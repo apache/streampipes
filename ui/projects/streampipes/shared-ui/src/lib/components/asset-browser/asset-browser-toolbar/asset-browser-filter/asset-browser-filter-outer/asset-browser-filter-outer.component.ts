@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -30,6 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-asset-browser-filter-outer',
     templateUrl: 'asset-browser-filter-outer.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

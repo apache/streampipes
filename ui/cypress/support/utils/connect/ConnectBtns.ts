@@ -155,6 +155,12 @@ export class ConnectBtns {
         return cy.dataCy('connect-refresh-schema-button', { timeout: 10000 });
     }
 
+    public static configureFieldsLoadingMessage() {
+        return cy.dataCy('configure-fields-loading-message', {
+            timeout: 10000,
+        });
+    }
+
     public static connectAdapterAddedSuccessfully() {
         return cy.dataCy('sp-connect-adapter-success-added', {
             timeout: 60000,
@@ -365,6 +371,10 @@ export class ConnectBtns {
         });
     }
 
+    public static scriptActionsBtn() {
+        return cy.dataCy('configure-schema-script-actions');
+    }
+
     public static addScriptTemplateBtn() {
         return cy.dataCy('add-script-template-button', {
             timeout: 10000,
@@ -393,6 +403,14 @@ export class ConnectBtns {
         return cy.dataCy('configure-schema-event-preview-original', {
             timeout: 10000,
         });
+    }
+
+    public static configureSchemaOriginalRawModeBtn() {
+        return cy.dataCy('configure-schema-original-mode-raw');
+    }
+
+    public static configureSchemaResultRawModeBtn() {
+        return cy.dataCy('configure-schema-result-mode-raw');
     }
 
     public static configureSchemaEventPreviewResult() {

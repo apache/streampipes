@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     LayoutAlignDirective,
     LayoutDirective,
@@ -32,6 +38,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-pipeline-details-toolbar',
     templateUrl: './pipeline-details-toolbar.component.html',
     styleUrls: ['./pipeline-details-toolbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

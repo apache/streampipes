@@ -17,13 +17,11 @@
  */
 
 import {
-    AfterViewInit,
     Component,
     Input,
     OnInit,
-    OnChanges,
-    SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     PeCategory,
@@ -31,6 +29,7 @@ import {
     PipelineElementUnion,
 } from '../../model/editor.model';
 import { EditorService } from '../../services/editor.service';
+import { CdkDropList } from '@angular/cdk/drag-drop';
 import { zip } from 'rxjs';
 import { Router } from '@angular/router';
 import {
@@ -53,7 +52,9 @@ import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-t
     selector: 'sp-pipeline-element-icon-stand',
     templateUrl: './pipeline-element-icon-stand.component.html',
     styleUrls: ['./pipeline-element-icon-stand.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        CdkDropList,
         FlexDirective,
         LayoutDirective,
         MatIcon,
@@ -71,9 +72,7 @@ import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-t
         PipelineElementTypeFilterPipe,
     ],
 })
-export class PipelineElementIconStandComponent
-    implements OnInit, AfterViewInit, OnChanges
-{
+export class PipelineElementIconStandComponent implements OnInit {
     private editorService = inject(EditorService);
     private router = inject(Router);
 
@@ -116,16 +115,6 @@ export class PipelineElementIconStandComponent
 
     ngOnInit(): void {
         this.loadOptions();
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.elementFilter && !changes.elementFilter.firstChange) {
-            this.makeDraggable();
-        }
-    }
-
-    ngAfterViewInit() {
-        this.makeDraggable();
     }
 
     loadOptions() {
@@ -172,44 +161,12 @@ export class PipelineElementIconStandComponent
         });
     }
 
-    makeDraggable() {
-        setTimeout(() => {
-            ($('.draggable-pipeline-element') as any).draggable({
-                revert: 'invalid',
-                helper: ev => {
-                    const draggable = $(ev.currentTarget)
-                        .find('.draggable-icon-editor')
-                        .first()
-                        .clone();
-                    const draggableContainer = $(draggable)
-                        .find('.pe-container')
-                        .first();
-                    $(draggable).removeClass('draggable-icon-editor');
-                    $(draggable).addClass('draggable-icon-drag');
-                    $(draggableContainer).removeClass('pe-container');
-                    $(draggableContainer).addClass('pe-container-drag');
-                    return draggable.clone();
-                },
-                stack: '.draggable-pipeline-element',
-                start(el, ui) {
-                    ui.helper.appendTo('#content');
-                    $('#outerAssemblyArea').css('border', '2px dashed #39b54a');
-                },
-                stop(_el, _ui) {
-                    $('#outerAssemblyArea').css('border', '0');
-                },
-            });
-        });
-    }
-
     toggleOpen(availableType: any): void {
         availableType.open = !availableType.open;
-        this.makeDraggable();
     }
 
     changeSorting(availableType: any, sortMode: string) {
         availableType.sort = sortMode;
-        this.makeDraggable();
     }
 
     navigateToConnect() {

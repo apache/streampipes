@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ConfigItem, DataType } from '@streampipes/platform-services';
 import { ServiceConfigsPasswordComponent } from '../service-configs-password/service-configs-password.component';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
@@ -27,6 +32,7 @@ import { ServiceConfigsBooleanComponent } from '../service-configs-boolean/servi
 @Component({
     selector: 'sp-service-configs-item',
     templateUrl: './service-configs-item.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ServiceConfigsPasswordComponent,
         FlexDirective,

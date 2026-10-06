@@ -27,8 +27,9 @@ import org.springframework.security.core.Authentication;
 public class PipelineResourceManager extends CrudResourceManager<Pipeline, IPipelineStorage> {
 
   public PipelineResourceManager(IPipelineStorage pipelineStorage,
-                                 PermissionResourceManager permissionResourceManager) {
-    super(pipelineStorage, Pipeline.class, permissionResourceManager);
+                                 PermissionResourceManager permissionResourceManager,
+                              ResourceDeletionManager resourceDeletionManager) {
+    super(pipelineStorage, Pipeline.class, permissionResourceManager, resourceDeletionManager);
   }
 
   public ResourceSummaryDto<PipelineSummaryDto> getSummary(Authentication auth) {

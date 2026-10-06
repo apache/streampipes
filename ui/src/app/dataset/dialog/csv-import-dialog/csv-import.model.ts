@@ -23,9 +23,7 @@ import {
 } from '@streampipes/platform-services';
 
 export type CsvImportColumnRole =
-    | 'TIMESTAMP'
-    | 'DIMENSION_PROPERTY'
-    | 'MEASUREMENT_PROPERTY';
+    'TIMESTAMP' | 'DIMENSION_PROPERTY' | 'MEASUREMENT_PROPERTY';
 
 export interface CsvImportColumnModel {
     column: CsvImportColumn;

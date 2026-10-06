@@ -20,58 +20,51 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataCounter;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
+import org.apache.streampipes.dataexplorer.api.query.DatasetAdministrationBackend;
+import org.apache.streampipes.dataexplorer.api.query.DatasetQueryBackend;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSanitizerInflux;
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
+import org.apache.streampipes.dataexplorer.influx.sanitize.DatasetMetadataSanitizerInflux;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class DataExplorerManagerInflux implements IDataExplorerManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerManagerInflux.class);
 
   public DataExplorerManagerInflux() {
   }
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(
-      List<DataLakeMeasure> allMeasurements,
+  public IDatasetMetadataCounter getMeasurementCounter(
+      List<DatasetMetadata> allMeasurements,
       List<String> measurementsToCount,
       int daysBack) {
-    return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount, daysBack);
+    return new DatasetMetadataCounterInflux(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override
-  public IDataExplorerQueryManagement getQueryManagement(
-      IDataExplorerSchemaManagement dataExplorerSchemaManagement
-  ) {
-    return new DataExplorerQueryManagementInflux(dataExplorerSchemaManagement);
+  public DatasetQueryBackend getQueryBackend() {
+    return new InfluxQueryBackend(InfluxConnectionSettings.from(Environments.getEnvironment()));
   }
 
   @Override
-  public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
-                                                           IPermissionStorage permissionStorage,
-                                                           IDataLakeMeasureStorage datasetStorage) {
-    return new DataExplorerSchemaManagement(
-        datasetStorage,
-        new DataLakePermissionManager(
-            permissionStorage
-        ),
-        chartSchemaUpdateCoordinator
-    );
+  public DatasetAdministrationBackend getAdministrationBackend() {
+    return new InfluxAdministrationBackend(Environments.getEnvironment().getTsStorageBucket().getValueOrDefault(),
+        InfluxClientProvider::getInfluxDBClient);
   }
 
   @Override
-  public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure, boolean ignoreDuplicates) {
+  public ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure, boolean ignoreDuplicates) {
     return new TimeSeriesStorageInflux(
         measure,
         ignoreDuplicates,
@@ -81,7 +74,31 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure) {
-    return new DataLakeMeasurementSanitizerInflux(client, measure);
+  public ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure,
+                                                 boolean ignoreDuplicates,
+                                                 BiConsumer<String, String> warningReporter) {
+    return new TimeSeriesStorageInflux(
+        measure,
+        ignoreDuplicates,
+        Environments.getEnvironment(),
+        new InfluxClientProvider(),
+        warningReporter
+    );
+  }
+
+  @Override
+  public ITimeSeriesStorage getSharedTimeseriesStorage(DatasetMetadata measure) {
+    return new TimeSeriesStorageInflux(
+        measure,
+        false,
+        new InfluxClientProvider().getSharedSetUpInfluxDBClient(Environments.getEnvironment()),
+        false,
+        (title, details) -> LOG.warn("{}: {}", title, details)
+    );
+  }
+
+  @Override
+  public IDatasetMetadataSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure) {
+    return new DatasetMetadataSanitizerInflux(client, measure);
   }
 }

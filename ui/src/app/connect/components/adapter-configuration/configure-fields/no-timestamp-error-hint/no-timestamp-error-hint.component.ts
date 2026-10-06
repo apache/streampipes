@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-no-timestamp-error-hint',
     templateUrl: './no-timestamp-error-hint.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SpAlertBannerComponent, TranslatePipe],
 })
 export class NoTimestampErrorHintComponent {}

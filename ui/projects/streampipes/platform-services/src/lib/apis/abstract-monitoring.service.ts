@@ -37,13 +37,13 @@ export abstract class AbstractMonitoringService {
         return `${this.monitoringUrl(elementId)}/metrics`;
     }
 
-    protected monitoringUrl(elementId): string {
+    protected monitoringUrl(elementId: string): string {
         return `${this.monitoringBasePath}/${
             this.monitoringPathAppendix
         }/${encodeURIComponent(elementId)}`;
     }
 
-    protected abstract get monitoringBasePath();
+    protected abstract get monitoringBasePath(): string;
 
-    protected abstract get monitoringPathAppendix();
+    protected abstract get monitoringPathAppendix(): string;
 }

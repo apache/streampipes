@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -56,6 +57,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-endpoint-item',
     templateUrl: './endpoint-item.component.html',
     styleUrls: ['./endpoint-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

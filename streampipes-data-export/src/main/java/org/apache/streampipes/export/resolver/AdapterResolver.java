@@ -19,6 +19,7 @@
 
 package org.apache.streampipes.export.resolver;
 
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
@@ -27,6 +28,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
@@ -91,7 +93,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     var adapter = deserializeDocument(document);
     var resourceId = adapter.getElementId();
     var existingAdapter = adapterStorage.getElementById(resourceId);
@@ -102,14 +104,15 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
               resourceManager,
               AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
               new WorkerRestClient(extensionServiceRequestManager, resourceManager),
-              getNoSqlStore().getExtensionsServiceStorage(),
-              extensionServiceRequestManager
+              resourceManager.getExtensionsServiceStorage(),
+              extensionServiceRequestManager,
+              new AdapterAuditRecorder(resourceManager.getAuditService())
           ).stopAdapter(resourceId, true);
         } catch (AdapterException e) {
           LOG.warn("Error when stopping adapter with id {} and name {}", resourceId, existingAdapter.getName());
         }
       }
-      adapterStorage.deleteElementById(resourceId);
+      resourceDeletionManager.delete(adapterStorage, resourceId);
     }
   }
 

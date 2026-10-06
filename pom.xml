@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache</groupId>
         <artifactId>apache</artifactId>
-        <version>37</version>
+        <version>39</version>
     </parent>
 
     <groupId>org.apache.streampipes</groupId>
@@ -44,8 +44,8 @@
 
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
-        <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
-        <boofcv.version>1.1.0</boofcv.version>
+        <bcprov-jdk18on.version>1.86</bcprov-jdk18on.version>
+        <boofcv.version>1.5.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
         <camel.version>4.22.0</camel.version>
         <commons-collections.version>3.2.2</commons-collections.version>
@@ -60,7 +60,7 @@
         <error-prone.version>2.10.0</error-prone.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
-        <grpc.version>1.80.0</grpc.version>
+        <grpc.version>1.84.0</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
         <hadoop.version>3.4.1</hadoop.version>
         <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
@@ -71,14 +71,14 @@
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
-        <influxdb.version>2.24</influxdb.version>
-        <inlong.version>1.13.0</inlong.version>
-        <iotdb.version>1.3.0</iotdb.version>
+        <influxdb.version>2.25</influxdb.version>
+        <inlong.version>2.4.0</inlong.version>
+        <iotdb.version>2.0.11</iotdb.version>
         <jts-core.version>1.20.0</jts-core.version>
         <milvus-sdk-java.version>2.5.10</milvus-sdk-java.version>
         <mqtt-client.version>1.3.0</mqtt-client.version>
         <nats.version>2.25.2</nats.version>
-        <okhttp.version>3.13.1</okhttp.version>
+        <okhttp.version>4.12.0</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.5.9</opennlp.version>
         <parquet.version>1.16.0</parquet.version>
@@ -93,11 +93,11 @@
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <s3.version>2.46.10</s3.version>
         <siddhi.version>5.1.27</siddhi.version>
-        <simple-java-mail.version>8.10.0</simple-java-mail.version>
+        <simple-java-mail.version>9.3.2</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
-        <springdoc.version>3.0.1</springdoc.version>
+        <springdoc.version>3.1.1</springdoc.version>
         <swagger.version>2.2.42</swagger.version>
-        <tsfile.version>1.1.0</tsfile.version>
+        <tsfile.version>2.4.0</tsfile.version>
         <type-parser.version>0.8.1</type-parser.version>
         <xz.version>1.12</xz.version>
 
@@ -115,7 +115,7 @@
         <javassist.version>3.30.1-GA</javassist.version>
         <woodstox.version>7.1.1</woodstox.version>
         <hdrhistogram.version>2.2.2</hdrhistogram.version>
-        <istack-runtime.version>4.1.2</istack-runtime.version>
+        <istack-runtime.version>4.2.0</istack-runtime.version>
         <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
         <jaxb-runtime.version>2.3.9</jaxb-runtime.version>
@@ -136,17 +136,15 @@
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.16.1</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-        <checkstyle.version>10.17.0</checkstyle.version>
+        <checkstyle.version>14.1.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
 
         <minimalMavenBuildVersion>3.8</minimalMavenBuildVersion>
         <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
-        <spotless.version>2.43.0</spotless.version>
+        <spotless.version>3.10.1</spotless.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
@@ -154,6 +152,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.pulsar</groupId>
+                <artifactId>pulsar-bom</artifactId>
+                <version>4.2.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -690,6 +695,21 @@
                 <version>${boofcv.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.boofcv</groupId>
+                <artifactId>boofcv-deepboof</artifactId>
+                <version>${boofcv.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.airlift</groupId>
+                        <artifactId>aircompressor</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.github.luben</groupId>
+                        <artifactId>zstd-jni</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bcprov-jdk18on.version}</version>
@@ -885,6 +905,10 @@
     </dependencyManagement>
 
     <modules>
+        <module>streampipes-audit-api</module>
+        <module>streampipes-audit-events</module>
+        <module>streampipes-audit-management</module>
+        <module>streampipes-audit-influx</module>
         <module>archetypes/streampipes-archetype-extensions-jvm</module>
         <module>streampipes-client</module>
         <module>streampipes-client-api</module>
@@ -934,7 +958,6 @@
         <module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-couchdb</module>
-        <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-test-utils-executors</module>
         <module>streampipes-user-management</module>
@@ -950,6 +973,12 @@
     </modules>
 
     <profiles>
+        <profile>
+            <id>benchmarks</id>
+            <modules>
+                <module>streampipes-benchmarks</module>
+            </modules>
+        </profile>
         <profile>
             <id>apache-release</id>
             <build>
@@ -998,7 +1027,7 @@
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <doclint>none</doclint>
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
-                                    <source>17</source>
+                                    <release>25</release>
                                 </configuration>
                             </execution>
                         </executions>
@@ -1032,7 +1061,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <release>17</release>
+                        <release>25</release>
                         <encoding>UTF-8</encoding>
                         <parameters>true</parameters>
                     </configuration>
@@ -1142,7 +1171,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>1.25.0</version>
+                                    <version>[25,)</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -1184,14 +1213,14 @@
                             <additionalJOption>-Xdoclint:none</additionalJOption>
                             <doclint>none</doclint>
                             <additionalJOption>-Xdoclint:none</additionalJOption>
-                            <release>11</release>
+                            <release>25</release>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <failOnWarnings>false</failOnWarnings>
                     <failOnError>false</failOnError>
-                    <source>25</source>
+                    <release>25</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -1351,7 +1380,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <release>17</release>
+                    <release>25</release>
                     <encoding>UTF-8</encoding>
                     <parameters>true</parameters>
                 </configuration>

@@ -27,9 +27,50 @@ StreamPipes Compose is a simple collection of user-friendly `docker-compose` fil
 #### TL;DR: A one-liner to rule them all :tada: :tada: :tada:
 
 ```bash
-docker-compose up -d
+./configure
+docker compose up -d
 ```
-Go to http://localhost to finish the installation in the browser. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/user-guide-introduction/) to learn how to create your first pipeline!
+Go to http://localhost and sign in with `admin@streampipes.apache.org` and the
+`SP_INITIAL_ADMIN_PASSWORD` from `.env`. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/user-guide-introduction/) to learn how to create your first pipeline!
+
+The configure helper requires Python 3 and prepares a **new deployment**. Run it from
+this folder before starting any Compose variant. It generates independent random values
+for these settings and writes them to `.env` with restricted file permissions:
+
+| Setting | Used by |
+| --- | --- |
+| `SP_SERVICE_SECRET` | Backend and extensions for service-account authentication |
+| `SP_COUCHDB_PASSWORD` | CouchDB, backend, and extensions |
+| `SP_TS_STORAGE_TOKEN` | InfluxDB initialization, backend, and extensions |
+| `SP_INFLUXDB_ADMIN_PASSWORD` | InfluxDB's initial administrator account |
+| `SP_ENCRYPTION_PASSCODE` | Backend and extensions for stored encrypted secrets |
+| `SP_INITIAL_ADMIN_PASSWORD` | Initial StreamPipes administrator account |
+| `SP_NATS_TOKEN` | NATS, backend, and extensions when a NATS-auth override is enabled |
+| `SP_JWT_SECRET` | Backend HMAC signing of user JWTs |
+
+The backend already generates and persists a JWT signing secret when none is configured.
+The installer supplies an explicit value so it is backed up with the other credentials.
+Keep it distinct from the service-account secret and do not pass it to extensions.
+Changing it invalidates existing HMAC user JWTs; it is not used for RSA signing.
+
+The helper fills missing or empty values and preserves existing custom values on reruns.
+The rejected historical service-secret default is replaced if present. To supply your
+own credentials, copy `.env.example` to `.env` and set the desired values before running
+`./configure`. The helper never prints passwords or tokens.
+
+Keep `.env` with your deployment backups and do not commit or share it. Reuse it when
+restarting or upgrading this deployment. In particular, generating a different encryption
+passcode would make existing encrypted secrets unreadable; this helper does not rotate
+credentials for databases that already contain data.
+
+On Windows, run `python configure` instead of `./configure`.
+Without Python, copy `.env.example` to `.env`, use `openssl rand -hex 32` separately for
+each setting in the table, and restrict access to `.env`.
+
+For deployments using the repository-root Compose file, run
+`./installer/compose/configure` from the repository root. That development Compose file
+currently consumes only the generated service secret; the complete credential wiring
+described above applies to the Compose variants in this installer directory.
 
 ## Prerequisite
 * Docker >= 17.06.0
@@ -59,7 +100,8 @@ docker-compose up -d
 # go to `http://localhost` after all services are started
 ```
 
-Optional: enable token-based NATS auth by setting `SP_NATS_TOKEN` in `.env` and use the auth override:
+Optional: enable token-based NATS auth using the generated `SP_NATS_TOKEN` and the auth override
+(the token alone does not enable authentication):
 
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.nats-auth.yml up -d
@@ -114,6 +156,34 @@ To upgrade to another StreamPipes version, simply edit the `SP_VERSION` in the `
 ```
 SP_VERSION=<VERSION>
 ```
+
+### Service credentials in existing deployments
+
+Existing deployments should retain their deployment configuration and persisted
+infrastructure credentials. The configure helper is not an infrastructure migration tool.
+
+For the service-account security update, generate a random service secret and configure
+the same value as `SP_INITIAL_SERVICE_USER_SECRET` on the backend and `SP_CLIENT_SECRET`
+on the backend and extensions. Recreate those containers during a maintenance window so
+they receive the changed environment variables.
+
+If the configured bootstrap service account still has the old shipped default, the
+backend migrates that stored secret. Accounts with custom secrets are left unchanged:
+keep using their existing credentials. Changing an initial-installation variable does
+not otherwise change stored credentials.
+
+If no valid replacement is configured, authentication using the old default is rejected.
+Human administrator login remains available. Set the backend and extension variables and
+restart, or edit the service user's Client Secret in the security configuration and set
+that same value on all its clients. Additional service accounts using the old default
+must be updated through the security configuration; the migration only changes the
+configured bootstrap account. Service users retain their existing roles and permissions.
+
+JWT verification also rejects disabled, locked, or expired accounts and tokens without
+an expiration. Existing clients using the StreamPipes JWT generator remain supported.
+Custom JWT clients must use the HMAC algorithm selected for their UTF-8 secret length:
+HS256 for 32–47 bytes, HS384 for 48–63 bytes, and HS512 for 64 bytes or more. RSA deployments
+must have working signing keys; the backend no longer falls back to HMAC on a key error.
 
 ## Bugs and Feature Requests
 

@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.networking.Networking;
+import org.apache.streampipes.commons.security.ServiceAccountSecret;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +69,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
   }
 
   private String getClientApiSecret() {
-    return env.getClientSecret().getValueOrDefault();
+    return ServiceAccountSecret.requireValid(env.getClientSecret().getValue(), "SP_CLIENT_SECRET");
   }
 
   private List<String> findClientServices() {

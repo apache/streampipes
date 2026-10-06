@@ -20,7 +20,7 @@
     @if (isLoading && !hasLoadedCharts) {
         <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
             <sp-spinner
-                diameter="40"
+                [diameter]="40"
                 [text]="'Loading' | translate"
             ></sp-spinner>
         </div>
@@ -28,7 +28,7 @@
         @if (isLoading) {
             <div class="p-2">
                 <sp-spinner
-                    diameter="18"
+                    [diameter]="18"
                     layout="row"
                     align="end center"
                     gap="8px"

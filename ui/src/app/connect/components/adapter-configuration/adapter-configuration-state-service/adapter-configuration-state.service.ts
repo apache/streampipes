@@ -16,7 +16,7 @@
  *
  */
 
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
     AdapterDescription,
     ConnectScriptLanguagesService,
@@ -78,6 +78,30 @@ export class AdapterConfigurationStateService {
     public state = this._state.asReadonly();
 
     private sampleRequestSubscription?: Subscription;
+    private scriptRequestSubscription?: Subscription;
+    private successfulTransformation = signal<string | null>(null);
+    public hasScriptPreview = computed(
+        () => this.successfulTransformation() !== null,
+    );
+    public previewOutdated = computed(() => {
+        const state = this.state();
+        return (
+            this.successfulTransformation() !==
+            this.transformationSignature(
+                state.currentScript,
+                state.selectedScriptMetadata?.language,
+                state.adapterDescription?.transformationConfig?.inputs,
+            )
+        );
+    });
+
+    private transformationSignature(
+        script: string,
+        language: string,
+        inputs: unknown,
+    ): string {
+        return JSON.stringify({ script, language, inputs });
+    }
 
     public updateState(newState: Partial<AdapterConfigurationState>): void {
         this._state.update(current => ({ ...current, ...newState }));
@@ -192,6 +216,36 @@ export class AdapterConfigurationStateService {
                 script: activeScript,
             },
         });
+
+        this.restoreStoredPreview(adapter, activeScriptMetadata);
+    }
+
+    /**
+     * An adapter opened for editing or copying already carries the outputs its
+     * stored script produced. Treat them as a valid preview so the user is not
+     * forced to re-run an unchanged script before continuing.
+     */
+    private restoreStoredPreview(
+        adapter: AdapterDescription,
+        activeScriptMetadata: ScriptMetadata,
+    ): void {
+        const config = adapter.transformationConfig;
+        const hasStoredResult =
+            config?.scriptActive &&
+            !!config.script &&
+            config.language === activeScriptMetadata.language &&
+            config.inputs?.length > 0 &&
+            config.outputs?.length > 0;
+
+        if (hasStoredResult && this.successfulTransformation() === null) {
+            this.successfulTransformation.set(
+                this.transformationSignature(
+                    config.script,
+                    config.language,
+                    config.inputs,
+                ),
+            );
+        }
     }
 
     resetScriptToInitial(): void {
@@ -298,37 +352,62 @@ export class AdapterConfigurationStateService {
     }
 
     public runScript(adapter: AdapterDescription): void {
-        // 1. Prepare state for loading
-        this.updateState({
-            isRunningScript: true,
-            scriptError: null,
-        });
-
-        // 2. Update the local adapter object with the latest script from the UI
-        const updatedAdapter = { ...adapter };
-        updatedAdapter.transformationConfig.script = this.state().currentScript;
-        updatedAdapter.transformationConfig.language =
-            this.state().selectedScriptMetadata.language;
-
-        // 3. Execute the API call
-        this.restService.sampleTransform(updatedAdapter).subscribe({
-            next: response => {
-                // Update the outputs in the adapter object based on server results
-                updatedAdapter.transformationConfig.outputs =
-                    response.transformationConfig.outputs;
-
-                this.updateState({
-                    adapterDescription: updatedAdapter,
-                    isRunningScript: false,
-                });
+        if (
+            this.state().isRunningScript ||
+            !this.state().selectedScriptMetadata
+        ) {
+            return;
+        }
+        const state = this.state();
+        const updatedAdapter = {
+            ...adapter,
+            transformationConfig: {
+                ...adapter.transformationConfig,
+                script: state.currentScript,
+                language: state.selectedScriptMetadata.language,
             },
-            error: (error: HttpErrorResponse) => {
-                this.updateState({
-                    isRunningScript: false,
-                    scriptError: error.error as SpLogMessage,
-                });
-            },
-        });
+        };
+        const signature = this.transformationSignature(
+            updatedAdapter.transformationConfig.script,
+            updatedAdapter.transformationConfig.language,
+            updatedAdapter.transformationConfig.inputs,
+        );
+        this.updateState({ isRunningScript: true, scriptError: null });
+        this.scriptRequestSubscription = this.restService
+            .sampleTransform(updatedAdapter)
+            .subscribe({
+                next: response => {
+                    const currentAdapter = this.state().adapterDescription;
+                    // Keep newer edits and sample data when an older run finishes.
+                    if (currentAdapter.transformationConfig.scriptActive) {
+                        this.successfulTransformation.set(signature);
+                        this.updateState({
+                            adapterDescription: {
+                                ...currentAdapter,
+                                transformationConfig: {
+                                    ...currentAdapter.transformationConfig,
+                                    script: updatedAdapter.transformationConfig
+                                        .script,
+                                    language:
+                                        updatedAdapter.transformationConfig
+                                            .language,
+                                    outputs:
+                                        response.transformationConfig.outputs,
+                                },
+                            },
+                            isRunningScript: false,
+                        });
+                    } else {
+                        this.updateState({ isRunningScript: false });
+                    }
+                },
+                error: (error: HttpErrorResponse) => {
+                    this.updateState({
+                        isRunningScript: false,
+                        scriptError: error.error as SpLogMessage,
+                    });
+                },
+            });
     }
 
     public openTransformationConfigurationChangedDialog(): void {
@@ -426,6 +505,9 @@ export class AdapterConfigurationStateService {
     }
 
     public reset(): void {
+        this.scriptRequestSubscription?.unsubscribe();
+        this.sampleRequestSubscription?.unsubscribe();
+        this.successfulTransformation.set(null);
         this._state.set({ ...this.initialState });
     }
 

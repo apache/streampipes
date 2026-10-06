@@ -22,6 +22,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
 import { EscapeNumberFilterService } from '../escape-number-filter.service';
@@ -33,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-filter-selection-panel-row-value-input',
     templateUrl: './filter-selection-panel-row-value-input.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatFormField, MatInput, FormsModule, TranslatePipe],
 })
 export class FilterSelectionPanelRowValueInputComponent implements OnInit {

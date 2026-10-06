@@ -17,6 +17,8 @@
         "-Dcom.sun.management.jmxremote.ssl=false"
       ],
       "env": {
+        "SP_INITIAL_SERVICE_USER_SECRET": "streampipes-development-only-service-secret",
+        "SP_CLIENT_SECRET": "streampipes-development-only-service-secret",
         "SP_BACKEND_HOST": "localhost",
         "SP_CORE_HOST": "localhost",
         "SP_CORE_PORT": "8030",
@@ -67,6 +69,7 @@
         "-Dcom.sun.management.jmxremote.ssl=false"
       ],
       "env": {
+        "SP_CLIENT_SECRET": "streampipes-development-only-service-secret",
         "SP_BACKEND_HOST": "localhost",
         "SP_CORE_HOST": "localhost",
         "SP_CORE_PORT": "8030",

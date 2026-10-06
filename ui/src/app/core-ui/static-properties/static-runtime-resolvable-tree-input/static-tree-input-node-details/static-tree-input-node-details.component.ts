@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
 import { KeyValuePipe } from '@angular/common';
 import { TreeInputNode } from '@streampipes/platform-services';
@@ -29,6 +29,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         '../static-runtime-resolvable-tree-input.component.scss',
         './static-tree-input-node-details.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutAlignDirective, KeyValuePipe, TranslatePipe],
 })
 export class StaticTreeInputNodeDetailsComponent {

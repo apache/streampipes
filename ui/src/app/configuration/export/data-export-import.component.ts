@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogService,
     PanelType,
@@ -60,6 +65,7 @@ interface AssetReferenceExportItems {
     selector: 'sp-data-export-import',
     templateUrl: './data-export-import.component.html',
     styleUrls: ['./data-export-import.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

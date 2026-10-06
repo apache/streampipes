@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import {
@@ -38,6 +43,7 @@ const hiddenPasswordString = '*****';
     templateUrl: './service-configs-password.component.html',
     styleUrls: ['./service-configs-password.component.scss'],
     providers: [ConfigurationService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatFormField,
         FlexDirective,
@@ -58,7 +64,7 @@ export class ServiceConfigsPasswordComponent {
     password: string;
     show: boolean;
     className: string;
-    private hide: boolean;
+    protected hide: boolean;
 
     constructor() {
         this.password = hiddenPasswordString;

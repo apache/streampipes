@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     StatusVisConfig,
@@ -41,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-data-explorer-status-widget-config',
     templateUrl: './status-widget-config.component.html',
     styleUrls: ['./status-widget-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

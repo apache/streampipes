@@ -18,13 +18,16 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.authentication.AuthenticationMethod;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,26 +41,57 @@ import static org.apache.streampipes.service.core.oauth2.HttpCookieOAuth2Authori
 @Component
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
+  /**
+   * The only failure information sent to the client. The reason of a failed login is written to
+   * the log and must not be exposed, as it can reveal which accounts exist.
+   */
+  static final String ERROR_CODE = "oauth_login_failed";
+
+  private static final Logger LOG = LoggerFactory.getLogger(OAuth2AuthenticationFailureHandler.class);
+  private static final String ERROR_PARAM = "error";
+
+  private final AuthenticationAuditRecorder audit;
+
+  private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+
   @Autowired
-  HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+  public OAuth2AuthenticationFailureHandler(HttpCookieOAuth2AuthorizationRequestRepository repository,
+                                            AuthenticationAuditRecorder audit) {
+    this.httpCookieOAuth2AuthorizationRequestRepository = repository;
+    this.audit = java.util.Objects.requireNonNull(audit);
+  }
 
   @Override
   public void onAuthenticationFailure(HttpServletRequest request,
                                       HttpServletResponse response,
                                       AuthenticationException exception) throws IOException {
+    audit.loginDenied(AuthenticationMethod.OAUTH2);
     String targetUrl = CookieUtils
         .getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
         .map(Cookie::getValue)
         .orElse(("/"));
 
-    targetUrl = UriComponentsBuilder
-        .fromUriString(targetUrl)
-        .queryParam("error", exception.getLocalizedMessage())
-        .build()
-        .toUriString();
+    LOG.warn("OAuth login failed: {}", sanitizeForLog(exception.getMessage()));
 
     httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
-    getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    getRedirectStrategy().sendRedirect(request, response, appendErrorCode(targetUrl));
+  }
+
+  /**
+   * Appends the error code to the end of the url, so that it becomes part of the route when the
+   * redirect uri points to a hash route of the UI (e.g. {@code http://host/#/login}).
+   */
+  static String appendErrorCode(String targetUrl) {
+    var route = targetUrl.substring(targetUrl.indexOf('#') + 1);
+    var separator = route.contains("?") ? "&" : "?";
+    return targetUrl + separator + ERROR_PARAM + "=" + ERROR_CODE;
+  }
+
+  /**
+   * Failure messages can contain values received from the identity provider.
+   */
+  static String sanitizeForLog(String message) {
+    return message == null ? "" : message.replaceAll("\\p{Cntrl}", "_");
   }
 }

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Group, UserGroupService } from '@streampipes/platform-services';
 import {
     MatCell,
@@ -50,6 +55,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-security-user-group-config',
     templateUrl: './user-group-configuration.component.html',
     styleUrls: ['./user-group-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

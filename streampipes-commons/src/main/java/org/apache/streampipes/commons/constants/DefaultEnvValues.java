@@ -22,6 +22,7 @@ public class DefaultEnvValues {
   public static final String INITIAL_ADMIN_EMAIL_DEFAULT = "admin@streampipes.apache.org";
   public static final String INITIAL_ADMIN_PW_DEFAULT = "admin";
   public static final String INITIAL_CLIENT_USER_DEFAULT = "sp-service-client";
+  // Legacy value retained for upgrade detection and rejection, never as a configuration fallback.
   public static final String INITIAL_CLIENT_SECRET_DEFAULT = "my-apache-streampipes-secret-key-change-me";
 
   public static final String INSTALL_PIPELINE_ELEMENTS = "true";

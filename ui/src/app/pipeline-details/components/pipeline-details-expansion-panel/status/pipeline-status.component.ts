@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Pipeline,
     PipelineService,
@@ -35,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-status',
     templateUrl: './pipeline-status.component.html',
     styleUrls: ['./pipeline-status.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

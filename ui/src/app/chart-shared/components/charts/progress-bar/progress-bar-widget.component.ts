@@ -17,7 +17,13 @@
  */
 
 import { NgStyle } from '@angular/common';
-import { Component, LOCALE_ID, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    LOCALE_ID,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataExplorerField,
     SpQueryResult,
@@ -50,6 +56,7 @@ interface ProgressBarViewModel {
     selector: 'sp-data-explorer-progress-bar-widget',
     templateUrl: './progress-bar-widget.component.html',
     styleUrls: ['./progress-bar-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

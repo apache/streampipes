@@ -52,24 +52,32 @@
                 </sp-form-field>
             </div>
             <div fxLayout="column" fxFlex="30">
-                <sp-form-field [level]="3" [label]="'Runtime type' | translate">
-                    <mat-form-field class="example-full-width" color="accent">
-                        <mat-select
-                            [(ngModel)]="ep.runtimeType"
-                            [disabled]="restrictedEditMode"
-                            data-cy="runtime-type"
+                @if (isPrimitiveProperty(ep)) {
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Runtime type' | translate"
+                    >
+                        <mat-form-field
+                            class="example-full-width"
+                            color="accent"
                         >
-                            @for (
-                                primitive of primitiveClasses;
-                                track primitive
-                            ) {
-                                <mat-option [value]="primitive.id">
-                                    {{ primitive.label }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-                </sp-form-field>
+                            <mat-select
+                                [(ngModel)]="ep.runtimeType"
+                                [disabled]="restrictedEditMode"
+                                data-cy="runtime-type"
+                            >
+                                @for (
+                                    primitive of primitiveClasses;
+                                    track primitive
+                                ) {
+                                    <mat-option [value]="primitive.id">
+                                        {{ primitive.label }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </sp-form-field>
+                }
             </div>
             <div fxLayout="column" fxFlex="30">
                 <sp-form-field

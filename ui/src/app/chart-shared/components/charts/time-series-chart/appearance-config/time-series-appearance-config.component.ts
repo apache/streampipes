@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -26,6 +31,7 @@ import { SpDataZoomConfigComponent } from '../../../chart-config/data-zoom-confi
 @Component({
     selector: 'sp-time-series-appearance-config',
     templateUrl: './time-series-appearance-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         SpEchartsWidgetAppearanceConfigComponent,

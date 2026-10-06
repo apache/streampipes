@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AssetSiteDesc, LocationConfig } from '@streampipes/platform-services';
 import {
     FormControl,
@@ -36,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-edit-asset-location-component',
     templateUrl: './edit-location.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FormsModule,

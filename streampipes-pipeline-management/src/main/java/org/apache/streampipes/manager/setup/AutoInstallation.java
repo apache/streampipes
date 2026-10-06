@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.setup;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+import org.apache.streampipes.commons.security.ServiceAccountSecret;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -36,6 +37,7 @@ public class AutoInstallation implements BackgroundTaskNotifier {
 
   private static final Logger LOG = LoggerFactory.getLogger(AutoInstallation.class);
 
+  private final InstallationConfiguration installationConfiguration;
   private final Environment env;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final AtomicInteger errorCount = new AtomicInteger();
@@ -44,7 +46,9 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   private final SpResourceManager resourceManager;
 
   public AutoInstallation(ExtensionServiceRequestManager extensionServiceRequestManager,
-                          SpResourceManager resourceManager) {
+                          SpResourceManager resourceManager,
+                          InstallationConfiguration installationConfiguration) {
+    this.installationConfiguration = installationConfiguration;
     this.env = Environments.getEnvironment();
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
@@ -53,8 +57,8 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   public void startAutoInstallation() {
     InitialSettings settings = collectInitialSettings();
 
-    List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(settings, resourceManager);
-    List<Runnable> backgroundSteps = InstallationConfiguration.getBackgroundInstallationSteps(
+    List<InstallationStep> steps = installationConfiguration.getInstallationSteps(settings, resourceManager);
+    List<Runnable> backgroundSteps = installationConfiguration.getBackgroundInstallationSteps(
         settings,
         this,
         extensionServiceRequestManager,
@@ -93,7 +97,8 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   }
 
   private String findServiceAccountSecret() {
-    return env.getInitialServiceUserSecret().getValueOrDefault();
+    return ServiceAccountSecret.requireValid(
+        env.getInitialServiceUserSecret().getValue(), "SP_INITIAL_SERVICE_USER_SECRET");
   }
 
   private String findServiceAccountName() {

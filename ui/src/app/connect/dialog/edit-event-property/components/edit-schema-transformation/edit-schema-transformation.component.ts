@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     debounceTime,
@@ -36,7 +37,6 @@ import {
     UntypedFormControl,
 } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
     EventProperty,
     EventPropertyPrimitive,
@@ -65,6 +65,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-schema-transformation',
     templateUrl: './edit-schema-transformation.component.html',
     styleUrls: ['../../edit-event-property.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         FormFieldComponent,
@@ -86,7 +87,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class EditSchemaTransformationComponent implements OnInit {
     private semanticTypesRestService = inject(SemanticTypesRestService);
-    private shepherdService = inject(ShepherdService);
     private router = inject(Router);
 
     @Input()

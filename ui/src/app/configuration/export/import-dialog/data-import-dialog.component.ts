@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     DialogRef,
     SpAlertBannerComponent,
@@ -56,6 +56,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-data-import-dialog',
     templateUrl: './data-import-dialog.component.html',
     styleUrls: ['./data-import-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatFormField,

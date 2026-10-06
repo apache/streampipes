@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     SpBasicViewComponent,
     SpBreadcrumbService,
@@ -34,6 +39,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     selector: 'sp-help',
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,

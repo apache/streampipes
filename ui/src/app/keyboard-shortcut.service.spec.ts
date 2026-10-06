@@ -16,7 +16,8 @@
  *
  */
 
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
 import { KeyboardShortcutService, DialogService } from '@streampipes/shared-ui';
 
 describe('KeyboardShortcutService', () => {
@@ -24,6 +25,7 @@ describe('KeyboardShortcutService', () => {
     let mockDialogService: any;
 
     beforeEach(() => {
+        vi.useFakeTimers();
         mockDialogService = {
             hasOpenDialogs: false,
         };
@@ -40,6 +42,7 @@ describe('KeyboardShortcutService', () => {
 
     afterEach(() => {
         service.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     it('should fire single-key registered shortcut', () => {
@@ -84,7 +87,7 @@ describe('KeyboardShortcutService', () => {
         expect(fired).toBe(true);
     });
 
-    it('should fire sequence action within timeout', fakeAsync(() => {
+    it('should fire sequence action within timeout', () => {
         let fired = false;
         service.registerSequences('test', [
             {
@@ -96,13 +99,13 @@ describe('KeyboardShortcutService', () => {
         ]);
 
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'g' }));
-        tick(500); // 500ms elapsed
+        vi.advanceTimersByTime(500); // 500ms elapsed
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'p' }));
 
         expect(fired).toBe(true);
-    }));
+    });
 
-    it('should NOT fire sequence action if timeout elapsed', fakeAsync(() => {
+    it('should NOT fire sequence action if timeout elapsed', () => {
         let fired = false;
         service.registerSequences('test', [
             {
@@ -114,13 +117,13 @@ describe('KeyboardShortcutService', () => {
         ]);
 
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'g' }));
-        tick(1001); // timeout elapsed
+        vi.advanceTimersByTime(1001); // timeout elapsed
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'p' }));
 
         expect(fired).toBe(false);
-    }));
+    });
 
-    it('should give sequence precedence over single-key contextual shortcut', fakeAsync(() => {
+    it('should give sequence precedence over single-key contextual shortcut', () => {
         let seqFired = false;
         let singleFired = false;
 
@@ -144,13 +147,13 @@ describe('KeyboardShortcutService', () => {
 
         // Press 'g'
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'g' }));
-        tick(100);
+        vi.advanceTimersByTime(100);
         // Press 'e' within sequence timeout
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'e' }));
 
         expect(seqFired).toBe(true);
         expect(singleFired).toBe(false);
-    }));
+    });
 
     it('should ignore shortcut events when input field is focused', () => {
         let fired = false;
@@ -185,7 +188,7 @@ describe('KeyboardShortcutService', () => {
         document.body.removeChild(input);
     });
 
-    it('should show shortcut hints after holding Shift', fakeAsync(() => {
+    it('should show shortcut hints after holding Shift', () => {
         document.dispatchEvent(
             new KeyboardEvent('keydown', {
                 key: 'Shift',
@@ -193,10 +196,10 @@ describe('KeyboardShortcutService', () => {
             }),
         );
 
-        tick(199);
+        vi.advanceTimersByTime(199);
         expect(service.shortcutHintsVisible()).toBe(false);
 
-        tick(1);
+        vi.advanceTimersByTime(1);
         expect(service.shortcutHintsVisible()).toBe(true);
 
         document.dispatchEvent(
@@ -205,9 +208,9 @@ describe('KeyboardShortcutService', () => {
             }),
         );
         expect(service.shortcutHintsVisible()).toBe(false);
-    }));
+    });
 
-    it('should not show shortcut hints in editable fields', fakeAsync(() => {
+    it('should not show shortcut hints in editable fields', () => {
         let fired = false;
         service.register('test', [
             {
@@ -237,13 +240,13 @@ describe('KeyboardShortcutService', () => {
                 bubbles: true,
             }),
         );
-        tick(200);
+        vi.advanceTimersByTime(200);
 
         expect(service.shortcutHintsVisible()).toBe(false);
         expect(fired).toBe(false);
 
         document.body.removeChild(input);
-    }));
+    });
 
     it('should ignore shortcuts when a Monaco editor is focused', () => {
         let fired = false;
@@ -280,7 +283,7 @@ describe('KeyboardShortcutService', () => {
         document.body.removeChild(monacoEditor);
     });
 
-    it('should not show shortcut hints when a Monaco editor is focused', fakeAsync(() => {
+    it('should not show shortcut hints when a Monaco editor is focused', () => {
         const monacoEditor = document.createElement('div');
         monacoEditor.classList.add('monaco-editor');
         const editorSurface = document.createElement('div');
@@ -298,14 +301,14 @@ describe('KeyboardShortcutService', () => {
         });
 
         editorSurface.dispatchEvent(shiftEvent);
-        tick(200);
+        vi.advanceTimersByTime(200);
 
         expect(service.shortcutHintsVisible()).toBe(false);
 
         document.body.removeChild(monacoEditor);
-    }));
+    });
 
-    it('should fire Shift shortcuts before hints appear', fakeAsync(() => {
+    it('should fire Shift shortcuts before hints appear', () => {
         let fired = false;
         service.register('test', [
             {
@@ -323,7 +326,7 @@ describe('KeyboardShortcutService', () => {
                 shiftKey: true,
             }),
         );
-        tick(50);
+        vi.advanceTimersByTime(50);
         document.dispatchEvent(
             new KeyboardEvent('keydown', {
                 key: 'P',
@@ -333,5 +336,5 @@ describe('KeyboardShortcutService', () => {
 
         expect(fired).toBe(true);
         expect(service.shortcutHintsVisible()).toBe(false);
-    }));
+    });
 });

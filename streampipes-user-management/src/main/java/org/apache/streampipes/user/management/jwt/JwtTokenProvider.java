@@ -34,8 +34,6 @@ import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.UserInfoUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -53,7 +51,6 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
   public static final String CLAIM_USER = "user";
-  private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
   private Environment env;
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
   private final IRoleStorage roleStorage;
@@ -101,8 +98,7 @@ public class JwtTokenProvider {
         return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), getKeyFilePath(), claims,
             tokenExpirationDate);
       } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException e) {
-        LOG.warn("Could not create JWT token from private key location..defaulting to HMAC");
-        return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), tokenSecret(), claims, tokenExpirationDate);
+        throw new IllegalStateException("Could not load configured JWT private key", e);
       }
     }
   }

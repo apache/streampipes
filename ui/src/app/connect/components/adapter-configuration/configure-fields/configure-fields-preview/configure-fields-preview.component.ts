@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -34,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-configure-fields-preview',
     templateUrl: './configure-fields-preview.component.html',
     styleUrls: ['./configure-fields-preview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

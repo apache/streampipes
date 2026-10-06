@@ -24,6 +24,7 @@ export type UserInputType =
     | 'radio'
     | 'code-input'
     | 'click'
+    | 'reload'
     | 'button'
     | 'slider'
     | 'select'

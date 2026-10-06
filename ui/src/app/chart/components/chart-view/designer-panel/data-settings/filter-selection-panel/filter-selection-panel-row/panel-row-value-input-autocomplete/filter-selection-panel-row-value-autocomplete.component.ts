@@ -22,6 +22,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
 import { EscapeNumberFilterService } from '../escape-number-filter.service';
@@ -39,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-filter-selection-panel-row-value-autocomplete',
     templateUrl:
         './filter-selection-panel-row-value-autocomplete.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatFormField,
         MatInput,

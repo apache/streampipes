@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -27,6 +27,7 @@ import { ShortcutsTabComponent } from './shortcuts.component';
     selector: 'sp-shortcut-dialog',
     templateUrl: './shortcut-dialog.component.html',
     styleUrl: './shortcut-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatDialogClose,
         MatDialogContent,

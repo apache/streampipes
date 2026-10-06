@@ -24,6 +24,7 @@ import {
     OnInit,
     Output,
     TemplateRef,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
 import {
@@ -43,6 +44,7 @@ import { NgTemplateOutlet } from '@angular/common';
 @Component({
     selector: 'sp-app-static-runtime-resolvable-group',
     templateUrl: './static-runtime-resolvable-group.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatButton,

@@ -17,6 +17,15 @@
   -->
 # StreamPipes CLI - The Developer's Favorite
 
+The CLI and repository IDE launch configurations use a public development-only service
+credential so local development works without setup. Override `SP_SERVICE_SECRET` in
+`installer/cli/.env` for CLI deployments, or the service-secret environment values in
+`.vscode/launch.json` for IDE launches. Do not expose deployments using this credential
+to untrusted networks. The Compose installer generates unique credentials separately.
+For an existing local database, update the service account to match the development
+credential, or configure the launch files with the account's existing custom secret.
+
+
 > **Deprecated:** The StreamPipes CLI is deprecated and will be removed in a future release. The functionality remains available for now, but new development setups should use the experimental dev container setup in [`../../.devcontainer`](../../.devcontainer).
 
 The StreamPipes command-line interface (CLI) is focused on developers in order to provide an easy entrypoint to set up a suitable dev environment, either planning on developing

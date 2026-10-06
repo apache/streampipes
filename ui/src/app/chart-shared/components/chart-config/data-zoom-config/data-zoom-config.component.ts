@@ -23,6 +23,7 @@ import {
     OnChanges,
     Output,
     SimpleChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -40,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-data-zoom-config',
     templateUrl: './data-zoom-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         LayoutDirective,

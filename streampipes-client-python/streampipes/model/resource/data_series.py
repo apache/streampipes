@@ -33,7 +33,7 @@ __all__ = [
 
 class DataSeries(Resource):
     """Implementation of a resource for data series.
-    This resource defines the data model used by its resource container(`model.container.DataLakeMeasures`).
+    This resource defines the data model used by its resource container(`model.container.Datasets`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
     which are used to parse, validate the API response and to easily switch between
     the Python representation (both serialized and deserialized) and Java representation (serialized only).
@@ -101,7 +101,7 @@ class DataSeries(Resource):
     total: StrictInt
     headers: list[StrictStr]
     rows: list[list[Any]]
-    tags: str | None = None
+    tags: dict[str, str] | None = None
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the data lake series in representation of a Pandas Dataframe.

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TrafficLightWidgetModel } from './model/traffic-light-widget.model';
 import {
@@ -36,6 +36,7 @@ import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-rang
     selector: 'sp-data-explorer-traffic-light-widget',
     templateUrl: './traffic-light-widget.component.html',
     styleUrls: ['./traffic-light-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutAlignDirective,

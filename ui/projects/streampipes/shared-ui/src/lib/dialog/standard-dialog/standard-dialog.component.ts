@@ -16,7 +16,11 @@
  *
  */
 
-import { Component, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    ViewEncapsulation,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 import { MatIconButton } from '@angular/material/button';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
@@ -27,6 +31,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './standard-dialog.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./standard-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIconButton, CdkPortalOutlet, MatIcon],
 })
 export class StandardDialogComponent<T> extends BaseDialogComponent<T> {

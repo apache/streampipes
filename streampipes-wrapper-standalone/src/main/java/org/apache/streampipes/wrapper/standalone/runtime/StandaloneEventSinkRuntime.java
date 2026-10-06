@@ -20,116 +20,48 @@ package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
-import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
-import org.apache.streampipes.extensions.api.memorymanager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
-import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.generator.DataSinkContextGenerator;
 import org.apache.streampipes.wrapper.params.generator.DataSinkParameterGenerator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime<
     IStreamPipesDataSink,
     DataSinkInvocation,
     EventSinkRuntimeContext,
     IDataSinkParameterExtractor,
-    IDataSinkParameters> implements IDataSinkRuntime, RawDataProcessor {
-
-  private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventSinkRuntime.class);
-  private boolean pipelineStarted;
+    IDataSinkParameters> implements IDataSinkRuntime {
 
   public StandaloneEventSinkRuntime() {
     super(new DataSinkContextGenerator(), new DataSinkParameterGenerator());
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, long size, String sourceInfo) {
-    try {
-      SpRateLimiter.INSTANCE.limit(size);
-      SpMemoryManager.INSTANCE.allocate(size);
-      monitoringManager.increaseInCounter(instanceId, sourceInfo, size, System.currentTimeMillis());
-      pipelineElement.onEvent(internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo));
-    } catch (RuntimeException e) {
-      LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
-      addLogEntry(e);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      LOG.warn("Event processing interrupted in {}", pipelineElement.getClass().getCanonicalName(), e);
-    } finally {
-      SpMemoryManager.INSTANCE.free(size);
-    }
+  protected void processEvent(Event event) {
+    pipelineElement.onEvent(event);
   }
 
   public void prepareRuntime() throws SpRuntimeException {
-    for (SpInputCollector spInputCollector : getInputCollectors(runtimeParameters.getModel().getInputStreams())) {
-      spInputCollector.connect();
-    }
+    connectInputCollectors();
   }
 
   public void postDiscard() throws SpRuntimeException {
-    for (SpInputCollector spInputCollector : inputCollectors) {
-      spInputCollector.disconnect();
-    }
+    disconnectInputCollectors();
   }
 
   @Override
   protected void beforeStart() {
-    pipelineElement.onPipelineStarted(runtimeParameters, runtimeContext);
-    pipelineStarted = true;
-    inputCollectors.forEach(is -> is.registerConsumer(instanceId, this));
+    startPipeline(() -> pipelineElement.onPipelineStarted(runtimeParameters, runtimeContext));
+    registerInputCollectors();
     prepareRuntime();
   }
 
   @Override
   protected void afterStop() {
-    RuntimeException stopException = null;
-    try {
-      pipelineElement.onPipelineStopped();
-    } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
-    } finally {
-      pipelineStarted = false;
-    }
-    try {
-      postDiscard();
-    } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
-    }
-
-    if (stopException != null) {
-      throw stopException;
-    }
-  }
-
-  @Override
-  protected void afterStartFailed() {
-    RuntimeException cleanupException = null;
-    try {
-      super.afterStartFailed();
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    }
-    try {
-      if (pipelineStarted) {
-        pipelineElement.onPipelineStopped();
-      }
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    } finally {
-      pipelineStarted = false;
-    }
-
-    if (cleanupException != null) {
-      throw cleanupException;
-    }
+    runCleanup(() -> stopPipeline(pipelineElement::onPipelineStopped), this::postDiscard);
   }
 }

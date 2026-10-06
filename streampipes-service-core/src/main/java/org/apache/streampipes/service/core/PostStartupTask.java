@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.service.core;
 
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
@@ -33,9 +34,9 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,20 +64,23 @@ public class PostStartupTask implements Runnable {
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final SpResourceManager resourceManager;
 
-  private final INoSqlStorage storage = StorageDispatcher.INSTANCE.getNoSqlStore();
+  private final IExtensionsServiceStorage extensionsServiceStorage;
 
   public PostStartupTask(IPipelineStorage pipelineStorage,
+                         IAdapterStorage adapterDescriptionStorage,
+                         IExtensionsServiceStorage extensionsServiceStorage,
                          ExtensionServiceRequestManager extensionServiceRequestManager,
                          WorkerRestClient workerRestClient,
                          SpResourceManager resourceManager,
                          List<HealthCheck> registeredHealthChecks,
                          Duration healthCheckInterval) {
     this.pipelineStorage = pipelineStorage;
+    this.extensionsServiceStorage = extensionsServiceStorage;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.resourceManager = resourceManager;
     this.workerAdministrationManagement = new WorkerAdministrationManagement(
-        storage.getAdapterDescriptionStorage(),
+        adapterDescriptionStorage,
         resourceManager,
         extensionServiceRequestManager);
     this.postStartupRecovery = new PostStartupRecovery(
@@ -88,11 +92,12 @@ public class PostStartupTask implements Runnable {
                     resourceManager,
                     AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
                     workerRestClient,
-                    StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
-                    extensionServiceRequestManager
+                    extensionsServiceStorage,
+                    extensionServiceRequestManager,
+                    new AdapterAuditRecorder(resourceManager.getAuditService())
                 )
             ),
-            StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+            extensionsServiceStorage,
             extensionServiceRequestManager,
             resourceManager,
             registeredHealthChecks,
@@ -103,14 +108,14 @@ public class PostStartupTask implements Runnable {
 
   @Override
   public void run() {
-    new ServiceHealthCheck(storage.getExtensionsServiceStorage(), extensionServiceRequestManager, resourceManager).run();
+    new ServiceHealthCheck(extensionsServiceStorage, extensionServiceRequestManager, resourceManager).run();
     performAdapterAssetUpdate();
     startAllPreviouslyStoppedPipelines();
     runHealthCheckOnce();
   }
 
   private void performAdapterAssetUpdate() {
-    var installedAppIds = storage.getExtensionsServiceStorage()
+    var installedAppIds = extensionsServiceStorage
         .findAll()
         .stream()
         .flatMap(config -> config.getTags()

@@ -64,7 +64,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dataSeries, err := streamPipesClient.DataLakeMeasures().GetSingleDataSeries("measureName")
+	dataSeries, err := streamPipesClient.Datasets().GetSingleDataSeries("measureName")
 	if err != nil {
 		log.Fatal(err)
 	}

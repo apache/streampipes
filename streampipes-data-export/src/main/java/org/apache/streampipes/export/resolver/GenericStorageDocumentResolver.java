@@ -20,7 +20,9 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,10 +39,16 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   private static final Logger LOG = LoggerFactory.getLogger(GenericStorageDocumentResolver.class);
 
+  private final IGenericStorage genericStorage;
+
+  public GenericStorageDocumentResolver(IGenericStorage genericStorage) {
+    this.genericStorage = genericStorage;
+  }
+
   @Override
   public Map<String, Object> findDocument(String resourceId) {
     try {
-      return getNoSqlStore().getGenericStorage().findOne(resourceId);
+      return genericStorage.findOne(resourceId);
     } catch (IOException e) {
       return null;
     }
@@ -70,7 +78,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   public void writeDocument(String document, AssetExportConfiguration config)
       throws JsonProcessingException, DocumentConflictException {
     try {
-      getNoSqlStore().getGenericStorage().create(document);
+      genericStorage.create(document);
     } catch (IOException e) {
       LOG.warn("Could not write document");
     }
@@ -85,12 +93,12 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     try {
       var asset = readDocument(document);
       var resourceId = asset.get("_id").toString();
-      var storedAsset = getNoSqlStore().getGenericStorage().findOne(resourceId);
-      getNoSqlStore().getGenericStorage().delete(resourceId, storedAsset.get("_rev").toString());
+      var storedAsset = genericStorage.findOne(resourceId);
+      genericStorage.delete(resourceId, storedAsset.get("_rev").toString());
     } catch (IOException e) {
       // Do nothing
     }

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -34,6 +34,7 @@ export interface DailyEventCount {
     selector: 'sp-daily-event-counts-chart',
     templateUrl: './daily-event-counts-chart.component.html',
     styleUrls: ['./daily-event-counts-chart.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

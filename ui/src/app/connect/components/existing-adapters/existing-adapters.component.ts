@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
     AdapterMonitoringService,
@@ -62,7 +69,6 @@ import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { Subscription } from 'rxjs';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -80,6 +86,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
     styleUrls: ['./existing-adapters.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         FlexDirective,
@@ -136,7 +143,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         new MatTableDataSource();
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
-    tutorialActive = false;
     readonly bulkAdapterActionOptions: SpTableMultiActionOption[] = [
         { value: 'start', label: 'Start selected', icon: 'play_arrow' },
         { value: 'stop', label: 'Stop selected', icon: 'stop' },
@@ -144,7 +150,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     assetFilter$: Subscription;
     user$: Subscription;
-    tutorial$: Subscription;
     currentFilterIds: Set<string> = new Set<string>();
 
     startAdapterErrorText = 'Could not start adapter';
@@ -156,7 +161,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private router = inject(Router);
     private pipelineElementAssetService = inject(PipelineElementAssetService);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private shepherdService = inject(ShepherdService);
     private translate = inject(TranslateService);
     private adapterMonitoringService = inject(AdapterMonitoringService);
     private assetFilterService = inject(SpAssetBrowserService);
@@ -199,11 +203,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.user$ = this.currentUserService.user$.subscribe(_user => {
             this.getAdaptersRunning();
         });
-        this.tutorial$ = this.shepherdService.tutorialActive$.subscribe(
-            tutorialActive => {
-                this.tutorialActive = tutorialActive;
-            },
-        );
     }
 
     startAdapter(adapter: AdapterSummaryDto): void {
@@ -477,14 +476,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.dataSource.data = this.filteredAdapters;
     }
 
-    startAdapterTutorial(): void {
-        this.shepherdService.startAdapterTour();
-    }
-
     createNewAdapter(): void {
-        this.router.navigate(['connect', 'catalog']).then(() => {
-            this.shepherdService.trigger('new-adapter-clicked');
-        });
+        this.router.navigate(['connect', 'catalog']);
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterSummaryDto): void {
@@ -493,7 +486,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.user$?.unsubscribe();
-        this.tutorial$?.unsubscribe();
         this.assetFilter$?.unsubscribe();
     }
 }

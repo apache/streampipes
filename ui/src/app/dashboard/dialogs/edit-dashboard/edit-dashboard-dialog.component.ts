@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     Dashboard,
@@ -57,6 +58,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-dashboard-dialog-component',
     templateUrl: './edit-dashboard-dialog.component.html',
     styleUrls: ['./edit-dashboard-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

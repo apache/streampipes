@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Privilege,
     PrivilegeService,
@@ -54,6 +60,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-role-dialog',
     templateUrl: './edit-role-dialog.component.html',
     styleUrls: ['./edit-role-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -16,10 +16,10 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EMPTY } from 'rxjs';
 import {
@@ -42,6 +42,7 @@ import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-de
 
 @Component({
     selector: 'sp-pipeline-preview',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<ng-content />',
 })
 class PreviewStubComponent {
@@ -52,6 +53,7 @@ class PreviewStubComponent {
 
 @Component({
     selector: 'sp-pipeline-details-expansion-panel',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '',
 })
 class InspectorStubComponent {
@@ -63,8 +65,9 @@ class InspectorStubComponent {
 describe('Pipeline details workspace', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SpPipelineDetailsComponent, TranslateModule.forRoot()],
+            imports: [SpPipelineDetailsComponent],
             providers: [
+                provideTranslateService(),
                 provideRouter([]),
                 ...[
                     ActivatedRoute,

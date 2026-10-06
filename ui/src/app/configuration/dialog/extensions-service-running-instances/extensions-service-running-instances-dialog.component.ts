@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
@@ -81,6 +87,7 @@ type PendingRemoval =
     selector: 'sp-extensions-service-running-instances-dialog',
     templateUrl: './extensions-service-running-instances-dialog.component.html',
     styleUrls: ['./extensions-service-running-instances-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutAlignDirective,

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Pipeline,
     PipelineCanvasMetadata,
@@ -60,6 +65,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-editor',
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

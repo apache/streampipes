@@ -21,8 +21,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MultipartUtils } from './multipart-utils';
+import { MessagingSettings } from './messaging-settings.model';
 import {
-    MessagingSettings,
     SpServiceConfiguration,
     SpServiceRegistration,
 } from '@streampipes/platform-services';

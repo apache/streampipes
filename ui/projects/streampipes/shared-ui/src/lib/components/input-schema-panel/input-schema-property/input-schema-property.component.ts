@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 import { PipelineElementSchemaService } from '../../../services/pipeline-element-schema.service';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -24,6 +30,7 @@ import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 @Component({
     selector: 'sp-input-schema-property',
     templateUrl: './input-schema-property.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, FlexDirective],
 })
 export class InputSchemaPropertyComponent implements OnInit {

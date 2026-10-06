@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
 import { SpQueryResult } from '@streampipes/platform-services';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
@@ -48,6 +48,7 @@ interface DayBucket extends DailyEventCount {
     selector: 'sp-dataset-details-metrics',
     templateUrl: './dataset-details-metrics.component.html',
     styleUrls: ['./dataset-details-metrics.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpDatasetDetailsLayoutComponent,
         LayoutDirective,

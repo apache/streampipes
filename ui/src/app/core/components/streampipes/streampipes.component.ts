@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
     CurrentUserService,
@@ -49,6 +55,7 @@ import { ShortcutDialogComponent } from '../../../help/components/shortcuts/shor
             transition(':leave', [animate('1000ms', style({ opacity: 0 }))]),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgClass,
         ClassDirective,

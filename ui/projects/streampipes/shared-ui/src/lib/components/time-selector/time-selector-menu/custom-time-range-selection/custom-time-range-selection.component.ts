@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     TimeSelectionConstants,
@@ -52,6 +53,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-custom-time-range-selection',
     templateUrl: 'custom-time-range-selection.component.html',
     styleUrls: ['./custom-time-range-selection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

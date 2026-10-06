@@ -25,11 +25,12 @@ import {
     Output,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
     DatasetSummaryDto,
     DatalakeRestService,
     SourceConfig,
@@ -81,6 +82,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-data-settings',
     templateUrl: './chart-data-settings.component.html',
     styleUrls: ['./chart-data-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -124,16 +126,16 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);
 
     @Input() dataConfig: DataExplorerDataConfig;
-    @Input() dataLakeMeasure: DataLakeMeasure;
+    @Input() dataLakeMeasure: DatasetMetadata;
     @Input() newWidgetMode: boolean;
     @Input() widgetId: string;
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     @Output() createWidgetEmitter: EventEmitter<
-        Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
-    > = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
-    @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> =
-        new EventEmitter<DataLakeMeasure>();
+        Tuple2<DatasetMetadata, DataExplorerWidgetModel>
+    > = new EventEmitter<Tuple2<DatasetMetadata, DataExplorerWidgetModel>>();
+    @Output() dataLakeMeasureChange: EventEmitter<DatasetMetadata> =
+        new EventEmitter<DatasetMetadata>();
     @Output() configureVisualizationEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
@@ -270,7 +272,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     }
 
     private applySelectedMeasurement(
-        measure: DataLakeMeasure,
+        measure: DatasetMetadata,
         resetQueryConfig: boolean,
         refreshData: boolean,
     ): void {

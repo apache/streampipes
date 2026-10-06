@@ -18,7 +18,13 @@
 
 import { CodeInputStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import type * as monacoType from 'monaco-editor';
 import type { editor as MonacoEditor } from 'monaco-editor';
 import {
@@ -41,6 +47,7 @@ declare const monaco: typeof monacoType;
     selector: 'sp-static-code-input',
     templateUrl: './static-code-input.component.html',
     styleUrls: ['./static-code-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

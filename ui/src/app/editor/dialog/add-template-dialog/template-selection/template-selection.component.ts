@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { CompactPipelineTemplate } from '@streampipes/platform-services';
 import {
     LayoutAlignDirective,
@@ -29,6 +35,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-template-selection',
     templateUrl: './template-selection.component.html',
     styleUrls: ['./template-selection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import {
     DataExplorerDataConfig,
@@ -29,6 +29,7 @@ import { SelectRetentionActionComponent } from './select-retention-action/select
     selector: 'sp-select-data',
     templateUrl: './select-data.component.html',
     styleUrls: ['./select-data.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SelectDataRetentionComponent, SelectRetentionActionComponent],
 })
 export class SelectDataComponent {

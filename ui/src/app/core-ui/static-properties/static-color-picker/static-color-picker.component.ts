@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { StaticPropertyUtilService } from '../static-property-util.service';
 import {
     FormsModule,
@@ -34,6 +39,7 @@ import { ColorPickerDirective } from 'ngx-color-picker';
     selector: 'sp-app-static-color-picker',
     templateUrl: './static-color-picker.component.html',
     styleUrls: ['./static-color-picker.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

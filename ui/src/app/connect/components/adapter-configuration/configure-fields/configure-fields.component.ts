@@ -23,6 +23,7 @@ import {
     inject,
     Input,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AdapterDescription,
@@ -52,6 +53,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-configure-fields',
     templateUrl: './configure-fields.component.html',
     styleUrls: ['./configure-fields.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

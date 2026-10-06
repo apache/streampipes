@@ -37,6 +37,14 @@ cd ./tool
 ./start-streampipes-client-e2e.sh -h 127.0.0.1 -p 8030 -u admin@streampipes.apache.org -pw admin -t java-client-e2e.sh -s lb
 ```
 
+Before starting either client-test Compose stack, generate and export a credential:
+
+```shell
+export SP_SERVICE_SECRET="$(openssl rand -hex 32)"
+```
+
+Keep this value unchanged while restarting containers that use the same database.
+
 ## Usage Instructions
 | Parameter | Default          | Required | Description                                                    |
 |-----------|-------------------|----------|----------------------------------------------------------------|

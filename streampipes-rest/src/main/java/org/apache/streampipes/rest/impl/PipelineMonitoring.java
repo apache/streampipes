@@ -57,6 +57,7 @@ public class PipelineMonitoring extends AbstractMonitoringResource {
   public ResponseEntity<Map<String, List<SpLogEntry>>> getLogInfoForPipeline(
       @PathVariable("pipelineId") String pipelineId
   ) {
+    new ExtensionsServiceLogExecutor(extensionServiceRequestManager, resourceManager).triggerUpdate();
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForPipeline(
         resourceManager.managePipelines().getDb(), pipelineId));
   }

@@ -50,7 +50,7 @@ describe('Test Time Range Selectors in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         periods.forEach(period => {

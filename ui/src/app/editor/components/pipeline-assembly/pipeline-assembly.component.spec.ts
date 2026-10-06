@@ -20,7 +20,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Pipeline, PermissionsService } from '@streampipes/platform-services';
 import {
@@ -44,8 +44,9 @@ import { IdGeneratorService } from '../../../core-services/id-generator/id-gener
 describe('Pipeline editor workspace header', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [PipelineAssemblyComponent, TranslateModule.forRoot()],
+            imports: [PipelineAssemblyComponent],
             providers: [
+                provideTranslateService(),
                 provideRouter([]),
                 ...[
                     PipelinePositioningService,

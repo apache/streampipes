@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AssetSiteDesc } from '@streampipes/platform-services';
 import {
     FormControl,
@@ -26,10 +31,10 @@ import {
 } from '@angular/forms';
 import { checkForDuplicatesValidator } from '../../../../../core-ui/static-properties/input.validator';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -41,13 +46,14 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-asset-location-area-component',
     templateUrl: './edit-location-area.component.html',
     styleUrls: ['./edit-location-area.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        DefaultLayoutDirective,
-        DefaultLayoutGapDirective,
+        LayoutDirective,
+        LayoutGapDirective,
         FormsModule,
         ReactiveFormsModule,
-        DefaultFlexDirective,
-        DefaultLayoutAlignDirective,
+        FlexDirective,
+        LayoutAlignDirective,
         MatIconButton,
         MatIcon,
         MatFormField,

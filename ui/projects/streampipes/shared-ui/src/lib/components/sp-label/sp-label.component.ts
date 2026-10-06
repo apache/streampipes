@@ -23,12 +23,14 @@ import {
     OnChanges,
     SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SpColorizationService } from '../../services/colorization.service';
 
 @Component({
     selector: 'sp-label',
     templateUrl: './sp-label.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./sp-label.component.scss'],
 })
 export class SpLabelComponent implements OnChanges {

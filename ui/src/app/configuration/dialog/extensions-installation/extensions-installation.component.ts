@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     ExtensionInstallationService,
@@ -32,6 +37,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'sp-extensions-installation-dialog',
     templateUrl: './extensions-installation.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

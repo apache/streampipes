@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     MatCell,
@@ -70,6 +71,7 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: [
         '../../../../chart/components/chart-overview/chart-overview.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

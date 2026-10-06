@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    TemplateRef,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
     ExtensionDeploymentConfiguration,
@@ -37,6 +43,7 @@ export type GroupRenderCtx = {
     selector: 'sp-app-static-group',
     templateUrl: './static-group.component.html',
     styleUrls: ['./static-group.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, NgTemplateOutlet],
 })
 export class StaticGroupComponent

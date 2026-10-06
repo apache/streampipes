@@ -19,10 +19,10 @@
 import {
     Component,
     EventEmitter,
-    inject,
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataType,
@@ -34,7 +34,6 @@ import {
     MatSelect,
     MatSelectChange,
 } from '@angular/material/select';
-import { ShepherdService } from '../../../../../../services/tour/shepherd.service';
 import { MatFormField } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -47,11 +46,10 @@ type PropertyScope =
 @Component({
     selector: 'sp-event-property-scope',
     templateUrl: './event-property-scope.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatFormField, MatSelect, MatOption, TranslatePipe],
 })
 export class EventPropertyScopeComponent implements OnInit {
-    private shepherdService = inject(ShepherdService);
-
     @Input()
     eventProperty: EventPropertyPrimitive;
 
@@ -95,7 +93,6 @@ export class EventPropertyScopeComponent implements OnInit {
                     this.eventProperty.runtimeType;
             }
             this.eventProperty.runtimeType = DataType.LONG;
-            this.shepherdService.trigger('timestamp-property-selected');
         } else {
             if (this.currentScope === 'TIMESTAMP_PROPERTY') {
                 this.eventProperty.semanticType = undefined;

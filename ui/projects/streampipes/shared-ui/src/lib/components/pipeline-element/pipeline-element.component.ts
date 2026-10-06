@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
     DataProcessorInvocation,
@@ -32,6 +37,7 @@ import { ClassDirective } from '@ngbracket/ngx-layout/extended';
     selector: 'sp-pipeline-element',
     templateUrl: './pipeline-element.component.html',
     styleUrls: ['./pipeline-element.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, ClassDirective],
 })
 export class PipelineElementComponent {
@@ -39,9 +45,7 @@ export class PipelineElementComponent {
     iconText: any;
 
     pipelineElement_:
-        | SpDataStream
-        | DataProcessorInvocation
-        | DataSinkInvocation;
+        SpDataStream | DataProcessorInvocation | DataSinkInvocation;
 
     @Input()
     iconSize: any;
@@ -99,9 +103,7 @@ export class PipelineElementComponent {
     @Input()
     set pipelineElement(
         pipelineElement:
-            | SpDataStream
-            | DataProcessorInvocation
-            | DataSinkInvocation,
+            SpDataStream | DataProcessorInvocation | DataSinkInvocation,
     ) {
         this.pipelineElement_ = pipelineElement;
         this.iconText = this.pipelineElementIconTextService.getElementIconText(

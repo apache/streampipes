@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataExplorerWidgetModel,
@@ -44,6 +45,7 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
     selector: 'sp-chart-view-toolbar',
     templateUrl: './chart-view-toolbar.component.html',
     styleUrls: ['./chart-view-toolbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatButton,
         MatTooltip,

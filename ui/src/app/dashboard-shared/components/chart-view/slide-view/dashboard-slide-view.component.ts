@@ -16,12 +16,18 @@
  *
  */
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import {
     ClientDashboardItem,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
 } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -36,6 +42,7 @@ import { ChartContainerComponent } from '../../../../chart-shared/components/cha
     selector: 'sp-dashboard-slide-view',
     templateUrl: './dashboard-slide-view.component.html',
     styleUrls: ['./dashboard-slide-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -51,7 +58,7 @@ export class DashboardSlideViewComponent
 {
     selectedWidgetIndex = 0;
     currentWidget: DataExplorerWidgetModel;
-    currentMeasure: DataLakeMeasure;
+    currentMeasure: DatasetMetadata;
     currentDashboardItem: ClientDashboardItem;
 
     displayWidget = false;

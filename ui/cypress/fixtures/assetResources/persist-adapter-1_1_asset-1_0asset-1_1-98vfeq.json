@@ -6,9 +6,9 @@
       "rev": null,
       "dom": "jsplumb_lake",
       "connectedTo": ["jsplumb_stream1"],
-      "name": "Data Lake",
-      "description": "Stores events in the internal data lake.",
-      "appId": "org.apache.streampipes.sinks.internal.jvm.datalake",
+      "name": "Dataset",
+      "description": "Stores events in the internal dataset.",
+      "appId": "org.apache.streampipes.sinks.internal.jvm.dataset",
       "includesAssets": true,
       "includesLocales": true,
       "includedAssets": ["documentation.md", "icon.png"],
@@ -235,7 +235,7 @@
           "defaultValue": false
         }
       ],
-      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.datalake",
+      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.dataset",
       "correspondingPipeline": "persist-adapter-1_1_asset-1_0.asset-1_1-98vfeq",
       "correspondingUser": "83b1d4725ccc4f49a632d36b54dddc13",
       "streamRequirements": [

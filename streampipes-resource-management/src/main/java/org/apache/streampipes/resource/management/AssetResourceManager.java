@@ -31,8 +31,9 @@ public class AssetResourceManager extends CrudResourceManager<SpAssetModel, IAss
   private final SpPermissionEvaluator permissionEvaluator;
 
   public AssetResourceManager(IAssetStorage assetStorage,
-                              PermissionResourceManager permissionResourceManager) {
-    super(assetStorage, SpAssetModel.class, permissionResourceManager);
+                              PermissionResourceManager permissionResourceManager,
+                              ResourceDeletionManager resourceDeletionManager) {
+    super(assetStorage, SpAssetModel.class, permissionResourceManager, resourceDeletionManager);
     this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 

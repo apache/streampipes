@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogService,
     PanelType,
@@ -40,6 +46,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     templateUrl: './files.component.html',
     styleUrls: ['./files.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         LayoutDirective,

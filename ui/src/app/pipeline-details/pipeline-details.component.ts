@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
@@ -65,6 +72,7 @@ import { MeasurementUpdateAction } from '../pipelines/model/pipeline-model';
     selector: 'sp-pipeline-details-overview-component',
     templateUrl: './pipeline-details.component.html',
     styleUrls: ['./pipeline-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,

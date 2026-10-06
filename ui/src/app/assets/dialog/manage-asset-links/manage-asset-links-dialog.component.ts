@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, HostListener, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    HostListener,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
@@ -33,6 +40,7 @@ import { AssetLinkTableComponent } from './asset-link-table/asset-link-table.com
 @Component({
     selector: 'sp-manage-asset-links-dialog-component',
     templateUrl: './manage-asset-links-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         MatButton,
@@ -127,8 +135,8 @@ export class SpManageAssetLinksDialogComponent
                 this.makeResourceRow(
                     measure.elementId,
                     measure.measureName,
-                    'Data Lake Storage',
-                    'measurement',
+                    'Dataset',
+                    'dataset',
                 ),
             ),
             ...this.dataSources.map(source =>
@@ -136,7 +144,7 @@ export class SpManageAssetLinksDialogComponent
                     source.elementId,
                     source.name,
                     'Data Stream',
-                    'data-source',
+                    'data-stream',
                 ),
             ),
             ...this.files.map(file =>

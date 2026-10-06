@@ -22,10 +22,12 @@ import {
     Input,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DataExplorerDataConfig,
+    DatasetMetadata,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { ChartDataSettingsComponent } from './data-settings/chart-data-settings.component';
@@ -45,6 +47,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-designer-panel',
     templateUrl: './chart-designer-panel.component.html',
     styleUrls: ['./chart-designer-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexFillDirective,
         LayoutDirective,
@@ -62,12 +65,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class ChartDesignerPanelComponent {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
-    @Input() dataLakeMeasure: DataLakeMeasure;
+    @Input() dataLakeMeasure: DatasetMetadata;
     @Input() newWidgetMode = false;
 
     @Output() addWidgetEmitter: EventEmitter<
-        Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
-    > = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+        Tuple2<DatasetMetadata, DataExplorerWidgetModel>
+    > = new EventEmitter<Tuple2<DatasetMetadata, DataExplorerWidgetModel>>();
 
     @Output() closeDesignerPanelEmitter = new EventEmitter();
 
@@ -102,5 +105,9 @@ export class ChartDesignerPanelComponent {
     @ViewChild('dataSettingsPanel')
     public set content(dataSettingsPanel: ChartDataSettingsComponent) {
         this.dataSettingsPanel = dataSettingsPanel;
+    }
+    get dataConfig(): DataExplorerDataConfig {
+        return this.currentlyConfiguredWidget
+            .dataConfig as DataExplorerDataConfig;
     }
 }

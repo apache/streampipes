@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { OneOfStaticProperty } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
@@ -29,6 +35,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
     selector: 'sp-static-one-of-input',
     templateUrl: './static-one-of-input.component.html',
     styleUrls: ['./static-one-of-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -36,6 +36,7 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,8 +62,9 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
                                          IDataProcessorStorage dataProcessorStorage,
                                          IDataSinkStorage dataSinkStorage,
                                          ExtensionServiceRequestManager extensionServiceRequestManager,
-                                         SpResourceManager resourceManager) {
-    super(extensionServiceRequestManager, resourceManager);
+                                         SpResourceManager resourceManager,
+                                         IPipelineElementDescriptionStorage descriptionStorage) {
+    super(extensionServiceRequestManager, resourceManager, descriptionStorage);
     this.pipelineStorage = pipelineStorage;
     this.dataProcessorStorage = dataProcessorStorage;
     this.dataSinkStorage = dataSinkStorage;

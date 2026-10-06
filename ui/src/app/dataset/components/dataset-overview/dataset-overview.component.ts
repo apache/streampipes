@@ -16,6 +16,7 @@
  *
  */
 
+import { DatePipe } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -23,6 +24,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -40,7 +42,7 @@ import {
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
-    DataLakeMeasure,
+    DatasetMetadata,
     DatalakeRestService,
     DatasetSummaryDto,
     ExportProviderService,
@@ -66,6 +68,8 @@ import {
     SpTableActionsDirective,
     SpTableAssetContextConfig,
     SpTableComponent,
+    SpTableMultiActionExecuteEvent,
+    SpTableMultiActionOption,
 } from '@streampipes/shared-ui';
 import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
@@ -98,7 +102,9 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
     selector: 'sp-dataset-overview',
     templateUrl: './dataset-overview.component.html',
     styleUrls: ['./dataset-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        DatePipe,
         LayoutDirective,
         LayoutAlignDirective,
         FlexDirective,
@@ -152,19 +158,72 @@ export class DatasetOverviewComponent
     private router = inject(Router);
 
     readonly pageHeaderAssetLinkType$ =
-        this.assetFilterService.getAssetLinkType$('measurement');
+        this.assetFilterService.getAssetLinkType$('dataset');
     dataSource: MatTableDataSource<DatasetOverviewEntry> =
         new MatTableDataSource([]);
     availableDatasets: DatasetOverviewEntry[] = [];
     filteredDatasets: DatasetOverviewEntry[] = [];
     availableExportProvider: ExportProviderSettings[] = [];
     readonly assetContextConfig: SpTableAssetContextConfig = {
-        resourceLinkType: 'measurement',
+        resourceLinkType: 'dataset',
         resourceIdKey: 'elementId',
     };
 
     dataSourceExport: MatTableDataSource<ExportProviderSettings> =
         new MatTableDataSource([]);
+
+    readonly bulkDatasetActionOptions: SpTableMultiActionOption[] = [
+        {
+            value: 'truncate',
+            label: this.translateService.instant('Truncate selected'),
+            icon: 'local_fire_department',
+        },
+        {
+            value: 'delete',
+            label: this.translateService.instant('Delete selected'),
+            icon: 'delete',
+        },
+    ];
+
+    executeSelectedDatasetAction(
+        event: SpTableMultiActionExecuteEvent<DatasetOverviewEntry>,
+    ): void {
+        if (
+            !this.writeAccess ||
+            !event.selectedRows.length ||
+            (event.action !== 'delete' && event.action !== 'truncate')
+        ) {
+            return;
+        }
+        const deleteDialog = event.action === 'delete';
+        const datasets = event.selectedRows.filter(
+            dataset => !deleteDialog || dataset.remove,
+        );
+        const dialogRef = this.dialogService.open(
+            DeleteDatasetDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                disableClose: true,
+                title: this.translateService.instant(
+                    deleteDialog ? 'Delete data' : 'Truncate data',
+                ),
+                width: '70vw',
+                data: {
+                    datasetNames: datasets.map(dataset => dataset.name),
+                    skippedDatasetNames: event.selectedRows
+                        .filter(dataset => deleteDialog && !dataset.remove)
+                        .map(dataset => dataset.name),
+                    deleteDialog,
+                },
+            },
+        );
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh || dialogRef.componentInstance?.instance?.hasChanges) {
+                this.spTable.clearSelection();
+                this.loadAvailableDatasets();
+            }
+        });
+    }
 
     displayedColumns: string[] = [
         'name',
@@ -207,7 +266,7 @@ export class DatasetOverviewComponent
     }
 
     ngOnInit(): void {
-        this.assetFilterService.applyAssetLinkType('measurement');
+        this.assetFilterService.applyAssetLinkType('dataset');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
                 this.currentFilterIds = filter?.activeElementIds;
@@ -461,14 +520,14 @@ export class DatasetOverviewComponent
     showPermissionsDialog(element: DatasetOverviewEntry): void {
         this.datasetRestService.getMeasurement(element.elementId).subscribe({
             next: dataset => {
-                const resourceConfig: ObjectManageDialogResourceConfig<DataLakeMeasure> =
+                const resourceConfig: ObjectManageDialogResourceConfig<DatasetMetadata> =
                     {
                         resourceLabel: 'Dataset',
                         nameLabel: 'Dataset name',
                         nameProperty: 'measureName',
                         resourceNameReadonly: true,
                         showResourceDescription: false,
-                        assetLinkType: 'measurement',
+                        assetLinkType: 'dataset',
                     };
 
                 const dialogRef = this.dialogService.open(
@@ -552,7 +611,7 @@ export class DatasetOverviewComponent
         return entry;
     }
 
-    private openRetentionLogDialog(dataset: DataLakeMeasure): void {
+    private openRetentionLogDialog(dataset: DatasetMetadata): void {
         const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
             this.dialogService.open(DataRetentionLogDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,

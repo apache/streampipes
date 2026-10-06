@@ -18,7 +18,7 @@
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
@@ -41,6 +41,7 @@ interface CodeSnippet {
     selector: 'sp-transformation-script-documentation-dialog',
     templateUrl: './transformation-script-documentation-dialog.component.html',
     styleUrl: './transformation-script-documentation-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ClipboardModule,
         LayoutDirective,

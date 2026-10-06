@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataType,
     EventPropertyPrimitive,
@@ -29,6 +36,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
     selector: 'sp-edit-data-type',
     templateUrl: './edit-data-type.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatFormField, FlexDirective, MatSelect, FormsModule, MatOption],
 })
 export class EditDataTypeComponent implements OnInit {

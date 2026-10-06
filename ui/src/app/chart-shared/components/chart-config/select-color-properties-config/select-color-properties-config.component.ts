@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
@@ -37,6 +38,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-select-color-properties-config',
     templateUrl: './select-color-properties-config.component.html',
     styleUrls: ['./select-color-properties-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatButton,

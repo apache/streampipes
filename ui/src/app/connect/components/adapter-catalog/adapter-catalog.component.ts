@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
@@ -43,6 +48,7 @@ import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
     selector: 'sp-adapter-catalog',
     templateUrl: './adapter-catalog.component.html',
     styleUrls: ['./adapter-catalog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         FlexDirective,

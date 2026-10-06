@@ -23,7 +23,7 @@ from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.compact import CompactAdapter
 from streampipes.model.container import Adapters
 from streampipes.model.container.resource_container import ResourceContainer
-from streampipes.model.resource import AdapterSummary
+from streampipes.model.resource import AdapterDescription
 
 __all__ = ["AdapterEndpoint"]
 
@@ -54,12 +54,13 @@ class AdapterEndpoint(APIEndpoint):
         )
         return Adapters.from_json(json_string=response.text)
 
-    def get(self, identifier: str, **kwargs) -> AdapterSummary:
-        """Return one adapter summary by identifier."""
-        for adapter in self.all():
-            if adapter.element_id == identifier:
-                return adapter
-        raise KeyError(f"No adapter summary found for identifier '{identifier}'.")
+    def get(self, identifier: str, **kwargs) -> AdapterDescription:
+        """Return one complete adapter description by identifier."""
+        response = self._make_request(
+            request_method=self._parent_client.request_session.get,
+            url=f"{self.build_url()}/{identifier}",
+        )
+        return AdapterDescription.model_validate(response.json())
 
     def post(self, resource: object) -> None:
         """Create an adapter from its compact representation."""

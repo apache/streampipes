@@ -25,6 +25,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SpAsset, SpAssetModel } from '@streampipes/platform-services';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -69,6 +70,7 @@ const HOVER_EXPAND_DELAY_MS = 500;
     selector: 'sp-asset-selection-panel',
     templateUrl: './asset-selection-panel.component.html',
     styleUrls: ['./asset-selection-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,
@@ -108,6 +110,9 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     @Output()
     selectedAssetEmitter: EventEmitter<{ asset: SpAsset; rootNode: boolean }> =
         new EventEmitter<{ asset: SpAsset; rootNode: boolean }>();
+
+    @Output()
+    moveAssetRequested = new EventEmitter<SpAsset>();
 
     treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
     dataSource = new MatTreeNestedDataSource<SpAsset>();
@@ -195,6 +200,12 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
         move.siblingAssets.splice(move.targetIndex, 0, movedAsset);
         this.rerenderTree();
         this.expandToAsset(node.assetId);
+    }
+
+    requestMoveAsset(node: SpAsset): void {
+        if (!this.isRootNode(node)) {
+            this.moveAssetRequested.emit(node);
+        }
     }
 
     canMoveAssetUp(node: SpAsset): boolean {

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -34,6 +40,7 @@ import { MatIcon } from '@angular/material/icon';
         '../static-runtime-resolvable-tree-input.component.scss',
         './static-tree-input-selected-nodes.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutAlignDirective,
         LayoutDirective,

@@ -16,12 +16,19 @@
  *
  */
 
-import { Component, ElementRef, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import SwaggerUIBundle from 'swagger-ui-dist/swagger-ui-es-bundle.js';
 
 @Component({
     selector: 'sp-apidocs',
     templateUrl: './apidocs.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./apidocs.component.scss'],
 })
 export class ApidocsComponent implements OnInit {

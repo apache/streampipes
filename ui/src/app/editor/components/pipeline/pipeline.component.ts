@@ -16,13 +16,15 @@
  *
  */
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { PipelineEditorService } from '../../services/pipeline-editor.service';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     Component,
+    DestroyRef,
+    ElementRef,
     EventEmitter,
     HostListener,
     Input,
@@ -31,6 +33,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
@@ -85,6 +88,7 @@ import { EnabledPipelineElementFilter } from '../../filter/enabled-pipeline-elem
     selector: 'sp-pipeline',
     templateUrl: './pipeline.component.html',
     styleUrls: ['./pipeline.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle,
         StyleDirective,
@@ -97,13 +101,14 @@ import { EnabledPipelineElementFilter } from '../../filter/enabled-pipeline-elem
     ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
+    private destroyRef = inject(DestroyRef);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private jsplumbService = inject(JsplumbService);
     private pipelineEditorService = inject(PipelineEditorService);
     private jsplumbFactoryService = inject(JsplumbFactoryService);
     private objectProvider = inject(ObjectProvider);
     private editorService = inject(EditorService);
     private idGeneratorService = inject(IdGeneratorService);
-    private shepherdService = inject(ShepherdService);
     private pipelineStyleService = inject(PipelineStyleService);
     private pipelineValidationService = inject(PipelineValidationService);
     private dialogService = inject(DialogService);
@@ -138,7 +143,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     currentMouseOverElement = '';
     currentPipelineModel: Pipeline;
     idCounter: any;
-    currentZoomLevel: any;
 
     JsplumbBridge: JsplumbBridge;
 
@@ -154,8 +158,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     constructor() {
         this.currentPipelineModel = new Pipeline();
         this.idCounter = 0;
-
-        this.currentZoomLevel = 1;
     }
 
     ngOnInit() {
@@ -253,64 +255,71 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     initAssembly() {
-        ($('#assembly') as any).droppable({
-            tolerance: 'fit',
-            drop: (element, ui) => {
-                const pipelineElementId = ui.draggable.data('pe');
-                const pipelineElement: PipelineElementUnion =
-                    this.findPipelineElementByElementId(pipelineElementId);
-                if (ui.draggable.hasClass('draggable-pipeline-element')) {
-                    this.editorService.makePipelineAssemblyEmpty(false);
-                    const newElementId =
-                        pipelineElement.elementId +
-                        ':' +
-                        this.idGeneratorService.generate(5);
-                    const pipelineElementConfig =
-                        this.jsplumbService.createNewPipelineElementConfig(
-                            pipelineElement,
-                            this.pipelineEditorService.getCoordinates(
-                                ui,
-                                this.currentZoomLevel,
-                            ),
-                            false,
-                            false,
-                            newElementId,
-                        );
+        this.pipelineEditorService.paletteDrop$
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ element: pipelineElement, bounds }) => {
+                const canvas = this.elementRef.nativeElement;
+                if (
+                    this.readonly ||
+                    !this.allElements.some(
+                        element =>
+                            element.elementId === pipelineElement.elementId,
+                    ) ||
+                    !this.pipelineEditorService.fitsInside(
+                        bounds,
+                        canvas.getBoundingClientRect(),
+                    ) ||
+                    !this.pipelineEditorService.fitsInside(
+                        bounds,
+                        canvas.parentElement.getBoundingClientRect(),
+                    )
+                ) {
+                    return;
+                }
+                this.editorService.makePipelineAssemblyEmpty(false);
+                const newElementId =
+                    pipelineElement.elementId +
+                    ':' +
+                    this.idGeneratorService.generate(5);
+                const pipelineElementConfig =
+                    this.jsplumbService.createNewPipelineElementConfig(
+                        pipelineElement,
+                        this.pipelineEditorService.getCoordinates(
+                            bounds,
+                            canvas,
+                        ),
+                        false,
+                        false,
+                        newElementId,
+                    );
 
-                    this.rawPipelineModel.push(pipelineElementConfig);
+                this.rawPipelineModel.push(pipelineElementConfig);
 
-                    if (pipelineElementConfig.type === 'stream') {
-                        this.checkTopicModel(pipelineElementConfig);
-                    } else if (pipelineElementConfig.type === 'sepa') {
-                        setTimeout(() => {
-                            this.jsplumbService.dataProcessorDropped(
-                                pipelineElementConfig.payload.dom,
-                                pipelineElementConfig.payload as DataProcessorInvocation,
-                                true,
-                                false,
-                            );
-                        }, 10);
-                    } else if (pipelineElementConfig.type === 'action') {
-                        setTimeout(() => {
-                            this.jsplumbService.dataSinkDropped(
-                                pipelineElementConfig.payload.dom,
-                                pipelineElementConfig.payload as DataSinkInvocation,
-                                true,
-                                false,
-                            );
-                        }, 10);
-                    }
-                    if (this.shepherdService.isTourActive()) {
-                        this.shepherdService.trigger(
-                            'drop-' + pipelineElementConfig.type,
+                if (pipelineElementConfig.type === 'stream') {
+                    this.checkTopicModel(pipelineElementConfig);
+                } else if (pipelineElementConfig.type === 'sepa') {
+                    setTimeout(() => {
+                        this.jsplumbService.dataProcessorDropped(
+                            pipelineElementConfig.payload.dom,
+                            pipelineElementConfig.payload as DataProcessorInvocation,
+                            true,
+                            false,
                         );
-                    }
+                    }, 10);
+                } else if (pipelineElementConfig.type === 'action') {
+                    setTimeout(() => {
+                        this.jsplumbService.dataSinkDropped(
+                            pipelineElementConfig.payload.dom,
+                            pipelineElementConfig.payload as DataSinkInvocation,
+                            true,
+                            false,
+                        );
+                    }, 10);
                 }
                 this.JsplumbBridge.repaintEverything();
                 this.validatePipeline();
                 this.triggerPipelineCacheUpdateEmitter.emit();
-            },
-        });
+            });
     }
 
     checkTopicModel(pipelineElementConfig: PipelineElementConfig) {

@@ -24,6 +24,7 @@ import {
     OnDestroy,
     OnInit,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { JsplumbBridge } from '../../../../services/jsplumb-bridge.service';
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
@@ -35,6 +36,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-pipeline-assembly-drawing-area-pan-zoom',
     templateUrl: './pipeline-assembly-drawing-area-pan-zoom.component.html',
     styleUrls: ['./pipeline-assembly-drawing-area-pan-zoom.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDivider],
 })
 export class PipelineAssemblyDrawingAreaPanZoomComponent

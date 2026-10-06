@@ -33,6 +33,7 @@ import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -52,11 +53,14 @@ public abstract class AbstractMigrationManager {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractMigrationManager.class);
   protected final ExtensionServiceRequestManager requestManager;
   protected final SpResourceManager resourceManager;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   protected AbstractMigrationManager(ExtensionServiceRequestManager requestManager,
-                                     SpResourceManager resourceManager) {
+                                     SpResourceManager resourceManager,
+                                     IPipelineElementDescriptionStorage descriptionStorage) {
     this.requestManager = requestManager;
     this.resourceManager = resourceManager;
+    this.descriptionStorage = descriptionStorage;
   }
 
   /**
@@ -157,7 +161,7 @@ public abstract class AbstractMigrationManager {
       var entityPayload = requestManager
           .request(ExtensionServiceRequests.descriptionUpdate(requestTarget, resourceManager))
           .responseBody();
-      var updateResult = new TypeExtractor(entityPayload, requestManager, resourceManager)
+      var updateResult = new TypeExtractor(entityPayload, descriptionStorage, requestManager, resourceManager)
           .getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(

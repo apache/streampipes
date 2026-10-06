@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import {
@@ -45,10 +45,14 @@ import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
 
+// Only failure information the backend exposes for OAuth logins.
+const OAUTH_LOGIN_FAILED = 'oauth_login_failed';
+
 @Component({
     selector: 'sp-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
         FlexDirective,
@@ -71,6 +75,7 @@ export class LoginComponent extends BaseLoginPageDirective {
     parentForm: UntypedFormGroup;
     loading = false;
     authenticationFailed = false;
+    oAuthLoginFailed = false;
     credentials: any = {};
 
     returnUrl: string;
@@ -82,6 +87,7 @@ export class LoginComponent extends BaseLoginPageDirective {
 
     doLogin() {
         this.authenticationFailed = false;
+        this.oAuthLoginFailed = false;
         this.loading = true;
         this.loginService.login(this.credentials).subscribe(
             response => {
@@ -109,6 +115,9 @@ export class LoginComponent extends BaseLoginPageDirective {
                 queryParams: { returnUrl: this.returnUrl },
             });
         }
+        this.oAuthLoginFailed =
+            this.route.snapshot.queryParamMap.get('error') ===
+            OAUTH_LOGIN_FAILED;
         this.parentForm = this.fb.group({});
         this.parentForm.addControl(
             'username',

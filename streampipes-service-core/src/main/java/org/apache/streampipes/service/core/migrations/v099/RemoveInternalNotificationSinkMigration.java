@@ -25,7 +25,6 @@ import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -53,11 +52,6 @@ public class RemoveInternalNotificationSinkMigration implements Migration {
                                                  IDataSinkStorage dataSinkStorage) {
     this.pipelineStorage = pipelineStorage;
     this.dataSinkStorage = dataSinkStorage;
-  }
-
-  public RemoveInternalNotificationSinkMigration(IPipelineStorage pipelineStorage) {
-    this(pipelineStorage,
-        StorageDispatcher.INSTANCE.getNoSqlStore().getDataSinkStorage());
   }
 
   @Override

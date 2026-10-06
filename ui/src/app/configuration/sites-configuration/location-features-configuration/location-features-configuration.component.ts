@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -47,6 +54,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-location-features-configuration',
     templateUrl: './location-features-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         SplitSectionComponent,

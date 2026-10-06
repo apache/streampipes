@@ -24,6 +24,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { AssetBrowserData, AssetFilter } from '../../asset-browser.model';
 import { Subscription } from 'rxjs';
@@ -47,6 +48,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-asset-browser-filter',
     templateUrl: 'asset-browser-filter.component.html',
     styleUrl: 'asset-browser-filter.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

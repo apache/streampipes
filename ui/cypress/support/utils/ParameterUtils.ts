@@ -21,7 +21,7 @@ export class ParameterUtils {
         localVariable: string,
         containerVariable: string,
     ): string {
-        if (Cypress.env('DEVELOPMENT')) {
+        if (Cypress.expose('DEVELOPMENT')) {
             return localVariable;
         } else {
             return containerVariable;

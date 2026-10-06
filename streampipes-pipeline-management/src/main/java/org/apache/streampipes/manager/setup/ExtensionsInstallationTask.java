@@ -23,7 +23,7 @@ import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,17 +42,20 @@ public class ExtensionsInstallationTask implements Runnable {
 
   private final InitialSettings settings;
   private final BackgroundTaskNotifier callback;
-  private final INoSqlStorage storage;
+  private final AvailableExtensionsProvider availableExtensionsProvider;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final SpResourceManager resourceManager;
 
   public ExtensionsInstallationTask(InitialSettings settings,
-                                    INoSqlStorage storage,
+                                    AvailableExtensionsProvider availableExtensionsProvider,
+                                    IPipelineElementDescriptionStorage descriptionStorage,
                                     BackgroundTaskNotifier callback,
                                     ExtensionServiceRequestManager extensionServiceRequestManager,
                                     SpResourceManager resourceManager) {
     this.settings = settings;
-    this.storage = storage;
+    this.availableExtensionsProvider = availableExtensionsProvider;
+    this.descriptionStorage = descriptionStorage;
     this.callback = callback;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
@@ -66,7 +69,7 @@ public class ExtensionsInstallationTask implements Runnable {
       int numberOfAttempts = 0;
       do {
 
-        availableExtensions = new AvailableExtensionsProvider(storage).getExtensionItemDescriptions();
+        availableExtensions = availableExtensionsProvider.getExtensionItemDescriptions();
         numberOfAttempts++;
         if (availableExtensions.isEmpty()) {
           LOG.info("Found 0 extensions - waiting {} seconds to make sure all extension services have properly started",
@@ -86,7 +89,8 @@ public class ExtensionsInstallationTask implements Runnable {
             extensionItem,
             settings.getInitialAdminUserSid(),
             extensionServiceRequestManager,
-            resourceManager)
+            resourceManager,
+            descriptionStorage)
         );
       }
 

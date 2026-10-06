@@ -137,11 +137,13 @@ export class PipelineService {
         );
     }
 
-    deleteOwnPipeline(pipelineId): Observable<any> {
+    deleteOwnPipeline(pipelineId: string): Observable<any> {
         return this.http.delete(`${this.apiBasePath}/pipelines/${pipelineId}`);
     }
 
-    getPipelineStatusById(pipelineId): Observable<PipelineStatusMessage[]> {
+    getPipelineStatusById(
+        pipelineId: string,
+    ): Observable<PipelineStatusMessage[]> {
         return this.http
             .get(`${this.apiBasePath}/pipelines/${pipelineId}/status`)
             .pipe(
@@ -183,7 +185,9 @@ export class PipelineService {
      * Validates the given pipeline and returns a pipeline modification message.
      * The message describe how the pipeline should be modified.
      */
-    validatePipeline(pipeline): Observable<PipelineModificationMessage> {
+    validatePipeline(
+        pipeline: Pipeline,
+    ): Observable<PipelineModificationMessage> {
         return this.http
             .post(`${this.apiBasePath}/pipelines/validate`, pipeline)
             .pipe(

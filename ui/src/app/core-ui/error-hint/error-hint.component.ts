@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, computed, input, signal } from '@angular/core';
+import {
+    Component,
+    computed,
+    input,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 import {
     LayoutAlignDirective,
@@ -27,6 +33,7 @@ import {
     selector: 'sp-error-hint',
     templateUrl: './error-hint.component.html',
     styleUrls: ['./error-hint.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, LayoutAlignDirective],
 })
 export class ErrorHintComponent {

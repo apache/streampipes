@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -35,6 +41,7 @@ import { StaticPropertyComponent } from '../../../../../core-ui/static-propertie
     selector: 'sp-configuration-group',
     templateUrl: './configuration-group.component.html',
     styleUrls: ['./configuration-group.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         FlexDirective,

@@ -21,12 +21,7 @@ import { EventSchema } from '../gen/streampipes-model';
 export type CsvImportTargetMode = 'NEW' | 'EXISTING';
 export type CsvImportJobState = 'RUNNING' | 'SUCCEEDED' | 'FAILED';
 export type CsvRuntimeType =
-    | 'STRING'
-    | 'BOOLEAN'
-    | 'INTEGER'
-    | 'LONG'
-    | 'FLOAT'
-    | 'DOUBLE';
+    'STRING' | 'BOOLEAN' | 'INTEGER' | 'LONG' | 'FLOAT' | 'DOUBLE';
 
 export interface CsvImportConfiguration {
     delimiter: string;

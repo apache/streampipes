@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     DataExplorerDataConfig,
     RetentionTimeConfig,
@@ -37,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         './select-data-retention.component.scss',
         // '../select-data.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatFormField,
         MatInput,

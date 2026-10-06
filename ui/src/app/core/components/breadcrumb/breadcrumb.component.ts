@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpBreadcrumbItem, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -27,6 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     styleUrls: ['./breadcrumb.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIcon, TranslatePipe],
 })
 export class SpBreadcrumbComponent implements OnInit, OnDestroy {

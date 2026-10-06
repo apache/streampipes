@@ -22,6 +22,7 @@ import {
     OnInit,
     ViewEncapsulation,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     CurrentUserService,
@@ -71,6 +72,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './edit-user-dialog.component.html',
     styleUrls: ['./edit-user-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

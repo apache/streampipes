@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AssetConstants,
     AssetLinkType,
@@ -61,6 +67,7 @@ import { ChartContainerComponent } from '../../../chart-shared/components/chart-
         FlexDirective,
         ChartContainerComponent,
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./chart-feature-card.component.scss'],
 })
 export class ChartFeatureCardComponent implements OnInit {

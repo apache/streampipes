@@ -22,7 +22,7 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 import {
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
 } from '../model/gen/streampipes-model';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -126,17 +126,17 @@ export class ChartService {
     getPersistedDataStream(
         pipelineId: string,
         measureName: string,
-    ): Observable<DataLakeMeasure> {
+    ): Observable<DatasetMetadata> {
         return this.http
             .get(`${this.persistedDataStreamsUrl}/${pipelineId}/${measureName}`)
-            .pipe(map(response => DataLakeMeasure.fromData(response as any)));
+            .pipe(map(response => DatasetMetadata.fromData(response as any)));
     }
 
-    getAllPersistedDataStreams(): Observable<DataLakeMeasure[]> {
+    getAllPersistedDataStreams(): Observable<DatasetMetadata[]> {
         return this.http.get(this.persistedDataStreamsUrl).pipe(
             map(response => {
                 return (response as any[]).map(p =>
-                    DataLakeMeasure.fromData(p),
+                    DatasetMetadata.fromData(p),
                 );
             }),
         );

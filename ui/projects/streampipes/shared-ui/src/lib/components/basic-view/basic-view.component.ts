@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
@@ -28,6 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-basic-view',
     templateUrl: './basic-view.component.html',
     styleUrls: ['./basic-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatIconButton,

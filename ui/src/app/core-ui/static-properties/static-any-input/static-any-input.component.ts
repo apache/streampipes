@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import { AnyStaticProperty } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -29,6 +29,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
     selector: 'sp-app-static-any-input',
     templateUrl: './static-any-input.component.html',
     styleUrls: ['./static-any-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

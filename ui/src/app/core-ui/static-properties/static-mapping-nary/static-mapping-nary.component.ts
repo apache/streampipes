@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyNary } from '@streampipes/platform-services';
 import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
@@ -34,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-app-static-mapping-nary',
     templateUrl: './static-mapping-nary.component.html',
     styleUrls: ['./static-mapping-nary.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

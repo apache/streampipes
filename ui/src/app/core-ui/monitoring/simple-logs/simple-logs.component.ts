@@ -16,7 +16,7 @@
  *
  // */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -30,6 +30,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-simple-logs',
     templateUrl: './simple-logs.component.html',
     styleUrls: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

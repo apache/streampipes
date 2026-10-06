@@ -20,15 +20,12 @@
 
 @use '@fortawesome/fontawesome-free/css/all.css';
 @use '@jsplumb/browser-ui/css/jsplumbtoolkit.css';
-@use 'shepherd.js/dist/css/shepherd.css';
 @use 'leaflet/dist/leaflet.css';
 @use 'material-icons/iconfont/material-icons.css';
 @use 'quill/dist/quill.snow.css';
 @use 'swagger-ui-dist/swagger-ui.css';
 
 @use 'roboto-fontface/css/roboto/roboto-fontface.css';
-
-@use './sp/shepherd-new';
 
 @use './sp/main';
 @use './sp/spinner';

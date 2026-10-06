@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Certificate } from '@streampipes/platform-services';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpLabelComponent } from '@streampipes/shared-ui';
@@ -24,6 +29,7 @@ import { SpLabelComponent } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-certificate-label',
     templateUrl: './certificate-label.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, SpLabelComponent],
 })
 export class CertificateLabelComponent implements OnInit {

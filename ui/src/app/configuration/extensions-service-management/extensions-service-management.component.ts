@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     SpBreadcrumbService,
@@ -36,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-extensions-service-management',
     templateUrl: './extensions-service-management.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

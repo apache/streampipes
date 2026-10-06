@@ -17,9 +17,4 @@
  */
 
 export type DataTypeString =
-    | 'String'
-    | 'Boolean'
-    | 'Double'
-    | 'Float'
-    | 'Integer'
-    | 'Long';
+    'String' | 'Boolean' | 'Double' | 'Float' | 'Integer' | 'Long';

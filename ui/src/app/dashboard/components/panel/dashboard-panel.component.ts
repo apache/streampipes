@@ -23,6 +23,7 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     firstValueFrom,
@@ -40,7 +41,7 @@ import {
     DashboardService,
     ChartService,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
     LinkageData,
     PermissionsService,
     TimeSelectionConstants,
@@ -119,6 +120,7 @@ import { AsyncPipe } from '@angular/common';
         '../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
     ],
     providers: [DashboardCopyService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AsyncPipe,
         SpBasicViewComponent,
@@ -183,7 +185,7 @@ export class DashboardPanelComponent
 
     public items: Dashboard[];
 
-    dataLakeMeasure: DataLakeMeasure;
+    dataLakeMeasure: DatasetMetadata;
     auth$: Subscription;
     refresh$: Subscription;
     private shortcutReg: ShortcutRegistration;
@@ -310,9 +312,7 @@ export class DashboardPanelComponent
     }
 
     private get activeDashboardView():
-        | DashboardGridViewComponent
-        | DashboardSlideViewComponent
-        | undefined {
+        DashboardGridViewComponent | DashboardSlideViewComponent | undefined {
         return this.viewMode === 'grid'
             ? this.dashboardGrid
             : this.dashboardSlide;

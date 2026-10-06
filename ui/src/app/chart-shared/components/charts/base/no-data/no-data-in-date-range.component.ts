@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TimeSettings } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -31,6 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-no-data-in-date-range',
     templateUrl: './no-data-in-date-range.component.html',
     styleUrls: ['./no-data-in-date-range.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

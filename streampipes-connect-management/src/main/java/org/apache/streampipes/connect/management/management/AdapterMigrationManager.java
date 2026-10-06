@@ -27,6 +27,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,8 +47,9 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
                                  IAdapterStorage adapterDescriptionStorage,
                                  WorkerRestClient workerRestClient,
                                  ExtensionServiceRequestManager extensionServiceRequestManager,
-                                 SpResourceManager resourceManager) {
-    super(extensionServiceRequestManager, resourceManager);
+                                 SpResourceManager resourceManager,
+                                 IPipelineElementDescriptionStorage descriptionStorage) {
+    super(extensionServiceRequestManager, resourceManager, descriptionStorage);
     this.adapterStorage = adapterStorage;
     this.adapterDescriptionStorage = adapterDescriptionStorage;
     this.workerRestClient = workerRestClient;

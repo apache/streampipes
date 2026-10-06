@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     MeasurementUpdateInfo,
@@ -55,6 +61,7 @@ export interface SavePipelineDialogResult {
     selector: 'sp-save-pipeline',
     templateUrl: './save-pipeline.component.html',
     styleUrls: ['./save-pipeline.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -147,14 +154,14 @@ export class SavePipelineComponent implements OnInit {
     private async shouldPerformUpdatePreflight(
         skipPreflight: boolean,
     ): Promise<boolean> {
-        return !skipPreflight && this.updateExisting && this.hasDataLakeSink();
+        return !skipPreflight && this.updateExisting && this.hasDatasetSink();
     }
 
-    private hasDataLakeSink(): boolean {
+    private hasDatasetSink(): boolean {
         return this.pipeline.actions.some(
             action =>
                 action.appId ===
-                'org.apache.streampipes.sinks.internal.jvm.datalake',
+                'org.apache.streampipes.sinks.internal.jvm.dataset',
         );
     }
 

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ServiceAccount } from '@streampipes/platform-services';
 import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
 import { Observable } from 'rxjs';
@@ -44,6 +44,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-security-service-config',
     templateUrl: './security-service-config.component.html',
     styleUrls: ['./security-service-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

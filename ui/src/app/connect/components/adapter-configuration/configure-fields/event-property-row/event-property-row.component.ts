@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataType,
@@ -36,7 +37,6 @@ import {
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -53,6 +53,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-event-property-row',
     templateUrl: './event-property-row.component.html',
     styleUrls: ['./event-property-row.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,
@@ -67,7 +68,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class EventPropertyRowComponent implements OnInit {
     private dialogService = inject(DialogService);
-    private shepherdService = inject(ShepherdService);
 
     @Input() eventProperty: EventProperty;
 
@@ -146,7 +146,9 @@ export class EventPropertyRowComponent implements OnInit {
         return runtimeType.split('#')[1].toUpperCase();
     }
 
-    private isEventPropertyPrimitive(instance: EventProperty): boolean {
+    protected isEventPropertyPrimitive(
+        instance: EventProperty,
+    ): instance is EventPropertyPrimitive {
         return instance instanceof EventPropertyPrimitive;
     }
 
@@ -193,7 +195,6 @@ export class EventPropertyRowComponent implements OnInit {
                 originalProperty: this.originalProperty,
             },
         });
-        this.shepherdService.trigger('adapter-edit-field-clicked');
 
         dialogRef.afterClosed().subscribe(_ => {
             this.timestampProperty = this.isTimestampProperty();

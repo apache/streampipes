@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { GaugeVisConfig, GaugeWidgetModel } from '../model/gauge-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
@@ -37,6 +37,7 @@ import { ResultLabelService } from '../../../../services/result-label.service';
 @Component({
     selector: 'sp-data-explorer-gauge-widget-config',
     templateUrl: './gauge-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

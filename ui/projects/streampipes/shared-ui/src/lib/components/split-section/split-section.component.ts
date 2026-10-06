@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpBasicHeaderTitleComponent } from '../basic-header-title/header-title.component';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 
@@ -24,6 +24,7 @@ import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
     selector: 'sp-split-section',
     templateUrl: './split-section.component.html',
     styleUrls: ['./split-section.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SpBasicHeaderTitleComponent, LayoutDirective],
 })
 export class SplitSectionComponent {

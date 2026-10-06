@@ -16,12 +16,18 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FieldConfig, SelectedFilter } from '@streampipes/platform-services';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { FilterSelectionPanelRowPropertySelectionComponent } from './panel-row-property-selection/filter-selection-panel-row-property-selection.component';
 import { FilterSelectionPanelRowOperationSelectionComponent } from './panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
@@ -35,10 +41,11 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-filter-selection-panel-row',
     templateUrl: './filter-selection-panel-row.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        DefaultFlexDirective,
-        DefaultLayoutDirective,
-        DefaultLayoutAlignDirective,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
         FilterSelectionPanelRowPropertySelectionComponent,
         FilterSelectionPanelRowOperationSelectionComponent,
         FilterSelectionPanelRowValueInputComponent,

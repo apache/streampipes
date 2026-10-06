@@ -23,8 +23,8 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
@@ -63,6 +63,7 @@ import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-started-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,
@@ -81,7 +82,6 @@ export class AdapterStartedDialog implements OnInit {
     translateService = inject(TranslateService);
     public dialogRef = inject(DialogRef<AdapterStartedDialog>);
     private adapterService = inject(AdapterService);
-    private shepherdService = inject(ShepherdService);
     private pipelineTemplateService = inject(PipelineTemplateService);
     private compactPipelineService = inject(CompactPipelineService);
     private assetSaveService = inject(AssetSaveService);
@@ -375,7 +375,6 @@ export class AdapterStartedDialog implements OnInit {
 
     onCloseConfirm() {
         this.dialogRef.close('Confirm');
-        this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
     onKeepEditing() {
@@ -424,7 +423,7 @@ export class AdapterStartedDialog implements OnInit {
                 name: adapter.name,
             },
             {
-                type: 'data-source',
+                type: 'data-stream',
                 id: adapter.correspondingDataStreamElementId,
                 name: adapter.name,
             },
@@ -447,7 +446,7 @@ export class AdapterStartedDialog implements OnInit {
         );
 
         linkageData.push({
-            type: 'measurement',
+            type: 'dataset',
             id: res.elementId,
             name: adapter.name,
         });

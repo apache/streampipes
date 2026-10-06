@@ -23,6 +23,7 @@ import {
     OnInit,
     SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
@@ -45,6 +46,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-visualisation-settings',
     templateUrl: './chart-visualisation-settings.component.html',
     styleUrls: ['./chart-visualisation-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

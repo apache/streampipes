@@ -28,8 +28,9 @@
                 [rawPipelineModel]="rawPipelineModel"
                 [pipelineCanvasMetadata]="pipelineCanvasMetadata"
                 [pipelineCanvasMetadataAvailable]="
-                    pipelineCanvasMetadata?.pipelineElementMetadata !==
-                    undefined
+                    $safeNavigationMigration(
+                        pipelineCanvasMetadata?.pipelineElementMetadata
+                    ) !== undefined
                 "
                 [readonly]="true"
             ></sp-pipeline-assembly-drawing-area>

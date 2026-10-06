@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     SpBasicViewComponent,
     SpBreadcrumbService,
@@ -32,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,

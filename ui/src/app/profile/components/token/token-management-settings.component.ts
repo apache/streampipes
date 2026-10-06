@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BasicProfileSettings } from '../basic-profile-settings';
 import { RawUserApiToken, UserApiToken } from '@streampipes/platform-services';
 import {
@@ -60,6 +60,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-token-management-settings',
     templateUrl: './token-management-settings.component.html',
     styleUrls: ['./token-management-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

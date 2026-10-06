@@ -22,7 +22,6 @@ import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,8 +40,11 @@ import java.util.List;
 @RequestMapping("/api/v2/connect/master/script-templates")
 public class TransformationScriptTemplateResource extends AbstractAuthGuardedRestResource {
 
-  private final ITransformationScriptTemplateStorage templateStorage = StorageDispatcher
-      .INSTANCE.getNoSqlStore().getTransformationScriptTemplateStorage();
+  private final ITransformationScriptTemplateStorage templateStorage;
+
+  public TransformationScriptTemplateResource(ITransformationScriptTemplateStorage templateStorage) {
+    this.templateStorage = templateStorage;
+  }
 
   @GetMapping(
       value = "{id}",

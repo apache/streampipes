@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     SpAlertBannerComponent,
@@ -53,6 +59,7 @@ export interface AdvancedFilterDialogResult {
     selector: 'sp-advanced-filter-dialog',
     templateUrl: './advanced-filter-dialog.component.html',
     styleUrls: ['./advanced-filter-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatButton,

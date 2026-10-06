@@ -80,7 +80,7 @@
                                 adapterConfigurationState.adapterDescription
                             "
                             (updateAdapterDescriptionEmitter)="
-                                adapterDescription = $event
+                                updateAdapterDescription($event)
                             "
                             (nextEmitter)="nextAdapterSettings()"
                             (cancelEmitter)="navigateToAdapterCatalog()"
@@ -130,7 +130,8 @@
                                 adapterConfigurationState.adapterDescription
                             "
                             [eventSchema]="
-                                adapterDescription.dataStream.eventSchema
+                                adapterConfigurationState.adapterDescription
+                                    .dataStream.eventSchema
                             "
                             [isEditMode]="isEditMode"
                             [permission]="pendingPermission"

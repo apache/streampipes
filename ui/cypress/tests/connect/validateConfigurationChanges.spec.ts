@@ -62,7 +62,7 @@ describe('Validate Warning Pops For Configuration Changes ', () => {
         // Update Event fields
         SharedUtils.confirmDialogVisible();
         ConnectEventSchemaUtils.configureFieldsNextBtnDisabled();
-        SharedBtns.confirmDialogConfirmBtn().click();
+        ConnectUtils.confirmRefreshFieldsDialog();
         ConnectEventSchemaUtils.markPropertyAsTimestamp(
             adapterConfiguration.build().timestampProperty,
         );

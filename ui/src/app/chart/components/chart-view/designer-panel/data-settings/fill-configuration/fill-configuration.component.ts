@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { QueryConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -37,6 +43,7 @@ type FillMode = 'none' | 'previous' | 'linear' | 'null' | 'number';
     selector: 'sp-fill-configuration',
     templateUrl: './fill-configuration.component.html',
     styleUrls: ['./fill-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

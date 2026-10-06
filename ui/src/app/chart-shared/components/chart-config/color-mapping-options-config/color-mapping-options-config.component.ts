@@ -25,6 +25,7 @@ import {
     Output,
     SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { ColorMappingService } from '../../../services/color-mapping.service';
 import { DataExplorerField } from '@streampipes/platform-services';
@@ -48,6 +49,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-color-mapping-options-config',
     templateUrl: './color-mapping-options-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

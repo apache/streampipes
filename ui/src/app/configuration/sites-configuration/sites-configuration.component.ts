@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     LocationConfig,
@@ -35,6 +40,7 @@ import { SiteAreaConfigurationComponent } from './site-area-configuration/site-a
 @Component({
     selector: 'sp-sites-configuration',
     templateUrl: './sites-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LocationFeaturesConfigurationComponent,

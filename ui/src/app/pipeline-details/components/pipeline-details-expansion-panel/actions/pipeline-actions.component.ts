@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { PipelineOperationsService } from '../../../../pipelines/services/pipeline-operations.service';
 import { Pipeline } from '@streampipes/platform-services';
@@ -40,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-pipeline-actions',
     templateUrl: './pipeline-actions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutAlignDirective,

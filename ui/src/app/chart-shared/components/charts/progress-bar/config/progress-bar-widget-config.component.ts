@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     ProgressBarDisplayMode,
@@ -42,6 +42,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-data-explorer-progress-bar-widget-config',
     templateUrl: './progress-bar-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

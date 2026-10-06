@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FlexFillDirective } from '@ngbracket/ngx-layout';
 import {
@@ -29,7 +35,7 @@ import {
 import {
     AssetConstants,
     AssetLinkType,
-    DataLakeMeasure,
+    DatasetMetadata,
     DatalakeRestService,
     EventPropertyUnion,
     GenericStorageService,
@@ -48,6 +54,7 @@ import {
     selector: 'sp-dataset-feature-card',
     templateUrl: './dataset-feature-card.component.html',
     styleUrls: ['./dataset-feature-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexFillDirective,
         LayoutDirective,
@@ -68,7 +75,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     @Input()
     onClose?: () => void;
 
-    dataset: DataLakeMeasure;
+    dataset: DatasetMetadata;
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
     lastEventTs: number | undefined;
@@ -88,7 +95,7 @@ export class DatasetFeatureCardComponent implements OnInit {
             ),
         ]).subscribe(res => {
             this.dataset = res[0];
-            this.assetLinkType = res[1].find(a => a.linkType === 'measurement');
+            this.assetLinkType = res[1].find(a => a.linkType === 'dataset');
             this.loadSampleData();
         });
     }

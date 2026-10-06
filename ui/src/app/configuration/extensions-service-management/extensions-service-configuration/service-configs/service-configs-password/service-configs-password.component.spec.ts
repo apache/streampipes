@@ -35,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
     provideHttpClient,
     withInterceptorsFromDi,
+    withXhr,
 } from '@angular/common/http';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ConfigItem } from '@streampipes/platform-services';
@@ -77,7 +78,7 @@ describe('ServiceConfigsPasswordComponent', () => {
                     provide: ConfigurationService,
                     useValue: configurationServiceStub,
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
         }).compileComponents();

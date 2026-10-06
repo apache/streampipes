@@ -28,6 +28,7 @@ import {
     ViewChild,
     ViewEncapsulation,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DashboardLiveSettings,
@@ -58,6 +59,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: 'time-range-selector.component.html',
     styleUrls: ['./time-range-selector.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

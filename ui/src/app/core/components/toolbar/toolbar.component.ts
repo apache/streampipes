@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { UntypedFormControl } from '@angular/forms';
@@ -43,6 +48,7 @@ import { SpSystemNotificationComponent } from '../system-notification/system-not
     selector: 'sp-toolbar',
     templateUrl: './toolbar.component.html',
     styleUrls: ['./toolbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatToolbar,
         LayoutDirective,

@@ -38,11 +38,11 @@
         'Liberation Mono', 'Courier New', monospace;
     font-size: var(--font-size-xs);
     line-height: 1.5;
-    max-height: 520px;
+    max-height: var(--adapter-preview-max-height, 520px);
 }
 
 .tree {
     background: var(--color-bg-0);
-    max-height: 520px;
+    max-height: var(--adapter-preview-max-height, 520px);
     overflow: auto;
 }

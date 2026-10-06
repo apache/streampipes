@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
     LayoutAlignDirective,
     LayoutDirective,
@@ -28,6 +28,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-live-preview-loading',
     templateUrl: './live-preview-loading.component.html',
     styleUrls: ['./live-preview-loading.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

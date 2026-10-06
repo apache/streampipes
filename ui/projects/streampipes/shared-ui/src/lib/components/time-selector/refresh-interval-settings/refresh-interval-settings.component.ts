@@ -16,9 +16,16 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DashboardLiveSettings } from '@streampipes/platform-services';
-import { DefaultLayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -29,8 +36,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-data-explorer-refresh-interval-settings-component',
     templateUrl: './refresh-interval-settings.component.html',
     styleUrl: './refresh-interval-settings.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        DefaultLayoutDirective,
+        LayoutDirective,
         MatButton,
         MatMenuTrigger,
         MatTooltip,

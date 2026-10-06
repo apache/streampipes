@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.connect.management.management;
 
+import org.apache.streampipes.audit.api.AuditOutcome;
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
@@ -35,6 +38,8 @@ import java.util.List;
 
 public class AdapterUpdateManagement {
 
+  private final AdapterAuditRecorder adapterAudit;
+  private final AdapterEditChanges editChanges = new AdapterEditChanges();
   private final AdapterMasterManagement adapterMasterManagement;
   private final AdapterResourceManager adapterResourceManager;
   private final DataStreamResourceManager dataStreamResourceManager;
@@ -45,6 +50,7 @@ public class AdapterUpdateManagement {
                                  ExtensionServiceRequestManager requestManager,
                                  SpResourceManager resourceManager,
                                  ApplicationEventPublisher eventPublisher) {
+    this.adapterAudit = new AdapterAuditRecorder(resourceManager.getAuditService());
     this.adapterMasterManagement = adapterMasterManagement;
     this.adapterResourceManager = resourceManager.manageAdapters();
     this.dataStreamResourceManager = resourceManager.manageDataStreams();
@@ -57,23 +63,37 @@ public class AdapterUpdateManagement {
 
   public void updateAdapter(AdapterDescription ad)
       throws AdapterException {
-    // update adapter in database
-    AdapterTransformationConfigDefaults.applyTo(ad);
-    this.adapterResourceManager.encryptAndUpdate(ad);
-    boolean shouldRestart = ad.isRunning();
+    updateAdapter(ad, null);
+  }
 
-    if (ad.isRunning()) {
-      this.adapterMasterManagement.stopAdapter(ad.getElementId(), true);
+  public void updateAdapter(AdapterDescription ad, String actor) throws AdapterException {
+    AdapterEditedDetails changes = editChanges.detect(
+        adapterResourceManager.getDb().getElementById(ad.getElementId()), ad);
+    boolean persisted = false;
+    try {
+      // update adapter in database
+      AdapterTransformationConfigDefaults.applyTo(ad);
+      this.adapterResourceManager.encryptAndUpdate(ad);
+      persisted = true;
+      boolean shouldRestart = ad.isRunning();
+
+      if (ad.isRunning()) {
+        this.adapterMasterManagement.stopAdapter(ad.getElementId(), true, actor);
+      }
+
+      // update data source
+      var updatedDataStream = this.updateDataSource(ad);
+      dataStreamUpdateManagement.updateDataStream(updatedDataStream);
+      publishEvent(new DataStreamUpdatedEvent(updatedDataStream));
+
+      if (shouldRestart) {
+        this.adapterMasterManagement.startAdapter(ad.getElementId(), actor);
+      }
+    } catch (AdapterException | RuntimeException e) {
+      adapterAudit.edited(actor, ad.getElementId(), persisted ? AuditOutcome.PARTIAL : AuditOutcome.FAILED, changes);
+      throw e;
     }
-
-    // update data source
-    var updatedDataStream = this.updateDataSource(ad);
-    dataStreamUpdateManagement.updateDataStream(updatedDataStream);
-    publishEvent(new DataStreamUpdatedEvent(updatedDataStream));
-
-    if (shouldRestart) {
-      this.adapterMasterManagement.startAdapter(ad.getElementId());
-    }
+    adapterAudit.edited(actor, ad.getElementId(), AuditOutcome.SUCCEEDED, changes);
   }
 
   public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {

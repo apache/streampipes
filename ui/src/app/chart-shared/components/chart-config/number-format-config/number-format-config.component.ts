@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { WidgetNumberAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { FormFieldComponent } from '@streampipes/shared-ui';
@@ -28,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-number-format-config',
     templateUrl: './number-format-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormFieldComponent,
         FormsModule,

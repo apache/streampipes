@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Certificate,
     CertificateService,
@@ -53,6 +58,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-certificate-configuration',
     templateUrl: './certificate-configuration.component.html',
     styleUrls: ['./certificate-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpTableComponent,
         MatSort,

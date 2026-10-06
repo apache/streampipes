@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpLabel } from '@streampipes/platform-services';
 import { AssetFilter } from '../../../asset-browser.model';
 import { AssetBrowserFilterOuterComponent } from '../asset-browser-filter-outer/asset-browser-filter-outer.component';
@@ -29,6 +29,7 @@ import { SpLabelComponent } from '../../../../sp-label/sp-label.component';
     selector: 'sp-asset-browser-filter-labels',
     templateUrl: 'asset-browser-filter-labels.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AssetBrowserFilterOuterComponent,
         MatFormField,

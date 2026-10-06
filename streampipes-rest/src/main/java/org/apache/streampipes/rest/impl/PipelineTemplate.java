@@ -27,7 +27,8 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,11 +53,15 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   private final ICompactPipelineTemplateStorage storage;
   private final CompactPipelineTemplateManagement templateManagement;
 
-  public PipelineTemplate(ExtensionServiceRequestManager extensionServiceRequestManager) {
-    storage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage();
+  public PipelineTemplate(ExtensionServiceRequestManager extensionServiceRequestManager,
+                          ISpServiceDiscovery serviceDiscovery,
+                          ICompactPipelineTemplateStorage storage,
+                          IPipelineElementDescriptionStorage descriptionStorage) {
+    this.storage = storage;
     templateManagement = new CompactPipelineTemplateManagement(
+        serviceDiscovery,
         storage,
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage(),
+        descriptionStorage,
         extensionServiceRequestManager
     );
   }

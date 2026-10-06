@@ -65,10 +65,13 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   private final DataStreamResourceManager dataStreamResourceManager;
   private final SpResourceManager resourceManager;
   private final AssetManager assetManager;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   public ExtensionsInstallationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
-                                        SpResourceManager resourceManager) {
+                                        SpResourceManager resourceManager,
+                                        IPipelineElementDescriptionStorage descriptionStorage) {
     this.resourceManager = resourceManager;
+    this.descriptionStorage = descriptionStorage;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.dataSinkResourceManager = resourceManager.manageDataSinks();
     this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
@@ -83,7 +86,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   public ResponseEntity<Message> addElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     try {
       var service = findSupportedService(installationReq);
-      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager)
+      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager, descriptionStorage)
           .installExtension(installationReq, getAuthenticatedUserSid()));
     } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
@@ -96,7 +99,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   public ResponseEntity<Message> updateElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     try {
       var service = findSupportedService(installationReq);
-      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager)
+      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager, descriptionStorage)
           .updateExtension(installationReq));
     } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
@@ -105,7 +108,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
 
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Message> deleteElement(@PathVariable("id") String elementId) {
-    IPipelineElementDescriptionStorage requestor = getPipelineElementStorage();
+    IPipelineElementDescriptionStorage requestor = descriptionStorage;
     String appId;
     try {
       if (requestor.existsDataProcessor(elementId)) {
@@ -133,7 +136,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   }
 
   private SpServiceRegistration findSupportedService(ExtensionItemInstallationRequest installationReq) throws NoServiceEndpointsAvailableException {
-    return new ExtensionsServiceEndpointGenerator().selectService(
+    return new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery()).selectService(
         installationReq.appId(),
         SpServiceUrlProvider.valueOf(installationReq.serviceTagPrefix().name()),
         Set.of()

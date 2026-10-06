@@ -22,7 +22,7 @@ import {
     ClientDashboardItem,
     Dashboard,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ChartRegistry } from '../../../chart-shared/registry/chart-registry.service';
@@ -49,9 +49,9 @@ export abstract class AbstractChartViewDirective {
         string,
         DataExplorerWidgetModel
     >();
-    dataLakeMeasures: Map<string, DataLakeMeasure> = new Map<
+    dataLakeMeasures: Map<string, DatasetMetadata> = new Map<
         string,
-        DataLakeMeasure
+        DatasetMetadata
     >();
 
     widgetsAvailable = false;

@@ -23,11 +23,12 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     ChartService,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
     EventPropertyUnion,
     FieldConfig,
     LinkageData,
@@ -103,6 +104,7 @@ import { AsyncPipe } from '@angular/common';
     selector: 'sp-chart-data-view',
     templateUrl: './chart-view.component.html',
     styleUrls: ['./chart-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AsyncPipe,
         SpBasicViewComponent,
@@ -132,7 +134,7 @@ export class ChartViewComponent
     editMode = true;
     dataView: DataExplorerWidgetModel;
     originalDataView: DataExplorerWidgetModel;
-    dataLakeMeasure: DataLakeMeasure;
+    dataLakeMeasure: DatasetMetadata;
     drawerWidth = 450;
 
     selectedAssets = [];
@@ -219,7 +221,7 @@ export class ChartViewComponent
         });
     }
 
-    onAddWidget(_event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
+    onAddWidget(_event: Tuple2<DatasetMetadata, DataExplorerWidgetModel>) {
         if (!this.originalDataView?.visualizationConfig) {
             this.setDefaultValuesOnOriginalDataViewForNewCharts();
         }

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpDataStream } from '@streampipes/platform-services';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
@@ -34,6 +34,7 @@ import { SortByRuntimeNamePipe } from '../../pipes/sort-by-runtime-name.pipe';
     selector: 'sp-input-schema-panel',
     templateUrl: './input-schema-panel.component.html',
     styleUrls: ['./input-schema-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatAccordion,

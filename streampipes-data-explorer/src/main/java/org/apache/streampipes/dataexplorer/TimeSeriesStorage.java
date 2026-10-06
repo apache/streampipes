@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -28,6 +28,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +39,12 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
 
   private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesStorage.class);
 
-  protected final DataLakeMeasure measure;
+  protected final DatasetMetadata measure;
   protected final List<EventProperty> allEventProperties;
   protected final Map<String, String> sanitizedRuntimeNames = new HashMap<>();
   private final AtomicBoolean warnedNullFields = new AtomicBoolean(false);
 
-  public TimeSeriesStorage(DataLakeMeasure measure) {
+  public TimeSeriesStorage(DatasetMetadata measure) {
     this.measure = measure;
     storeSanitizedRuntimeNames();
     allEventProperties = getAllEventPropertiesExceptTimestamp();
@@ -51,9 +52,33 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
 
   @Override
   public void onEvent(Event event) throws SpRuntimeException {
+    prepareEvent(event);
+    writeToTimeSeriesStorage(event);
+  }
+
+  @Override
+  public void onEvents(List<Event> events) throws SpRuntimeException {
+    var preparedEvents = new ArrayList<Event>(events.size());
+    for (var event : events) {
+      prepareEvent(event);
+      preparedEvents.add(event);
+    }
+    writeToTimeSeriesStorage(preparedEvents);
+  }
+
+  private void prepareEvent(Event event) {
     validateInputEventAndLogMissingFields(event);
     sanitizeRuntimeNamesInEvent(event);
-    writeToTimeSeriesStorage(event);
+  }
+
+  /**
+   * Writes a batch of already validated and sanitized events. Storages that support bulk writes override this
+   * method; the default writes the events one by one.
+   */
+  protected void writeToTimeSeriesStorage(List<Event> events) throws SpRuntimeException {
+    for (var event : events) {
+      writeToTimeSeriesStorage(event);
+    }
   }
 
   private void validateInputEventAndLogMissingFields(Event event) {
@@ -110,8 +135,10 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
           var field = event.getOptionalFieldByRuntimeName(runtimeName);
 
           return field.isPresent() && field.get()
-                                           .getAsPrimitive()
-                                           .getRawValue() == null;
+                                           .isPrimitive()
+                                 && field.get()
+                                         .getAsPrimitive()
+                                         .getRawValue() == null;
         })
         .map(EventProperty::getRuntimeName)
         .collect(Collectors.toList());

@@ -72,7 +72,7 @@ export class PipelineElementService {
         );
     }
 
-    getDocumentation(appId) {
+    getDocumentation(appId: string) {
         return this.http.get(
             this.platformServicesCommons.apiBasePath +
                 '/pe/' +

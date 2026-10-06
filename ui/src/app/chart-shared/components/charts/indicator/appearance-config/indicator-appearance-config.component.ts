@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { IndicatorAppearanceConfig } from '../model/indicator-chart-widget.model';
 import {
@@ -32,6 +38,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-indicator-appearance-config',
     templateUrl: './indicator-appearance-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         FormFieldComponent,

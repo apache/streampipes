@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormFieldComponent,
     SplitSectionComponent,
@@ -31,6 +37,7 @@ import { ColorPickerDirective } from 'ngx-color-picker';
     selector: 'sp-progress-bar-widget-appearance-config',
     templateUrl: './progress-bar-appearance-config.component.html',
     styleUrls: ['./progress-bar-appearance-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         FormFieldComponent,

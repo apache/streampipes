@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import {
@@ -52,6 +53,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-asset-link-configuration',
     templateUrl: './asset-link-configuration.component.html',
     styleUrls: ['./asset-link-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatTree,
         MatTreeNodeDef,

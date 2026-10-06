@@ -24,6 +24,7 @@ import {
     Input,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AssetLinkResourceRow,
@@ -84,6 +85,7 @@ type AssetLinkViewMode = 'grouped' | 'list';
     selector: 'sp-manage-asset-link-table',
     templateUrl: './asset-link-table.component.html',
     styleUrls: ['./asset-link-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

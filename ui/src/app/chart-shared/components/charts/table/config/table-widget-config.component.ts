@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
@@ -45,6 +45,7 @@ import { FieldOrderConfigComponent } from '../../../chart-config/field-order-con
     selector: 'sp-data-explorer-table-widget-config',
     templateUrl: './table-widget-config.component.html',
     styleUrls: ['./table-widget-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SelectMultiplePropertiesConfigComponent,

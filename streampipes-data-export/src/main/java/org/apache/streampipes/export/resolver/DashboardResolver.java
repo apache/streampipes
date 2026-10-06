@@ -24,6 +24,7 @@ import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.DashboardResourceManager;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -76,10 +77,10 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     var dashboard = readDocument(document);
     var resourceId = dashboard.getElementId();
-    resourceManager.getDb().deleteElementById(resourceId);
+    resourceDeletionManager.delete(resourceManager.getDb(), resourceId);
   }
 
   public List<String> getCharts(String resourceId) {

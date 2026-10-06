@@ -61,7 +61,7 @@ import static org.mockito.Mockito.when;
 
 class PipelineUpdateCoordinatorTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  private static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
 
   @Test
   void updatePipelines_ShouldRestartRunningPipelinesForDataStreamUpdates() {
@@ -81,7 +81,7 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
                    .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
@@ -122,7 +122,7 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
                    .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
@@ -158,7 +158,7 @@ class PipelineUpdateCoordinatorTest {
 
     var storedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
     storedPipeline.getStreams().get(0).setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
-    storedPipeline.setActions(List.of(makeDataLakeSink()));
+    storedPipeline.setActions(List.of(makeDatasetSink()));
 
     var modifiedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Updated stream");
     var measurementUpdateInfo = PipelineElementValidationInfo.info(
@@ -203,10 +203,10 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
-                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(1), List.of()));
              })) {
 
       var result = coordinator.checkPipelineMigrations(dataStream);
@@ -240,10 +240,10 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
-                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(1), List.of()));
              })) {
 
       var result = coordinator.checkPipelineMigrations(dataStream);
@@ -272,7 +272,7 @@ class PipelineUpdateCoordinatorTest {
 
     var pipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     pipeline.getStreams().get(0).setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
-    pipeline.setActions(List.of(makeDataLakeSink()));
+    pipeline.setActions(List.of(makeDatasetSink()));
 
     var measurementUpdateInfo = PipelineElementValidationInfo.info(
         measurementUpdateRequiredMessage());
@@ -283,7 +283,7 @@ class PipelineUpdateCoordinatorTest {
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
-                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(1), List.of()));
              })) {
 
       var result = coordinator.checkPipelineMigrations(dataStream);
@@ -331,9 +331,9 @@ class PipelineUpdateCoordinatorTest {
     return pipeline;
   }
 
-  private DataSinkInvocation makeDataLakeSink() {
+  private DataSinkInvocation makeDatasetSink() {
     var sink = new DataSinkInvocation();
-    sink.setAppId(DATA_LAKE_SINK_APP_ID);
+    sink.setAppId(DATASET_SINK_APP_ID);
     return sink;
   }
 

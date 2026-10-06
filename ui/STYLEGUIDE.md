@@ -203,6 +203,8 @@ You can also define an optional tooltip which is shown above the label.
 
 Use `sp-search-select` when users need to select one or more items from a searchable list, such as datasets, labels, sites, asset types, users, roles or groups.
 
+For single-value filters that also accept typed values, provide `freeTextValue`, a function mapping text to the same item type as `items`. Typing updates the value immediately; clearing resets it. `searchTextFor` optionally returns searchable text for each item (for example username plus principal ID). Both hooks are optional; existing selection-only and multi-select behavior remains unchanged.
+
 Keep data loading, persistence and feature-specific actions outside the component. For example, actions such as `Manage Labels` or refresh buttons should remain in the parent view, usually in the surrounding `sp-form-field` actions.
 
 Single-select example:
@@ -315,7 +317,7 @@ For compact inline loading states, use a smaller diameter and row layout:
 
 #### Tables
 
-For rendering tables, always use the `sp-table` component which comes with pre-defined features for paging, sorting and layout.
+For rendering tables, always use the `sp-table` component which comes with pre-defined features for paging, sorting and layout. For server-paged results, set `[showPaginator]="false"` and provide feature-specific pagination controls; this disables client-side pagination. Set `[rowsClickable]="true"` and handle `(rowClicked)` for row activation by click, Enter or Space; nested controls retain their own keyboard behavior.
 In most cases, table actions should be shown in a popup menu to ensure a clean UI.
 Check the examples to see how to add table actions.
 

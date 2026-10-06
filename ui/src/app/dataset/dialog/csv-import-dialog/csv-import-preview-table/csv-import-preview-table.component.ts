@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, computed, input, output } from '@angular/core';
+import {
+    Component,
+    computed,
+    input,
+    output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -35,6 +41,7 @@ import {
     selector: 'sp-csv-import-preview-table',
     templateUrl: './csv-import-preview-table.component.html',
     styleUrls: ['./csv-import-preview-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         MatFormField,

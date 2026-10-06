@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnDestroy,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DataExportService } from '../../services/data-export.service';
 import { DownloadProgress } from '../../model/download-progress.model';
 import { Subscription } from 'rxjs';
@@ -36,6 +42,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-download',
     templateUrl: './download.component.html',
     styleUrls: ['./download.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         MatStepLabel,

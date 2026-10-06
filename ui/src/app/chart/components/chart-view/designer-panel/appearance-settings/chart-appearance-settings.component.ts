@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
@@ -37,6 +44,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-appearance-settings',
     templateUrl: './chart-appearance-settings.component.html',
     styleUrls: ['./chart-appearance-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

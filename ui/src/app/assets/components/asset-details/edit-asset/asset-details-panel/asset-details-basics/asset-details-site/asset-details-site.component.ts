@@ -23,6 +23,7 @@ import {
     OnChanges,
     Output,
     SimpleChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { AssetSiteDesc, SpAsset } from '@streampipes/platform-services';
 import {
@@ -48,6 +49,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-asset-details-site',
     templateUrl: './asset-details-site.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

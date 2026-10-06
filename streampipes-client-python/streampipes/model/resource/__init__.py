@@ -15,18 +15,21 @@
 # limitations under the License.
 #
 
-from .adapter import AdapterSummary
+from .adapter import AdapterDescription, AdapterSummary
 from .data_lake_measure import DataLakeMeasure
 from .data_series import DataSeries
 from .data_stream import DataStream
+from .dataset_metadata import DatasetMetadata
 from .function_definition import FunctionDefinition
 from .pipeline import PipelineSummary
 from .version import Version
 
 __all__ = [
+    "AdapterDescription",
     "AdapterSummary",
     "DataLakeMeasure",
     "DataSeries",
+    "DatasetMetadata",
     "DataStream",
     "FunctionDefinition",
     "PipelineSummary",

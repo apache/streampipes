@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     animate,
     state,
@@ -62,6 +62,7 @@ import { TranslatePipe } from '@ngx-translate/core';
             ),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

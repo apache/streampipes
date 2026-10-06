@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.compact.AdapterGenerationSteps;
@@ -31,6 +32,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
@@ -38,10 +40,15 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,26 +70,38 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   private final AdapterUpdateManagement adapterUpdateManagement;
   private final ExtensionServiceRequestManager requestManager;
   private final PipelineManager pipelineManager;
+  private final ISpServiceDiscovery serviceDiscovery;
+  private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   public CompactAdapterResource(WorkerRestClient workerRestClient,
                                 ExtensionServiceRequestManager requestManager,
                                 ApplicationEventPublisher eventPublisher,
-                                SpResourceManager resourceManager) {
+                                SpResourceManager resourceManager,
+                                @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
+                                IExtensionsServiceStorage extensionsServiceStorage,
+                                ISpServiceDiscovery serviceDiscovery,
+                                ICompactPipelineTemplateStorage pipelineTemplateStorage,
+                                IPipelineElementDescriptionStorage descriptionStorage) {
     super(() -> new AdapterMasterManagement(
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,
-        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
-        requestManager
+        extensionsServiceStorage,
+        requestManager,
+        new AdapterAuditRecorder(resourceManager.getAuditService())
     ));
     var guessManagement = new GuessManagement(
-        new ExtensionsServiceEndpointGenerator(),
+        new ExtensionsServiceEndpointGenerator(serviceDiscovery),
         requestManager,
         resourceManager
     );
     this.requestManager = requestManager;
+    this.serviceDiscovery = serviceDiscovery;
+    this.pipelineTemplateStorage = pipelineTemplateStorage;
+    this.descriptionStorage = descriptionStorage;
     this.compactAdapterManagement = new CompactAdapterManagement(
-        new AdapterGenerationSteps(guessManagement).getGenerators()
+        new AdapterGenerationSteps(guessManagement).getGenerators(), adapterDescriptionStorage
     );
     this.pipelineManager = new PipelineManager(
         resourceManager
@@ -107,6 +126,14 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
 
+    if (isPersistRequested(compactAdapter) && !hasPipelineWriteAuthority()) {
+      LOG.warn(
+          "Rejected compact adapter creation for user {}: persist option requires privilege {}",
+          getAuthenticatedUsername(), DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE
+      );
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
     var principalSid = getAuthenticatedUserSid();
     var adapterDescription = convertToAdapterDescription(compactAdapter, principalSid);
 
@@ -129,9 +156,10 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
                           .persist()) {
           var storedAdapter = managementService.getAdapter(adapterId);
           new PersistPipelineHandler(
-              getNoSqlStorage().getPipelineTemplateStorage(),
+              pipelineTemplateStorage,
               new CompactPipelineManagement(
-                  getNoSqlStorage().getPipelineElementDescriptionStorage(),
+                  serviceDiscovery,
+                  descriptionStorage,
                   requestManager
               ),
               pipelineManager,
@@ -140,7 +168,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         }
         if (compactAdapter.createOptions()
                           .start()) {
-          managementService.startAdapter(adapterId);
+          managementService.startAdapter(adapterId, getAuthenticatedUserSid());
         }
       }
       return ok(Notifications.success(adapterId));
@@ -174,7 +202,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       );
 
       try {
-        adapterUpdateManagement.updateAdapter(adapterDescription);
+        adapterUpdateManagement.updateAdapter(adapterDescription, getAuthenticatedUserSid());
       } catch (AdapterException e) {
         LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
         return ok(Notifications.error(e.getMessage()));
@@ -184,6 +212,15 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     } else {
       throw new BadRequestException(String.format("Adapter with id %s not found", elementId));
     }
+  }
+
+  private boolean isPersistRequested(CompactAdapter compactAdapter) {
+    return compactAdapter.createOptions() != null
+        && Boolean.TRUE.equals(compactAdapter.createOptions().persist());
+  }
+
+  private boolean hasPipelineWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
   }
 
   private AdapterDescription convertToAdapterDescription(

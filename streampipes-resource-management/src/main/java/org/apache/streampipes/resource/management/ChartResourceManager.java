@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.datalake.ChartSummaryDto;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.ChartSummaryDto;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
@@ -36,8 +36,9 @@ public class ChartResourceManager
 
   public ChartResourceManager(DashboardResourceManager dashboardManager,
                               IChartStorage db,
-                              PermissionResourceManager permissionResourceManager) {
-    super(db, DataExplorerWidgetModel.class, permissionResourceManager);
+                              PermissionResourceManager permissionResourceManager,
+                              ResourceDeletionManager resourceDeletionManager) {
+    super(db, DataExplorerWidgetModel.class, permissionResourceManager, resourceDeletionManager);
     this.dashboardManager = dashboardManager;
   }
 

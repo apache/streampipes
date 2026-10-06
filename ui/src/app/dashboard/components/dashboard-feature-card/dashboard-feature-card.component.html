@@ -31,9 +31,15 @@
 
         <div class="feature-card-meta-card">
             <sp-feature-card-meta-creation
-                [creationTimestamp]="dashboard.metadata?.createdAtEpochMs"
+                [creationTimestamp]="
+                    $safeNavigationMigration(
+                        dashboard.metadata?.createdAtEpochMs
+                    )
+                "
                 [lastModifiedTimestamp]="
-                    dashboard.metadata?.lastModifiedEpochMs
+                    $safeNavigationMigration(
+                        dashboard.metadata?.lastModifiedEpochMs
+                    )
                 "
             >
             </sp-feature-card-meta-creation>

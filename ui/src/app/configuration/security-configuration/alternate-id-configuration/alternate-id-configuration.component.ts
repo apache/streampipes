@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -33,6 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-alternate-id-configuration',
     templateUrl: './alternate-id-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

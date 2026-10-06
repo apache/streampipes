@@ -221,7 +221,7 @@ export class PipelineValidationService {
         g.setDefaultEdgeLabel(() => {
             return {};
         });
-        const nodes = $('#assembly').find("div[id^='jsplumb']").get();
+        const nodes = document.querySelectorAll("#assembly div[id^='jsplumb']");
         for (let i = 0; i < nodes.length; i++) {
             const n = nodes[i];
             const elementOptions = this.getElementOptions(

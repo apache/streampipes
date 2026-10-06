@@ -16,22 +16,26 @@
  *
  */
 
-import { Component, input, output } from '@angular/core';
+import {
+    Component,
+    input,
+    output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterEventPreviewComponent,
     Mode,
 } from '../../adapter-event-preview/adapter-event-preview.component';
 import {
-    SpBasicInnerPanelComponent,
     SpExceptionMessageComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import {
-    FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import {
     MatButtonToggle,
@@ -43,12 +47,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-adapter-sample-preview',
     templateUrl: './adapter-sample-preview.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: '../schema-preview.scss',
     imports: [
-        SpBasicInnerPanelComponent,
         LayoutAlignDirective,
-        FlexDirective,
-        MatButton,
+        MatIconButton,
         MatIcon,
+        MatTooltip,
         MatButtonToggleGroup,
         MatButtonToggle,
         LayoutDirective,
@@ -64,7 +69,7 @@ export class AdapterSamplePreviewComponent {
     sampleErrorMessage = input<any>();
     fieldStatusInfos = input<any>();
     input = input<any>();
-    sourceViewMode = input<Mode>('raw');
+    sourceViewMode = input<Mode>('tree');
 
     sourceViewModeChange = output<Mode>();
     getSample = output<void>();

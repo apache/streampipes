@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FunctionDefinition } from '@streampipes/platform-services';
 import {
     SpBasicViewComponent,
@@ -30,6 +30,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-function-details-layout',
     templateUrl: './function-details-layout.component.html',
     styleUrl: './function-details-layout.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,

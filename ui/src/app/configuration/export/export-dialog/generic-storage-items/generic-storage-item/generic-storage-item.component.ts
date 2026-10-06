@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -30,6 +36,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-generic-storage-item',
     templateUrl: './generic-storage-item.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

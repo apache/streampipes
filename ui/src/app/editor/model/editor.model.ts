@@ -63,13 +63,10 @@ export enum PipelineElementType {
 }
 
 export type PipelineElementUnion =
-    | SpDataStream
-    | DataProcessorInvocation
-    | DataSinkInvocation;
+    SpDataStream | DataProcessorInvocation | DataSinkInvocation;
 
 export type InvocablePipelineElementUnion =
-    | DataProcessorInvocation
-    | DataSinkInvocation;
+    DataProcessorInvocation | DataSinkInvocation;
 
 export type PipelineElementIdentifier =
     | 'org.apache.streampipes.model.SpDataStream'

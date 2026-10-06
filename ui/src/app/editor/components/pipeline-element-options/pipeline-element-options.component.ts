@@ -26,6 +26,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { PipelineElementRecommendationService } from '../../services/pipeline-element-recommendation.service';
 import { ObjectProvider } from '../../services/object-provider.service';
@@ -57,6 +58,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-element-options',
     templateUrl: './pipeline-element-options.component.html',
     styleUrls: ['./pipeline-element-options.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle,
         StyleDirective,

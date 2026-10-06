@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
 import { RuntimeInfo } from '../pipeline-element-runtime-info.model';
 import {
@@ -39,6 +44,7 @@ import { PropertyScopeBadgeComponent } from '../../property-scope-badge/property
     selector: 'sp-live-preview-table',
     templateUrl: './live-preview-table.component.html',
     styleUrls: ['./live-preview-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatTable,
         MatColumnDef,

@@ -40,20 +40,22 @@ export class LabelsService {
             .pipe(map(docs => this.extractLabelIds(docs)));
     }
 
-    extractLabelIds(assets) {
+    extractLabelIds(assets: any): string[] {
         const allLabelIds = new Set<string>();
 
-        const extractLabelsFromAsset = asset => {
+        const extractLabelsFromAsset = (asset: any) => {
             if (asset.labelIds) {
-                asset.labelIds.forEach(labelId => allLabelIds.add(labelId));
+                asset.labelIds.forEach((labelId: any) =>
+                    allLabelIds.add(labelId),
+                );
             }
             if (asset.assets) {
-                asset.assets.forEach(subasset =>
+                asset.assets.forEach((subasset: any) =>
                     extractLabelsFromAsset(subasset),
                 );
             }
         };
-        assets.forEach(asset => extractLabelsFromAsset(asset));
+        assets.forEach((asset: any) => extractLabelsFromAsset(asset));
 
         return Array.from(allLabelIds);
     }

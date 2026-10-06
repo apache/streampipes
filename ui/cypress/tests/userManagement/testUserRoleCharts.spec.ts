@@ -84,7 +84,7 @@ describe('Test User Roles for Charts', () => {
         chartIsNotVisible(chartUser1);
 
         UserUtils.switchUser(chartAdmin1);
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         PermissionUtils.changeOwnership(chartName, chartAdmin2.email);
 
         chartIsNotVisible(chartAdmin1);
@@ -121,7 +121,7 @@ describe('Test User Roles for Charts', () => {
         ChartUtils.createTableChart('simulator', true);
         ChartUtils.saveChartConfiguration(false, false, chartName);
         ChartUtils.checkAmount(1);
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
     }
 
     function chartIsVisibleAndEditableCanChangePermissions(user: User) {

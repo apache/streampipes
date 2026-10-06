@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { DataExportConfig } from '../../model/data-export-config.model';
 import { DataExplorerDataConfig } from '@streampipes/platform-services';
@@ -27,6 +27,7 @@ import { SelectDataMissingValuesComponent } from './select-data-missing-values/s
     selector: 'sp-select-data',
     templateUrl: './select-data.component.html',
     styleUrls: ['./select-data.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SelectDataRangeComponent, SelectDataMissingValuesComponent],
 })
 export class SelectDataComponent {

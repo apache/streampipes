@@ -27,6 +27,7 @@ import {
     Output,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelineComponent } from '../../pipeline/pipeline.component';
@@ -53,6 +54,7 @@ import { ErrorHintComponent } from '../../../../core-ui/error-hint/error-hint.co
     selector: 'sp-pipeline-assembly-drawing-area',
     templateUrl: './pipeline-assembly-drawing-area.component.html',
     styleUrls: ['./pipeline-assembly-drawing-area.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ErrorHintComponent,
         PipelineAssemblyDrawingAreaPanZoomComponent,

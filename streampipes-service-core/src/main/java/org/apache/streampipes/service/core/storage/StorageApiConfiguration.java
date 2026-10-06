@@ -18,42 +18,78 @@
 
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
+import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DashboardStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DatasetMetadataStorage;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.DataProcessorStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.DataSinkStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.DataStreamStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineCanvasMetadataStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementDescriptionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 @EnableCaching
@@ -64,7 +100,7 @@ public class StorageApiConfiguration {
   private final boolean adapterCacheEnabled;
   private final boolean dashboardCacheEnabled;
   private final boolean pipelineCacheEnabled;
-  private final boolean dataLakeMeasureCacheEnabled;
+  private final boolean datasetMetadataCacheEnabled;
   private final boolean roleCacheEnabled;
   private final boolean userGroupCacheEnabled;
   private final boolean privilegeCacheEnabled;
@@ -77,7 +113,7 @@ public class StorageApiConfiguration {
       @Value("${streampipes.storage.cache.adapters.enabled:true}") boolean adapterCacheEnabled,
       @Value("${streampipes.storage.cache.dashboards.enabled:true}") boolean dashboardCacheEnabled,
       @Value("${streampipes.storage.cache.pipelines.enabled:true}") boolean pipelineCacheEnabled,
-      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean dataLakeMeasureCacheEnabled,
+      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean datasetMetadataCacheEnabled,
       @Value("${streampipes.storage.cache.roles.enabled:true}") boolean roleCacheEnabled,
       @Value("${streampipes.storage.cache.user-groups.enabled:true}") boolean userGroupCacheEnabled,
       @Value("${streampipes.storage.cache.privileges.enabled:true}") boolean privilegeCacheEnabled,
@@ -88,7 +124,7 @@ public class StorageApiConfiguration {
     this.adapterCacheEnabled = adapterCacheEnabled;
     this.dashboardCacheEnabled = dashboardCacheEnabled;
     this.pipelineCacheEnabled = pipelineCacheEnabled;
-    this.dataLakeMeasureCacheEnabled = dataLakeMeasureCacheEnabled;
+    this.datasetMetadataCacheEnabled = datasetMetadataCacheEnabled;
     this.roleCacheEnabled = roleCacheEnabled;
     this.userGroupCacheEnabled = userGroupCacheEnabled;
     this.privilegeCacheEnabled = privilegeCacheEnabled;
@@ -114,6 +150,7 @@ public class StorageApiConfiguration {
   }
 
   @Bean
+  @Primary
   public IAdapterStorage adapterStorage(CacheManager cacheManager) {
     IAdapterStorage delegate = new AdapterInstanceStorageImpl();
     return adapterCacheEnabled ? new CachedAdapterStorage(delegate, cacheManager) : delegate;
@@ -148,12 +185,12 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IDataLakeMeasureStorage datasetStorage(CacheManager cacheManager) {
-    IDataLakeMeasureStorage delegate = new DataLakeMeasureStorage(
+  public IDatasetMetadataStorage datasetStorage(CacheManager cacheManager) {
+    IDatasetMetadataStorage delegate = new DatasetMetadataStorage(
         () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
-        DataLakeMeasure.class
+        DatasetMetadata.class
     );
-    return dataLakeMeasureCacheEnabled ? new CachedDataLakeMeasureStorage(delegate, cacheManager) : delegate;
+    return datasetMetadataCacheEnabled ? new CachedDatasetMetadataStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
@@ -178,5 +215,97 @@ public class StorageApiConfiguration {
   public IUserStorage userStorage(CacheManager cacheManager) {
     IUserStorage delegate = new UserStorage();
     return userCacheEnabled ? new CachedUserStorage(delegate, cacheManager) : delegate;
+  }
+
+  @Bean
+  public IAdapterStorage adapterDescriptionStorage() {
+    return new AdapterDescriptionStorageImpl();
+  }
+
+  @Bean
+  public IGenericStorage genericStorage() {
+    return new GenericStorageImpl();
+  }
+
+  // The legacy image store opens its database connection in the constructor.
+  @Bean
+  @Lazy
+  public IImageStorage imageStorage() {
+    return new ImageStorageImpl();
+  }
+
+  @Bean
+  public IPipelineElementTemplateStorage pipelineElementTemplateStorage() {
+    return new PipelineElementTemplateStorageImpl();
+  }
+
+  @Bean
+  public IPipelineCanvasMetadataStorage pipelineCanvasMetadataStorage() {
+    return new PipelineCanvasMetadataStorageImpl();
+  }
+
+  @Bean
+  public IPipelineElementDescriptionStorage pipelineElementDescriptionStorage(
+      IDataProcessorStorage dataProcessorStorage,
+      IDataStreamStorage dataStreamStorage,
+      IDataSinkStorage dataSinkStorage,
+      @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
+    return new PipelineElementDescriptionStorageImpl(
+        dataProcessorStorage, dataStreamStorage, dataSinkStorage, adapterDescriptionStorage);
+  }
+
+  @Bean
+  public IDataProcessorStorage dataProcessorStorage() {
+    return new DataProcessorStorageImpl();
+  }
+
+  @Bean
+  public IDataSinkStorage dataSinkStorage() {
+    return new DataSinkStorageImpl();
+  }
+
+  @Bean
+  public IDataStreamStorage dataStreamStorage() {
+    return new DataStreamStorageImpl();
+  }
+
+  @Bean
+  public IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage() {
+    return new PasswordRecoveryTokenStorageImpl();
+  }
+
+  @Bean
+  public IUserActivationTokenStorage userActivationTokenStorage() {
+    return new UserActivationTokenStorageImpl();
+  }
+
+  @Bean
+  public IRefreshTokenStorage refreshTokenStorage() {
+    return new RefreshTokenStorageImpl();
+  }
+
+  @Bean
+  public IExtensionsServiceStorage extensionsServiceStorage() {
+    return new ExtensionsServiceStorageImpl();
+  }
+
+  @Bean
+  public IExtensionsServiceConfigurationStorage extensionsServiceConfigurationStorage() {
+    return new ExtensionsServiceConfigurationStorageImpl();
+  }
+
+  @Bean
+  public ICompactPipelineTemplateStorage pipelineTemplateStorage() {
+    return new CompactPipelineTemplateStorageImpl();
+  }
+
+  @Bean
+  public ICertificateStorage certificateStorage() {
+    return new CertificateStorageImpl();
+  }
+
+  @Bean
+  public ITransformationScriptTemplateStorage transformationScriptTemplateStorage() {
+    return new TransformationScriptTemplateStorageImpl();
   }
 }

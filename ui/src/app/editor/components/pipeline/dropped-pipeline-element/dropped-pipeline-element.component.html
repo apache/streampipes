@@ -86,8 +86,7 @@
         [pipelineElement]="pipelineElementConfig"
         [rawPipelineModel]="rawPipelineModel"
         [pipelineElementId]="
-            pipelineElementConfig.type === 'stream' ||
-            pipelineElementConfig.type === 'set'
+            'eventGrounding' in pipelineElementConfig.payload
                 ? pipelineElementConfig.payload.elementId
                 : pipelineElementConfig.payload.belongsTo
         "

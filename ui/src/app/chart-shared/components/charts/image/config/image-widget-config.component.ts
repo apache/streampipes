@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     ImageWidgetModel,
@@ -32,6 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-data-explorer-image-widget-config',
     templateUrl: './image-widget-config.component.html',
     styleUrls: ['./image-widget-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

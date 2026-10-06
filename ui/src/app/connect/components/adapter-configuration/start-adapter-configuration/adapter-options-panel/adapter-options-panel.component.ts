@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -30,6 +36,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
     selector: 'sp-adapter-options-panel',
     templateUrl: './adapter-options-panel.component.html',
     styleUrls: ['./adapter-options-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

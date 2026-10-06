@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
@@ -32,6 +32,7 @@ import {
     selector: 'sp-element-id',
     templateUrl: './element-id.component.html',
     styleUrls: ['./element-id.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import {
@@ -29,6 +29,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-data-export-item',
     templateUrl: './data-export-item.component.html',
     styleUrls: ['./data-export-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatCheckbox,

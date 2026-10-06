@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     CurrentUserService,
     SpAssetBrowserService,
@@ -39,6 +46,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-chart-overview',
     templateUrl: './chart-overview.component.html',
     styleUrls: ['./chart-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,

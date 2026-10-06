@@ -16,7 +16,13 @@
  *
  */
 
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     DialogService,
@@ -52,6 +58,7 @@ import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
     selector: 'sp-extensions-installation',
     templateUrl: './extensions-installation.component.html',
     styleUrls: ['./extensions-installation.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatButton,

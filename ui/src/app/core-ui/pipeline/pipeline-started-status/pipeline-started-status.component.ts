@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, input, output, signal } from '@angular/core';
+import {
+    Component,
+    input,
+    output,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineOperationStatus } from '@streampipes/platform-services';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
 import {
@@ -33,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-started-status',
     templateUrl: './pipeline-started-status.component.html',
     styleUrls: ['./pipeline-started-status.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

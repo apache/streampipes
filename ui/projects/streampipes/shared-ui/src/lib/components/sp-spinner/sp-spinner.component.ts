@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
     LayoutAlignDirective,
@@ -28,6 +28,7 @@ import {
     selector: 'sp-spinner',
     templateUrl: './sp-spinner.component.html',
     styleUrls: ['./sp-spinner.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

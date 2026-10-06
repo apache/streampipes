@@ -16,17 +16,24 @@
  *
  */
 
-import { Component, Input, OnChanges } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-link-table-type',
     templateUrl: './asset-link-table-type.component.html',
     styleUrls: ['./asset-link-table-type.component.scss'],
-    imports: [NgStyle, StyleDirective, MatIcon],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [NgStyle, StyleDirective, MatIcon, TranslatePipe],
 })
 export class AssetLinkTableTypeComponent implements OnChanges {
     @Input()
@@ -37,6 +44,9 @@ export class AssetLinkTableTypeComponent implements OnChanges {
 
     linkType: AssetLinkType;
 
+    /** True when the stored link type matches none of the available types. */
+    unsupported = false;
+
     boxStyle: any;
     linkStyle: any;
     accentColor = 'var(--color-primary)';
@@ -46,7 +56,10 @@ export class AssetLinkTableTypeComponent implements OnChanges {
         this.linkType = this.assetLinkTypes.find(
             l => l.linkType === this.assetLink.linkType,
         );
-        this.accentColor = this.linkType?.linkColor || this.accentColor;
+        this.unsupported = !this.linkType && !!this.assetLink.linkType;
+        this.accentColor = this.unsupported
+            ? 'var(--color-warning)'
+            : this.linkType?.linkColor || this.accentColor;
         this.backgroundColor = `color-mix(in srgb, ${this.accentColor} 20%, white);`;
         this.boxStyle = { border: `1px solid ${this.accentColor}` };
         this.linkStyle = { color: this.accentColor };

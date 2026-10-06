@@ -68,6 +68,9 @@ export class PermissionUtils {
 
     public static save() {
         cy.dataCy('sp-manage-save').should('be.visible').click();
+        // The dialog saves asynchronously; wait until it has closed so the next
+        // step cannot close it early (e.g. Escape from openMenuForRow).
+        cy.dataCy('sp-manage-save', { timeout: 10000 }).should('not.exist');
     }
 
     public static cancel() {

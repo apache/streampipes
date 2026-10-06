@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
@@ -35,7 +34,11 @@ import java.util.stream.Collectors;
 
 public class ModifyAssetLinksMigration implements Migration {
 
-  private final IGenericStorage storage = StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
+  private final IGenericStorage storage;
+
+  public ModifyAssetLinksMigration(IGenericStorage storage) {
+    this.storage = storage;
+  }
 
   @Override
   public boolean shouldExecute() {

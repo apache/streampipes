@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.model.assets.AssetLinkType;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -51,18 +50,23 @@ public class CreateAssetLinkTypeTask implements InstallationTask {
           List.of("connect", "details"),
           true
       ),
-      new AssetLinkType("data-source", "Data Source", "var(--color-data-source)", "sensors", "data-source", List.of(),
+      new AssetLinkType("data-stream", "Data Stream", "var(--color-data-source)", "sensors", "data-stream", List.of(),
           false),
       new AssetLinkType("pipeline", "Pipeline", "var(--color-pipeline)", "play_arrow", "pipeline",
           List.of("pipelines", "details"), true),
-      new AssetLinkType("measurement", "Data Lake Storage", "var(--color-measurement)", "dataset", "measurement",
+      new AssetLinkType("dataset", "Dataset", "var(--color-measurement)", "dataset", "dataset",
           List.of(), false),
       new AssetLinkType("file", "File", "var(--color-file)", "folder", "file", List.of(), false)
   );
 
+  private final IGenericStorage genericStorage;
+
+  public CreateAssetLinkTypeTask(IGenericStorage genericStorage) {
+    this.genericStorage = genericStorage;
+  }
+
   @Override
   public void execute() {
-    var genericStorage = getGenericStorage();
 
     this.defaultLinkTypes.forEach(link -> {
       try {
@@ -75,7 +79,4 @@ public class CreateAssetLinkTypeTask implements InstallationTask {
     });
   }
 
-  private IGenericStorage getGenericStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
-  }
 }

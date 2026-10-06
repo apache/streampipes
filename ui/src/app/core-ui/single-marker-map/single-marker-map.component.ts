@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, forwardRef, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    forwardRef,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     icon,
     Layer,
@@ -47,6 +54,7 @@ import { StyleDirective } from '@ngbracket/ngx-layout/extended';
             multi: true,
         },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LeafletDirective, NgStyle, StyleDirective, LeafletLayerDirective],
 })
 export class SingleMarkerMapComponent implements OnInit, ControlValueAccessor {

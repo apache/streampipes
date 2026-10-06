@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
@@ -27,6 +33,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'sp-select-single-property-config',
     templateUrl: './select-single-property-config.component.html',
     styleUrls: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatFormField,
         FlexDirective,

@@ -19,6 +19,8 @@
 package org.apache.streampipes.dataformat;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.EventConverter;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -26,6 +28,10 @@ import java.util.Map;
 public interface SpDataFormatDefinition extends Serializable {
 
   Map<String, Object> toMap(byte[] event) throws SpRuntimeException;
+
+  default byte[] fromEvent(Event event) throws SpRuntimeException {
+    return fromMap(new EventConverter(event).toMap());
+  }
 
   byte[] fromMap(Map<String, Object> event) throws SpRuntimeException;
 }

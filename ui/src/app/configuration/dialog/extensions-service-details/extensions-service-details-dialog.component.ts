@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { SpServiceRegistration } from '@streampipes/platform-services';
 import {
@@ -32,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-extensions-service-details-dialog',
     templateUrl: './extensions-service-details-dialog.component.html',
     styleUrls: ['./extensions-service-details-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

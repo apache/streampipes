@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     EventPropertyUnion,
@@ -45,6 +46,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-field-selection',
     templateUrl: './field-selection.component.html',
     styleUrls: ['./field-selection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

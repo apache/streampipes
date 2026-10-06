@@ -31,12 +31,16 @@ import (
 // DataLakeMeasure connects to the DataLakeMeasure endpoint of streamPipes.
 // DataLakeMeasure supports GET and DELETE to delete or obtain resources
 // The specific interaction behavior is provided by the method bound to the DataLakeMeasure struct.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset (StreamPipesClient.Datasets) instead.
 type DataLakeMeasure struct {
 	endpoint
 }
 
+// NewDataLakeMeasures is used to return an instance of *DataLakeMeasure.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use NewDatasets instead.
 func NewDataLakeMeasures(clientConfig config.StreamPipesClientConfig) *DataLakeMeasure {
-	// NewDataLakeMeasure is used to return an instance of *DataLakeMeasure,
 
 	return &DataLakeMeasure{
 		endpoint{config: clientConfig},
@@ -44,6 +48,8 @@ func NewDataLakeMeasures(clientConfig config.StreamPipesClientConfig) *DataLakeM
 }
 
 // GetAllDataLakeMeasure retrieves a list of all measurements series from the Data Lake.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset.GetAllDatasetMetadata instead.
 func (d *DataLakeMeasure) GetAllDataLakeMeasure() ([]data_lake.DataLakeMeasure, error) {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", nil)
@@ -76,6 +82,8 @@ func (d *DataLakeMeasure) GetAllDataLakeMeasure() ([]data_lake.DataLakeMeasure, 
 }
 
 // DeleteDataLakeMeasurements removes all stored measurement series form Data Lake.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset.DeleteAllDatasets instead.
 func (d *DataLakeMeasure) DeleteDataLakeMeasurements() error {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", nil)
@@ -97,6 +105,8 @@ func (d *DataLakeMeasure) DeleteDataLakeMeasurements() error {
 }
 
 // GetSingleDataLakeMeasure retrieves a specific measure from the Data Lake.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset.GetSingleDatasetMetadata instead.
 func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.DataLakeMeasure, error) {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measure", []string{elementId})
@@ -129,6 +139,8 @@ func (d *DataLakeMeasure) GetSingleDataLakeMeasure(elementId string) (data_lake.
 }
 
 // DeleteSingleDataLakeMeasure deletes a specific measure from the Data Lake.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset.DeleteSingleDatasetMetadata instead.
 func (d *DataLakeMeasure) DeleteSingleDataLakeMeasure(elementId string) error {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measure", []string{elementId})
@@ -152,6 +164,8 @@ func (d *DataLakeMeasure) DeleteSingleDataLakeMeasure(elementId string) error {
 // GetSingleDataSeries retrieves the measurement series for the specified measureId from the Data Lake.
 // Currently not supporting parameter queries.
 // The measureId can also be considered measureName.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset.GetSingleDataSeries instead.
 func (d *DataLakeMeasure) GetSingleDataSeries(measureId string) (*data_lake.DataSeries, error) {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId})
@@ -185,6 +199,8 @@ func (d *DataLakeMeasure) GetSingleDataSeries(measureId string) (*data_lake.Data
 
 // ClearDataLakeMeasureData removes data from a single measurement series with given id.
 // The measureId can also be considered measureName.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset.ClearDatasetData instead.
 func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureId string) error {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId})
@@ -208,6 +224,8 @@ func (d *DataLakeMeasure) ClearDataLakeMeasureData(measureId string) error {
 
 // DeleteDataLakeMeasure  drops a single measurement series with given id from Data Lake and remove related event property.
 // The measureId can also be considered measureName.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Dataset.DeleteDataset instead.
 func (d *DataLakeMeasure) DeleteDataLakeMeasure(measureId string) error {
 
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v4/datalake/measurements", []string{measureId, "drop"})

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, ViewChild, inject } from '@angular/core';
+import {
+    Component,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import {
     MatCell,
@@ -50,6 +55,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     selector: 'sp-registered-extensions-services',
     templateUrl: './registered-extensions-services.component.html',
     styleUrls: ['./registered-extensions-services.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

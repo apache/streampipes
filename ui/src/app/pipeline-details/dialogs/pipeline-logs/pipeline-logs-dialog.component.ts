@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -29,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-logs',
     templateUrl: './pipeline-logs-dialog.component.html',
     styleUrls: ['./pipeline-logs-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

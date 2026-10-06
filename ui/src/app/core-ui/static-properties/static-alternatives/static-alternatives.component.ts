@@ -23,6 +23,7 @@ import {
     OnInit,
     TemplateRef,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
@@ -32,10 +33,7 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import {
-    DefaultFlexDirective,
-    DefaultLayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgTemplateOutlet } from '@angular/common';
@@ -51,9 +49,10 @@ export type AlternativeRenderCtx = {
     selector: 'sp-app-static-alternatives',
     templateUrl: './static-alternatives.component.html',
     styleUrls: ['./static-alternatives.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        DefaultFlexDirective,
-        DefaultLayoutDirective,
+        FlexDirective,
+        LayoutDirective,
         MatRadioGroup,
         MatRadioButton,
         MatTooltip,

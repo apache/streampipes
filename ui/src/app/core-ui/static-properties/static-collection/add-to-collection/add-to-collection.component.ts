@@ -16,19 +16,23 @@
  *
  */
 
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { StaticPropertyUtilService } from '../../static-property-util.service';
 import {
     FreeTextStaticProperty,
     OneOfStaticProperty,
-    StaticProperty,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    DefaultFlexDirective,
-    DefaultLayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -43,11 +47,12 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     selector: 'sp-add-to-collection',
     templateUrl: './add-to-collection.component.html',
     styleUrls: ['./add-to-collection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        DefaultLayoutGapDirective,
+        LayoutGapDirective,
         MatButton,
         MatIcon,
-        DefaultFlexDirective,
+        FlexDirective,
         MatFormField,
         MatInput,
         MatProgressBar,
@@ -62,11 +67,11 @@ export class AddToCollectionComponent {
     translateService = inject(TranslateService);
 
     @Input()
-    public staticPropertyTemplate: StaticProperty;
+    public staticPropertyTemplate: StaticPropertyUnion;
 
     @Output()
-    addPropertyEmitter: EventEmitter<StaticProperty> =
-        new EventEmitter<StaticProperty>();
+    addPropertyEmitter: EventEmitter<StaticPropertyUnion> =
+        new EventEmitter<StaticPropertyUnion>();
 
     public showFileSelecion = false;
 
@@ -106,10 +111,8 @@ export class AddToCollectionComponent {
             this.parseCsv(fileReader.result).subscribe(res => {
                 res.pop();
                 res.forEach((row, i) => {
-                    const property: StaticProperty = this.getStaticProperty(
-                        row,
-                        i,
-                    );
+                    const property: StaticPropertyUnion =
+                        this.getStaticProperty(row, i);
                     finalProperties.push(property);
                 });
 
@@ -126,7 +129,7 @@ export class AddToCollectionComponent {
         fileReader.readAsText(target.files[0]);
 
         // Parse file and return properties
-        const finalProperties: StaticProperty[] = [];
+        const finalProperties: StaticPropertyUnion[] = [];
     }
 
     private setError(errorMessage: string) {
@@ -159,7 +162,7 @@ export class AddToCollectionComponent {
         return parseResult;
     }
 
-    public getStaticProperty(row: any, rowNumber: number): StaticProperty {
+    public getStaticProperty(row: any, rowNumber: number): StaticPropertyUnion {
         const clone = this.staticPropertyUtil.clone(
             this.staticPropertyTemplate,
         );

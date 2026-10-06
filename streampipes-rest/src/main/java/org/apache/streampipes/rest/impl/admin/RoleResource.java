@@ -24,15 +24,48 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v2/admin/roles")
-@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class RoleResource extends DefaultCRUDRestResource<Role> {
 
   public RoleResource(IRoleStorage roleStorage) {
     super(roleStorage);
+  }
+
+  @Override
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public List<Role> findAll() {
+    return super.findAll();
+  }
+
+  @Override
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public Role findById(@PathVariable String id) {
+    return super.findById(id);
+  }
+
+  @Override
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public void create(@RequestBody Role entity) {
+    super.create(entity);
+  }
+
+  @Override
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public Void update(@RequestBody Role entity) {
+    return super.update(entity);
+  }
+
+  @Override
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public void delete(@PathVariable String id) {
+    super.delete(id);
   }
 }

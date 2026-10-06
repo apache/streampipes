@@ -15,7 +15,13 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FieldConfig, SelectedFilter } from '@streampipes/platform-services';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -25,6 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-filter-selection-panel-row-property-selection',
     templateUrl:
         './filter-selection-panel-row-property-selection.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatFormField, MatLabel, MatSelect, MatOption, TranslatePipe],
 })
 export class FilterSelectionPanelRowPropertySelectionComponent {

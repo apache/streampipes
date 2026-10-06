@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataExplorerField,
     DataExplorerWidgetModel,
@@ -40,6 +45,7 @@ import { StyleDirective } from '@ngbracket/ngx-layout/extended';
     selector: 'sp-data-explorer-echarts-widget',
     templateUrl: './echarts-widget.component.html',
     styleUrls: ['./echarts-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NoDataInDateRangeComponent,
         TooMuchDataComponent,

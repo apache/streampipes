@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -31,6 +37,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
     selector: 'sp-feature-card-header',
     templateUrl: './feature-card-header.component.html',
     styleUrls: ['./feature-card-header.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

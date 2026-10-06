@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     PieChartVisConfig,
@@ -41,6 +41,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 @Component({
     selector: 'sp-pie-chart-widget-config',
     templateUrl: './pie-chart-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

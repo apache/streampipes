@@ -20,21 +20,43 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DataStreamResourceManagerTest {
+
+  @Test
+  void deletionCleansAssetLinksAndPermissions() throws IOException {
+    var storage = mock(IDataStreamStorage.class);
+    var permissions = mock(PermissionResourceManager.class);
+    var genericStorage = mock(IGenericStorage.class);
+    var stream = new SpDataStream();
+    stream.setElementId("stream-1");
+    when(storage.getElementById("stream-1")).thenReturn(stream);
+
+    new DataStreamResourceManager(storage, permissions, new ResourceDeletionManager(genericStorage))
+        .delete("stream-1");
+
+    verify(genericStorage).deleteAssetLinkToResource("stream-1");
+    verify(permissions).findForObjectId("stream-1");
+    verify(storage).deleteElement(stream);
+  }
 
   @Test
   public void update() {
     IDataStreamStorage storage = mock(IDataStreamStorage.class);
     PermissionResourceManager permissionResourceManager = mock(PermissionResourceManager.class);
-    DataStreamResourceManager dataStreamResourceManager = new DataStreamResourceManager(storage, permissionResourceManager);
+    DataStreamResourceManager dataStreamResourceManager = new DataStreamResourceManager(
+        storage, permissionResourceManager, mock(ResourceDeletionManager.class));
     dataStreamResourceManager.update(new SpDataStream());
 
     verify(storage, times(1)).updateElement(any());

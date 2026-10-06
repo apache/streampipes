@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     LocationConfig,
     LocationConfigService,
@@ -31,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-asset-location',
     templateUrl: './asset-location.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         MatCheckbox,

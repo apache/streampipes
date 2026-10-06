@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -27,6 +27,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-visualization-config-outer',
     templateUrl: './visualization-config-outer.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

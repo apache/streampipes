@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AssetConstants,
@@ -33,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-manage-site-dialog-component',
     templateUrl: './manage-site-dialog.component.html',
     styleUrls: ['./manage-site-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [EditAssetLocationComponent, MatDivider, MatButton, TranslatePipe],
 })
 export class ManageSiteDialogComponent implements OnInit {

@@ -17,7 +17,13 @@
  */
 
 import { NgStyle } from '@angular/common';
-import { Component, LOCALE_ID, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    LOCALE_ID,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataExplorerField,
     SpQueryResult,
@@ -51,6 +57,7 @@ interface ValueCardView {
     selector: 'sp-data-explorer-value-card-widget',
     templateUrl: './value-card-widget.component.html',
     styleUrls: ['./value-card-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

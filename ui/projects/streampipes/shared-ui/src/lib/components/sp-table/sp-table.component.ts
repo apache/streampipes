@@ -34,6 +34,7 @@ import {
     SimpleChanges,
     TemplateRef,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
@@ -122,6 +123,7 @@ type SpTableRenderedRow<T> = T | SpTableGroupHeaderRow;
     selector: 'sp-table',
     templateUrl: './sp-table.component.html',
     styleUrls: ['./sp-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatTable,
@@ -181,6 +183,7 @@ export class SpTableComponent<T>
     @Input() noBorder = false;
     @Input() noToolbarBorderTop = false;
     @Input() rowsClickable = false;
+    @Input() showPaginator = true;
     @Input() showActionsMenu = false;
     @Input() showSelectionCheckboxes = false;
     @Input() showMultiActionsExecuteButton = false;
@@ -202,7 +205,15 @@ export class SpTableComponent<T>
     >();
     @Output() multiActionSelectionChanged = new EventEmitter<string | null>();
 
-    @ViewChild('paginator') paginator: MatPaginator;
+    paginator: MatPaginator;
+
+    @ViewChild('paginator')
+    set paginatorControl(paginator: MatPaginator) {
+        this.paginator = paginator;
+        if (this.viewInitialized) {
+            this.bindDataSource();
+        }
+    }
     @ContentChild(SpTableActionsDirective, { read: TemplateRef })
     actionsTemplate?: TemplateRef<any>;
     @ContentChild(SpTableMultiActionsDirective, { read: TemplateRef })
@@ -547,6 +558,13 @@ export class SpTableComponent<T>
         this.onNameSearchInput('');
     }
 
+    activateRow(event: Event, row: T): void {
+        if (this.rowsClickable && event.target === event.currentTarget) {
+            event.preventDefault();
+            this.rowClicked.emit(row);
+        }
+    }
+
     isGroupHeaderRow = (_: number, row: SpTableRenderedRow<T>) =>
         this.hasGroupHeaderMarker(row);
 
@@ -559,7 +577,7 @@ export class SpTableComponent<T>
         }
 
         this.configureNameSearch();
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.showPaginator ? this.paginator : null;
 
         this.renderedDataSubscription?.unsubscribe();
         this.renderedDataSubscription = this.dataSource.connect().subscribe({
@@ -769,8 +787,7 @@ export class SpTableComponent<T>
             this.dataSource.sortingDataAccessor?.bind(this.dataSource) ??
             ((data: T, sortHeaderId: string) =>
                 (data as Record<string, unknown>)?.[sortHeaderId] as
-                    | string
-                    | number);
+                    string | number);
 
         this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
             if (

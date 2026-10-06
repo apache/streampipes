@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     FormFieldComponent,
@@ -37,6 +42,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl:
         './create-adapter-transformation-template-dialog.component.html',
     styleUrl: './create-adapter-transformation-template-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormFieldComponent,
         SpAlertBannerComponent,

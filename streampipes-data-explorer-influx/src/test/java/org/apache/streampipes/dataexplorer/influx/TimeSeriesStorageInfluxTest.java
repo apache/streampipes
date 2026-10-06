@@ -22,7 +22,7 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
@@ -37,6 +37,7 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.influxdb.InfluxDB;
+import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,8 +49,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -323,6 +328,129 @@ public class TimeSeriesStorageInfluxTest {
   }
 
   @Test
+  public void onEventWithJsonValueForPrimitivePropertyWarnsOnceAndPreservesValidFields() {
+    var expected = getPointBuilderWithTimestamp()
+        .addField("valid", "value")
+        .build();
+
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(
+            EventPropertyPrimitiveTestBuilder
+                .create()
+                .withRuntimeName(FIELD_NAME)
+                .withRuntimeType(XSD.STRING)
+                .build())
+        .withEventProperty(
+            EventPropertyPrimitiveTestBuilder
+                .create()
+                .withRuntimeName("valid")
+                .withRuntimeType(XSD.STRING)
+                .build())
+        .build();
+
+    var event = getEvent(eventSchema, Map.of(FIELD_NAME, Map.of("key", "value"), "valid", "value"));
+
+    var warnings = new ArrayList<Map.Entry<String, String>>();
+    var influxStore = getInfluxStore(eventSchema, false,
+        (title, details) -> warnings.add(Map.entry(title, details)));
+
+    influxStore.onEvent(event);
+    influxStore.onEvent(event);
+
+    var points = ArgumentCaptor.forClass(Point.class);
+    Mockito.verify(influxDBMock, Mockito.times(2)).write(points.capture());
+    assertEquals(List.of(expected, expected), points.getAllValues());
+    assertEquals(List.of(Map.entry("Invalid field ignored",
+        "Event property 'testId' is declared as primitive in the schema but received NestedField.")), warnings);
+  }
+
+  @Test
+  public void malformedFieldsWarnOncePerRuntimeNameAcrossEvents() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName("first")
+            .withRuntimeType(XSD.STRING)
+            .build())
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName("second")
+            .withRuntimeType(XSD.STRING)
+            .build())
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName("third")
+            .withRuntimeType(XSD.STRING)
+            .build())
+        .build();
+    var warnings = new ArrayList<String>();
+    var influxStore = getInfluxStore(eventSchema, false, (title, details) -> warnings.add(details));
+    var malformedValue = Map.of("key", "value");
+    var firstEvent = getEvent(eventSchema, Map.of("first", malformedValue, "second", malformedValue));
+
+    influxStore.onEvent(firstEvent);
+    influxStore.onEvent(firstEvent);
+    assertEquals(List.of(
+        "Event property 'first' is declared as primitive in the schema but received NestedField.",
+        "Event property 'second' is declared as primitive in the schema but received NestedField."
+    ), warnings);
+
+    var laterEvent = getEvent(eventSchema,
+        Map.of("first", malformedValue, "second", malformedValue, "third", malformedValue));
+    influxStore.onEvent(laterEvent);
+    influxStore.onEvent(laterEvent);
+    assertEquals(List.of(
+        "Event property 'first' is declared as primitive in the schema but received NestedField.",
+        "Event property 'second' is declared as primitive in the schema but received NestedField.",
+        "Event property 'third' is declared as primitive in the schema but received NestedField."
+    ), warnings);
+    Mockito.verifyNoInteractions(influxDBMock);
+  }
+
+  @Test
+  public void onEventWithOnlyMalformedFieldsSkipsEmptyPointsAndRecovers() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.STRING)
+            .build())
+        .build();
+    var warnings = new ArrayList<String>();
+    var influxStore = getInfluxStore(eventSchema, false, (title, details) -> warnings.add(details));
+
+    influxStore.onEvent(getEvent(eventSchema, Map.of(FIELD_NAME, Map.of("key", "value"))));
+    influxStore.onEvent(getEvent(eventSchema, Map.of(FIELD_NAME, List.of("value"))));
+
+    Mockito.verifyNoInteractions(influxDBMock);
+    assertEquals(1, warnings.size());
+
+    var actualPoint = executeOnEvent(influxStore, getEvent(eventSchema, Map.of(FIELD_NAME, "valid")));
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, "valid").build(), actualPoint);
+  }
+
+  @Test
+  public void malformedFieldDoesNotDiscardValidValueWithDuplicateFiltering() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName("valid")
+            .withRuntimeType(XSD.STRING)
+            .build())
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.STRING)
+            .build())
+        .build();
+    var warnings = new ArrayList<String>();
+    var influxStore = getInfluxStore(eventSchema, true, (title, details) -> warnings.add(details));
+    var event = getEvent(eventSchema, Map.of("valid", "value", FIELD_NAME, Map.of("key", "value")));
+
+    influxStore.onEvent(event);
+    influxStore.onEvent(event);
+
+    var points = ArgumentCaptor.forClass(Point.class);
+    Mockito.verify(influxDBMock).write(points.capture());
+    assertEquals(getPointBuilderWithTimestamp().addField("valid", "value").build(), points.getValue());
+    assertEquals(1, warnings.size());
+  }
+
+  @Test
   public void onEventWithListProperty() {
     String[] value = {"one", "two"};
     var expected = getPointBuilderWithTimestamp()
@@ -349,6 +477,154 @@ public class TimeSeriesStorageInfluxTest {
   /**
    * Initialize a Point builder with a timestamp
    */
+  @Test
+  public void onEventsWritesAllPointsInOneBatch() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.INTEGER)
+            .build())
+        .build();
+    var events = IntStream.range(0, 3)
+        .mapToObj(i -> getEvent(eventSchema, Map.of(FIELD_NAME, i)))
+        .toList();
+
+    getInfluxStore(eventSchema).onEvents(events);
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock).write(captor.capture());
+    Mockito.verify(influxDBMock, Mockito.never()).write(ArgumentMatchers.any(Point.class));
+    assertEquals(3, captor.getValue().getPoints().size());
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 2).build(),
+        captor.getValue().getPoints().get(2));
+  }
+
+  @Test
+  public void onEventsSplitsLargeBatches() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.INTEGER)
+            .build())
+        .build();
+    var events = IntStream.range(0, TimeSeriesStorageInflux.MAX_POINTS_PER_WRITE + 1)
+        .mapToObj(i -> getEvent(eventSchema, Map.of(FIELD_NAME, i)))
+        .toList();
+
+    getInfluxStore(eventSchema).onEvents(events);
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock, Mockito.times(2)).write(captor.capture());
+    assertEquals(TimeSeriesStorageInflux.MAX_POINTS_PER_WRITE, captor.getAllValues().get(0).getPoints().size());
+    assertEquals(1, captor.getAllValues().get(1).getPoints().size());
+  }
+
+  @Test
+  public void onEventsSkipsEventsWithoutFields() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp().build();
+    var events = List.of(getEvent(eventSchema, Map.of()));
+
+    getInfluxStore(eventSchema).onEvents(events);
+
+    Mockito.verify(influxDBMock, Mockito.never()).write(ArgumentMatchers.any(BatchPoints.class));
+  }
+
+  @Test
+  public void closeOnlyFlushesSharedClient() {
+    var measure = new DatasetMetadata(EXPECTED_MEASUREMENT, "s0::%s".formatted(TIMESTAMP),
+        getEventSchemaBuilderWithTimestamp().build());
+
+    new TimeSeriesStorageInflux(measure, false, influxDBMock, false, (title, details) -> { }).close();
+
+    Mockito.verify(influxDBMock).flush();
+    Mockito.verify(influxDBMock, Mockito.never()).close();
+  }
+
+  @Test
+  public void onEventNormalizesLegacySelectorsWithoutDuplicates() {
+    var schema = legacyEventSchema();
+    var event = legacyEvent();
+    var store = getInfluxStore(schema);
+
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build(), executeOnEvent(store, event));
+    assertEquals(Set.of("s0::timestamp", "s0::" + FIELD_NAME), event.getFields().keySet());
+    store.onEvent(event);
+    assertEquals(2, event.getFields().size());
+  }
+
+  @Test
+  public void onEventsSupportsLegacyAndFactorySelectors() {
+    var schema = legacyEventSchema();
+    var legacy = legacyEvent();
+    var factory = getEvent(schema, Map.of(FIELD_NAME, 1));
+
+    getInfluxStore(schema).onEvents(List.of(legacy, factory));
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock).write(captor.capture());
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build();
+    assertEquals(List.of(expected, expected), captor.getValue().getPoints());
+    assertEquals(factory.getFields().keySet(), legacy.getFields().keySet());
+  }
+
+  @Test
+  public void normalizationPreservesExistingSelectors() {
+    var schema = legacyEventSchema();
+    var event = getEvent(schema, Map.of(FIELD_NAME, 1));
+    event.addField(TIMESTAMP, 0L);
+
+    var actual = executeOnEvent(getInfluxStore(schema), event);
+
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build(), actual);
+    assertEquals(2, event.getFields().size());
+  }
+
+  @Test
+  public void onEventPreservesExplicitDatasetTimestampSelector() {
+    var event = datasetImportEvent();
+    var actual = executeOnEvent(getInfluxStore(legacyEventSchema()), event);
+
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build(), actual);
+    assertEquals(SAMPLE_TIMESTAMP, event.getFieldBySelector("s0::timestamp").getAsPrimitive().getAsLong());
+    assertFalse(event.getFields().containsKey("o::s0::timestamp"));
+  }
+
+  @Test
+  public void onEventsPreservesExplicitDatasetTimestampSelector() {
+    var event = datasetImportEvent();
+    var store = getInfluxStore(legacyEventSchema());
+    store.onEvents(List.of(event));
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock).write(captor.capture());
+    assertEquals(List.of(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build()),
+        captor.getValue().getPoints());
+    assertEquals(Set.of("o::timestamp", "o::" + FIELD_NAME, "s0::timestamp"), event.getFields().keySet());
+  }
+
+  private Event datasetImportEvent() {
+    // Match DatasetWriter: default factory prefix "o", followed by an explicit dataset timestamp selector.
+    var event = EventFactory.fromMap(Map.of(TIMESTAMP, SAMPLE_TIMESTAMP, FIELD_NAME, 1));
+    event.addField("s0::timestamp", event.getFieldByRuntimeName(TIMESTAMP).getAsPrimitive().getAsLong());
+    return event;
+  }
+
+  private Event legacyEvent() {
+    var event = new Event(new SourceInfo("test-topic", "s0"));
+    event.addField(TIMESTAMP, SAMPLE_TIMESTAMP);
+    event.addField(FIELD_NAME, 1);
+    return event;
+  }
+
+  private EventSchema legacyEventSchema() {
+    return getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.INTEGER)
+            .build())
+        .build();
+  }
+
   private Point.Builder getPointBuilderWithTimestamp() {
     return Point.measurement(EXPECTED_MEASUREMENT)
                 .time(SAMPLE_TIMESTAMP, TimeUnit.MILLISECONDS);
@@ -433,8 +709,14 @@ public class TimeSeriesStorageInfluxTest {
    * Initializes an influx store with the given event schema
    */
   private TimeSeriesStorageInflux getInfluxStore(EventSchema eventSchema) {
+    return getInfluxStore(eventSchema, false, (title, details) -> { });
+  }
 
-    DataLakeMeasure measure = new DataLakeMeasure(
+  private TimeSeriesStorageInflux getInfluxStore(EventSchema eventSchema,
+                                                boolean ignoreDuplicates,
+                                                BiConsumer<String, String> warningReporter) {
+
+    DatasetMetadata measure = new DatasetMetadata(
         EXPECTED_MEASUREMENT,
         "s0::%s".formatted(TIMESTAMP),
         eventSchema
@@ -444,7 +726,7 @@ public class TimeSeriesStorageInfluxTest {
     Mockito.when(influxClientProviderMock.getSetUpInfluxDBClient((Environment) ArgumentMatchers.any()))
            .thenReturn(influxDBMock);
 
-    return new TimeSeriesStorageInflux(measure, null, influxClientProviderMock);
+    return new TimeSeriesStorageInflux(measure, ignoreDuplicates, null, influxClientProviderMock, warningReporter);
   }
 
 }

@@ -95,7 +95,7 @@ public class AbstractMailer {
   protected List<Recipient> toSimpleRecipientList(List<String> recipients) {
     return recipients
         .stream()
-        .map(r -> new Recipient("", r, Message.RecipientType.TO))
+        .map(r -> new Recipient("", r, Message.RecipientType.TO, null))
         .collect(Collectors.toList());
   }
 }

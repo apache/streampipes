@@ -22,6 +22,7 @@ import {
     inject,
     Input,
     OnChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { SpLabelComponent } from '@streampipes/shared-ui';
@@ -31,6 +32,7 @@ import { LastUpdatedFormatterService } from '../../../../core-services/time-form
     selector: 'sp-dataset-last-event-label',
     templateUrl: './dataset-last-event-label.component.html',
     styleUrls: ['./dataset-last-event-label.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatTooltip, SpLabelComponent],
 })
 export class DatasetLastEventLabelComponent implements OnChanges {

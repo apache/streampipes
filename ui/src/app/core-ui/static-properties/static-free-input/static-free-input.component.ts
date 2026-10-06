@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -41,12 +47,13 @@ import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
-import { MatChip } from '@angular/material/chips';
+import { MatChip, MatChipSet } from '@angular/material/chips';
 
 @Component({
     selector: 'sp-app-static-free-input',
     templateUrl: './static-free-input.component.html',
     styleUrls: ['./static-free-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -58,6 +65,7 @@ import { MatChip } from '@angular/material/chips';
         MatSlider,
         MatSliderThumb,
         MatChip,
+        MatChipSet,
         QuillEditorComponent,
         TranslatePipe,
     ],
@@ -171,6 +179,6 @@ export class StaticFreeInputComponent
         if (!Number.isInteger(value)) {
             value = Number(value.toFixed(1));
         }
-        return value;
+        return String(value);
     }
 }

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, ViewChild, inject } from '@angular/core';
+import {
+    Component,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import {
     MatCell,
@@ -68,6 +73,7 @@ import { TranslatePipe } from '@ngx-translate/core';
             ),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

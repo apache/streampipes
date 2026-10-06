@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Pipeline, SpLogEntry } from '@streampipes/platform-services';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
 import {
@@ -34,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-details-expansion-panel',
     templateUrl: './pipeline-details-expansion-panel.component.html',
     styleUrls: ['./pipeline-details-expansion-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatAccordion,
         MatExpansionPanel,

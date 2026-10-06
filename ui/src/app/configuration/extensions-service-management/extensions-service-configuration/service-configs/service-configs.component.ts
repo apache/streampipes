@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpServiceConfiguration } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -31,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-service-configs',
     templateUrl: './service-configs.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

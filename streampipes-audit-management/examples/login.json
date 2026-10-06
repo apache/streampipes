@@ -1,0 +1,10 @@
+{
+  "event_id": "9d635b88-d6a4-4a5c-b5c7-29da71e612ff",
+  "recorded_at": "2026-09-26T09:00:00Z",
+  "event_type": "sp.auth.login",
+  "outcome": "succeeded",
+  "actor": "user-42",
+  "details": {
+    "authMethod": "PASSWORD"
+  }
+}

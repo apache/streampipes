@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     CompactPipeline,
     Pipeline,
@@ -32,6 +38,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-pipeline-code-dialog',
     templateUrl: './pipeline-code-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

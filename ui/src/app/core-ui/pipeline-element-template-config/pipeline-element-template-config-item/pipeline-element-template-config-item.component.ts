@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { StaticPropertyUnion } from '@streampipes/platform-services';
 import { PipelineElementTemplateGenerator } from '../pipeline-element-template-generator';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -26,6 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-pipeline-element-template-config-item',
     templateUrl: './pipeline-element-template-config-item.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, MatCheckbox, TranslatePipe],
 })
 export class PipelineElementTemplateConfigItemComponent implements OnInit {

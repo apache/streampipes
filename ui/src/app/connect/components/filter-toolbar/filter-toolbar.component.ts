@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import {
     FlexDirective,
@@ -32,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-connect-filter-toolbar',
     templateUrl: './filter-toolbar.component.html',
     styleUrls: ['./filter-toolbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

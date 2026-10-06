@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -29,6 +34,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-configure-fields-header',
     templateUrl: './configure-fields-header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

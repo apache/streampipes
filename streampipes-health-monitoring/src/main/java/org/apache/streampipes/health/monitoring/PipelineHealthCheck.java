@@ -225,9 +225,9 @@ public class PipelineHealthCheck implements HealthCheck {
   protected boolean restorePipelineElement(InvocableStreamPipesEntity pipelineElement,
                                            String pipelineId) {
     try {
-      var service = new ExtensionsServiceEndpointGenerator().selectService(
+      var service = new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery()).selectService(
           pipelineElement.getAppId(),
-          ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement.getAppId()),
+          ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement),
           Collections.emptySet()
       );
       new SecretService(new SecretDecrypter()).apply(pipelineElement);

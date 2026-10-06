@@ -21,7 +21,13 @@ import {
     PipelineOperationStatus,
     PipelineService,
 } from '@streampipes/platform-services';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineAction } from '../../model/pipeline-model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -39,6 +45,7 @@ import { PipelineStartService } from '../../services/pipeline-start.service';
     selector: 'sp-pipeline-status-dialog',
     templateUrl: './pipeline-status-dialog.component.html',
     styleUrls: ['./pipeline-status-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

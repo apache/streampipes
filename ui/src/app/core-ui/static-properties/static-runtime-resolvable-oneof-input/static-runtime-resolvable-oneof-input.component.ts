@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnChanges, OnInit } from '@angular/core';
+import {
+    Component,
+    OnChanges,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Option,
     RuntimeResolvableOneOfStaticProperty,
@@ -41,6 +46,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-app-static-runtime-resolvable-oneof-input',
     templateUrl: './static-runtime-resolvable-oneof-input.component.html',
     styleUrls: ['./static-runtime-resolvable-oneof-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

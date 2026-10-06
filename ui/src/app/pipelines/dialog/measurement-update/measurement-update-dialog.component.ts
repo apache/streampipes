@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Pipeline } from '@streampipes/platform-services';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
@@ -34,6 +39,7 @@ import { MeasurementUpdateAction } from '../../model/pipeline-model';
     selector: 'sp-measurement-update-dialog',
     templateUrl: './measurement-update-dialog.component.html',
     styleUrls: ['./measurement-update-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutAlignDirective,
         LayoutDirective,

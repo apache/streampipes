@@ -110,8 +110,8 @@ export interface QuickTimeSelection {
 }
 
 export class DateRange {
-    public startDate: Date;
-    public endDate: Date;
+    public startDate!: Date;
+    public endDate!: Date;
 
     constructor(startDate?: Date, endDate?: Date) {
         if (startDate && endDate) {

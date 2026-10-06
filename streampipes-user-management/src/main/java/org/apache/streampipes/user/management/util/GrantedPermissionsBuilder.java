@@ -21,30 +21,24 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class GrantedPermissionsBuilder {
 
-  private final Principal principal;
+  private final Set<String> sids;
   private final IPermissionStorage permissionStorage;
 
   public GrantedPermissionsBuilder(Principal principal,
                                    IPermissionStorage permissionStorage) {
-    this.principal = principal;
+    this.sids = new HashSet<>(principal.getGroups());
+    this.sids.add(principal.getPrincipalId());
     this.permissionStorage = permissionStorage;
   }
 
   public Set<String> buildAllPermissions() {
-    Set<String> sids = extractSids();
-
     return permissionStorage
         .getObjectPermissions(new ArrayList<>(sids));
   }
 
-  private Set<String> extractSids() {
-    Set<String> groupSids = principal.getGroups();
-    groupSids.add(principal.getPrincipalId());
-
-    return groupSids;
-  }
 }

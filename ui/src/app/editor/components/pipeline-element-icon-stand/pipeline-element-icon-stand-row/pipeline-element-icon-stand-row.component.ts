@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     PipelineElementType,
     PipelineElementUnion,
@@ -37,12 +44,17 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SpDataStream } from '@streampipes/platform-services';
 import { SpTableResolvedAssetContext } from '@streampipes/shared-ui';
 import { map } from 'rxjs';
+import { CdkDrag, CdkDragPreview } from '@angular/cdk/drag-drop';
+import { PipelineEditorService } from '../../../services/pipeline-editor.service';
 
 @Component({
     selector: 'sp-pe-icon-stand-row',
     templateUrl: './pipeline-element-icon-stand-row.component.html',
     styleUrls: ['./pipeline-element-icon-stand-row.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        CdkDrag,
+        CdkDragPreview,
         MatTooltip,
         NgClass,
         PipelineElementComponent,
@@ -52,6 +64,7 @@ import { map } from 'rxjs';
     ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
+    protected pipelineEditorService = inject(PipelineEditorService);
     private editorService = inject(EditorService);
     private assetBrowserService = inject(SpAssetBrowserService);
     private assetContextService = inject(SpTableAssetContextService);
@@ -65,6 +78,12 @@ export class PipelineElementIconStandRowComponent implements OnInit {
 
     currentMouseOver = false;
     assetContext?: SpTableResolvedAssetContext;
+
+    constructor() {
+        this.destroyRef.onDestroy(() =>
+            this.pipelineEditorService.dragging.set(false),
+        );
+    }
 
     ngOnInit(): void {
         const activeType = PipelineElementTypeUtils.fromClassName(
@@ -85,6 +104,19 @@ export class PipelineElementIconStandRowComponent implements OnInit {
                     takeUntilDestroyed(this.destroyRef),
                 )
                 .subscribe(assetContext => (this.assetContext = assetContext));
+        }
+    }
+
+    releaseDrag(): void {
+        this.pipelineEditorService.dragging.set(false);
+        const preview = document.querySelector(
+            '.pipeline-element-drag-preview',
+        );
+        if (preview) {
+            this.pipelineEditorService.paletteDrop$.next({
+                element: this.element,
+                bounds: preview.getBoundingClientRect(),
+            });
         }
     }
 

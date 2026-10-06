@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import {
@@ -33,6 +38,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     selector: 'sp-service-configs-boolean',
     templateUrl: './service-configs-boolean.component.html',
     providers: [ConfigurationService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

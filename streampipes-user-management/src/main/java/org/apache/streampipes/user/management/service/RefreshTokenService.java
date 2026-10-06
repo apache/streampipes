@@ -19,7 +19,6 @@ package org.apache.streampipes.user.management.service;
 
 import org.apache.streampipes.model.client.user.RefreshToken;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
 import java.util.UUID;
@@ -32,10 +31,8 @@ public class RefreshTokenService {
 
   private final IRefreshTokenStorage refreshTokenStorage;
 
-  public RefreshTokenService() {
-    this.refreshTokenStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getRefreshTokenStorage();
+  public RefreshTokenService(IRefreshTokenStorage refreshTokenStorage) {
+    this.refreshTokenStorage = java.util.Objects.requireNonNull(refreshTokenStorage);
   }
 
   public IssuedRefreshToken issueRefreshToken(String principalId,
@@ -89,12 +86,20 @@ public class RefreshTokenService {
   }
 
   public void deleteAllRefreshTokensByRawToken(String rawToken) {
+    deleteAllRefreshTokensAndGetPrincipalId(rawToken);
+  }
+
+  /** Preserves logout revocation behavior; only a valid token supplies an authenticated audit actor. */
+  public String deleteAllRefreshTokensAndGetPrincipalId(String rawToken) {
     String hashedToken = TokenUtil.hashToken(rawToken);
     RefreshToken existingToken = refreshTokenStorage.findByHashedToken(hashedToken);
 
     if (existingToken != null && existingToken.getPrincipalId() != null) {
+      String actor = isValid(existingToken) ? existingToken.getPrincipalId() : null;
       deleteAllRefreshTokens(existingToken.getPrincipalId());
+      return actor;
     }
+    return null;
   }
 
   private long getTokenLifetime(boolean rememberMe) {

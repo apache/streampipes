@@ -25,6 +25,7 @@ import {
     Output,
     SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AssetSiteDesc,
@@ -51,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-asset-details-basics',
     templateUrl: './asset-details-basics.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         SplitSectionComponent,

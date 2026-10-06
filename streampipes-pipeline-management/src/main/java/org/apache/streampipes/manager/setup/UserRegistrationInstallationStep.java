@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.commons.security.ServiceAccountSecret;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
@@ -50,7 +51,8 @@ public class UserRegistrationInstallationStep extends InstallationStep {
     this.adminEmail = adminEmail;
     this.adminPassword = adminPassword;
     this.initialServiceAccountName = initialServiceAccountName;
-    this.initialServiceAccountSecret = initialServiceAccountSecret;
+    this.initialServiceAccountSecret = ServiceAccountSecret.requireValid(
+        initialServiceAccountSecret, "Initial service account secret");
     this.initialAdminUserSid = initialAdminUserSid;
     this.userStorage = userStorage;
     roles = new HashSet<>();

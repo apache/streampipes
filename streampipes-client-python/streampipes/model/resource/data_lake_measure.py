@@ -14,52 +14,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+"""
+DEPRECATED - the data lake measure resource has been superseded by
+[DatasetMetadata][streampipes.model.resource.DatasetMetadata].
+"""
 
-from pydantic import StrictBool, StrictStr
+import warnings
+from typing import Any
 
-from streampipes.model.common import EventSchema
-from streampipes.model.resource.resource import Resource
+from pydantic import StrictBool
+
+from streampipes.model.resource.dataset_metadata import DatasetMetadata
 
 __all__ = [
     "DataLakeMeasure",
 ]
 
+DATA_LAKE_MEASURE_DEPRECATION_MESSAGE = (
+    "`DataLakeMeasure` is deprecated since 0.99.0 and will be removed in the release following 0.99.0; "
+    "please use `DatasetMetadata` instead."
+)
 
-class DataLakeMeasure(Resource):
-    """Implementation of a resource for data lake measures.
 
-    This resource defines the data model used by resource container (`model.container.DataLakeMeasures`).
-    It inherits from Pydantic's BaseModel to get all its superpowers,
-    which are used to parse, validate the API response, and to easily switch between
-    the Python representation (both serialized and deserialized) and Java representation (serialized only).
+class DataLakeMeasure(DatasetMetadata):
+    """DEPRECATED - use [DatasetMetadata][streampipes.model.resource.DatasetMetadata] instead.
+
+    Deprecated since 0.99.0, scheduled for removal in the release following 0.99.0.
+
+    This resource is kept for backwards compatibility only. It behaves like `DatasetMetadata`
+    and additionally carries the legacy `pipeline_is_running` field, which StreamPipes no longer returns.
     """
 
-    def convert_to_pandas_representation(self):
-        """Returns the dictionary representation of a data lake measure
-        to be used when creating a pandas Dataframe.
+    pipeline_is_running: StrictBool | None = None
 
-        It excludes the following fields: `element_id`, `event_schema`, `schema_version`.
-        Instead of the whole event schema the number of event properties contained
-        is returned with the column name `num_event_properties`.
-
-        Returns
-        -------
-        pandas_repr: Dict[str, Any]
-            Pandas representation of the resource as a dictionary, which is then used by the respource container
-            to create a data frame from a collection of resources.
-
-        """
-
-        return {
-            **self.model_dump(exclude={"element_id", "event_schema", "schema_version"}),
-            "num_event_properties": len(self.event_schema.event_properties) if self.event_schema else 0,
-        }
-
-    element_id: StrictStr | None = None
-    measure_name: StrictStr
-    timestamp_field: StrictStr
-    event_schema: EventSchema | None = None
-    pipeline_id: StrictStr | None = None
-    pipeline_name: StrictStr | None = None
-    pipeline_is_running: StrictBool
-    schema_version: StrictStr | None = None
+    def model_post_init(self, __context: Any) -> None:
+        """Emits a deprecation warning whenever an instance is created."""
+        warnings.warn(DATA_LAKE_MEASURE_DEPRECATION_MESSAGE, DeprecationWarning, stacklevel=2)

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
 import {
@@ -36,6 +42,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'sp-data-retention-dialog',
     templateUrl: 'data-retention-dialog.component.html',
     styleUrls: ['./data-retention-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         SelectDataComponent,

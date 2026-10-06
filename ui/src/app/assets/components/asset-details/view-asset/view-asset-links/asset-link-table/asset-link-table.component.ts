@@ -25,6 +25,7 @@ import {
     OnInit,
     SimpleChanges,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AssetLink,
@@ -71,6 +72,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-asset-link-table',
     templateUrl: './asset-link-table.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

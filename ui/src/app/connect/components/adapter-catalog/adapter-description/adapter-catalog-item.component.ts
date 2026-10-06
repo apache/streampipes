@@ -16,16 +16,22 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
+    AdapterSummaryDto,
     PipelineElementAssetService,
 } from '@streampipes/platform-services';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { Router } from '@angular/router';
-import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -35,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-catalog-item',
     templateUrl: './adapter-catalog-item.component.html',
     styleUrls: ['./adapter-catalog-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatButton, MatTooltip, MatIcon, TranslatePipe],
 })
 export class AdapterCatalogItemComponent implements OnInit {
@@ -42,10 +49,9 @@ export class AdapterCatalogItemComponent implements OnInit {
     private sanitizer = inject(DomSanitizer);
     private dialogService = inject(DialogService);
     private router = inject(Router);
-    private shepherdService = inject(ShepherdService);
 
     @Input()
-    adapter: AdapterDescription;
+    adapter: AdapterDescription | AdapterSummaryDto;
 
     iconUrl: SafeUrl;
 
@@ -67,9 +73,7 @@ export class AdapterCatalogItemComponent implements OnInit {
     }
 
     selectAdapter(appId: string) {
-        this.router.navigate(['connect', 'create', appId]).then(() => {
-            this.shepherdService.trigger('new-adapter-selected');
-        });
+        this.router.navigate(['connect', 'create', appId]);
     }
 
     openDocumentation(event: MouseEvent): void {

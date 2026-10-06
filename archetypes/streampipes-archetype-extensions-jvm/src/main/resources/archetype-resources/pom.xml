@@ -79,7 +79,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
-                    <release>17</release>
+                    <release>25</release>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -36,6 +37,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'sp-static-tree-input-text-editor',
     templateUrl: './static-tree-input-text-editor.component.html',
     styleUrl: './static-tree-input-text-editor.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MonacoEditorModule, FormsModule],
 })
 export class StaticTreeInputTextEditorComponent implements OnInit {

@@ -21,6 +21,8 @@ services:
     volumes:
       - backend:/root/.streampipes
     environment:
+      - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:-streampipes-development-only-service-secret}
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:-streampipes-development-only-service-secret}
       - SP_PRIORITIZED_PROTOCOL=${SP_PRIORITIZED_PROTOCOL:-kafka}
       - SP_MQTT_HOST=${SP_MQTT_HOST:-activemq}
       - SP_NATS_TOKEN=${SP_NATS_TOKEN}

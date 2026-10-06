@@ -29,7 +29,7 @@ import org.apache.streampipes.manager.pipeline.update.MeasurementUpdateManagemen
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
-import org.apache.streampipes.model.datalake.MeasurementUpdateInfo;
+import org.apache.streampipes.model.dataset.MeasurementUpdateInfo;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
@@ -45,13 +45,12 @@ import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import com.google.gson.JsonSyntaxException;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -98,13 +97,17 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   private final DataProcessorResourceManager dataProcessorResourceManager;
   private final DataSinkResourceManager dataSinkResourceManager;
   private final SpResourceManager resourceManager;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   public PipelineResource(ExtensionServiceRequestManager requestManager,
                           SpResourceManager resourceManager,
-                          IChartStorage chartStorage) {
+                          IChartStorage chartStorage,
+                          IPipelineElementDescriptionStorage descriptionStorage) {
     this.resourceManager = resourceManager;
+    this.descriptionStorage = descriptionStorage;
     this.compactPipelineManagement = new CompactPipelineManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage(),
+        resourceManager.getServiceDiscovery(),
+        descriptionStorage,
         requestManager
     );
     this.requestManager = requestManager;
@@ -112,10 +115,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
         resourceManager.managePipelines().getDb(),
         new ChartSchemaUpdateCoordinator(chartStorage)
     );
-    PermissionResourceManager permissionResourceManager = resourceManager.managePermissions();
     this.pipelineManager = new PipelineManager(resourceManager);
-    this.dataProcessorResourceManager = new DataProcessorResourceManager(permissionResourceManager);
-    this.dataSinkResourceManager = new DataSinkResourceManager(permissionResourceManager);
+    this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
+    this.dataSinkResourceManager = resourceManager.manageDataSinks();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -245,7 +247,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                                         @PathVariable("recId") String baseRecElement) {
     try {
       return new ElementRecommender(
-          pipeline, baseRecElement, requestManager, dataProcessorResourceManager, dataSinkResourceManager
+          resourceManager.getServiceDiscovery(),
+          pipeline, baseRecElement, requestManager, dataProcessorResourceManager, dataSinkResourceManager, descriptionStorage
       ).findRecommendedElements();
     } catch (JsonSyntaxException e) {
       throw new SpNotificationException(
@@ -275,7 +278,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
-      return ok(new PipelineVerificationHandlerV2(pipeline, requestManager).verifyPipeline());
+      return ok(new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager).verifyPipeline());
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
     } catch (Exception e) {

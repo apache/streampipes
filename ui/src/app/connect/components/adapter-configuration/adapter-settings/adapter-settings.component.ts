@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AdapterDescription,
@@ -56,6 +57,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-settings',
     templateUrl: './adapter-settings.component.html',
     styleUrls: ['./adapter-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -155,7 +157,7 @@ export class AdapterSettingsComponent implements OnInit {
 
     loadTemplate(event: any) {
         if (!event.value) {
-            this.adapterDescription = { ...this.cachedAdapterDescription };
+            this.afterTemplateReceived({ ...this.cachedAdapterDescription });
             this.selectedTemplate = false;
         } else {
             this.selectedTemplate = event.value;

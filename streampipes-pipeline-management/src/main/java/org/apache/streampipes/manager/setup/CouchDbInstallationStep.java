@@ -20,13 +20,14 @@ package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
-import org.apache.streampipes.manager.setup.tasks.AddDataLakeMeasureViewTask;
+import org.apache.streampipes.manager.setup.tasks.AddDatasetMetadataViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDefaultPipelineTemplatesTask;
 import org.apache.streampipes.manager.setup.tasks.AddFunctionStateViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddScriptTemplateViewTask;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
@@ -41,17 +42,22 @@ public class CouchDbInstallationStep extends InstallationStep {
 
   private static final String PREPARING_USERS_TEXT = "Preparing database 'users'...";
 
-  public CouchDbInstallationStep() {
+  private final IGenericStorage genericStorage;
+  private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
 
+  public CouchDbInstallationStep(IGenericStorage genericStorage,
+                                  ICompactPipelineTemplateStorage pipelineTemplateStorage) {
+    this.genericStorage = genericStorage;
+    this.pipelineTemplateStorage = pipelineTemplateStorage;
   }
 
   @Override
   public void install() {
     createDatabases();
     createViews();
-    new CreateAssetLinkTypeTask().execute();
+    new CreateAssetLinkTypeTask(genericStorage).execute();
     new AddDefaultPipelineTemplatesTask(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage()
+        pipelineTemplateStorage
     ).execute();
   }
 
@@ -75,7 +81,7 @@ public class CouchDbInstallationStep extends InstallationStep {
   private void createViews() {
     addUserView();
     addPipelineView();
-    new AddDataLakeMeasureViewTask().execute();
+    new AddDatasetMetadataViewTask().execute();
     new AddAssetManagementViewTask().execute();
     new AddScriptTemplateViewTask().execute();
     new AddFunctionStateViewTask().execute();

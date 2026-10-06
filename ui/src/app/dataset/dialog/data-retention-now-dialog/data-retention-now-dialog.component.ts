@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { SpLogMessage } from '@streampipes/platform-services';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     SpExceptionDetailsComponent,
@@ -35,6 +42,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'sp-data-retention-now-dialog',
     templateUrl: './data-retention-now-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutAlignDirective,
         LayoutDirective,
@@ -55,7 +63,7 @@ export class DataRetentionNowDialogComponent implements OnInit {
 
     isInProgress = true;
     currentStatus: string = '';
-    errorMessage = '';
+    errorMessage: SpLogMessage;
     isError = false;
     message = '';
     filePath = '';

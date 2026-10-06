@@ -23,6 +23,7 @@ import {
     OnInit,
     SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     LabelsService,
@@ -40,6 +41,7 @@ import { SpLabelComponent } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-view-asset-labels',
     templateUrl: './view-asset-labels.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

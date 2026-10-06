@@ -26,6 +26,7 @@ import {
     OnInit,
     Output,
     signal,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {
@@ -39,6 +40,7 @@ import {
     DialogService,
     PanelType,
     SpAlertBannerComponent,
+    SpSecondaryToolbarComponent,
 } from '@streampipes/shared-ui';
 import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -46,7 +48,6 @@ import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dia
 import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadSampleEventDialogComponent } from '../../../dialog/upload-sample-event-dialog/upload-sample-event-dialog.component';
-import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -56,6 +57,10 @@ import {
 import { AdapterScriptEditorComponent } from './script-editor/adapter-script-editor.component';
 import { AdapterSamplePreviewComponent } from './sample-preview/adapter-sample-preview.component';
 import { AdapterResultPreviewComponent } from './result-preview/adapter-result-preview.component';
+import { FormsModule } from '@angular/forms';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatIcon } from '@angular/material/icon';
+import { TransformationScriptDocumentationDialogComponent } from '../../../dialog/transformation-script-documentation/transformation-script-documentation-dialog.component';
 import { MatButton } from '@angular/material/button';
 import type { editor as MonacoEditor } from 'monaco-editor';
 import { validateFieldNames } from './field-name-validation';
@@ -64,6 +69,7 @@ import { validateFieldNames } from './field-name-validation';
     selector: 'sp-configure-schema',
     templateUrl: './configure-schema.component.html',
     styleUrl: './configure-schema.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -75,6 +81,10 @@ import { validateFieldNames } from './field-name-validation';
         MatButton,
         TranslatePipe,
         SpAlertBannerComponent,
+        SpSecondaryToolbarComponent,
+        FormsModule,
+        MatSlideToggle,
+        MatIcon,
     ],
 })
 export class ConfigureSchemaComponent implements OnInit {
@@ -82,7 +92,6 @@ export class ConfigureSchemaComponent implements OnInit {
     private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
-    private shepherdService = inject(ShepherdService);
 
     @Input()
     adapterDescription: AdapterDescription;
@@ -117,8 +126,8 @@ export class ConfigureSchemaComponent implements OnInit {
         () => this.stateService.state().loadingAvailableScriptsError,
     );
 
-    resultViewMode = signal<Mode>('raw');
-    sourceViewMode = signal<Mode>('raw');
+    resultViewMode = signal<Mode>('tree');
+    sourceViewMode = signal<Mode>('tree');
 
     script = computed(() => this.stateService.state().currentScript);
 
@@ -166,18 +175,36 @@ export class ConfigureSchemaComponent implements OnInit {
         () => this.fieldNameValidation().warningFieldNames,
     );
 
+    previewOutdated = this.stateService.previewOutdated;
+    hasPreview = this.stateService.hasScriptPreview;
+    hasInputEvents = computed(
+        () =>
+            !!this.stateService.state().adapterDescription?.transformationConfig
+                ?.inputs?.length,
+    );
+
+    openDocumentation(): void {
+        this.dialogService.open(
+            TransformationScriptDocumentationDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Documentation'),
+                width: '50vw',
+            },
+        );
+    }
+
     isNextDisabled = computed(() => {
         const state = this.stateService.state();
-        const hasInputEvents =
-            !!state.adapterDescription?.transformationConfig?.inputs?.length;
 
         return (
             state.adapterSettingsChanged ||
             state.isGettingSample ||
             state.isRunningScript ||
             !!state.sampleError ||
-            !!state.scriptError ||
-            !hasInputEvents ||
+            (this.scriptActive() &&
+                (!!state.scriptError || this.previewOutdated())) ||
+            !this.hasInputEvents() ||
             this.invalidFieldNames().length > 0
         );
     });
@@ -213,16 +240,8 @@ export class ConfigureSchemaComponent implements OnInit {
     onLanguageChange(newLanguage: ScriptMetadata) {
         this.stateService.updateState({
             selectedScriptMetadata: newLanguage,
-            currentScript: newLanguage.template, // Or keep existing if logic allows
+            currentScript: newLanguage.template,
         });
-    }
-
-    setSourceViewMode(mode: Mode) {
-        this.sourceViewMode.set(mode);
-    }
-
-    setResultViewMode(mode: Mode) {
-        this.resultViewMode.set(mode);
     }
 
     resetScript(): void {
@@ -254,8 +273,10 @@ export class ConfigureSchemaComponent implements OnInit {
     }
 
     runScript(): void {
-        this.stateService.runScript(this.adapterDescription);
-        this.shepherdService.trigger('configure-schema-script-run');
+        this.stateService.runScript(
+            this.stateService.state().adapterDescription ??
+                this.adapterDescription,
+        );
     }
 
     openAdapterConfigurationChangedDialog(): void {
@@ -355,7 +376,6 @@ export class ConfigureSchemaComponent implements OnInit {
             adapterDescription.transformationConfig.scriptActive = true;
             this.stateService.updateAdapter(adapterDescription);
             this.stateService.runScript(adapterDescription);
-            this.shepherdService.trigger('configure-schema-script-enabled');
         }
     }
 
@@ -372,13 +392,10 @@ export class ConfigureSchemaComponent implements OnInit {
             transformationConfigurationChanged:
                 transformationConfigurationChanged,
         });
-        this.shepherdService.trigger('configure-schema-next-button');
         this.nextEmitter.emit();
     }
 
     public goBack() {
         this.goBackEmitter.emit();
     }
-
-    protected readonly Error = Error;
 }

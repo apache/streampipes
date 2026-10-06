@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogService } from '../../dialog/base-dialog/base-dialog.service';
 import { PanelType } from '../../dialog/base-dialog/base-dialog.model';
@@ -29,6 +34,7 @@ import { DatePipe } from '@angular/common';
 @Component({
     selector: 'sp-exception-message',
     templateUrl: './sp-exception-message.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
