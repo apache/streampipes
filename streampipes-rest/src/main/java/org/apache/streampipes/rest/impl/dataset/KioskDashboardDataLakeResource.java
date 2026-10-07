@@ -44,6 +44,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard/kiosk")
 public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResource {
@@ -97,7 +99,8 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     } else {
       ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(measureName, queryParams);
       var result = queryService.queryByName(measureName, RestQuerySpecMapper.parse(sanitizedParams),
-          RestQuerySpecMapper.options(sanitizedParams, true));
+          RestQuerySpecMapper.options(sanitizedParams,
+              "ignore".equals(sanitizedParams.getAsString(QP_MISSING_VALUE_BEHAVIOUR))));
       if (sanitizedParams.has("forId")) {
         result.setForId(sanitizedParams.getAsString("forId"));
       }
