@@ -46,6 +46,9 @@ public class NatsUtils {
       splitNatsProperties(propertiesAsString, props);
     }
 
+    // Match the long-lived management connections. Explicit connector properties still win.
+    props.putIfAbsent(Options.PROP_MAX_RECONNECT, "-1");
+
     String[] natsServerUrls = natsUrls.split(",");
     Options options;
     if (natsServerUrls.length > 1) {

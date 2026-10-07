@@ -43,6 +43,13 @@ public class ServiceRegistrationManager {
     applyServiceStatus(status, serviceRegistration);
   }
 
+  public void applyServiceStatus(SpServiceRegistration snapshot, SpServiceStatus status,
+                                 long firstTimeSeenUnhealthy) {
+    // Keep the revision that was probed: concurrent lifecycle updates must win.
+    snapshot.setFirstTimeSeenUnhealthy(firstTimeSeenUnhealthy);
+    applyServiceStatus(status, snapshot);
+  }
+
   public void applyServiceStatus(String serviceId, SpServiceStatus status) {
     var serviceRegistration = storage.getElementById(serviceId);
     applyServiceStatus(status, serviceRegistration);

@@ -40,6 +40,7 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneSpOutputCollector.class);
 
   private final EventProducer producer;
+  private boolean connectionStarted;
   private final String resourceId;
   private final ExtensionsLogger extensionsLogger;
 
@@ -67,14 +68,16 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
     if (!producer.isConnected()) {
       producer.connect();
     }
+    connectionStarted = true;
   }
 
   @Override
   public void disconnect() throws SpRuntimeException {
-    if (producer.isConnected()) {
+    if (connectionStarted || producer.isConnected()) {
       producer.disconnect();
-      ProtocolManager.removeOutputCollector(transportProtocol);
+      connectionStarted = false;
     }
+    ProtocolManager.removeOutputCollector(transportProtocol);
   }
 
 }

@@ -29,6 +29,55 @@ This module receives core-to-extension commands over NATS request/reply.
 - `SP_NATS_PORT`: default `4222`
 - `SP_NATS_TOKEN`: optional NATS token for internal core<->extension communication
 
+## Recovery and health checks
+
+Event publishers and consumers default to unlimited JNATS reconnect attempts, matching
+management connections. Failed initial connections and terminally closed event connections
+are retried by a background supervisor. A replacement consumer connection recreates its
+subscription. Explicit disconnect, including stopping a pipeline during an outage, cancels recovery.
+Invalid setup and explicit authentication or TLS-handshake exceptions cancel recovery
+and are reported as errors; transient connection failures continue to retry.
+`isConnected()` remains false until there is a connected transport; startup can return
+while the broker is unavailable.
+
+For connectors accepting `NatsConfig.properties`, JNATS options such as
+`io.nats.client.reconnect.wait` and `io.nats.client.reconnect.max` can override the client
+settings. The supervisor uses the reconnect wait and jitter for its retry interval;
+a finite client retry limit applies per connection, not to the supervisor's lifetime.
+Recovery does not provide durable delivery: publishing before the first connection, on a
+closed connection, or after the reconnect buffer fills fails without replaying the event.
+
+NATS transport and management connections log the first transient outage at WARN,
+then at most one reminder per connection every 30 seconds while failures continue.
+Reminders report the number of suppressed outage messages. Successful reconnection
+is logged at INFO with the transport subject or management role, and resets the
+limiter so a later outage is reported immediately. Intentional shutdowns do not
+produce outage warnings. Server errors, authentication/TLS exceptions, slow consumers,
+and application exceptions retain their normal error reporting.
+
+Core service health uses these settings:
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| `SP_HEALTH_SERVICE_FAILURE_THRESHOLD` | `3` | Consecutive failed probes before marking a service unhealthy; must be at least 1 |
+| `SP_HEALTH_SERVICE_MAX_UNHEALTHY_TIME_MS` | `60000` | Grace period after the unhealthy transition before removal; must be non-negative |
+| `SP_HEALTH_CHECK_INTERVAL_MS` | `30000` | Delay between health-check runs |
+
+A successful probe restores a previously `UNHEALTHY` service to `HEALTHY`, clears the
+failure timestamp, and resets the failure count. Services awaiting registration or
+migration completion retain `REGISTERED` or `MIGRATING`: reachability alone does not
+establish readiness. A later outage starts a new grace period. Failure counts are kept
+in memory and reset on core restart; unhealthy timestamps remain persisted. Registered
+and migrating services also expire after consecutive failures and the grace period,
+while retaining their lifecycle state until removal. Detection and removal timing also
+include request duration.
+
+The Docker-backed event transport recovery test is opt-in:
+
+```bash
+mvn -pl streampipes-messaging-nats -am test -Dstreampipes.nats.integration=true
+```
+
 ## Subject Structure
 
 Base subject format:
