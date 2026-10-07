@@ -77,7 +77,7 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
       producer.disconnect();
       connectionStarted = false;
     }
-    ProtocolManager.removeOutputCollector(transportProtocol);
+    ProtocolManager.removeOutputCollector(transportProtocol, this);
   }
 
 }
