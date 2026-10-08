@@ -18,27 +18,23 @@
 
 package org.apache.streampipes.messaging.nats;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.nats.NatsConfig;
 
 import io.nats.client.Connection;
-import io.nats.client.Dispatcher;
-import io.nats.client.Subscription;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 public class NatsConsumer extends AbstractNatsConnector implements EventConsumer {
 
-  private Dispatcher dispatcher;
-  private Subscription subscription;
   private NatsConfig natsConfig;
+  private NatsTransportProtocol protocol;
 
   public NatsConsumer(NatsTransportProtocol protocol) {
-    this.natsConfig = makeNatsConfig(protocol);
+    this.protocol = protocol;
   }
 
   public NatsConsumer(NatsConfig natsConfig) {
@@ -48,38 +44,26 @@ public class NatsConsumer extends AbstractNatsConnector implements EventConsumer
   public void connect(NatsConfig natsConfig,
                       InternalEventProcessor<byte[]> eventProcessor) throws IOException, InterruptedException {
     this.natsConfig = natsConfig;
+    this.protocol = null;
     connect(eventProcessor);
   }
 
   @Override
-  public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
-    try {
-      makeBrokerConnection(natsConfig);
-      createSubscription(eventProcessor);
-    } catch (IOException | InterruptedException e) {
-      throw new SpRuntimeException(e);
+  public void connect(InternalEventProcessor<byte[]> eventProcessor) {
+    Consumer<Connection> initializer = connection -> {
+      var dispatcher = connection.createDispatcher(message -> eventProcessor.onEvent(message.getData()));
+      dispatcher.subscribe(subject);
+    };
+    if (protocol != null) {
+      makeBrokerConnection(protocol, initializer);
+    } else {
+      makeBrokerConnection(natsConfig, initializer);
     }
   }
 
   @Override
-  public void disconnect() throws SpRuntimeException {
-    try {
-      dispatcher.unsubscribe(this.subscription);
-      super.disconnect();
-    } catch (InterruptedException | TimeoutException e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Override
-  public boolean isConnected() {
-    return natsConnection != null && natsConnection.getStatus() == Connection.Status.CONNECTED;
-  }
-
-  private void createSubscription(InternalEventProcessor<byte[]> eventProcessor) {
-    dispatcher = natsConnection.createDispatcher((message) -> {});
-
-    this.subscription = dispatcher.subscribe(subject, (message) ->
-        eventProcessor.onEvent(message.getData()));
+  public void disconnect() {
+    // Closing the connection also closes its dispatchers, including during reconnect.
+    super.disconnect();
   }
 }

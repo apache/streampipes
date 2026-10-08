@@ -82,6 +82,14 @@ public class ProtocolManager {
     return new StandaloneSpOutputCollector<>(protocol, resourceId);
   }
 
+  public static void removeInputCollector(TransportProtocol protocol, StandaloneSpInputCollector<?> expected) {
+    consumers.remove(topicName(protocol), expected);
+  }
+
+  public static void removeOutputCollector(TransportProtocol protocol, StandaloneSpOutputCollector<?> expected) {
+    producers.remove(topicName(protocol), expected);
+  }
+
   private static String topicName(TransportProtocol protocol) {
     return protocol.getTopicDefinition().getActualTopicName();
   }

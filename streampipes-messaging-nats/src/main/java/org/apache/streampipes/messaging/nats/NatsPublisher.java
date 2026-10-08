@@ -18,14 +18,8 @@
 
 package org.apache.streampipes.messaging.nats;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
-
-import io.nats.client.Connection;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 public class NatsPublisher extends AbstractNatsConnector implements EventProducer {
 
@@ -36,30 +30,17 @@ public class NatsPublisher extends AbstractNatsConnector implements EventProduce
   }
 
   @Override
-  public void connect() throws SpRuntimeException {
-    try {
-      makeBrokerConnection(protocol);
-    } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
-    }
+  public void connect() {
+    makeBrokerConnection(protocol);
   }
 
   @Override
   public void publish(byte[] event) {
-    natsConnection.publish(subject, event);
+    publishEvent(event);
   }
 
   @Override
-  public void disconnect() throws SpRuntimeException {
-    try {
-      super.disconnect();
-    } catch (InterruptedException | TimeoutException e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Override
-  public boolean isConnected() {
-    return natsConnection != null && natsConnection.getStatus() == Connection.Status.CONNECTED;
+  public void disconnect() {
+    super.disconnect();
   }
 }
