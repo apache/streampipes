@@ -26,8 +26,8 @@
 
 .system-notification-outer {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: var(--space-xl);
+    right: var(--space-xl);
 }
 
 .auth-box-footer {

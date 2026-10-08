@@ -18,6 +18,12 @@
 
 :host {
     display: flex;
+    min-width: 0;
+}
+
+sp-label {
+    min-width: 0;
+    --sp-label-min-width: 0;
 }
 
 .notification-text {

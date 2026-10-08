@@ -23,14 +23,6 @@
 .standalone-outer {
     background: var(--color-bg-1);
     min-height: 100vh;
-    position: relative;
-}
-
-.system-notification-outer {
-    position: absolute;
-    top: 0;
-    right: 20px;
-    height: 60px;
 }
 
 .dashboard-grid {
@@ -44,19 +36,58 @@
     background: var(--color-bg-1);
 }
 
+.standalone-toolbar .sp-toolbar {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.sp-toolbar .md-toolbar-tools {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .dashboard-title {
     margin-left: 2rem;
     font-size: 1.25rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .dashboard-description {
     font-size: 1.25rem;
     font-weight: normal;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.toolbar-end {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    column-gap: var(--space-lg);
+    row-gap: var(--space-2xs);
+    padding-left: 1rem;
 }
 
 .last-updated {
     display: inline-flex;
-    margin-left: auto;
-    padding-left: 1rem;
+    flex: 0 0 auto;
     white-space: nowrap;
+}
+
+.system-notification {
+    flex: 1 1 8rem;
+    min-width: 0;
+    max-width: max-content;
+}
+
+.system-notification:only-child {
+    margin-left: auto;
 }
