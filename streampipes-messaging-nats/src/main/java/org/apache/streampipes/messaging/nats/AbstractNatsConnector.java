@@ -69,8 +69,11 @@ public abstract class AbstractNatsConnector {
   }
 
   protected void disconnect() throws InterruptedException, TimeoutException {
-    natsConnection.flush(Duration.ofMillis(50));
-    natsConnection.close();
+    try {
+      natsConnection.flush(Duration.ofMillis(50));
+    } finally {
+      natsConnection.close();
+    }
   }
 
   private String makeBrokerUrl(NatsTransportProtocol protocolSettings) {

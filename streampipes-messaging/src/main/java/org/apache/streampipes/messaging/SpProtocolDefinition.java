@@ -22,6 +22,21 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 
 public interface SpProtocolDefinition<T extends TransportProtocol> {
 
+  /** Verify broker readiness before an extension accepts invocations. */
+  default void validateConnection(T transportProtocol) {
+    var probe = getProducer(transportProtocol);
+    try {
+      probe.connect();
+      if (!probe.isConnected()) {
+        throw new IllegalStateException("Internal broker connection is not ready");
+      }
+    } finally {
+      if (probe.isConnected()) {
+        probe.disconnect();
+      }
+    }
+  }
+
   EventConsumer getConsumer(T transportProtocol);
 
   EventProducer getProducer(T transportProtocol);

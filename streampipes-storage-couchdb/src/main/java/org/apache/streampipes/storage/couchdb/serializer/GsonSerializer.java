@@ -36,6 +36,7 @@ import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransform
 import org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
+import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.message.Message;
@@ -74,6 +75,7 @@ public class GsonSerializer {
 
   public static GsonBuilder getGsonBuilder() {
     GsonBuilder builder = new GsonBuilder();
+    builder.registerTypeAdapter(EventGrounding.class, new EventGroundingDeserializer());
     builder.registerTypeAdapter(EventProperty.class, new EventPropertySerializer());
     builder.registerTypeAdapter(StaticProperty.class, new CouchDbJsonSerializer<StaticProperty>());
     builder.registerTypeAdapter(OutputStrategy.class, new CouchDbJsonSerializer<OutputStrategy>());

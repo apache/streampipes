@@ -272,8 +272,6 @@ export function importFixtureDirectory(
                 previewResponse.toString('utf8'),
             );
 
-            importConfiguration.overrideBrokerSettings = true;
-
             return postMultipart(importUrl, options.token, [
                 {
                     contentType: 'application/zip',

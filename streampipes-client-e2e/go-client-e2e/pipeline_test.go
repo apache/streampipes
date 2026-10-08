@@ -43,13 +43,16 @@ func TestCreatePipeline(t *testing.T) {
 		os.Exit(1)
 	}
 	adapter := adapters[0]
+	if adapter.EventGrounding.TopicDefinition == nil || adapter.EventGrounding.TopicDefinition.ActualTopicName == "" {
+		t.Fatalf("adapter %s has no output topic in eventGrounding.topicDefinition", adapter.ElementID)
+	}
 
 	data := utils.CreateData("pipelines/pipelines.json")
 	pipeline := string(data)
 	pipeline = strings.Replace(pipeline, E2E_ADAPTER_ID, adapter.ElementID, -1)
 	pipeline = strings.Replace(pipeline, E2E_ADAPTER_NAME, adapter.Name, -1)
 	pipeline = strings.Replace(pipeline, E2E_STREAM_REV, adapter.Rev, -1)
-	pipeline = strings.Replace(pipeline, E2E_ADAPTER_OUT_TOPIC_NAME, adapter.EventGrounding.TransportProtocols[0].TopicDefinition.ActualTopicName, -1)
+	pipeline = strings.Replace(pipeline, E2E_ADAPTER_OUT_TOPIC_NAME, adapter.EventGrounding.TopicDefinition.ActualTopicName, -1)
 
 	message, statusErr := streamPipesClient.Pipeline().CreatePipeline([]byte(pipeline))
 	if statusErr != nil || !message.Success {

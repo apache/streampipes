@@ -59,11 +59,6 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
   public void writeDocument(String document,
                             AssetExportConfiguration config) throws JsonProcessingException {
     var dataStream = deserializeDocument(document);
-    if (config.isOverrideBrokerSettings()) {
-      if (dataStream.getEventGrounding() != null) {
-        overrideProtocol(dataStream.getEventGrounding());
-      }
-    }
     dataStreamStorage.persist(dataStream);
   }
 

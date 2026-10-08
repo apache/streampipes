@@ -44,19 +44,10 @@
           "category": null,
           "correspondingAdapterId": null,
           "eventGrounding": {
-            "transportProtocols": [
-              {
-                "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-                "brokerHostname": "nats",
-                "elementId": null,
-                "topicDefinition": {
-                  "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                  "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
-                },
-                "port": 4222,
-                "token": null
-              }
-            ]
+            "topicDefinition": {
+              "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+              "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
+            }
           },
           "eventSchema": {
             "eventProperties": [
@@ -352,19 +343,10 @@
           "category": null,
           "correspondingAdapterId": null,
           "eventGrounding": {
-            "transportProtocols": [
-              {
-                "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-                "brokerHostname": "nats",
-                "elementId": "sp:transportprotocol:KoHuzT",
-                "topicDefinition": {
-                  "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                  "actualTopicName": "e2e-adapter-out-topic-name"
-                },
-                "port": 4222,
-                "token": null
-              }
-            ]
+            "topicDefinition": {
+              "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+              "actualTopicName": "e2e-adapter-out-topic-name"
+            }
           },
           "eventSchema": {
             "eventProperties": [
@@ -563,19 +545,10 @@
         "category": null,
         "correspondingAdapterId": null,
         "eventGrounding": {
-          "transportProtocols": [
-            {
-              "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-              "brokerHostname": "nats",
-              "elementId": null,
-              "topicDefinition": {
-                "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
-              },
-              "port": 4222,
-              "token": null
-            }
-          ]
+          "topicDefinition": {
+            "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+            "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
+          }
         },
         "eventSchema": {
           "eventProperties": [
@@ -706,19 +679,10 @@
       "category": null,
       "correspondingAdapterId": "sp:adapterdescription:OiTAHK",
       "eventGrounding": {
-        "transportProtocols": [
-          {
-            "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-            "brokerHostname": "nats",
-            "elementId": "sp:transportprotocol:KoHuzT",
-            "topicDefinition": {
-              "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-              "actualTopicName": "e2e-adapter-out-topic-name"
-            },
-            "port": 4222,
-            "token": null
-          }
-        ]
+        "topicDefinition": {
+          "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+          "actualTopicName": "e2e-adapter-out-topic-name"
+        }
       },
       "eventSchema": {
         "eventProperties": [

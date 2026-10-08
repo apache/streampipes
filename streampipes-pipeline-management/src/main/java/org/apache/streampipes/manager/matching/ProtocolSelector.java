@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.manager.matching;
 
-import org.apache.streampipes.commons.environment.Environment;
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.manager.util.GroundingUtils;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
@@ -31,30 +29,23 @@ import java.util.Set;
 
 public class ProtocolSelector {
 
-  private final Environment env;
   private final String outputTopic;
-  private final String prioritizedProtocol;
   protected NamedStreamPipesEntity source;
   protected Set<InvocableStreamPipesEntity> targets;
 
   public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
-    this.env = Environments.getEnvironment();
     this.source = source;
     this.targets = targets;
     this.outputTopic = TopicGenerator.generateRandomTopic();
-
-
-    this.prioritizedProtocol = env.getPrioritizedProtocol().getValueOrDefault();
   }
 
   public TransportProtocol getPreferredProtocol() {
-    var env = Environments.getEnvironment();
     if (source instanceof SpDataStream) {
       return ((SpDataStream) source)
           .getEventGrounding()
           .getTransportProtocol();
     } else {
-      return GroundingUtils.makeProtocol(env, prioritizedProtocol, outputTopic);
+      return GroundingUtils.makeProtocol(outputTopic);
     }
   }
 }

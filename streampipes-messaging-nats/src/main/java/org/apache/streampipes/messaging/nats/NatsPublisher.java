@@ -39,8 +39,11 @@ public class NatsPublisher extends AbstractNatsConnector implements EventProduce
   public void connect() throws SpRuntimeException {
     try {
       makeBrokerConnection(protocol);
-    } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new SpRuntimeException("Interrupted while connecting to NATS", e);
+    } catch (IOException e) {
+      throw new SpRuntimeException("Could not connect to NATS", e);
     }
   }
 

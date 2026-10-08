@@ -128,17 +128,10 @@
   },
   "running" : false,
   "eventGrounding" : {
-    "transportProtocols" : [ {
-      "@class" : "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-      "elementId" : "sp:transportprotocol:UjmJyQ",
-      "brokerHostname" : "nats",
-      "topicDefinition" : {
-        "@class" : "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-        "actualTopicName" : "org.apache.streampipes.connect.e1045bb8-6d1c-43be-a951-c74dce77083b"
-      },
-      "port" : 4222,
-      "token" : null
-    } ]
+    "topicDefinition": {
+      "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+      "actualTopicName": "org.apache.streampipes.connect.e1045bb8-6d1c-43be-a951-c74dce77083b"
+    }
   },
   "icon" : null,
   "config" : [ {

@@ -55,8 +55,7 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   private boolean hasValidGrounding(AdapterDescription adapterDescription) {
     return adapterDescription.getEventGrounding() != null
-        && adapterDescription.getEventGrounding().getTransportProtocol() != null
-        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null;
+        && adapterDescription.getEventGrounding().getTopicDefinition() != null;
   }
 
   private String getUserId(AdapterDescription adapterDescription) {

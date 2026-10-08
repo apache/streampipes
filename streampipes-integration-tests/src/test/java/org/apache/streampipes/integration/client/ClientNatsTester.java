@@ -22,12 +22,11 @@ import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.integration.containers.NatsContainer;
 import org.apache.streampipes.integration.containers.NatsDevContainer;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
+import org.apache.streampipes.model.grounding.BrokerConfiguration;
 
 import java.util.Objects;
 
-public class ClientNatsTester extends ClientLiveDataTesterBase<NatsTransportProtocol> {
+public class ClientNatsTester extends ClientLiveDataTesterBase {
 
   private NatsContainer natsContainer;
 
@@ -43,18 +42,12 @@ public class ClientNatsTester extends ClientLiveDataTesterBase<NatsTransportProt
   }
 
   @Override
-  public NatsTransportProtocol makeProtocol() {
-    var protocol = new NatsTransportProtocol();
-    protocol.setBrokerHostname(natsContainer.getBrokerHost());
-    protocol.setPort(natsContainer.getBrokerPort());
-    protocol.setTopicDefinition(new SimpleTopicDefinition("test-topic"));
-
-    return protocol;
-  }
-
-  @Override
   public void prepareClient(IStreamPipesClient client) {
     client.registerProtocol(new SpNatsProtocolFactory());
+    var broker = new BrokerConfiguration();
+    broker.setProtocolId("nats");
+    broker.setUrl("nats://" + natsContainer.getBrokerUrl());
+    client.getConfig().setInternalBrokerConfiguration(broker);
   }
 
   @Override

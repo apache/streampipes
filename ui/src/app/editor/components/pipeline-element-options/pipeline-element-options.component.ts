@@ -204,8 +204,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     isWildcardTopic() {
         return (
             (this.pipelineElement.payload as SpDataStream).eventGrounding
-                .transportProtocols[0].topicDefinition instanceof
-            WildcardTopicDefinition
+                .topicDefinition instanceof WildcardTopicDefinition
         );
     }
 

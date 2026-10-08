@@ -24,8 +24,9 @@ import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.grounding.BrokerConfiguration;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -49,8 +50,6 @@ import static org.awaitility.Awaitility.await;
 public final class ClientTestSupport {
 
   private static final String DEFAULT_NATS_URL = "nats://127.0.0.1:4222";
-  private static final int DEFAULT_NATS_PORT = 4222;
-  private static final String DEFAULT_NATS_HOST = "127.0.0.1";
   private static final int WAIT_TIMEOUT_SECONDS = 20;
 
   private final String testPrefix;
@@ -208,15 +207,12 @@ public final class ClientTestSupport {
           String topicOut,
           List<SensorEvent> inputEvents,
           long expectedEventCount) {
-    NatsTransportProtocol protocolIn = natsProtocolForTopic(topicIn);
-    NatsTransportProtocol protocolOut = natsProtocolForTopic(topicOut);
-
     List<Map<String, Object>> consumed = new ArrayList<>();
     var subscription = client.streams().subscribe(
-            streamForTopic(protocolOut),
+            streamForTopic(topicOut),
             event -> consumed.add(event.getRaw()));
 
-    var producer = client.streams().getProducer(streamForTopic(protocolIn));
+    var producer = client.streams().getProducer(streamForTopic(topicIn));
     try {
       for (SensorEvent event : inputEvents) {
         producer.publish(event.toMap());
@@ -230,26 +226,12 @@ public final class ClientTestSupport {
     return consumed;
   }
 
-  private static SpDataStream streamForTopic(NatsTransportProtocol protocol) {
+  private static SpDataStream streamForTopic(String topic) {
     SpDataStream stream = new SpDataStream();
-    stream.setEventGrounding(new EventGrounding(protocol));
+    var grounding = new EventGrounding();
+    grounding.setTopicDefinition(new SimpleTopicDefinition(topic));
+    stream.setEventGrounding(grounding);
     return stream;
-  }
-
-  private static NatsTransportProtocol natsProtocolForTopic(String topic) {
-    String natsUrl = System.getProperty("test.nats.url", DEFAULT_NATS_URL);
-    String host = DEFAULT_NATS_HOST;
-    int port = DEFAULT_NATS_PORT;
-
-    if (natsUrl.startsWith("nats://")) {
-      String rest = natsUrl.substring(7);
-      int colon = rest.indexOf(':');
-      if (colon > 0) {
-        host = rest.substring(0, colon);
-        port = Integer.parseInt(rest.substring(colon + 1));
-      }
-    }
-    return new NatsTransportProtocol(host, port, topic);
   }
 
   /**
@@ -304,6 +286,11 @@ public final class ClientTestSupport {
     var streamPipesClient = StreamPipesClient.create(host, port,
             StreamPipesCredentials.withApiKey(user, apiKey), true);
     streamPipesClient.registerProtocol(new SpNatsProtocolFactory());
+    var broker = new BrokerConfiguration();
+    broker.setProtocolId("nats");
+    broker.setUrl(System.getProperty("test.nats.url", DEFAULT_NATS_URL));
+    broker.setToken(System.getProperty("test.nats.token"));
+    streamPipesClient.getConfig().setInternalBrokerConfiguration(broker);
     return streamPipesClient;
   }
 

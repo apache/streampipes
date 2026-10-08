@@ -90,7 +90,9 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
 
   @Override
   public IConfiguredEventProducer getProducer(SpDataStream stream) {
-    return new ProducerManager(stream.getEventGrounding()).makeProducer();
+    return new ProducerManager(stream.getEventGrounding())
+        .withInternalBroker(clientConfig.getInternalBrokerSettings())
+        .makeProducer();
   }
 
   /**
@@ -102,7 +104,9 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   @Override
   public ISubscription subscribe(SpDataStream stream,
                                  EventProcessor callback) {
-    return new SubscriptionManager(stream.getEventGrounding(), callback).subscribe();
+    return new SubscriptionManager(stream.getEventGrounding(), callback)
+        .withInternalBroker(clientConfig.getInternalBrokerSettings())
+        .subscribe();
   }
 
   /**
@@ -116,7 +120,9 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   public ISubscription subscribe(SpDataStream stream,
                                  IBrokerConfigOverride kafkaConfig,
                                  EventProcessor callback) {
-    return new SubscriptionManager(kafkaConfig, stream.getEventGrounding(), callback).subscribe();
+    return new SubscriptionManager(kafkaConfig, stream.getEventGrounding(), callback)
+        .withInternalBroker(clientConfig.getInternalBrokerSettings())
+        .subscribe();
   }
 
   @Override

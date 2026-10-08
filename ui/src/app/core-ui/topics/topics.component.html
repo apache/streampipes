@@ -49,12 +49,7 @@
                 @if (isSpDataStream(pipelineElement)) {
                     <table
                         mat-table
-                        [dataSource]="
-                            $safeNavigationMigration(
-                                pipelineElement?.eventGrounding
-                                    ?.transportProtocols
-                            )
-                        "
+                        [dataSource]="[pipelineElement?.eventGrounding]"
                     >
                         <ng-container matColumnDef="outputTopics">
                             <th mat-header-cell *matHeaderCellDef>
@@ -115,16 +110,14 @@
                                     fxLayoutAlign="space-between center"
                                 >
                                     <span>{{
-                                        element?.eventGrounding
-                                            ?.transportProtocols?.[0]
-                                            ?.topicDefinition?.actualTopicName
+                                        element?.eventGrounding?.topicDefinition
+                                            ?.actualTopicName
                                     }}</span>
                                     <button
                                         mat-icon-button
                                         [cdkCopyToClipboard]="
                                             $safeNavigationMigration(
                                                 element?.eventGrounding
-                                                    ?.transportProtocols?.[0]
                                                     ?.topicDefinition
                                                     ?.actualTopicName
                                             )
@@ -147,12 +140,9 @@
                     </table>
                     <table
                         mat-table
-                        [dataSource]="
-                            $safeNavigationMigration(
-                                pipelineElement?.outputStream?.eventGrounding
-                                    ?.transportProtocols
-                            )
-                        "
+                        [dataSource]="[
+                            pipelineElement?.outputStream?.eventGrounding,
+                        ]"
                     >
                         <ng-container matColumnDef="outputTopics">
                             <th mat-header-cell *matHeaderCellDef>
@@ -215,16 +205,14 @@
                                     fxLayoutAlign="space-between center"
                                 >
                                     <span>{{
-                                        element?.eventGrounding
-                                            ?.transportProtocols?.[0]
-                                            ?.topicDefinition?.actualTopicName
+                                        element?.eventGrounding?.topicDefinition
+                                            ?.actualTopicName
                                     }}</span>
                                     <button
                                         mat-icon-button
                                         [cdkCopyToClipboard]="
                                             $safeNavigationMigration(
                                                 element?.eventGrounding
-                                                    ?.transportProtocols?.[0]
                                                     ?.topicDefinition
                                                     ?.actualTopicName
                                             )

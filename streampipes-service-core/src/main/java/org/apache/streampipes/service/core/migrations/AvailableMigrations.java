@@ -32,6 +32,7 @@ import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateView
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.ExtractBrokerConfigurationMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeDatabaseToDatasetMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakePersistPipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeSinkToDatasetMigration;
@@ -138,7 +139,8 @@ public class AvailableMigrations {
         new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
         new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage),
-        new RenameAssetLinkTypesMigration(genericStorage)
+        new RenameAssetLinkTypesMigration(genericStorage),
+        new ExtractBrokerConfigurationMigration()
     );
   }
 }

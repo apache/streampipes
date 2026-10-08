@@ -46,7 +46,7 @@ public class WildcardTopicGenerator {
               .getWildcardTopicMappings());
 
       wildcardTopicDefinition.setActualTopicName(actualTopicName);
-      stream.getEventGrounding().getTransportProtocol().setTopicDefinition(wildcardTopicDefinition);
+      stream.getEventGrounding().setTopicDefinition(wildcardTopicDefinition);
     }
     return stream;
   }

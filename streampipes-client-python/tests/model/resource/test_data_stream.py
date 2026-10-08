@@ -16,7 +16,9 @@
 #
 
 from unittest import TestCase
+from unittest.mock import patch
 
+from streampipes.functions.broker.broker import resolve_transport_protocol
 from streampipes.model.resource import DataStream
 
 
@@ -65,3 +67,38 @@ class TestDataStreamWorkaround(TestCase):
         data_stream = DataStream.model_validate(data_stream_def)
 
         self.assertEqual(50, data_stream.to_dict()["eventGrounding"]["transportProtocols"][0]["kafkaPort"])
+
+    def test_channel_grounding(self):
+        """Topic-only streams retain their topic without inventing broker settings."""
+        stream = DataStream.model_validate(
+            {
+                "elementId": "original-id",
+                "eventGrounding": {"topicDefinition": {"actualTopicName": "original.topic"}, "options": {}},
+            }
+        )
+        grounding = stream.to_dict()["eventGrounding"]
+        self.assertEqual("original.topic", grounding["topicDefinition"]["actualTopicName"])
+        self.assertNotIn("transportProtocols", grounding)
+        self.assertEqual([], stream.event_grounding.transport_protocols)
+
+    def test_channel_broker_resolution_uses_local_settings(self):
+        """Connection settings stay local and resolution preserves the original topic."""
+        stream = DataStream.model_validate(
+            {
+                "elementId": "original-id",
+                "eventGrounding": {"topicDefinition": {"actualTopicName": "original.topic"}},
+            }
+        )
+        with patch.dict(
+            "os.environ",
+            {"SP_PRIORITIZED_PROTOCOL": "nats", "SP_NATS_HOST": "edge", "SP_NATS_PORT": "4321"},
+            clear=True,
+        ):
+            protocol = resolve_transport_protocol(stream)
+            self.assertEqual("edge", protocol.broker_hostname)
+            self.assertEqual(4321, protocol.port)
+            self.assertEqual("original.topic", protocol.topic_definition.actual_topic_name)
+            self.assertEqual([], stream.event_grounding.transport_protocols)
+        with patch.dict("os.environ", {}, clear=True):
+            with self.assertRaises(ValueError):
+                resolve_transport_protocol(stream)

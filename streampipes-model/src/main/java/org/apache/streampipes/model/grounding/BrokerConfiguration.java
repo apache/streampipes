@@ -16,23 +16,37 @@
  *
  */
 
-package org.apache.streampipes.wrapper.kafka;
+package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
-import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
-import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
+public class BrokerConfiguration {
 
-import java.util.function.Supplier;
+  private String protocolId;
 
-public class KafkaStreamRuntimeProvider implements IStreamPipesRuntimeProvider {
+  private String url;
 
-  @Override
-  public Supplier<IDataProcessorRuntime> getDataProcessorRuntime() {
-    return KafkaStreamsDataProcessorRuntime::new;
+  private String token;
+
+  public String getProtocolId() {
+    return protocolId;
   }
 
-  @Override
-  public Supplier<IDataSinkRuntime> getDataSinkRuntime() {
-    return KafkaStreamsDataSinkRuntime::new;
+  public void setProtocolId(String protocolId) {
+    this.protocolId = protocolId;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 }

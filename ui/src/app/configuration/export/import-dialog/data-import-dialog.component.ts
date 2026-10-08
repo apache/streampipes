@@ -123,7 +123,6 @@ export class SpDataImportDialogComponent {
                         } else if (event instanceof HttpResponse) {
                             this.importConfiguration =
                                 event.body as AssetExportConfiguration;
-                            this.importConfiguration.overrideBrokerSettings = true;
                             this.currentImportStep++;
                         }
                     },

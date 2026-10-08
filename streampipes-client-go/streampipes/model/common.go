@@ -153,8 +153,10 @@ type SpDataStream struct {
 }
 
 type EventGrounding struct {
-	TransportProtocols []TransportProtocol `json:"transportProtocols"`
-	TransportFormats   []TransportFormat   `json:"transportFormats"`
+	TopicDefinition    *TopicDefinition    `json:"topicDefinition,omitempty"`
+	Options            map[string]string   `json:"options,omitempty"`
+	TransportProtocols []TransportProtocol `json:"transportProtocols,omitempty"`
+	TransportFormats   []TransportFormat   `json:"transportFormats,omitempty"`
 }
 
 type TransportProtocol struct {

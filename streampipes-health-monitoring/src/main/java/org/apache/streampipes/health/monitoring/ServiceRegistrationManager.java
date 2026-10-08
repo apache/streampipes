@@ -17,7 +17,10 @@
  */
 package org.apache.streampipes.health.monitoring;
 
+import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.messaging.InternalBrokerSettings;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistrationResponse;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
@@ -53,6 +56,16 @@ public class ServiceRegistrationManager {
     serviceRegistration.setStatus(status);
     storage.updateElement(serviceRegistration);
     logService(serviceRegistration);
+  }
+
+  public SpServiceRegistrationResponse registerService(SpServiceRegistration registration) {
+    var broker = InternalBrokerSettings.fromEnvironment(Environments.getEnvironment());
+    if (registration.getSupportedProtocols() == null
+        || !registration.getSupportedProtocols().contains(broker.protocolId())) {
+      throw new IllegalArgumentException("Extension service must support internal broker protocol " + broker.protocolId());
+    }
+    addService(registration, SpServiceStatus.REGISTERED);
+    return new SpServiceRegistrationResponse(broker.configuration());
   }
 
   public void addService(SpServiceRegistration serviceRegistration, SpServiceStatus status) {

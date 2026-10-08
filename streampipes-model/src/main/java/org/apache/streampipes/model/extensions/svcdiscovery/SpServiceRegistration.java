@@ -32,6 +32,8 @@ import java.util.Set;
 @TsModel
 public class SpServiceRegistration implements Storable {
 
+  private Set<String> supportedProtocols = new HashSet<>();
+
   private String svcType;
   private String svcGroup;
 
@@ -49,6 +51,14 @@ public class SpServiceRegistration implements Storable {
   private List<ScriptMetadata> supportedScriptLanguages;
 
   private Set<ExtensionItemDescription> providedExtensions;
+
+  public Set<String> getSupportedProtocols() {
+    return supportedProtocols;
+  }
+
+  public void setSupportedProtocols(Set<String> supportedProtocols) {
+    this.supportedProtocols = supportedProtocols;
+  }
 
   public SpServiceRegistration() {
   }

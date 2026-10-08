@@ -19,12 +19,16 @@
 package org.apache.streampipes.client.api.config;
 
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
+import org.apache.streampipes.model.grounding.BrokerConfiguration;
 
 import org.apache.http.Header;
 
 import java.util.Set;
 
 public interface IStreamPipesClientConfig {
+
+  /** Configures the internal broker for this client's live subscriptions and producers. */
+  void setInternalBrokerConfiguration(BrokerConfiguration configuration);
 
   void addTransportProtocol(SpProtocolDefinitionFactory<?> protocolDefinitionFactory);
 

@@ -17,18 +17,15 @@
  */
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.commons.environment.Environment;
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.monitoring.ExtensionsLogger;
 import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.messaging.InternalBrokerProvider;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Map;
@@ -42,15 +39,8 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement, AutoClo
 
   public SendToBrokerAdapterSink(AdapterDescription adapterDescription) {
     this.adapterDescription = adapterDescription;
-    this.protocol = adapterDescription
-        .getEventGrounding()
-        .getTransportProtocol();
+    this.protocol = InternalBrokerProvider.resolve(adapterDescription.getEventGrounding().getTransportProtocol());
 
-    if (getEnvironment().getSpDebug().getValueOrDefault()) {
-      modifyProtocolForDebugging(this.protocol);
-    }
-
-    addNatsTokenIfConfigured(this.protocol);
 
     var producerOpt = SpProtocolManager.INSTANCE.findDefinition(this.protocol);
     if (producerOpt.isPresent()) {
@@ -88,28 +78,6 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement, AutoClo
   @Override
   public void close() {
     producer.disconnect();
-  }
-
-  public void modifyProtocolForDebugging(TransportProtocol protocol) {
-    protocol.setBrokerHostname("localhost");
-    if (protocol instanceof KafkaTransportProtocol) {
-      ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
-    }
-  }
-
-  private Environment getEnvironment() {
-    return Environments.getEnvironment();
-  }
-
-  private void addNatsTokenIfConfigured(TransportProtocol protocol) {
-    if (protocol instanceof NatsTransportProtocol natsProtocol) {
-      var natsToken = getEnvironment().getNatsToken().getValueOrDefault();
-      if ((natsProtocol.getToken() == null || natsProtocol.getToken().isBlank())
-          && natsToken != null
-          && !natsToken.isBlank()) {
-        natsProtocol.setToken(natsToken);
-      }
-    }
   }
 
 }

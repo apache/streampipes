@@ -18,9 +18,12 @@
 
 package org.apache.streampipes.model.export;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonIgnoreProperties("overrideBrokerSettings")
 public class AssetExportConfiguration {
 
   private String assetId;
@@ -38,7 +41,6 @@ public class AssetExportConfiguration {
   private Set<ExportItem> sites;
   private Set<ExportItem> genericStorageDocuments;
 
-  private boolean overrideBrokerSettings;
   private boolean overwriteExistingDocuments;
 
   public AssetExportConfiguration() {
@@ -189,14 +191,6 @@ public class AssetExportConfiguration {
 
   public void addAsset(ExportItem asset) {
     this.assets.add(asset);
-  }
-
-  public boolean isOverrideBrokerSettings() {
-    return overrideBrokerSettings;
-  }
-
-  public void setOverrideBrokerSettings(boolean overrideBrokerSettings) {
-    this.overrideBrokerSettings = overrideBrokerSettings;
   }
 
   public Set<ExportItem> getGenericStorageDocuments() {

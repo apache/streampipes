@@ -130,6 +130,7 @@ class DataStream(Resource):
 
         if (
             use_source_names
+            and resource_dict["eventGrounding"]["transportProtocols"]
             and (transport_protocol_dict := resource_dict["eventGrounding"]["transportProtocols"][0])["@class"]
             != "org.apache.streampipes.model.grounding.KafkaTransportProtocol"
         ):
@@ -137,4 +138,8 @@ class DataStream(Resource):
             transport_protocol_dict.update({"port": port})
             resource_dict["eventGrounding"]["transportProtocols"][0] = transport_protocol_dict
 
+        if self.event_grounding.topic_definition is not None:
+            grounding = resource_dict["eventGrounding" if use_source_names else "event_grounding"]
+            grounding.pop("transportProtocols" if use_source_names else "transport_protocols", None)
+            grounding.pop("transportFormats" if use_source_names else "transport_formats", None)
         return resource_dict

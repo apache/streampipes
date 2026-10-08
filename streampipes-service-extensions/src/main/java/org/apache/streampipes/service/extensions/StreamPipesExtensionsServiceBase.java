@@ -29,6 +29,8 @@ import org.apache.streampipes.extensions.management.client.StreamPipesClientReso
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.monitoring.ServiceLoadDataReportGenerator;
+import org.apache.streampipes.messaging.InternalBrokerProvider;
+import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.configuration.ConfigItem;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
@@ -129,26 +131,10 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    InternalBrokerProvider.requireRegistration();
     this.extensionTransportMode = ExtensionServiceTransportMode.from(
         Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
     );
-    if (extensionTransportMode.supportsNats()) {
-      LOG.info("Starting Extension Service on Nats Mode");
-      this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver(
-          getAdditionalBrokerOperationHandlers()
-      );
-      this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
-          serviceId(),
-          extensionTransportMode,
-          Environments.getEnvironment()
-              .getExtensionRequestTopicPrefix()
-              .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX),
-          this::onNatsReconnect
-      );
-    } else {
-      LOG.info("Starting Extension Service on HTTP Mode");
-      this.natsBrokerReceiverActive = false;
-    }
 
     var extensions = new ExtensionItemProvider().getAllItemDescriptions();
     var req = SpServiceRegistration.from(
@@ -162,10 +148,35 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         getHealthCheckPath(),
         extensions);
 
+    req.setSupportedProtocols(SpProtocolManager.INSTANCE.supportedProtocolIds());
     this.currentServiceRegistration = req;
 
     LOG.info("Registering service {} with id {} at core", req.getSvcGroup(), req.getSvcId());
     registerService(req);
+
+    if (extensionTransportMode.supportsNats()) {
+      LOG.info("Starting Extension Service on Nats Mode");
+      this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver(
+          getAdditionalBrokerOperationHandlers()
+      );
+      this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
+          serviceId(),
+          extensionTransportMode,
+          Environments.getEnvironment()
+              .getExtensionRequestTopicPrefix()
+              .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX),
+          this::onNatsReconnect,
+          InternalBrokerProvider.configuration()
+      );
+    } else {
+      LOG.info("Starting Extension Service on HTTP Mode");
+      this.natsBrokerReceiverActive = false;
+    }
+
+    req.setTags(getServiceTags(extensions));
+    if (natsBrokerReceiverActive) {
+      registerService(req);
+    }
 
     this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
     this.startStreamPipesService(

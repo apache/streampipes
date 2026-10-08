@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -50,16 +49,6 @@ public class DataProcessorPipelineElementManagement extends InvocablePipelineEle
   @Override
   protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
     return new ProcessingElementParameterExtractor(graph);
-  }
-
-  @Override
-  protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
-    graph.getInputStreams().forEach(is -> {
-      GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
-    });
-
-    GroundingDebugUtils.modifyGrounding(graph.getOutputStream().getEventGrounding());
-    return graph;
   }
 
   @Override

@@ -85,7 +85,9 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
   @Override
   public ISubscription subscribe(DataProcessorInvocation processor,
                                  EventProcessor callback) {
-    return new SubscriptionManager(processor.getOutputStream().getEventGrounding(), callback).subscribe();
+    return new SubscriptionManager(processor.getOutputStream().getEventGrounding(), callback)
+        .withInternalBroker(clientConfig.getInternalBrokerSettings())
+        .subscribe();
   }
 
   /**
@@ -100,7 +102,7 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
                                  IBrokerConfigOverride brokerConfigOverride,
                                  EventProcessor callback) {
     return new SubscriptionManager(brokerConfigOverride, processor.getOutputStream().getEventGrounding(), callback)
-        .subscribe();
+        .withInternalBroker(clientConfig.getInternalBrokerSettings()).subscribe();
   }
 
   /**
@@ -116,7 +118,7 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
                                  EventProcessor callback) {
     return new SubscriptionManager(
         processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
-        .subscribe();
+        .withInternalBroker(clientConfig.getInternalBrokerSettings()).subscribe();
   }
 
   /**
@@ -135,6 +137,6 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
     return new SubscriptionManager(
         brokerConfigOverride,
         processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
-        .subscribe();
+        .withInternalBroker(clientConfig.getInternalBrokerSettings()).subscribe();
   }
 }
