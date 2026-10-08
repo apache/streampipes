@@ -31,6 +31,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpSystemNotificationComponent } from '../../../core/components/system-notification/system-notification.component';
 
 @Component({
     selector: 'sp-auth-box',
@@ -44,6 +45,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         RouterLink,
         RouterLinkActive,
         TranslatePipe,
+        SpSystemNotificationComponent,
     ],
 })
 export class AuthBoxComponent {

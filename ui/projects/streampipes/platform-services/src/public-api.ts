@@ -52,6 +52,7 @@ export * from './lib/apis/privilege.service';
 export * from './lib/apis/role.service';
 export * from './lib/apis/semantic-types-rest.service';
 export * from './lib/apis/service-tags.service';
+export * from './lib/apis/system-notification.service';
 export * from './lib/apis/user.service';
 export * from './lib/apis/user-admin.service';
 export * from './lib/apis/user-group.service';

@@ -18,12 +18,8 @@
 
 package org.apache.streampipes.model.configuration;
 
-public class DefaultGeneralConfig {
-
-  public GeneralConfig make() {
-    var generalConfig = new GeneralConfig();
-    generalConfig.setLinkSettings(new DefaultLinkSettings().make());
-    generalConfig.setSystemNotification(SystemNotificationConfig.disabled());
-    return generalConfig;
-  }
+public enum SystemNotificationType {
+  INFO,
+  WARNING,
+  CRITICAL
 }

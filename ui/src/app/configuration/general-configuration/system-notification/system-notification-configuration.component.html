@@ -1,0 +1,116 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<sp-split-section
+    [title]="'System Notification' | translate"
+    [subtitle]="
+        'Inform users about maintenance, incidents, or other announcements'
+            | translate
+    "
+    [formGroup]="parentForm"
+>
+    <mat-checkbox
+        formControlName="notificationEnabled"
+        data-cy="system-notification-enabled"
+        >{{ 'Show message on every page' | translate }}
+    </mat-checkbox>
+
+    @if (parentForm.get('notificationEnabled').getRawValue()) {
+        @if (expired) {
+            <sp-alert-banner
+                type="warning"
+                [title]="'Message expired' | translate"
+                [description]="
+                    'The configured message has expired and is no longer shown'
+                        | translate
+                "
+            ></sp-alert-banner>
+        }
+
+        <sp-form-field
+            [level]="2"
+            [label]="'Message Type' | translate"
+            [description]="
+                'Select the urgency of the message, which also sets its color'
+                    | translate
+            "
+        >
+            <mat-form-field color="accent">
+                <mat-select
+                    formControlName="notificationType"
+                    data-cy="system-notification-type"
+                >
+                    <mat-option value="INFO">{{
+                        'Info' | translate
+                    }}</mat-option>
+                    <mat-option value="WARNING">{{
+                        'Warning' | translate
+                    }}</mat-option>
+                    <mat-option value="CRITICAL">{{
+                        'Critical' | translate
+                    }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </sp-form-field>
+
+        <sp-form-field
+            [level]="2"
+            [label]="'Message' | translate"
+            [description]="
+                'The message as shown in the top right corner of every page. Longer messages are cut off after about 60 characters and shown in full on hover'
+                    | translate
+            "
+        >
+            <mat-form-field color="accent">
+                <input
+                    formControlName="notificationMessage"
+                    fxFlex
+                    matInput
+                    data-cy="system-notification-message"
+                />
+            </mat-form-field>
+        </sp-form-field>
+
+        <sp-form-field
+            [level]="2"
+            [label]="'Expiry' | translate"
+            [description]="
+                'Add a point in time to hide the message automatically, or leave it empty to show it until you switch it off'
+                    | translate
+            "
+        >
+            <sp-date-input
+                [(date)]="expiryDate"
+                data-cy="system-notification-expiry"
+            ></sp-date-input>
+            @if (expiryDate) {
+                <div class="mt-sm">
+                    <button
+                        type="button"
+                        mat-flat-button
+                        class="small-button"
+                        (click)="clearExpiry()"
+                        data-cy="system-notification-clear-expiry"
+                    >
+                        <span>{{ 'Reset expiry' | translate }}</span>
+                    </button>
+                </div>
+            }
+        </sp-form-field>
+    }
+</sp-split-section>

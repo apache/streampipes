@@ -45,6 +45,8 @@ public class UnauthenticatedInterfaces {
         "/",
         "/streampipes-backend/",
         "/streampipes-backend/index.html",
+        // the system notification is shown before login and on anonymous dashboards
+        "/api/v2/system-notification",
         // anonymous dashboard access is allowed
         "/api/v3/datalake/dashboard/*/composite",
         "/api/v3/datalake/dashboard/kiosk/*/data"

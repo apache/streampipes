@@ -16,14 +16,21 @@
  *
  */
 
-package org.apache.streampipes.model.configuration;
+import { SystemNotificationType } from '@streampipes/platform-services';
+import { SpLabelComponent } from '@streampipes/shared-ui';
 
-public class DefaultGeneralConfig {
+export type NotificationTone = NonNullable<SpLabelComponent['tone']>;
 
-  public GeneralConfig make() {
-    var generalConfig = new GeneralConfig();
-    generalConfig.setLinkSettings(new DefaultLinkSettings().make());
-    generalConfig.setSystemNotification(SystemNotificationConfig.disabled());
-    return generalConfig;
-  }
+export function toNotificationTone(
+    type: SystemNotificationType,
+): NotificationTone {
+    switch (type) {
+        case 'CRITICAL':
+            // sp-label calls this tone 'error'
+            return 'error';
+        case 'WARNING':
+            return 'warning';
+        default:
+            return 'info';
+    }
 }
