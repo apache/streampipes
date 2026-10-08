@@ -18,14 +18,15 @@
 package streampipes
 
 import (
+	"io"
+	"log"
+	"net/http"
+
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/config"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/serializer"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/internal/util"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/pipeline"
-	"io"
-	"log"
-	"net/http"
 )
 
 type Pipeline struct {
