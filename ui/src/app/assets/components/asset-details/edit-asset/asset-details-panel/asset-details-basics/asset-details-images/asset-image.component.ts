@@ -28,7 +28,7 @@ import {
 import {
     FileMetadata,
     FilesService,
-    SpAsset,
+    SpAssetModel,
 } from '@streampipes/platform-services';
 import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
@@ -59,7 +59,7 @@ export class AssetImageComponent implements OnInit {
     private dialog = inject(MatDialog);
 
     @Input()
-    asset: SpAsset;
+    asset: SpAssetModel;
 
     @Input()
     editMode: boolean;
@@ -83,39 +83,31 @@ export class AssetImageComponent implements OnInit {
     }
 
     refreshImages(): void {
-        this.filesService.getFileMetadata(['jpg', 'jpeg']).subscribe(files => {
-            this.imageFiles = files.filter(file =>
-                this.asset.assetLinks?.some(
-                    link =>
-                        link.linkType === 'file' &&
-                        link.resourceId === file.fileId,
-                ),
-            );
+        this.imageFiles = this.asset.assetImages ?? [];
 
-            this.imageUrls.forEach(url => URL.revokeObjectURL(url));
-            this.imageUrls = [];
+        this.imageUrls.forEach(url => URL.revokeObjectURL(url));
+        this.imageUrls = [];
 
-            if (this.imageFiles.length === 0) {
+        if (this.imageFiles.length === 0) {
+            this.selectedImageIndex = null;
+            return;
+        }
+
+        forkJoin(
+            this.imageFiles.map(file =>
+                this.filesService
+                    .getFile(file.filename)
+                    .pipe(map(blob => URL.createObjectURL(blob))),
+            ),
+        ).subscribe(urls => {
+            this.imageUrls = urls;
+
+            if (
+                this.selectedImageIndex !== null &&
+                this.selectedImageIndex >= urls.length
+            ) {
                 this.selectedImageIndex = null;
-                return;
             }
-
-            forkJoin(
-                this.imageFiles.map(file =>
-                    this.filesService
-                        .getFile(file.filename)
-                        .pipe(map(blob => URL.createObjectURL(blob))),
-                ),
-            ).subscribe(urls => {
-                this.imageUrls = urls;
-
-                if (
-                    this.selectedImageIndex !== null &&
-                    this.selectedImageIndex >= urls.length
-                ) {
-                    this.selectedImageIndex = null;
-                }
-            });
         });
     }
 
@@ -135,6 +127,7 @@ export class AssetImageComponent implements OnInit {
             }
 
             this.imageUploaded.emit(uploadedFile);
+            this.refreshImages();
         });
     }
 
@@ -165,9 +158,10 @@ export class AssetImageComponent implements OnInit {
             data: {
                 title: this.translateService.instant('Remove image?'),
                 subtitle: this.translateService.instant(
-                    'Remove the link only, or permanently delete the image file.',
+                    'Remove this image from the asset, or permanently delete the image file.',
                 ),
-                neutralTitle: this.translateService.instant('Remove link only'),
+                neutralTitle:
+                    this.translateService.instant('Remove from asset'),
                 cancelTitle: this.translateService.instant('Cancel'),
                 confirmTitle: this.translateService.instant('Delete file'),
             },
@@ -178,12 +172,11 @@ export class AssetImageComponent implements OnInit {
             .subscribe((action: ConfirmDialogAction | undefined) => {
                 if (action === 'neutral') {
                     this.imageLinkRemoval.emit(file.fileId);
-                    return;
-                }
-
-                if (action === 'confirm') {
+                    this.refreshImages();
+                } else if (action === 'confirm') {
                     this.imageLinkRemoval.emit(file.fileId);
                     this.imageFileDeletionRequested.emit(file.fileId);
+                    this.refreshImages();
                 }
             });
     }

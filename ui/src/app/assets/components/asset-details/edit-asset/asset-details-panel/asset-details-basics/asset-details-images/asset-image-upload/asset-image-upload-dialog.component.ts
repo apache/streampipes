@@ -82,7 +82,7 @@ export class AssetImageUploadDialogComponent {
 
     errorMessage = this.translateService.instant('Please enter a value');
 
-    private readonly allowedFileTypes = ['image/jpeg'];
+    private readonly allowedFileTypes = ['image/jpeg', 'image/png'];
 
     handleFileInput(files: FileList): void {
         this.uploadError = false;
@@ -101,7 +101,7 @@ export class AssetImageUploadDialogComponent {
             if (!this.allowedFileTypes.includes(file.type)) {
                 this.uploadError = true;
                 this.uploadErrorMessage = this.translateService.instant(
-                    'Only JPEG, JPG images are supported',
+                    'Only JPEG, JPG and PNG images are supported',
                 );
                 continue;
             }

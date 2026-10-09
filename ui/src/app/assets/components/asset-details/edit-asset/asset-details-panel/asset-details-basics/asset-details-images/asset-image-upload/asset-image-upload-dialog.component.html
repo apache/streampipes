@@ -26,7 +26,15 @@
             >
             </sp-alert-banner>
         }
-
+        <sp-alert-banner
+            type="info"
+            [title]="'Asset image access' | translate"
+            [description]="
+                'Other registered users may be able to access uploaded images.'
+                    | translate
+            "
+        >
+        </sp-alert-banner>
         @if (this.duplicateFileNames.length === 0) {
             <div fxFlex="100">
                 <div fxFlex="100" style="margin: 5px; width: 100%">
@@ -45,7 +53,7 @@
                         <input
                             #fileInput
                             type="file"
-                            accept="image/jpeg"
+                            accept="image/jpeg,image/png"
                             style="display: none"
                             (change)="handleFileInput($event.target.files)"
                         />

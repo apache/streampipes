@@ -3992,6 +3992,7 @@ export class SpAsset {
 
 export class SpAssetModel extends SpAsset implements Storable {
     appDocType: string;
+    assetImages: FileMetadata[];
     elementId: string;
     removable: boolean;
     rev: string;
@@ -4003,6 +4004,9 @@ export class SpAssetModel extends SpAsset implements Storable {
         const instance = target || new SpAssetModel();
         super.fromData(data, instance);
         instance.appDocType = data.appDocType;
+        instance.assetImages = __getCopyArrayFn(FileMetadata.fromData)(
+            data.assetImages,
+        );
         instance.elementId = data.elementId;
         instance.removable = data.removable;
         instance.rev = data.rev;

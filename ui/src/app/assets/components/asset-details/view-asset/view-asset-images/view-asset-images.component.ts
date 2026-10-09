@@ -24,14 +24,10 @@ import {
     OnChanges,
     OnDestroy,
 } from '@angular/core';
-import {
-    FileMetadata,
-    FilesService,
-    SpAsset,
-} from '@streampipes/platform-services';
+import { FileMetadata, FilesService } from '@streampipes/platform-services';
 import { MatIcon } from '@angular/material/icon';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
     selector: 'sp-view-asset-images',
@@ -44,7 +40,7 @@ export class ViewAssetImagesComponent implements OnChanges, OnDestroy {
     private filesService = inject(FilesService);
 
     @Input()
-    asset: SpAsset;
+    imageFiles: FileMetadata[] = [];
 
     imageUrls: string[] = [];
 
@@ -102,67 +98,31 @@ export class ViewAssetImagesComponent implements OnChanges, OnDestroy {
         this.selectedImageIndex = null;
         this.clearImageUrls();
 
-        const linkedFileIds = [
-            ...new Set(
-                (this.asset?.assetLinks ?? [])
-                    .filter(
-                        link => link.linkType === 'file' && !!link.resourceId,
-                    )
-                    .map(link => link.resourceId),
-            ),
-        ];
-
-        if (linkedFileIds.length === 0) {
+        if (this.imageFiles.length === 0) {
             return;
         }
 
-        this.filesService
-            .getFileMetadata(['jpg', 'jpeg'])
-            .pipe(
-                map(files => this.getLinkedImageFiles(files, linkedFileIds)),
-                switchMap(files => {
-                    if (files.length === 0) {
-                        return of<(string | null)[]>([]);
-                    }
+        forkJoin(
+            this.imageFiles.map(file =>
+                this.filesService.getFile(file.filename).pipe(
+                    map(blob => URL.createObjectURL(blob)),
+                    catchError(() => of(null)),
+                ),
+            ),
+        ).subscribe(urls => {
+            const validUrls = urls.filter((url): url is string => url !== null);
 
-                    return forkJoin(
-                        files.map(file =>
-                            this.filesService.getFile(file.filename).pipe(
-                                map(blob => URL.createObjectURL(blob)),
-                                catchError(() => of(null)),
-                            ),
-                        ),
-                    );
-                }),
-            )
-            .subscribe(urls => {
-                const validUrls = urls.filter(
-                    (url): url is string => url !== null,
-                );
+            if (generation !== this.loadGeneration) {
+                validUrls.forEach(url => URL.revokeObjectURL(url));
+                return;
+            }
 
-                if (generation !== this.loadGeneration) {
-                    validUrls.forEach(url => URL.revokeObjectURL(url));
-                    return;
-                }
-
-                this.imageUrls = validUrls;
-            });
-    }
-
-    private getLinkedImageFiles(
-        files: FileMetadata[],
-        linkedFileIds: string[],
-    ): FileMetadata[] {
-        const filesById = new Map(files.map(file => [file.fileId, file]));
-
-        return linkedFileIds
-            .map(fileId => filesById.get(fileId))
-            .filter((file): file is FileMetadata => file !== undefined);
+            this.imageUrls = validUrls;
+        });
     }
 
     private clearImageUrls(): void {
         this.imageUrls.forEach(url => URL.revokeObjectURL(url));
-
         this.imageUrls = [];
     }
 }

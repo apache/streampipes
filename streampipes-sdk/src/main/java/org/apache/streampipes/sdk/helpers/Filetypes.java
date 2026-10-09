@@ -30,6 +30,7 @@ public enum Filetypes {
 
   CSV("csv"),
   JPG("jpg", "jpeg"),
+  PNG("png"),
   JSON("json"),
   XLS("xls"),
   XLSX("xlsx"),
