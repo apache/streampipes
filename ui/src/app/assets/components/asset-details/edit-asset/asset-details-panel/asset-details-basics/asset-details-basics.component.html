@@ -110,7 +110,7 @@
     <sp-split-section [level]="2" [title]="'Image' | translate">
         <sp-asset-image
             #assetImage
-            [asset]="asset"
+            [asset]="assetModel"
             [editMode]="editMode"
             (imageUploaded)="handleImageUploaded($event)"
             (imageLinkRemoval)="handleImageLinkRemoval($event)"
@@ -125,7 +125,6 @@
         [asset]="asset"
         [assetModel]="assetModel"
         [editMode]="true"
-        (updateAssetEmitter)="assetImage.refreshImages()"
     >
     </sp-asset-details-links>
 </div>

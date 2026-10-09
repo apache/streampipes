@@ -102,6 +102,9 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     assetDetailsLinks: AssetDetailsLinksComponent;
 
     @Output()
+    imageUploaded = new EventEmitter<string>();
+
+    @Output()
     imageFileDeletionRequested = new EventEmitter<string>();
 
     isa95Types: Isa95TypeDesc[] = [];
@@ -123,14 +126,22 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     }
 
     handleImageUploaded(file: FileMetadata): void {
-        this.assetDetailsLinks.addUploadedFileLink(file);
+        this.assetModel.assetImages = [
+            ...(this.assetModel.assetImages ?? []),
+            file,
+        ];
+
+        this.imageUploaded.emit(file.fileId);
     }
 
     handleImageLinkRemoval(fileId: string): void {
-        this.assetDetailsLinks.removeFileLink(fileId);
+        this.assetModel.assetImages = (
+            this.assetModel.assetImages ?? []
+        ).filter(image => image.fileId !== fileId);
     }
 
     handleImageFileDeletionRequested(fileId: string): void {
+        this.handleImageLinkRemoval(fileId);
         this.imageFileDeletionRequested.emit(fileId);
     }
 }

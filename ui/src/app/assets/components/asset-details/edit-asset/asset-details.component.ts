@@ -117,6 +117,7 @@ export class SpAssetDetailsComponent
     private initialGeneratedAssetId?: string;
     private initialGeneratedElementId?: string;
     private pendingConfirmLeaveDialog?: Observable<boolean>;
+    private uploadedImageFileIds = new Set<string>();
     @ViewChild(SpAssetSelectionPanelComponent)
     assetSelectionPanel: SpAssetSelectionPanelComponent;
 
@@ -252,6 +253,7 @@ export class SpAssetDetailsComponent
             ...assetToPromote,
             assetType: formerParent.assetType,
             assetSite: formerParent.assetSite,
+            assetImages: [],
             elementId: this.idGeneratorService.generate(24),
             appDocType: 'asset-management',
             removable: true,
@@ -393,11 +395,18 @@ export class SpAssetDetailsComponent
         this.pendingConfirmLeaveDialog = dialogRef.afterClosed().pipe(
             switchMap((dialogResult: ConfirmDialogAction | undefined) => {
                 if (dialogResult === 'confirm') {
-                    return from(this.saveAssetChanges()).pipe(map(() => true));
+                    return from(
+                        (async () => {
+                            await this.saveAssetChanges();
+                            await this.cleanupUnusedImageUploadsAfterSave();
+                        })(),
+                    ).pipe(map(() => true));
                 }
 
                 if (dialogResult === 'cancel') {
-                    return of(true);
+                    return from(this.deleteDiscardedImageUploads()).pipe(
+                        map(() => true),
+                    );
                 }
 
                 return of(false);
@@ -528,6 +537,8 @@ export class SpAssetDetailsComponent
         if (this.isNewAsset) {
             await firstValueFrom(this.filesService.deleteFile(fileId));
 
+            this.uploadedImageFileIds.delete(fileId);
+
             return;
         }
 
@@ -535,10 +546,46 @@ export class SpAssetDetailsComponent
             this.assetService.deleteAssetFile(this.assetModelId, fileId),
         );
 
+        this.uploadedImageFileIds.delete(fileId);
+
         this.asset.rev = persistedAsset.rev;
 
         this.originalAsset = this.normalizeAssetForComparison(persistedAsset);
 
         this.assetBrowserService.refreshBrowserAssetData();
+    }
+
+    trackUploadedImage(fileId: string): void {
+        this.uploadedImageFileIds.add(fileId);
+    }
+
+    private async deleteDiscardedImageUploads(): Promise<void> {
+        const fileIds = [...this.uploadedImageFileIds];
+
+        await Promise.all(
+            fileIds.map(fileId =>
+                firstValueFrom(this.filesService.deleteFile(fileId)),
+            ),
+        );
+
+        this.uploadedImageFileIds.clear();
+    }
+
+    private async cleanupUnusedImageUploadsAfterSave(): Promise<void> {
+        const currentAssetImageFileIds = new Set(
+            (this.asset.assetImages ?? []).map(image => image.fileId),
+        );
+
+        const unusedUploadedFileIds = [...this.uploadedImageFileIds].filter(
+            fileId => !currentAssetImageFileIds.has(fileId),
+        );
+
+        await Promise.all(
+            unusedUploadedFileIds.map(fileId =>
+                firstValueFrom(this.filesService.deleteFile(fileId)),
+            ),
+        );
+
+        this.uploadedImageFileIds.clear();
     }
 }

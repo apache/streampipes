@@ -128,6 +128,9 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+    asset.getAssetImages().removeIf(image -> fileId.equals(image.getFileId()));
+    assetResourceManager.update(asset);
+    
     fileManager.deleteFile(fileId);
 
     var updatedAsset = assetResourceManager.find(elementId);
