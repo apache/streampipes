@@ -31,6 +31,7 @@ import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
+import org.apache.streampipes.model.configuration.SystemNotificationConfig;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.file.FileMetadata;
@@ -83,7 +84,7 @@ public class ResetManagement {
 
   /**
    * Remove all configurations for this user. This includes:
-   * [pipeline assembly cache, pipelines, adapters, files, assets]
+   * [pipeline assembly cache, pipelines, adapters, files, assets, system notification]
    *
    * @param username of the user to delte the resources
    */
@@ -111,6 +112,8 @@ public class ResetManagement {
     removeAllPipelineTemplates();
 
     clearGenericStorage();
+
+    disableSystemNotification();
 
     logger.info("Resetting the system was completed");
   }
@@ -234,5 +237,18 @@ public class ResetManagement {
       }
     });
 
+  }
+
+  /**
+   * Switches the system notification off again, as on a fresh installation. The rest of the
+   * general configuration stays untouched.
+   */
+  void disableSystemNotification() {
+    var configStorage = resourceManager.getCoreConfigurationStorage();
+    var config = configStorage.get();
+    if (config != null && config.getGeneralConfig() != null) {
+      config.getGeneralConfig().setSystemNotification(SystemNotificationConfig.disabled());
+      configStorage.updateElement(config);
+    }
   }
 }
