@@ -27,12 +27,6 @@ describe('Show a system notification to all users', () => {
         ConfigurationUtils.enableSystemNotification(message);
     });
 
-    afterEach('Switch the notification off again', () => {
-        // The reset does not touch the general configuration
-        cy.login();
-        ConfigurationUtils.disableSystemNotification();
-    });
-
     it('Shows the notification in the toolbar and on the login page', () => {
         ConfigurationBtns.systemNotification().should('contain.text', message);
         cy.logout();
