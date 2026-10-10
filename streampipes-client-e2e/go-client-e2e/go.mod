@@ -17,7 +17,7 @@
 
 module go-client-e2e
 
-go 1.21.6
+go 1.25
 
 require github.com/apache/streampipes/streampipes-client-go v0.0.0 // indirect
 replace "github.com/apache/streampipes/streampipes-client-go" => "../../streampipes-client-go"
