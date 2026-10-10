@@ -82,7 +82,7 @@
     "swagger-ui-dist": "5.32.15",
     "tslib": "^2.6.2",
     "zone.js": "~0.15.1",
-    "katex": "^0.16.47",
+    "katex": "^0.18.2",
     "marked-katex-extension": "^5.1.12"
   },
   "devDependencies": {
