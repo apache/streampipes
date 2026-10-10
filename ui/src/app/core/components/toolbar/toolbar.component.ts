@@ -82,7 +82,10 @@ export class ToolbarComponent
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('');
         this.currentUserService.user$.subscribe(user => {
-            this.userEmail = user.displayName || user.username;
+            this.userEmail = user?.displayName || user?.username || '';
+            if (!user) {
+                return;
+            }
             this.profileService
                 .getUserProfile(user.username)
                 .subscribe(userInfo => {

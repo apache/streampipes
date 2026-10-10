@@ -237,7 +237,6 @@ public class UserService {
     if (Objects.nonNull(fullName)) {
       user.setFullName(fullName.toString());
     }
-    user.setAccountEnabled(false);
     user.setProvider(registrationId);
     return user;
   }
