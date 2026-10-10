@@ -43,7 +43,7 @@ export class CurrentUserService {
     }
 
     public hasRole(role: string): boolean {
-        const roles = this.getCurrentUser().roles;
+        const roles = this.getCurrentUser()?.roles ?? [];
         return roles.includes('ROLE_ADMIN') || roles.includes(role);
     }
 
