@@ -45,7 +45,6 @@ import org.apache.streampipes.sdk.helpers.Options;
 
 import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.PlcConnectionManager;
-import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.apache.plc4x.java.api.types.PlcResponseCode;
@@ -58,7 +57,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -98,10 +96,6 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   private IEventCollector collector;
   private PullAdapterScheduler pullAdapterScheduler;
 
-  /**
-   * Connection to the PLC
-   */
-  private PlcConnection plcConnection;
   private final PlcConnectionManager connectionManager;
 
   public Plc4xModbusAdapter(PlcConnectionManager connectionManager) {
@@ -146,28 +140,10 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
 
-  /**
-   * This method is executed when the adapter is started. A connection to the PLC is initialized
-   *
-   * @throws AdapterException
-   */
-  private void before(IStaticPropertyExtractor extractor) throws AdapterException {
-
-    // Extract user input
-    getConfigurations(extractor);
-
-    try {
-      this.plcConnection = connectionManager.getConnection(
-          "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID);
-
-      if (!this.plcConnection.getMetadata()
-                             .isReadSupported()) {
-        throw new AdapterException("The Modbus device on IP: " + this.ip + " does not support reading data");
-      }
-    } catch (PlcConnectionException pce) {
-      throw new AdapterException("Could not establish a connection to Modbus device on IP: " + this.ip);
-    }
+  private String connectionString() {
+    return "modbus-tcp:tcp://" + this.ip + ":" + this.port + "?unit-identifier=" + this.slaveID;
   }
+
 
   /**
    * is called iteratively according to the polling interval defined in getPollInterval.
@@ -180,6 +156,20 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   }
 
   private Map<String, Object> getEvent() {
+    try (var connection = connectionManager.getConnection(connectionString())) {
+      if (!connection.getMetadata().isReadSupported()) {
+        throw new IllegalStateException("The Modbus device does not support reading data");
+      }
+      return getEvent(connection);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new IllegalStateException("Interrupted while reading from Modbus device", e);
+    } catch (Exception e) {
+      throw new IllegalStateException("Could not read from Modbus device", e);
+    }
+  }
+
+  private Map<String, Object> getEvent(PlcConnection plcConnection) throws Exception {
 
     // create PLC read request
     PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
@@ -207,14 +197,7 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
     PlcReadRequest readRequest = builder.build();
 
     // Execute the request
-    PlcReadResponse response = null;
-
-    try {
-      response = readRequest.execute()
-                            .get();
-    } catch (InterruptedException | ExecutionException ie) {
-      ie.printStackTrace();
-    }
+    PlcReadResponse response = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
 
     // Create an event containing the value of the PLC
     Map<String, Object> event = new HashMap<>();
@@ -287,7 +270,7 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
       IEventCollector collector,
       IAdapterRuntimeContext adapterRuntimeContext
   ) throws AdapterException {
-    before(extractor.getStaticPropertyExtractor());
+    getConfigurations(extractor.getStaticPropertyExtractor());
     this.collector = collector;
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(this,
@@ -306,8 +289,8 @@ public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
   public SampleData onSampleDataRequested(
       IAdapterParameterExtractor extractor,
       IAdapterGuessSchemaContext adapterGuessSchemaContext
-  ) {
-
+  ) throws AdapterException {
+    getConfigurations(extractor.getStaticPropertyExtractor());
     var event = getEvent();
     return SampleDataBuilder.create()
                             .sample(event)

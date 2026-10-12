@@ -19,115 +19,124 @@
 package org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection;
 
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
-import org.apache.streampipes.extensions.api.connect.IPollingSettings;
-import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
-import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
-import org.apache.plc4x.java.api.PlcConnection;
-import org.apache.plc4x.java.api.PlcConnectionManager;
+import org.apache.plc4x.java.api.PlcConnectionFactory;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.plc4x.java.tools.eventpump.EventPump;
+import org.apache.plc4x.java.tools.eventpump.TagBatch;
+import org.apache.plc4x.java.tools.eventpump.triggers.TimerTrigger;
+import org.apache.plc4x.java.tools.eventpump.triggers.Trigger;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class ContinuousPlcRequestReader
-    extends OneTimePlcRequestReader implements IPullAdapter {
+public class ContinuousPlcRequestReader implements AutoCloseable, TagBatch.TagBatchListener {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ContinuousPlcRequestReader.class);
-  private static final int MAX_IDLE_PULLS = 500;
-
+  private final EventPump pump = new EventPump();
+  private final String adapterId;
   private final IEventCollector collector;
-  private int idlePullsBeforeNextAttempt = 0;
-  private int currentIdlePulls = 0;
-  private final String adapterName;
+  private final IExtensionsLogger logger;
+  private final PlcEventGenerator eventGenerator;
+  private final Map<String, String> nodes;
+  private boolean failed;
+  private boolean closed;
 
-  /**
-   *  Failure and recovery strategy:
-   * - If a read fails, the number of idle pulls before the next attempt is doubled, up to a maximum of 300.
-   * - If the read is successful, the idle pull counter is reset.
-   */
-  public ContinuousPlcRequestReader(
-      PlcConnectionManager connectionManager,
-      Plc4xConnectionSettings settings,
-      PlcRequestProvider requestProvider,
-      IEventCollector collector,
-      String adapterName
-  ) {
-    super(connectionManager, settings, requestProvider);
+  public ContinuousPlcRequestReader(PlcConnectionFactory connectionFactory,
+                                    Plc4xConnectionSettings settings,
+                                    IEventCollector collector,
+                                    String adapterId,
+                                    IExtensionsLogger logger) {
+    this(connectionFactory, settings, collector, adapterId, logger,
+        new TimerTrigger(settings.pollingInterval(), 0, TimeUnit.MILLISECONDS));
+  }
+
+  ContinuousPlcRequestReader(PlcConnectionFactory connectionFactory,
+                             Plc4xConnectionSettings settings,
+                             IEventCollector collector,
+                             String adapterId,
+                             IExtensionsLogger logger,
+                             Trigger trigger) {
+    this.adapterId = adapterId;
     this.collector = collector;
-    this.adapterName = adapterName;
+    this.logger = logger;
+    this.nodes = Map.copyOf(settings.nodes());
+    this.eventGenerator = new PlcEventGenerator(nodes);
+    try {
+      var batch = TagBatch.builder()
+          .withBatchId(adapterId)
+          .withConnectionFactory(connectionFactory)
+          .withConnectionString(settings.connectionString())
+          .addTagAddresses(nodes)
+          .withTrigger(trigger)
+          // Preserve the previous reader's five-second bound, even if a driver never completes its read.
+          .withFetchTimeout(5, TimeUnit.SECONDS)
+          .withListener(this)
+          .build();
+      pump.addBatch(batch);
+    } catch (RuntimeException e) {
+      trigger.close();
+      pump.close();
+      throw e;
+    }
+  }
+
+  public synchronized void start() {
+    try {
+      // Unlike startAll(), startBatch() propagates startup failures to the adapter lifecycle.
+      pump.startBatch(adapterId);
+    } catch (RuntimeException e) {
+      close();
+      throw e;
+    }
   }
 
   @Override
-  public void pullData() throws RuntimeException {
-    if (currentIdlePulls < idlePullsBeforeNextAttempt) {
-      idleRead();
-    } else {
-      connectAndReadPlcData();
+  public synchronized void onTagsFetched(TagBatch batch, PlcReadResponse response) {
+    if (closed) {
+      return;
     }
-  }
-
-  private void connectAndReadPlcData() {
-    try (PlcConnection plcConnection = connectionManager.getConnection(settings.connectionString())) {
-      if (plcConnection.isConnected()) {
-        var readRequest = requestProvider.makeReadRequest(plcConnection, settings.nodes());
-        var readResponse = readRequest.execute()
-            .get(5000, TimeUnit.MILLISECONDS);
-        processPlcReadResponse(readResponse);
-      } else {
-        LOG.error(
-            "Not connected to PLC with connection string {}, adapter {}",
-            settings.connectionString(),
-            adapterName
-        );
-        handleFailingPlcRead();
-      }
-    } catch (Exception e) {
-      handleFailingPlcRead(e.getMessage());
+    refreshRequest(batch);
+    collector.collect(eventGenerator.makeEvent(response));
+    if (failed) {
+      failed = false;
+      logger.info("PLC connection recovered", "Reading PLC data has resumed.");
     }
-  }
-
-  private void handleFailingPlcRead(String problem) {
-    LOG.error(
-        "Error while reading from PLC with connection string {}, adapter {}. Setting adapter to idle for {} attempts. {} ",
-        settings.connectionString(), adapterName, idlePullsBeforeNextAttempt, problem
-    );
-
-    handleFailingPlcRead();
-  }
-
-  private void handleFailingPlcRead() {
-    // Increase backoff counter on failure
-    if (idlePullsBeforeNextAttempt == 0) {
-      idlePullsBeforeNextAttempt = 1;
-    } else {
-      idlePullsBeforeNextAttempt = Math.min(idlePullsBeforeNextAttempt * 2, MAX_IDLE_PULLS);
-    }
-
-    currentIdlePulls = 0;
-  }
-
-  private void processPlcReadResponse(PlcReadResponse readResponse) {
-    var event = eventGenerator.makeEvent(readResponse);
-    collector.collect(event);
-    this.resetIdlePulls();
-  }
-
-  private void idleRead() {
-    LOG.debug("Skipping pullData call for {}. Idle pulls left: {}",
-              settings.connectionString(), idlePullsBeforeNextAttempt - currentIdlePulls);
-    currentIdlePulls++;
-  }
-
-  private void resetIdlePulls() {
-    idlePullsBeforeNextAttempt = 0;
-    currentIdlePulls = 0;
   }
 
   @Override
-  public IPollingSettings getPollingInterval() {
-    return PollingSettings.from(TimeUnit.MILLISECONDS, settings.pollingInterval());
+  public synchronized void onError(TagBatch batch, Throwable error) {
+    if (closed) {
+      return;
+    }
+    refreshRequest(batch);
+    if (!failed) {
+      failed = true;
+      // Driver exception messages can contain connection URLs and credentials.
+      logger.error(new IllegalStateException("PLC read failed (" + error.getClass().getSimpleName()
+          + "). The event pump will retry with exponential backoff."));
+    }
+  }
+
+  @Override
+  public synchronized void onFetchSkipped(TagBatch batch, long lastFetchDurationMs, long consecutiveSkips) {
+    if (!closed && consecutiveSkips == 1) {
+      logger.warn("PLC poll skipped", "The previous read is still running. Consider increasing the polling interval.");
+    }
+  }
+
+  private void refreshRequest(TagBatch batch) {
+    // PLC4X 1.0 caches requests across fetches, but a request belongs to its original connection lease.
+    // Reapplying the tags invalidates that cache so the next fetch builds against its newly acquired lease.
+    batch.addTags(nodes);
+  }
+
+  @Override
+  public synchronized void close() {
+    if (!closed) {
+      closed = true;
+      pump.close();
+    }
   }
 }
