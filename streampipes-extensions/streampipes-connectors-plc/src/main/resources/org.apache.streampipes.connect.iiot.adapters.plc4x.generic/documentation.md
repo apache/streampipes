@@ -85,7 +85,29 @@ propertyName=%{Memory-Area}{start-address}[{start-index}..{end-index}]:{Data-Typ
 temperature=%I0.0:INT
 ```
 
+### Browsing tags
+
+Choose **Browse PLC tags** after configuring the connection, then load **Available tags** and select the readable tags.
+The browse query defaults to `*` for S7 and ADS, which browse all available items with this query.
+For OPC UA, it defaults to `ns=0;i=85` (the Objects folder). Children are loaded one level at a time
+as you expand folders, avoiding a recursive browse of the entire server. Enter a parent NodeId to browse its children,
+for example `ns=2;s=Demo.Industrial.CncMachine.RawData`, then select `cycleActive` from the results.
+A query for a leaf node returns its children, not the leaf itself. Earlier saved OPC UA queries using `*` are
+interpreted as the Objects folder. Include the server's endpoint path in **PLC Address**, for example
+`localhost:4840/milo`; the path is case-sensitive. Query syntax and returned information depend on the driver and PLC. Unsupported connections report an error; use **Enter tags manually** instead.
+Browsing waits up to ten seconds for the response and returns the connection to the shared cache afterwards.
+
+The tree preserves the hierarchy supplied by the driver. Only readable items with an address can be selected.
+S7 browsing can return memory areas and data blocks as byte addresses rather than symbolic, typed variables.
+Use manual entry when you need different offsets, datatypes, or custom event field names.
+
+Selected addresses are used unchanged for sampling and polling. Event field names start with `tag_`, followed by the
+address with punctuation replaced by underscores. Conflicting names require manual entry. Browsing is performed only
+while configuring the adapter; starting an adapter uses its saved selections without browsing again.
+
 ### Upgrading existing adapters
+
+The version 3 migration keeps existing tags in the selected manual-entry option, preserving field names and addresses.
 
 The version 2 adapter migration updates saved PLC4X configuration parameter names and legacy array addresses for PLC4X 1.0.
 For example, `request-timeout` becomes `request-timeout-ms`, and `%DB42:28.0:BYTE[4]` becomes

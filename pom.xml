@@ -125,6 +125,7 @@
         <jetbrains.version>26.1.0</jetbrains.version>
         <snakeyaml.version>3.0.1</snakeyaml.version>
         <vertx.version>4.5.31</vertx.version>
+        <zip4j.version>2.11.6</zip4j.version>
 
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
@@ -885,6 +886,11 @@
 
 
             <!--dependency convergence -->
+            <dependency>
+                <groupId>net.lingala.zip4j</groupId>
+                <artifactId>zip4j</artifactId>
+                <version>${zip4j.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>

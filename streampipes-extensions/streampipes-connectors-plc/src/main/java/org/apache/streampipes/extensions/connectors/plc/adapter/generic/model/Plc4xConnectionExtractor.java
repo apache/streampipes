@@ -26,12 +26,16 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.BROWSE_RESULTS;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.BROWSE_TAGS;
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_CODE_BLOCK;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.TAG_INPUT;
 
 public class Plc4xConnectionExtractor {
 
@@ -45,17 +49,30 @@ public class Plc4xConnectionExtractor {
   }
 
   public Plc4xConnectionSettings makeSettings() {
+    return new Plc4xConnectionSettings(makeConnectionString(),
+        extractor.singleValueParameter(Plc4xLabels.PLC_POLLING_INTERVAL, Integer.class), extractNodes());
+  }
+
+  public String makeConnectionString() {
+    return makeConnectionString(false);
+  }
+
+  public String makeBrowseConnectionString() {
+    return makeConnectionString(true);
+  }
+
+  private String makeConnectionString(boolean browsing) {
     var host = extractHost();
     var transportCode = extractTransportCode();
     var transportConfigs = extractTransportMetadata(transportCode);
-    var protocolConfigs = extractProtocolMetadata();
+    var protocolConfigs = new HashMap<>(extractProtocolMetadata());
+    if (browsing && "opcua".equals(protocolCode)) {
+      // OPC UA otherwise recursively traverses the entire address space for every expansion.
+      protocolConfigs.put("browse-max-depth", 1);
+    }
     var configParameters = makeConfigParameters(transportConfigs, protocolConfigs);
 
-    return new Plc4xConnectionSettings(
-        getConnectionString(host, transportCode, protocolCode, configParameters),
-        extractor.singleValueParameter(Plc4xLabels.PLC_POLLING_INTERVAL, Integer.class),
-        extractNodes()
-    );
+    return getConnectionString(host, transportCode, protocolCode, configParameters);
   }
 
   private String getConnectionString(String host,
@@ -149,6 +166,21 @@ public class Plc4xConnectionExtractor {
   }
 
   private Map<String, String> extractNodes() {
+    if (extractor.getStaticPropertyByName(TAG_INPUT) != null
+        && BROWSE_TAGS.equals(extractor.selectedAlternativeInternalId(TAG_INPUT))) {
+      var nodes = new LinkedHashMap<String, String>();
+      for (var address : extractor.selectedTreeNodesInternalNames(BROWSE_RESULTS, String.class)) {
+        var name = "tag_" + address.replaceAll("[^a-zA-Z0-9_]", "_");
+        var previous = nodes.putIfAbsent(name, address);
+        if (previous != null && !previous.equals(address)) {
+          throw new IllegalArgumentException("Selected tags have conflicting field names. Use manual tag entry.");
+        }
+      }
+      if (nodes.isEmpty()) {
+        throw new IllegalArgumentException("Select at least one readable PLC tag.");
+      }
+      return nodes;
+    }
     var codePropertyInput = extractor.codeblockValue(PLC_CODE_BLOCK);
     return new ConfigurationParser().getNodeInformationFromCodeProperty(codePropertyInput);
   }

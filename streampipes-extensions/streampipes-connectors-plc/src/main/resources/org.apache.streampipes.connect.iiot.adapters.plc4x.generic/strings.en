@@ -25,7 +25,7 @@ protocol_metadata.title=Protocol Metadata
 protocol_metadata.description=Apply protocol metadata configurations
 
 plc_ip.title=PLC Address
-plc_ip.description=Example: 192.168.34.56
+plc_ip.description=Host and optional port/path. Examples: 192.168.34.56 or localhost:4840/milo for OPC UA.
 
 plc_polling_interval.title=Polling Interval [ms]
 plc_polling_interval.description=Polling Interval of adapter in milliseconds. Minimum value is 10.
@@ -41,3 +41,17 @@ required_options.description=
 
 advanced_options.title=Advanced options
 advanced_options.description=
+
+
+tag_input.title=Tag selection
+tag_input.description=Enter tag addresses manually or browse the connected PLC.
+manual_tags.title=Enter tags manually
+manual_tags.description=Define addresses and custom event field names.
+browse_tags.title=Browse PLC tags
+browse_tags.description=Discover readable tags when supported by the PLC and driver.
+browse_group.title=Browse settings
+browse_group.description=
+browse_query.title=Browse query
+browse_query.description=Driver-specific query. Use * for S7 and ADS. For OPC UA, enter a parent NodeId; ns=0;i=85 starts at Objects.
+browse_results.title=Available tags
+browse_results.description=Select readable tags. Field names use tag_ followed by the address with punctuation replaced by underscores. Use manual entry for custom names.

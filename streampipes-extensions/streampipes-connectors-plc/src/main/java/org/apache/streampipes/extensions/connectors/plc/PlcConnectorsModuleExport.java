@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.plc.adapter.GenericAdapterGenerator;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xAdapterMigrationV2;
+import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xAdapterMigrationV3;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xModbusAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xS7AdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter;
@@ -73,6 +74,7 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
     try {
       for (var protocol : driverManager.getProtocolCodes()) {
         migrators.add(new Plc4xAdapterMigrationV2(driverManager.getDriver(protocol)));
+        migrators.add(new Plc4xAdapterMigrationV3(protocol));
       }
       migrators.add(new Plc4xAdapterMigrationV2(Plc4xS7Adapter.ID, driverManager.getDriver("s7")));
     } catch (PlcConnectionException e) {
