@@ -22,5 +22,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CreateOptions(Boolean persist,
-                            Boolean start) {
+                            Boolean start,
+                            String persistDatasetName) {
+
+  public CreateOptions(Boolean persist, Boolean start) {
+    this(persist, start, null);
+  }
 }
