@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.GenericP
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.assets.PlcAdapterAssetResolver;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -50,7 +51,7 @@ public class AdapterConfigurationProvider {
     var appId = getAdapterAppId(driver);
     var adapterBuilder = AdapterConfigurationBuilder.create(
             appId,
-            1,
+            3,
             () -> new GenericPlc4xAdapter(driver, connectionManager)
         )
         .withLocales(Locales.EN)
@@ -62,7 +63,10 @@ public class AdapterConfigurationProvider {
         .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
         .requiredSingleValueSelection(
             Labels.withId(SUPPORTED_TRANSPORTS),
-            driverMetadata.getSupportedTransportCodes().stream().map(Option::new).toList()
+            driverMetadata.getSupportedTransportCodes().stream()
+                .filter(code -> !"test".equals(code))
+                .map(code -> new Option(code, driverMetadata.getDefaultTransportCode().filter(code::equals).isPresent()))
+                .toList()
         )
         .requiredStaticProperty(
             new MetadataOptionGenerator().makeRuntimeResolvableMetadata(
@@ -77,7 +81,9 @@ public class AdapterConfigurationProvider {
             optionMetadata
         )));
     adapterBuilder
-        .requiredCodeblock(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE);
+        .requiredStaticProperty(PlcTagConfiguration.make(
+            StaticProperties.codeStaticProperty(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE),
+            protocolMetadata.isPresent(), driver.getProtocolCode()));
 
     return adapterBuilder.buildConfiguration();
   }

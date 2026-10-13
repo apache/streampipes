@@ -30,14 +30,17 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.AdapterConfigurationProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.MetadataOptionGenerator;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.PlcTagConfiguration;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.ContinuousPlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.OneTimePlcRequestReader;
+import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcBrowseService;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcRequestProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionExtractor;
-import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.TreeInputNode;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 
 import org.apache.plc4x.java.api.PlcConnectionManager;
@@ -49,12 +52,14 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.ADVANCED_GROUP_TRANSPORT;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.BROWSE_QUERY;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.BROWSE_RESULTS;
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.REQUIRED_GROUP_TRANSPORT;
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.SUPPORTED_TRANSPORTS;
 
 public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeConfig {
 
-  private PullAdapterScheduler pullAdapterScheduler;
+  private ContinuousPlcRequestReader plcRequestReader;
   private final PlcRequestProvider requestProvider;
 
   private final PlcDriver driver;
@@ -79,22 +84,23 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
     var settings = new Plc4xConnectionExtractor(
         extractor.getStaticPropertyExtractor(), driver.getProtocolCode()
     ).makeSettings();
-    var adapterName = extractor.getAdapterDescription().getName();
-    var plcRequestReader = new ContinuousPlcRequestReader(
+    this.plcRequestReader = new ContinuousPlcRequestReader(
         connectionManager,
         settings,
-        requestProvider,
         collector,
-        adapterName
+        extractor.getAdapterDescription().getElementId(),
+        adapterRuntimeContext.getLogger()
     );
-    this.pullAdapterScheduler = new PullAdapterScheduler();
-    this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
+    this.plcRequestReader.start();
   }
 
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
                                IAdapterRuntimeContext adapterRuntimeContext) {
-    this.pullAdapterScheduler.shutdown();
+    if (this.plcRequestReader != null) {
+      this.plcRequestReader.close();
+      this.plcRequestReader = null;
+    }
   }
 
   @Override
@@ -119,6 +125,23 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
                                              IStaticPropertyExtractor extractor) throws SpConfigurationException {
+    if (staticPropertyInternalName.equals(BROWSE_RESULTS)) {
+      var tree = extractor.getStaticPropertyByName(BROWSE_RESULTS, RuntimeResolvableTreeInputStaticProperty.class);
+      var connectionString = new Plc4xConnectionExtractor(extractor, driver.getProtocolCode()).makeBrowseConnectionString();
+      var query = PlcTagConfiguration.browseQuery(driver.getProtocolCode(), extractor.textParameter(BROWSE_QUERY));
+      var browseParent = tree.getNextBaseNodeToResolve();
+      var incrementalBrowse = "opcua".equals(driver.getProtocolCode());
+      if (incrementalBrowse && browseParent != null) {
+        query = browseParent;
+      }
+      var nodes = new PlcBrowseService(connectionManager).browse(connectionString, query);
+      if (tree.getNextBaseNodeToResolve() == null) {
+        tree.setNodes(nodes);
+      } else {
+        tree.setLatestFetchedNodes(incrementalBrowse ? nodes : findBrowseChildren(nodes, browseParent));
+      }
+      return tree;
+    }
     Function<OptionMetadata, List<Option>> metadataOption = staticPropertyInternalName.equals(REQUIRED_GROUP_TRANSPORT)
         ? OptionMetadata::getRequiredOptions
         : OptionMetadata::getOptions;
@@ -142,4 +165,17 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
     }
     throw new SpConfigurationException(String.format("Not supported internal name %s", staticPropertyInternalName));
   }
+  private List<TreeInputNode> findBrowseChildren(List<TreeInputNode> nodes, String parent) {
+    for (var node : nodes) {
+      if (parent.equals(node.getInternalNodeName())) {
+        return node.getChildren();
+      }
+      var children = findBrowseChildren(node.getChildren(), parent);
+      if (!children.isEmpty()) {
+        return children;
+      }
+    }
+    return List.of();
+  }
+
 }
