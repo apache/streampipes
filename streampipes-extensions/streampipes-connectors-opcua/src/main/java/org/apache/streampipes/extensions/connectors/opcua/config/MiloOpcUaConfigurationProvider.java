@@ -38,6 +38,9 @@ public class MiloOpcUaConfigurationProvider {
     String applicationUri = Environments.getEnvironment().getOpcUaApplicationUri().getValueOrDefault();
     List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(opcServerUrl).get();
 
+    endpoints.forEach(e -> System.out.println(e.getEndpointUrl()));
+    endpoints.forEach(e -> System.out.println(e.getServer().getDiscoveryUrls()));
+
     var builder = OpcUaClientConfig.builder()
         .setApplicationName(LocalizedText.english("Apache StreamPipes"))
         .setApplicationUri(applicationUri);
