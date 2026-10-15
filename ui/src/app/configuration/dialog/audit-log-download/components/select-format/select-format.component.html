@@ -51,10 +51,16 @@
             [(ngModel)]="formatExportConfig.delimiter"
             class="sp-radio-group"
         >
-            <mat-radio-button value="comma" class="sp-radio-button"
+            <mat-radio-button
+                value="comma"
+                class="sp-radio-button"
+                data-cy="audit-download-delimiter-comma"
                 >,</mat-radio-button
             >
-            <mat-radio-button value="semicolon" class="sp-radio-button"
+            <mat-radio-button
+                value="semicolon"
+                class="sp-radio-button"
+                data-cy="audit-download-delimiter-semicolon"
                 >;</mat-radio-button
             >
         </mat-radio-group>

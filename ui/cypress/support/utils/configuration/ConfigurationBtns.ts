@@ -75,6 +75,12 @@ export class ConfigurationBtns {
     }
 
     public static auditDownloadFormat(format: 'csv' | 'json' | 'xlsx') {
-        return cy.dataCy(`audit-download-format-${format}`);
+        return cy.dataCy(`audit-download-format-${format}`).find('.mdc-radio');
+    }
+
+    public static auditDownloadDelimiter(delimiter: 'comma' | 'semicolon') {
+        return cy
+            .dataCy(`audit-download-delimiter-${delimiter}`)
+            .find('.mdc-radio');
     }
 }

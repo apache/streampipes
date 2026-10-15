@@ -45,17 +45,35 @@ describe('Download audit log', () => {
         cy.wait('@getAuditEvents');
     });
 
-    it('shows a confirmation after downloading the audit log as JSON', () => {
+    const downloadAuditLog = (
+        format: 'csv' | 'json',
+        delimiter?: 'comma' | 'semicolon',
+    ) => {
         ConfigurationBtns.auditLogDownloadBtn().should('be.enabled').click();
         ConfigurationBtns.auditDownloadDialog().should('be.visible');
 
         ConfigurationBtns.auditDownloadNextBtn().click();
-        ConfigurationBtns.auditDownloadFormat('json').click();
+        ConfigurationBtns.auditDownloadFormat(format).click();
+        if (format === 'csv' && delimiter) {
+            ConfigurationBtns.auditDownloadDelimiter(delimiter).click();
+        }
         ConfigurationBtns.auditDownloadBtn().click();
 
         ConfigurationBtns.auditDownloadDialog().should(
             'contain.text',
             'Your audit log is being downloaded.',
         );
+    };
+
+    it('shows a confirmation after downloading the audit log as JSON', () => {
+        downloadAuditLog('json');
+    });
+
+    it('shows a confirmation after downloading the audit log as CSV with commas', () => {
+        downloadAuditLog('csv', 'comma');
+    });
+
+    it('shows a confirmation after downloading the audit log as CSV with semicolons', () => {
+        downloadAuditLog('csv', 'semicolon');
     });
 });
