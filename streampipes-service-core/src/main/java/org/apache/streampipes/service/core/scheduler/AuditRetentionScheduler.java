@@ -18,10 +18,8 @@
 
 package org.apache.streampipes.service.core.scheduler;
 
-import org.apache.streampipes.audit.api.AuditEventStore;
+import org.apache.streampipes.audit.management.AuditRetentionManager;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.model.dataset.RetentionAction;
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,35 +28,22 @@ import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 
-import java.time.Clock;
-import java.time.temporal.ChronoUnit;
-
 @Configuration
 public class AuditRetentionScheduler implements SchedulingConfigurer {
 
   private static final Logger LOG = LoggerFactory.getLogger(AuditRetentionScheduler.class);
-  private final AuditEventStore auditEventStore;
-  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+  private final AuditRetentionManager auditRetentionManager;
 
-  public AuditRetentionScheduler(AuditEventStore auditEventStore,
-                                 ISpCoreConfigurationStorage coreConfigurationStorage) {
-    this.auditEventStore = auditEventStore;
-    this.coreConfigurationStorage = coreConfigurationStorage;
+  public AuditRetentionScheduler(AuditRetentionManager auditRetentionManager) {
+    this.auditRetentionManager = auditRetentionManager;
   }
 
   public void cleanupAuditEvents() {
     try {
-      var coreConfiguration = coreConfigurationStorage.get();
-      var retention = coreConfiguration == null ? null : coreConfiguration.getAuditRetentionConfiguration();
-      if (retention == null || retention.getDataRetentionConfig() == null
-          || retention.getDataRetentionConfig().action() != RetentionAction.DELETE) {
+      if (!Environments.getEnvironment().getAuditEnabled().getValueOrDefault()) {
         return;
       }
-      var days = retention.getDataRetentionConfig().olderThanDays();
-      if (days > 0) {
-      //TODO
-        auditEventStore.deleteEventsOlderThan(Clock.systemUTC().instant().minus(days, ChronoUnit.MINUTES));
-      }
+      auditRetentionManager.cleanup();
     } catch (RuntimeException e) {
       LOG.error("Audit retention cleanup failed", e);
     }

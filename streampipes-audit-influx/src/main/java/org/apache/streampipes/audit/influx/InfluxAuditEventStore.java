@@ -188,8 +188,12 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
       throw new IllegalArgumentException("Audit retention cutoff is required");
     }
     initialize();
-    queries.execute(new Query("DELETE FROM \"%s\" WHERE time < %dms"
+    var result = queries.execute(new Query("DELETE FROM \"%s\" WHERE time < %dms"
         .formatted(InfluxAuditSchema.MEASUREMENT, cutoff.toEpochMilli())));
+    if (result.hasError() || result.getResults() != null
+        && result.getResults().stream().anyMatch(statement -> statement.hasError())) {
+      throw new IllegalStateException("Audit retention delete failed");
+    }
   }
 
   private void initializeWatermark() {
