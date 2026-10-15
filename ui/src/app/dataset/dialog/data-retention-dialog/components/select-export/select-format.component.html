@@ -77,33 +77,6 @@
             </mat-radio-group>
         </sp-form-field>
     }
-    @if (
-        showHeaderColumnName &&
-        dataRetentionConfig.retentionExportConfig.exportConfig.format !== 'json'
-    ) {
-        <sp-form-field [level]="3" [label]="'Header column name' | translate">
-            <mat-radio-group
-                [(ngModel)]="
-                    dataRetentionConfig.retentionExportConfig.exportConfig
-                        .headerColumnName
-                "
-                class="sp-radio-group"
-            >
-                <mat-radio-button value="key" class="sp-radio-button">
-                    {{
-                        'Use field key (runtime name) as header column'
-                            | translate
-                    }}
-                </mat-radio-button>
-                <mat-radio-button value="label" class="sp-radio-button">
-                    {{
-                        'Use field label as header column if available'
-                            | translate
-                    }}
-                </mat-radio-button>
-            </mat-radio-group>
-        </sp-form-field>
-    }
     <sp-form-field [level]="3" [label]="'Export Provider' | translate">
         <mat-form-field class="w-100">
             <mat-select
