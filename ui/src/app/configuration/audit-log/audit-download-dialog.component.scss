@@ -20,7 +20,7 @@
 .audit-download-filters {
     display: flex;
     flex-wrap: wrap;
-    align-items: end;
+    align-items: flex-start;
     flex-direction: column;
     gap: var(--space-sm);
 }
@@ -29,8 +29,16 @@
     flex-direction: row;
 }
 
-.audit-download-filters > * {
-    flex: 1 1 14rem;
+.audit-date-range-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.audit-download-filters {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
 }
 
 .audit-download-error {

@@ -24,20 +24,45 @@
                     [level]="3"
                     [title]="'Data Range' | translate"
                 >
-                    <div class="audit-date-range">
-                        <div>
-                            <h5>{{ 'From' | translate }}</h5>
-                            <sp-date-input [(date)]="fromDate" />
+                    <mat-radio-group
+                        class="sp-radio-group audit-date-range-selection"
+                        [ngModel]="dateRangeSelection"
+                        (ngModelChange)="onDateRangeSelectionChange($event)"
+                    >
+                        <mat-radio-button
+                            value="current"
+                            class="sp-radio-button"
+                        >
+                            {{ 'Current selection' | translate }}
+                        </mat-radio-button>
+
+                        <mat-radio-button
+                            value="custom"
+                            class="sp-radio-button"
+                        >
+                            {{ 'Custom selection' | translate }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    @if (dateRangeSelection === 'custom') {
+                        <div class="audit-date-range">
+                            <div>
+                                <h5>{{ 'From' | translate }}</h5>
+                                <sp-date-input [(date)]="fromDate" />
+                            </div>
+                            <div>
+                                <h5>{{ 'To' | translate }}</h5>
+                                <sp-date-input [(date)]="toDate" />
+                            </div>
                         </div>
-                        <div>
-                            <h5>{{ 'To' | translate }}</h5>
-                            <sp-date-input [(date)]="toDate" />
-                        </div>
-                    </div>
+                    }
                 </sp-split-section>
                 <sp-split-section [level]="3" [title]="'Filters' | translate">
                     <div class="audit-download-filters">
-                        <sp-form-field [label]="'Event type' | translate">
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Event type' | translate"
+                            margin="0"
+                        >
                             <sp-search-select
                                 [items]="eventTypes"
                                 [value]="query.eventType || undefined"
@@ -46,7 +71,11 @@
                                 (valueChange)="onEventTypeChange($event)"
                             />
                         </sp-form-field>
-                        <sp-form-field [label]="'Actor username' | translate">
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Actor username' | translate"
+                            margin="0"
+                        >
                             <sp-search-select
                                 [items]="actors"
                                 [value]="selectedActor"
@@ -56,7 +85,11 @@
                                 (valueChange)="onActorChange($event)"
                             />
                         </sp-form-field>
-                        <sp-form-field [label]="'Outcome' | translate">
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Outcome' | translate"
+                            margin="0"
+                        >
                             <sp-search-select
                                 [items]="outcomeOptions"
                                 [value]="selectedOutcome"

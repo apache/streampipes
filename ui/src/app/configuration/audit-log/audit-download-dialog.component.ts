@@ -48,6 +48,9 @@ import { expand, reduce } from 'rxjs';
 interface AuditExportColumn {
     id: keyof AuditEntry;
     label: string;
+}
+
+interface SelectedAuditExportColumn extends AuditExportColumn {
     selected: boolean;
 }
 
@@ -60,6 +63,7 @@ interface AuditActorOption {
 type AuditExportFormat = 'csv' | 'json';
 type CsvDelimiter = 'comma' | 'semicolon';
 type CsvHeader = 'key' | 'label';
+type DateRangeSelection = 'current' | 'custom';
 
 @Component({
     selector: 'sp-audit-download-dialog',
@@ -94,22 +98,18 @@ export class AuditDownloadDialogComponent implements OnInit {
     query: AuditQuery;
     eventTypes: string[] = [];
     actors: AuditActorOption[] = [];
+    availableColumns: AuditExportColumn[] = [];
     fromDate: Date;
     toDate: Date;
+    private initialFromDate: Date;
+    private initialToDate: Date;
+    dateRangeSelection: DateRangeSelection = 'current';
     format: AuditExportFormat = 'csv';
     delimiter: CsvDelimiter = 'comma';
     headerColumnName: CsvHeader = 'label';
     downloading = false;
     downloadFailed = false;
-    readonly columns: AuditExportColumn[] = [
-        { id: 'storedAt', label: 'Stored at', selected: true },
-        { id: 'eventType', label: 'Event type', selected: true },
-        { id: 'outcome', label: 'Outcome', selected: true },
-        { id: 'actor', label: 'Actor username', selected: true },
-        { id: 'resourceType', label: 'Resource type', selected: true },
-        { id: 'resourceId', label: 'Resource ID', selected: true },
-        { id: 'eventId', label: 'Event ID', selected: true },
-    ];
+    columns: SelectedAuditExportColumn[] = [];
 
     get hasSelectedColumns(): boolean {
         return this.columns.some(column => column.selected);
@@ -157,6 +157,20 @@ export class AuditDownloadDialogComponent implements OnInit {
     ngOnInit(): void {
         this.fromDate = new Date(this.query.from);
         this.toDate = new Date(this.query.to);
+        this.initialFromDate = new Date(this.fromDate);
+        this.initialToDate = new Date(this.toDate);
+        this.columns = this.availableColumns.map(column => ({
+            ...column,
+            selected: true,
+        }));
+    }
+
+    onDateRangeSelectionChange(selection: DateRangeSelection): void {
+        this.dateRangeSelection = selection;
+        if (selection === 'current') {
+            this.fromDate = new Date(this.initialFromDate);
+            this.toDate = new Date(this.initialToDate);
+        }
     }
 
     onEventTypeChange(value: string | string[] | undefined): void {
