@@ -60,8 +60,8 @@ import {
 } from '@streampipes/shared-ui';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
-import { AuditDialogComponent } from './audit-dialog.component';
-import { AuditDownloadDialogComponent } from './audit-download-dialog.component';
+import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
+import { AuditDownloadDialogComponent } from '../dialog/audit-log/audit-download-dialog.component';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';

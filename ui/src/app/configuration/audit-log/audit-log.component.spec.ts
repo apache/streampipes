@@ -17,8 +17,8 @@
  */
 
 import { TranslateService } from '@ngx-translate/core';
-import { AuditDialogComponent } from './audit-dialog.component';
-import { AuditDownloadDialogComponent } from './audit-download-dialog.component';
+import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
+import { AuditDownloadDialogComponent } from '../dialog/audit-log/audit-download-dialog.component';
 import { TestBed } from '@angular/core/testing';
 import {
     AuditService,
