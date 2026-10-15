@@ -47,6 +47,8 @@ import { SpLabelComponent, SpTableComponent } from '@streampipes/shared-ui';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { AssetTableLinkPreviewComponent } from './asset-table-link-preview/asset-table-link-preview.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FavoriteToggleComponent } from '../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../favorites/favorites.store';
 
 @Component({
     selector: 'sp-home-asset-table',
@@ -66,6 +68,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         SpLabelComponent,
         AssetTableLinkPreviewComponent,
         TranslatePipe,
+        FavoriteToggleComponent,
     ],
 })
 export class HomeAssetTableComponent implements OnInit, OnChanges {
@@ -82,6 +85,7 @@ export class HomeAssetTableComponent implements OnInit, OnChanges {
     assetLinkTypes: Record<string, AssetLinkType> = {};
 
     displayedColumns: string[] = [
+        'favorite',
         'assetName',
         'assetType',
         'location',
@@ -97,6 +101,10 @@ export class HomeAssetTableComponent implements OnInit, OnChanges {
 
     private isa95TypeService = inject(Isa95TypeService);
     private router = inject(Router);
+
+    constructor() {
+        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'ASSET');
+    }
 
     ngOnInit() {
         this.dataSource.sortingDataAccessor = (assetModel, column) => {

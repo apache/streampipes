@@ -34,6 +34,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   private final ICertificateStorage certificateStorage;
   private final ResourceDeletionManager resourceDeletionManager;
   private final SpPermissionEvaluator permissionEvaluator;
+  private final PermissionResourceManager permissionResourceManager;
 
   public AdapterResourceManager(IAdapterStorage adapterStorage,
                                 ICertificateStorage certificateStorage,
@@ -42,6 +43,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
     super(adapterStorage);
     this.certificateStorage = certificateStorage;
     this.resourceDeletionManager = resourceDeletionManager;
+    this.permissionResourceManager = permissionResourceManager;
     this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 
@@ -109,6 +111,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
 
     // Then delete the adapter
     resourceDeletionManager.delete(db, elementId);
+    permissionResourceManager.deleteResourceFavorites(AdapterDescription.class, elementId);
   }
 
   /**

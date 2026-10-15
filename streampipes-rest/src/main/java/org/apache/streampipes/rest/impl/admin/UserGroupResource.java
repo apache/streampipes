@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.audit.events.security.SecurityAuditRecorder;
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.resource.management.FavoriteCleanupManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -49,6 +50,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
   private final IUserGroupStorage userGroupStorage;
   private final IUserStorage userStorage;
   private final SecurityAuditRecorder audit;
+  private final FavoriteCleanupManager favoriteCleanup;
 
   public UserGroupResource(IUserGroupStorage userGroupStorage,
                            IUserStorage userStorage,
@@ -56,6 +58,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
     this.userGroupStorage = userGroupStorage;
     this.userStorage = userStorage;
     this.audit = new SecurityAuditRecorder(resourceManager.getAuditService());
+    this.favoriteCleanup = resourceManager.manageFavoriteCleanup();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -86,6 +89,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
           existingGroup == null ? null : existingGroup.getGroupName(), updatedGroup.getGroupName(),
           existingGroup == null ? null : existingGroup.getRoles(), updatedGroup.getRoles(),
           existingGroup == null ? null : existingGroup.getAlternateIds(), updatedGroup.getAlternateIds());
+      favoriteCleanup.permissionsChanged();
       return ok(updatedGroup);
     }
   }
@@ -105,6 +109,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
         }
       });
       audit.groupDeleted(getAuthenticatedUserSid(), group.getGroupId());
+      favoriteCleanup.permissionsChanged();
       return ok();
     } else {
       return badRequest();

@@ -55,6 +55,7 @@ public class CrudResourceManager<T extends Storable, SeT extends CRUDStorage<T>>
   public void delete(String elementId) {
     resourceDeletionManager.delete(db, elementId);
     deletePermissions(elementId);
+    permissionResourceManager.deleteResourceFavorites(elementClass, elementId);
   }
 
   public T create(T element,

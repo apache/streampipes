@@ -49,6 +49,19 @@
                 (rowClicked)="openChart($event, true)"
                 matSort
             >
+                <ng-container matColumnDef="favorite">
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        [attr.aria-label]="'Favorite' | translate"
+                    ></th>
+                    <td mat-cell *matCellDef="let resource">
+                        <sp-resource-favorite
+                            resourceType="CHART"
+                            [resourceId]="resource.elementId"
+                        />
+                    </td>
+                </ng-container>
                 <ng-container matColumnDef="name">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>
                         {{ 'Chart' | translate }}
