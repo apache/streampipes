@@ -66,12 +66,16 @@ import { MatMenuItem } from '@angular/material/menu';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { FavoriteToggleComponent } from '../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../favorites/favorites.store';
+
 @Component({
     selector: 'sp-pipeline-overview',
     templateUrl: './pipeline-overview.component.html',
     styleUrls: ['./pipeline-overview.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        FavoriteToggleComponent,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -101,6 +105,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         new EventEmitter<boolean>();
 
     displayedColumns: string[] = [
+        'favorite',
         'status',
         'start',
         'name',
@@ -132,6 +137,10 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private dialogService = inject(DialogService);
+
+    constructor() {
+        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'PIPELINE');
+    }
 
     ngOnInit() {
         this.userSub = this.currentUserService.user$.subscribe(() => {

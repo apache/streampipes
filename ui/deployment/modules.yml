@@ -139,3 +139,13 @@ spChart:
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
     category: 'visualization'
     shortcutKey: 'c'
+spFavorites:
+    routesPath: './favorites/favorites.routes'
+    routesName: FAVORITES_ROUTES
+    link: 'favorites'
+    title: 'Favorites'
+    icon: 'star'
+    privileges: '[]'
+    pageNames: 'PageName.FAVORITES'
+    showStatusBox: false
+    category: 'top'

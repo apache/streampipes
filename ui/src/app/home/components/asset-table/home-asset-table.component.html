@@ -26,6 +26,19 @@
     [noBorder]="true"
     matSort
 >
+    <ng-container matColumnDef="favorite">
+        <th
+            mat-header-cell
+            *matHeaderCellDef
+            [attr.aria-label]="'Favorite' | translate"
+        ></th>
+        <td mat-cell *matCellDef="let asset">
+            <sp-resource-favorite
+                resourceType="ASSET"
+                [resourceId]="asset.elementId"
+            />
+        </td>
+    </ng-container>
     <ng-container matColumnDef="assetName">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Asset</th>
         <td mat-cell *matCellDef="let asset">

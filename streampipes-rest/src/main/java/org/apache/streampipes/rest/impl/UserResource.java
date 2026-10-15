@@ -27,6 +27,8 @@ import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.resource.management.FavoriteCleanupManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
@@ -64,11 +66,14 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
   private final ISpCoreConfigurationStorage configurationStorage;
   private final IUserStorage userStorage;
+  private final FavoriteCleanupManager favoriteCleanup;
 
   public UserResource(ISpCoreConfigurationStorage configurationStorage,
-                      IUserStorage userStorage) {
+                      IUserStorage userStorage,
+                      SpResourceManager resourceManager) {
     this.configurationStorage = configurationStorage;
     this.userStorage = userStorage;
+    this.favoriteCleanup = resourceManager.manageFavoriteCleanup();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -141,6 +146,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
     if (principal != null) {
       userStorage.deleteUser(principalId);
+      favoriteCleanup.userDeleted(principalId);
       return ok();
     } else {
       return statusMessage(Notifications.error("User not found"));
@@ -235,6 +241,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
         user.setRev(existingUser.getRev());
         userStorage.updateUser(user);
+        favoriteCleanup.userPermissionsChanged(principalId);
         return ok(Notifications.success("User updated"));
       } else {
         return badRequest(Notifications.error("Username is not available"));
@@ -327,6 +334,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         user.setSecretEncrypted(true);
       }
       userStorage.updateUser(user);
+      favoriteCleanup.userPermissionsChanged(principalId);
       return ok(Notifications.success("User updated"));
     } else {
       return statusMessage(Notifications.error("User not found"));

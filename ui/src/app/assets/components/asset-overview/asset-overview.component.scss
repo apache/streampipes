@@ -19,3 +19,12 @@
 .mat-mdc-header-cell {
     font-weight: bold;
 }
+
+.favorite-column {
+    box-sizing: border-box;
+    width: 56px;
+    min-width: 56px;
+    max-width: 56px;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
