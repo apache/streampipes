@@ -61,11 +61,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
-import { AuditDownloadDialogComponent } from '../dialog/audit-log/audit-download-dialog.component';
+import { AuditDownloadDialogComponent } from '../dialog/audit-log-download/audit-download-dialog.component';
 import {
     AuditActorOption,
     AuditExportColumn,
-} from '../dialog/audit-log/model/audit-download-dialog.model';
+} from '../dialog/audit-log-download/model/audit-download-dialog.model';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';
