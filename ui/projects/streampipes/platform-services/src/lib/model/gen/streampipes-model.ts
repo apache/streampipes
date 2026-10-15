@@ -17,7 +17,7 @@
  * under the License.
  */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-09-18 15:38:44.
+// Generated using typescript-generator version 3.2.1263 on 2026-10-13 16:58:25.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1153,6 +1153,7 @@ export class CorrectionValueTransformationRuleDescription extends ValueTransform
 
 export class CreateOptions {
     persist: boolean;
+    persistDatasetName: string;
     start: boolean;
 
     static fromData(
@@ -1164,6 +1165,7 @@ export class CreateOptions {
         }
         const instance = target || new CreateOptions();
         instance.persist = data.persist;
+        instance.persistDatasetName = data.persistDatasetName;
         instance.start = data.start;
         return instance;
     }
