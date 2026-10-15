@@ -20,8 +20,53 @@
     <div class="sp-dialog-content">
         <mat-horizontal-stepper #stepper>
             <mat-step>
-                <section class="audit-download-columns">
-                    <h3>{{ 'Columns' | translate }}</h3>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Data Range' | translate"
+                >
+                    <div class="audit-date-range">
+                        <div>
+                            <h5>{{ 'From' | translate }}</h5>
+                            <sp-date-input [(date)]="fromDate" />
+                        </div>
+                        <div>
+                            <h5>{{ 'To' | translate }}</h5>
+                            <sp-date-input [(date)]="toDate" />
+                        </div>
+                    </div>
+                </sp-split-section>
+                <sp-split-section [level]="3" [title]="'Filters' | translate">
+                    <div class="audit-download-filters">
+                        <sp-form-field [label]="'Event type' | translate">
+                            <sp-search-select
+                                [items]="eventTypes"
+                                [value]="query.eventType || undefined"
+                                [freeTextValue]="eventTypeFromText"
+                                [placeholder]="'All event types' | translate"
+                                (valueChange)="onEventTypeChange($event)"
+                            />
+                        </sp-form-field>
+                        <sp-form-field [label]="'Actor username' | translate">
+                            <sp-search-select
+                                [items]="actors"
+                                [value]="selectedActor"
+                                [freeTextValue]="actorFromText"
+                                [searchTextFor]="actorSearchText"
+                                [placeholder]="'All actors' | translate"
+                                (valueChange)="onActorChange($event)"
+                            />
+                        </sp-form-field>
+                        <sp-form-field [label]="'Outcome' | translate">
+                            <sp-search-select
+                                [items]="outcomeOptions"
+                                [value]="selectedOutcome"
+                                [placeholder]="'All outcomes' | translate"
+                                (valueChange)="onOutcomeChange($event)"
+                            />
+                        </sp-form-field>
+                    </div>
+                </sp-split-section>
+                <sp-split-section [level]="3" [title]="'Columns' | translate">
                     <p>
                         {{
                             'Choose the columns to include in the export.'
@@ -33,23 +78,93 @@
                             {{ column.label | translate }}
                         </mat-checkbox>
                     }
-                </section>
+                </sp-split-section>
                 <ng-template matStepLabel>{{
                     'Select Data' | translate
                 }}</ng-template>
             </mat-step>
             <mat-step>
-                <section class="audit-download-ready">
-                    <mat-icon>description</mat-icon>
-                    <h3>{{ 'Export audit log' | translate }}</h3>
-                    <p>
-                        {{
-                            'The active audit-log filters and selected columns will be exported as a CSV file.'
-                                | translate
-                        }}
-                    </p>
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Download Format' | translate"
+                >
+                    <mat-radio-group
+                        class="sp-radio-group"
+                        [(ngModel)]="format"
+                    >
+                        <mat-radio-button value="json" class="sp-radio-button"
+                            >JSON</mat-radio-button
+                        >
+                        <mat-radio-button value="csv" class="sp-radio-button"
+                            >CSV</mat-radio-button
+                        >
+                    </mat-radio-group>
+                </sp-split-section>
+                @if (format === 'csv') {
+                    <sp-split-section
+                        [level]="3"
+                        [title]="'Delimiter' | translate"
+                    >
+                        <mat-radio-group
+                            class="sp-radio-group"
+                            [(ngModel)]="delimiter"
+                        >
+                            <mat-radio-button
+                                value="comma"
+                                class="sp-radio-button"
+                                >,</mat-radio-button
+                            >
+                            <mat-radio-button
+                                value="semicolon"
+                                class="sp-radio-button"
+                                >;</mat-radio-button
+                            >
+                        </mat-radio-group>
+                    </sp-split-section>
+                    <sp-split-section
+                        [level]="3"
+                        [title]="'Header column name' | translate"
+                    >
+                        <mat-radio-group
+                            class="sp-radio-group"
+                            [(ngModel)]="headerColumnName"
+                        >
+                            <mat-radio-button
+                                value="key"
+                                class="sp-radio-button"
+                                >{{
+                                    'Use field key (runtime name) as header column'
+                                        | translate
+                                }}</mat-radio-button
+                            >
+                            <mat-radio-button
+                                value="label"
+                                class="sp-radio-button"
+                                >{{
+                                    'Use field label as header column if available'
+                                        | translate
+                                }}</mat-radio-button
+                            >
+                        </mat-radio-group>
+                    </sp-split-section>
+                }
+                <ng-template matStepLabel>{{
+                    'Export Format' | translate
+                }}</ng-template>
+            </mat-step>
+            <mat-step>
+                <sp-split-section [level]="3" [title]="'Download' | translate">
                     @if (downloading) {
                         <mat-spinner diameter="24" />
+                        <p>{{ 'Preparing download...' | translate }}</p>
+                    } @else if (!downloadFailed) {
+                        <mat-icon>check_circle</mat-icon>
+                        <p>
+                            {{
+                                'Your audit log is being downloaded.'
+                                    | translate
+                            }}
+                        </p>
                     }
                     @if (downloadFailed) {
                         <p class="audit-download-error" role="alert">
@@ -59,21 +174,9 @@
                             }}
                         </p>
                     }
-                </section>
+                </sp-split-section>
                 <ng-template matStepLabel>{{
                     'Download' | translate
-                }}</ng-template>
-            </mat-step>
-            <mat-step>
-                <section class="audit-download-ready">
-                    <mat-icon>check_circle</mat-icon>
-                    <h3>{{ 'Download started' | translate }}</h3>
-                    <p>
-                        {{ 'Your audit log is being downloaded.' | translate }}
-                    </p>
-                </section>
-                <ng-template matStepLabel>{{
-                    'Complete' | translate
                 }}</ng-template>
             </mat-step>
         </mat-horizontal-stepper>
@@ -94,10 +197,12 @@
                 {{ 'Next' | translate }}
             </button>
         }
-        @if (stepper.selectedIndex === 1) {
+        @if (stepper.selectedIndex > 0) {
             <button mat-button class="mat-basic" (click)="stepper.previous()">
                 {{ 'Previous' | translate }}
             </button>
+        }
+        @if (stepper.selectedIndex === 1) {
             <button
                 mat-flat-button
                 color="accent"

@@ -334,7 +334,11 @@ export class AuditLogComponent implements OnInit {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translate.instant('Download audit log'),
             width: '50vw',
-            data: { query: this.query },
+            data: {
+                query: this.query,
+                eventTypes: this.types,
+                actors: this.actorOptions,
+            },
         });
     }
 

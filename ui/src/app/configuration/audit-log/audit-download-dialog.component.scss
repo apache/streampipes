@@ -16,16 +16,21 @@
  *
  */
 
-.audit-download-columns,
-.audit-download-ready {
+.audit-date-range,
+.audit-download-filters {
     display: flex;
+    flex-wrap: wrap;
+    align-items: end;
     flex-direction: column;
     gap: var(--space-sm);
-    padding-block: var(--space-md);
 }
 
-.audit-download-ready mat-icon {
-    color: var(--color-primary);
+.audit-date-range {
+    flex-direction: row;
+}
+
+.audit-download-filters > * {
+    flex: 1 1 14rem;
 }
 
 .audit-download-error {
