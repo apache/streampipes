@@ -61,6 +61,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { AuditDialogComponent } from './audit-dialog.component';
+import { AuditDownloadDialogComponent } from './audit-download-dialog.component';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';
@@ -322,6 +323,18 @@ export class AuditLogComponent implements OnInit {
             panelType: PanelType.SLIDE_IN_PANEL,
             width: '32rem',
             title: this.translate.instant('Audit status'),
+        });
+    }
+
+    openDownloadDialog(): void {
+        if (!this.query) {
+            return;
+        }
+        this.dialogs.open(AuditDownloadDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translate.instant('Download audit log'),
+            width: '50vw',
+            data: { query: this.query },
         });
     }
 
