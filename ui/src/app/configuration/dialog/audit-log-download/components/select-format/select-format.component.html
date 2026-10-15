@@ -21,13 +21,25 @@
         class="sp-radio-group"
         [(ngModel)]="formatExportConfig.format"
     >
-        <mat-radio-button value="json" class="sp-radio-button">
+        <mat-radio-button
+            value="json"
+            class="sp-radio-button"
+            data-cy="audit-download-format-json"
+        >
             JSON
         </mat-radio-button>
-        <mat-radio-button value="csv" class="sp-radio-button">
+        <mat-radio-button
+            value="csv"
+            class="sp-radio-button"
+            data-cy="audit-download-format-csv"
+        >
             CSV
         </mat-radio-button>
-        <mat-radio-button value="xlsx" class="sp-radio-button">
+        <mat-radio-button
+            value="xlsx"
+            class="sp-radio-button"
+            data-cy="audit-download-format-xlsx"
+        >
             EXCEL (XLSX)
         </mat-radio-button>
     </mat-radio-group>

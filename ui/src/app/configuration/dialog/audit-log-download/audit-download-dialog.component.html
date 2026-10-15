@@ -16,7 +16,7 @@
   ~
   -->
 
-<div class="sp-dialog-container">
+<div class="sp-dialog-container" data-cy="audit-download-dialog">
     @if (dialogModel && exportConfig) {
         <div class="sp-dialog-content">
             <mat-horizontal-stepper #stepper>
@@ -51,13 +51,19 @@
 
         <mat-divider />
         <div class="sp-dialog-actions actions-align-left">
-            <button mat-button class="mat-basic" (click)="close()">
+            <button
+                mat-button
+                class="mat-basic"
+                data-cy="audit-download-close-button"
+                (click)="close()"
+            >
                 {{ 'Close' | translate }}
             </button>
             @if (stepper.selectedIndex === 0) {
                 <button
                     mat-flat-button
                     color="accent"
+                    data-cy="audit-download-next-button"
                     [disabled]="!hasSelectedColumns"
                     (click)="stepper.next()"
                 >
@@ -68,6 +74,7 @@
                 <button
                     mat-button
                     class="mat-basic"
+                    data-cy="audit-download-previous-button"
                     (click)="stepper.previous()"
                 >
                     {{ 'Previous' | translate }}
@@ -77,6 +84,7 @@
                 <button
                     mat-flat-button
                     color="accent"
+                    data-cy="audit-download-download-button"
                     [disabled]="downloading"
                     (click)="download(stepper)"
                 >
