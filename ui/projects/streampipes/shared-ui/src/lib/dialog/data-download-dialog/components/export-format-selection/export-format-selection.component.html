@@ -24,21 +24,21 @@
         <mat-radio-button
             value="json"
             class="sp-radio-button"
-            data-cy="audit-download-format-json"
+            [attr.data-cy]="dataCyPrefix + '-json'"
         >
             JSON
         </mat-radio-button>
         <mat-radio-button
             value="csv"
             class="sp-radio-button"
-            data-cy="audit-download-format-csv"
+            [attr.data-cy]="dataCyPrefix + '-csv'"
         >
             CSV
         </mat-radio-button>
         <mat-radio-button
             value="xlsx"
             class="sp-radio-button"
-            data-cy="audit-download-format-xlsx"
+            [attr.data-cy]="dataCyPrefix + '-xlsx'"
         >
             EXCEL (XLSX)
         </mat-radio-button>
@@ -54,13 +54,13 @@
             <mat-radio-button
                 value="comma"
                 class="sp-radio-button"
-                data-cy="audit-download-delimiter-comma"
+                [attr.data-cy]="delimiterDataCyPrefix + '-delimiter-comma'"
                 >,</mat-radio-button
             >
             <mat-radio-button
                 value="semicolon"
                 class="sp-radio-button"
-                data-cy="audit-download-delimiter-semicolon"
+                [attr.data-cy]="delimiterDataCyPrefix + '-delimiter-semicolon'"
                 >;</mat-radio-button
             >
         </mat-radio-group>

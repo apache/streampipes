@@ -19,14 +19,18 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AuditFormatExportConfig } from '../../model/format-export-config.model';
+import { SplitSectionComponent } from '../../../../components/split-section/split-section.component';
+
+export interface BasicFormatExportConfig {
+    format: 'json' | 'csv' | 'xlsx';
+    delimiter?: 'comma' | 'semicolon';
+}
 
 @Component({
-    selector: 'sp-audit-select-format',
-    templateUrl: './select-format.component.html',
-    styleUrls: ['./select-format.component.scss'],
+    selector: 'sp-export-format-selection',
+    templateUrl: './export-format-selection.component.html',
+    styleUrls: ['./export-format-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
@@ -36,6 +40,8 @@ import { AuditFormatExportConfig } from '../../model/format-export-config.model'
         TranslatePipe,
     ],
 })
-export class AuditSelectFormatComponent {
-    @Input({ required: true }) formatExportConfig: AuditFormatExportConfig;
+export class ExportFormatSelectionComponent {
+    @Input({ required: true }) formatExportConfig: BasicFormatExportConfig;
+    @Input() dataCyPrefix = 'download-configuration';
+    @Input() delimiterDataCyPrefix = this.dataCyPrefix;
 }

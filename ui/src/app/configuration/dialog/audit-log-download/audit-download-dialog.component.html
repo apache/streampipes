@@ -30,8 +30,10 @@
                     }}</ng-template>
                 </mat-step>
                 <mat-step>
-                    <sp-audit-select-format
+                    <sp-export-format-selection
                         [formatExportConfig]="exportConfig.formatExportConfig"
+                        dataCyPrefix="audit-download-format"
+                        delimiterDataCyPrefix="audit-download"
                     />
                     <ng-template matStepLabel>{{
                         'Export Format' | translate
