@@ -40,9 +40,11 @@
                     }}</ng-template>
                 </mat-step>
                 <mat-step>
-                    <sp-audit-download
+                    <sp-download-status
                         [downloading]="downloading"
-                        [downloadFailed]="downloadFailed"
+                        [finished]="!downloading && !downloadFailed"
+                        [failed]="downloadFailed"
+                        errorMessage="Audit events could not be downloaded. Try again."
                     />
                     <ng-template matStepLabel>{{
                         'Download' | translate

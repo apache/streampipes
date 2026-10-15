@@ -16,25 +16,7 @@
  *
  */
 
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
-import { TranslatePipe } from '@ngx-translate/core';
-
-@Component({
-    selector: 'sp-audit-download',
-    templateUrl: './download.component.html',
-    styleUrls: ['./download.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        MatIconModule,
-        MatProgressSpinnerModule,
-        SplitSectionComponent,
-        TranslatePipe,
-    ],
-})
-export class AuditDownloadComponent {
-    @Input() downloading = false;
-    @Input() downloadFailed = false;
+.download-error,
+.download-error-icon {
+    color: var(--color-error);
 }

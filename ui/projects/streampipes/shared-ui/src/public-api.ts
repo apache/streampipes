@@ -22,6 +22,7 @@ export * from './lib/dialog/base-dialog/dialog-ref';
 export * from './lib/dialog/data-download-dialog/data-download-dialog.component';
 export * from './lib/dialog/data-download-dialog/components/select-format/select-format.component';
 export * from './lib/dialog/data-download-dialog/components/export-format-selection/export-format-selection.component';
+export * from './lib/dialog/data-download-dialog/components/download-status/download-status.component';
 export * from './lib/dialog/data-download-dialog/model/export-config.model';
 export * from './lib/dialog/data-download-dialog/model/format-export-config.model';
 export * from './lib/dialog/data-download-dialog/model/data-export-config.model';

@@ -28,10 +28,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import {
     DialogRef,
+    DownloadStatusComponent,
     ExportFormatSelectionComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AuditDownloadComponent } from './components/download/download.component';
 import { AuditSelectDataComponent } from './components/select-data/select-data.component';
 import {
     AuditActorOption,
@@ -53,7 +53,7 @@ import { AuditExportService } from './services/audit-export.service';
         MatStepLabel,
         AuditSelectDataComponent,
         ExportFormatSelectionComponent,
-        AuditDownloadComponent,
+        DownloadStatusComponent,
         TranslatePipe,
     ],
 })
