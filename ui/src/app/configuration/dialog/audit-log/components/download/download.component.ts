@@ -16,31 +16,25 @@
  *
  */
 
-.audit-date-range,
-.audit-download-filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: var(--space-sm);
-}
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
-.audit-date-range {
-    flex-direction: row;
-}
-
-.audit-date-range-selection {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.audit-download-filters {
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 0;
-}
-
-.audit-download-error {
-    color: var(--color-error);
+@Component({
+    selector: 'sp-audit-download',
+    templateUrl: './download.component.html',
+    styleUrls: ['./download.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        MatIconModule,
+        MatProgressSpinnerModule,
+        SplitSectionComponent,
+        TranslatePipe,
+    ],
+})
+export class AuditDownloadComponent {
+    @Input() downloading = false;
+    @Input() downloadFailed = false;
 }

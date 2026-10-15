@@ -20,6 +20,7 @@ export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
 export * from './lib/dialog/data-download-dialog/data-download-dialog.component';
+export * from './lib/dialog/data-download-dialog/components/select-format/select-format.component';
 export * from './lib/dialog/data-download-dialog/model/export-config.model';
 export * from './lib/dialog/data-download-dialog/model/format-export-config.model';
 export * from './lib/dialog/data-download-dialog/model/data-export-config.model';

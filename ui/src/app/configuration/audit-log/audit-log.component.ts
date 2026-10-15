@@ -62,20 +62,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
 import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
 import { AuditDownloadDialogComponent } from '../dialog/audit-log/audit-download-dialog.component';
+import {
+    AuditActorOption,
+    AuditExportColumn,
+} from '../dialog/audit-log/model/audit-download-dialog.model';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';
-
-interface AuditActorOption {
-    id: string;
-    label: string;
-    username?: string;
-}
-
-interface AuditExportColumn {
-    id: keyof AuditEntry;
-    label: string;
-}
 
 @Component({
     selector: 'sp-audit-log',

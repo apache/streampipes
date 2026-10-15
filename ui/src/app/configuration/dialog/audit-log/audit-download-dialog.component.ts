@@ -19,177 +19,86 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    inject,
+    Input,
     OnInit,
+    inject,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import {
-    AuditEntry,
-    AuditQuery,
-    AuditService,
-} from '@streampipes/platform-services';
-import {
-    DateInputComponent,
     DialogRef,
-    FormFieldComponent,
-    SearchSelectComponent,
-    SplitSectionComponent,
+    FormatExportConfig,
+    SelectFormatComponent,
 } from '@streampipes/shared-ui';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { expand, reduce } from 'rxjs';
-
-interface AuditExportColumn {
-    id: keyof AuditEntry;
-    label: string;
-}
-
-interface SelectedAuditExportColumn extends AuditExportColumn {
-    selected: boolean;
-}
-
-interface AuditActorOption {
-    id: string;
-    label: string;
-    username?: string;
-}
-
-type AuditExportFormat = 'csv' | 'json';
-type CsvDelimiter = 'comma' | 'semicolon';
-type CsvHeader = 'key' | 'label';
-type DateRangeSelection = 'current' | 'custom';
+import { TranslatePipe } from '@ngx-translate/core';
+import { AuditDownloadComponent } from './components/download/download.component';
+import { AuditSelectDataComponent } from './components/select-data/select-data.component';
+import {
+    AuditActorOption,
+    AuditDownloadDialogModel,
+    AuditExportColumn,
+} from './model/audit-download-dialog.model';
+import { AuditExportConfig } from './model/audit-export-config.model';
+import { AuditExportService } from './services/audit-export.service';
 
 @Component({
     selector: 'sp-audit-download-dialog',
     templateUrl: './audit-download-dialog.component.html',
-    styleUrls: ['./audit-download-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FormsModule,
         MatButtonModule,
-        MatCheckboxModule,
         MatDividerModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatRadioGroup,
-        MatRadioButton,
         MatStepper,
         MatStep,
         MatStepLabel,
-        SplitSectionComponent,
-        FormFieldComponent,
-        SearchSelectComponent,
-        DateInputComponent,
+        AuditSelectDataComponent,
+        SelectFormatComponent,
+        AuditDownloadComponent,
         TranslatePipe,
     ],
 })
 export class AuditDownloadDialogComponent implements OnInit {
     private dialogRef =
         inject<DialogRef<AuditDownloadDialogComponent>>(DialogRef);
-    private auditService = inject(AuditService);
-    private translate = inject(TranslateService);
+    private auditExportService = inject(AuditExportService);
 
-    query: AuditQuery;
-    eventTypes: string[] = [];
-    actors: AuditActorOption[] = [];
-    availableColumns: AuditExportColumn[] = [];
-    fromDate: Date;
-    toDate: Date;
-    private initialFromDate: Date;
-    private initialToDate: Date;
-    dateRangeSelection: DateRangeSelection = 'current';
-    format: AuditExportFormat = 'csv';
-    delimiter: CsvDelimiter = 'comma';
-    headerColumnName: CsvHeader = 'label';
+    @Input({ required: true }) query: AuditDownloadDialogModel['query'];
+    @Input() eventTypes: string[] = [];
+    @Input() actors: AuditActorOption[] = [];
+    @Input() availableColumns: AuditExportColumn[] = [];
+
+    dialogModel: AuditDownloadDialogModel;
+    exportConfig: AuditExportConfig;
+    readonly availableFormats: FormatExportConfig['format'][] = ['json', 'csv'];
     downloading = false;
     downloadFailed = false;
-    columns: SelectedAuditExportColumn[] = [];
 
     get hasSelectedColumns(): boolean {
-        return this.columns.some(column => column.selected);
-    }
-
-    readonly eventTypeFromText = (text: string): string => text.trim();
-    readonly actorSearchText = (actor: AuditActorOption): string =>
-        actor.label + ' ' + actor.id;
-    readonly actorFromText = (text: string): AuditActorOption => {
-        const value = text.trim();
-        const byId = this.actors.find(actor => actor.id === value);
-        const byUsername = this.actors.filter(
-            actor => actor.username?.toLowerCase() === value.toLowerCase(),
-        );
-        return (
-            byId ??
-            (byUsername.length === 1
-                ? byUsername[0]
-                : { id: value, label: value })
-        );
-    };
-
-    get selectedActor(): AuditActorOption | undefined {
-        return this.query.actor
-            ? this.actorFromText(this.query.actor)
-            : undefined;
-    }
-
-    get outcomeOptions(): { id: string; label: string }[] {
-        return [
-            { id: 'succeeded', label: 'Succeeded' },
-            { id: 'failed', label: 'Failed' },
-            { id: 'partial', label: 'Partial' },
-            { id: 'requested', label: 'Requested' },
-            { id: 'denied', label: 'Denied' },
-        ];
-    }
-
-    get selectedOutcome(): { id: string; label: string } | undefined {
-        return this.outcomeOptions.find(
-            option => option.id === this.query.outcome,
-        );
+        return this.exportConfig.columns.some(column => column.selected);
     }
 
     ngOnInit(): void {
-        this.fromDate = new Date(this.query.from);
-        this.toDate = new Date(this.query.to);
-        this.initialFromDate = new Date(this.fromDate);
-        this.initialToDate = new Date(this.toDate);
-        this.columns = this.availableColumns.map(column => ({
-            ...column,
-            selected: true,
-        }));
-    }
-
-    onDateRangeSelectionChange(selection: DateRangeSelection): void {
-        this.dateRangeSelection = selection;
-        if (selection === 'current') {
-            this.fromDate = new Date(this.initialFromDate);
-            this.toDate = new Date(this.initialToDate);
-        }
-    }
-
-    onEventTypeChange(value: string | string[] | undefined): void {
-        this.query.eventType = typeof value === 'string' ? value : '';
-    }
-
-    onActorChange(
-        value: AuditActorOption | AuditActorOption[] | undefined,
-    ): void {
-        this.query.actor = value && !Array.isArray(value) ? value.id : '';
-    }
-
-    onOutcomeChange(
-        value:
-            | { id: string; label: string }
-            | { id: string; label: string }[]
-            | undefined,
-    ): void {
-        this.query.outcome = value && !Array.isArray(value) ? value.id : '';
+        this.dialogModel = {
+            query: { ...this.query },
+            eventTypes: this.eventTypes,
+            actors: this.actors,
+            availableColumns: this.availableColumns,
+        };
+        this.exportConfig = {
+            dateRangeSelection: 'current',
+            fromDate: new Date(this.query.from),
+            toDate: new Date(this.query.to),
+            columns: this.availableColumns.map(column => ({
+                ...column,
+                selected: true,
+            })),
+            formatExportConfig: {
+                format: 'csv',
+                delimiter: 'comma',
+                headerColumnName: 'label',
+            },
+        };
     }
 
     close(): void {
@@ -204,95 +113,14 @@ export class AuditDownloadDialogComponent implements OnInit {
         this.downloading = true;
         this.downloadFailed = false;
         stepper.next();
-        const query = {
-            ...this.query,
-            from: this.fromDate.toISOString(),
-            to: this.toDate.toISOString(),
-            limit: 200,
-            cursor: undefined,
-        };
-        this.auditService
-            .getEvents(query)
-            .pipe(
-                expand(page =>
-                    page.nextCursor
-                        ? this.auditService.getEvents({
-                              ...query,
-                              cursor: page.nextCursor,
-                          })
-                        : [],
-                ),
-                reduce(
-                    (entries: AuditEntry[], page) => entries.concat(page.items),
-                    [],
-                ),
-            )
+        this.auditExportService
+            .download(this.dialogModel, this.exportConfig)
             .subscribe({
-                next: entries => {
-                    this.saveExport(entries);
-                    this.downloading = false;
-                },
+                next: () => (this.downloading = false),
                 error: () => {
                     this.downloading = false;
                     this.downloadFailed = true;
                 },
             });
-    }
-
-    private saveExport(entries: AuditEntry[]): void {
-        if (this.format === 'json') {
-            this.saveFile(
-                JSON.stringify(this.selectedEntries(entries), null, 2),
-                'application/json;charset=utf-8',
-                'audit-log.json',
-            );
-            return;
-        }
-        const selectedColumns = this.columns.filter(column => column.selected);
-        const delimiter = this.delimiter === 'comma' ? ',' : ';';
-        const csv = [
-            selectedColumns
-                .map(column => this.csvHeader(column))
-                .join(delimiter),
-            ...entries.map(entry =>
-                selectedColumns
-                    .map(column => this.escape(entry[column.id]))
-                    .join(delimiter),
-            ),
-        ].join('\r\n');
-        this.saveFile(csv, 'text/csv;charset=utf-8', 'audit-log.csv');
-    }
-
-    private selectedEntries(entries: AuditEntry[]): Record<string, string>[] {
-        const selectedColumns = this.columns.filter(column => column.selected);
-        return entries.map(entry =>
-            Object.fromEntries(
-                selectedColumns.map(column => [
-                    column.id,
-                    entry[column.id] ?? '',
-                ]),
-            ),
-        );
-    }
-
-    private csvHeader(column: AuditExportColumn): string {
-        const value =
-            this.headerColumnName === 'key'
-                ? column.id
-                : this.translate.instant(column.label);
-        return this.escape(value);
-    }
-
-    private saveFile(data: string, type: string, filename: string): void {
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(new Blob([data], { type }));
-        link.href = url;
-        link.download = filename;
-        link.click();
-        URL.revokeObjectURL(url);
-    }
-
-    private escape(value: string | null | undefined): string {
-        return '"' + (value ?? '').replaceAll('"', '""') + '"';
     }
 }
