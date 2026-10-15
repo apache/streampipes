@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 import { DecimalPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
