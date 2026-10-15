@@ -61,7 +61,7 @@ describe('Download audit log', () => {
 
         ConfigurationBtns.auditDownloadDialog().should(
             'contain.text',
-            'Your audit log is being downloaded.',
+            'Download successful',
         );
     };
 
