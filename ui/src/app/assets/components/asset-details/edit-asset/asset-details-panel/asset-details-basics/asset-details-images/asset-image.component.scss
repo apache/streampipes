@@ -1,0 +1,211 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.asset-image-list {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    overflow-x: auto;
+
+    margin-top: 15px;
+    padding-bottom: 5px;
+}
+
+.asset-image-thumbnail-wrapper {
+    position: relative;
+
+    width: 100px;
+    height: 75px;
+
+    flex: 0 0 100px;
+}
+
+.asset-image-thumbnail {
+    display: block;
+
+    width: 100px;
+    height: 75px;
+
+    object-fit: cover;
+
+    cursor: pointer;
+
+    border-radius: 4px;
+}
+
+.asset-image-remove {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 25px;
+    height: 25px;
+
+    padding: 0;
+
+    border: 1px solid rgba(211, 47, 47, 0.35);
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+
+    cursor: pointer;
+}
+
+.asset-image-remove mat-icon {
+    width: 17px;
+    height: 17px;
+
+    font-size: 17px;
+    line-height: 17px;
+
+    color: #d32f2f !important;
+}
+
+.asset-image-remove:hover {
+    background: #f5f5f5;
+}
+
+.asset-image-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    box-sizing: border-box;
+
+    width: 100vw;
+    height: 100vh;
+
+    max-width: none;
+    max-height: none;
+
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+
+    background: rgba(0, 0, 0, 0.82);
+
+    overflow: hidden;
+}
+
+.asset-image-overlay:popover-open {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.viewer-image {
+    display: block;
+
+    max-width: 80vw;
+    max-height: 80vh;
+
+    object-fit: contain;
+}
+
+.viewer-navigation {
+    position: absolute;
+    top: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+
+    cursor: pointer;
+
+    transform: translateY(-50%);
+}
+
+.viewer-navigation:hover {
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.viewer-navigation mat-icon {
+    width: 32px;
+    height: 32px;
+
+    font-size: 32px;
+    line-height: 32px;
+
+    color: #ffffff;
+}
+
+.viewer-previous {
+    left: 30px;
+}
+
+.viewer-next {
+    right: 30px;
+}
+
+.viewer-close {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+
+    cursor: pointer;
+}
+
+.viewer-close:hover {
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.viewer-close mat-icon {
+    width: 32px;
+    height: 32px;
+
+    font-size: 32px;
+    line-height: 32px;
+
+    color: #ffffff;
+}

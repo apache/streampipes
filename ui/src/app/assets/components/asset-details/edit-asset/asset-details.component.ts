@@ -48,6 +48,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import {
+    FilesService,
     PermissionsService,
     SpAsset,
     SpAssetModel,
@@ -109,6 +110,7 @@ export class SpAssetDetailsComponent
     private translateService = inject(TranslateService);
     private permissionsService = inject(PermissionsService);
     private idGeneratorService = inject(IdGeneratorService);
+    private filesService = inject(FilesService);
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
     private originalAsset: SpAssetModel;
@@ -520,5 +522,23 @@ export class SpAssetDetailsComponent
         }
 
         asset.assets?.forEach(child => this.cleanupEmptyCustomFields(child));
+    }
+
+    async handleImageFileDeletionRequested(fileId: string): Promise<void> {
+        if (this.isNewAsset) {
+            await firstValueFrom(this.filesService.deleteFile(fileId));
+
+            return;
+        }
+
+        const persistedAsset = await firstValueFrom(
+            this.assetService.deleteAssetFile(this.assetModelId, fileId),
+        );
+
+        this.asset.rev = persistedAsset.rev;
+
+        this.originalAsset = this.normalizeAssetForComparison(persistedAsset);
+
+        this.assetBrowserService.refreshBrowserAssetData();
     }
 }

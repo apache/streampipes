@@ -107,10 +107,25 @@
         </sp-split-section>
     }
 
+    <sp-split-section [level]="2" [title]="'Image' | translate">
+        <sp-asset-image
+            #assetImage
+            [asset]="asset"
+            [editMode]="editMode"
+            (imageUploaded)="handleImageUploaded($event)"
+            (imageLinkRemoval)="handleImageLinkRemoval($event)"
+            (imageFileDeletionRequested)="
+                handleImageFileDeletionRequested($event)
+            "
+        >
+        </sp-asset-image>
+    </sp-split-section>
+
     <sp-asset-details-links
         [asset]="asset"
         [assetModel]="assetModel"
         [editMode]="true"
+        (updateAssetEmitter)="assetImage.refreshImages()"
     >
     </sp-asset-details-links>
 </div>

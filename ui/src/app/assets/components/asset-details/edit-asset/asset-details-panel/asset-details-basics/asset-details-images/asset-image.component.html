@@ -1,0 +1,118 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div fxLayout="column">
+    <sp-form-field
+        [level]="2"
+        [label]="'Image' | translate"
+        [description]="'Upload an image for this asset' | translate"
+    >
+        <button
+            mat-flat-button
+            color="accent"
+            type="button"
+            (click)="openImageUploadDialog()"
+            [disabled]="!editMode"
+            style="width: fit-content"
+        >
+            <mat-icon>cloud_upload</mat-icon>
+            {{ 'Upload image' | translate }}
+        </button>
+
+        @if (imageUrls.length > 0) {
+            <div class="asset-image-list">
+                @for (imageUrl of imageUrls; track imageUrl; let i = $index) {
+                    <div class="asset-image-thumbnail-wrapper">
+                        <img
+                            class="asset-image-thumbnail"
+                            [src]="imageUrl"
+                            alt="Asset image"
+                            (click)="
+                                selectedImageIndex = i;
+                                imageViewer.showPopover()
+                            "
+                        />
+
+                        @if (editMode) {
+                            <button
+                                type="button"
+                                class="asset-image-remove"
+                                [attr.aria-label]="'Remove image'"
+                                (click)="
+                                    openImageRemovalDialog(
+                                        $event,
+                                        imageFiles[i]
+                                    )
+                                "
+                            >
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        <div
+            #imageViewer
+            popover="auto"
+            class="asset-image-overlay"
+            (click)="imageViewer.hidePopover(); selectedImageIndex = null"
+        >
+            @if (selectedImageIndex !== null) {
+                <button
+                    type="button"
+                    class="viewer-navigation viewer-previous"
+                    aria-label="Previous image"
+                    (click)="previousImage(); $event.stopPropagation()"
+                >
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+
+                <img
+                    class="viewer-image"
+                    [src]="imageUrls[selectedImageIndex]"
+                    alt="Asset image"
+                    (click)="$event.stopPropagation()"
+                />
+
+                <button
+                    type="button"
+                    class="viewer-navigation viewer-next"
+                    aria-label="Next image"
+                    (click)="nextImage(); $event.stopPropagation()"
+                >
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+
+                <button
+                    type="button"
+                    class="viewer-close"
+                    aria-label="Close image viewer"
+                    (click)="
+                        imageViewer.hidePopover();
+                        selectedImageIndex = null;
+                        $event.stopPropagation()
+                    "
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+        </div>
+    </sp-form-field>
+</div>
