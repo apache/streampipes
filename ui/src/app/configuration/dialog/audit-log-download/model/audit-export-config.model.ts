@@ -16,15 +16,23 @@
  *
  */
 
-import { FormatExportConfig } from '@streampipes/shared-ui';
 import { SelectedAuditExportColumn } from './audit-download-dialog.model';
 
 export type AuditDateRangeSelection = 'current' | 'custom';
+
+export type AuditFormatExportConfig =
+    | { format: 'json' }
+    | {
+          format: 'csv';
+          delimiter: 'comma' | 'semicolon';
+          headerColumnName: 'key' | 'label';
+      }
+    | { format: 'xlsx'; headerColumnName: 'key' | 'label' };
 
 export interface AuditExportConfig {
     dateRangeSelection: AuditDateRangeSelection;
     fromDate: Date;
     toDate: Date;
     columns: SelectedAuditExportColumn[];
-    formatExportConfig: FormatExportConfig;
+    formatExportConfig: AuditFormatExportConfig;
 }

@@ -20,6 +20,7 @@ import { Injectable, inject } from '@angular/core';
 import { AuditEntry, AuditService } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, expand, map, reduce, tap } from 'rxjs';
+import * as XLSX from 'xlsx';
 import { AuditDownloadDialogModel } from '../model/audit-download-dialog.model';
 import { AuditExportConfig } from '../model/audit-export-config.model';
 
@@ -64,6 +65,14 @@ export class AuditExportService {
         entries: AuditEntry[],
         exportConfig: AuditExportConfig,
     ): void {
+        if (exportConfig.formatExportConfig.format === 'xlsx') {
+            this.saveXlsx(
+                entries,
+                exportConfig,
+                exportConfig.formatExportConfig.headerColumnName,
+            );
+            return;
+        }
         if (exportConfig.formatExportConfig.format === 'json') {
             this.saveFile(
                 JSON.stringify(
@@ -108,6 +117,33 @@ export class AuditExportService {
         this.saveFile(csv, 'text/csv;charset=utf-8', 'audit-log.csv');
     }
 
+    private saveXlsx(
+        entries: AuditEntry[],
+        exportConfig: AuditExportConfig,
+        headerColumnName: 'key' | 'label',
+    ): void {
+        const selectedColumns = exportConfig.columns.filter(
+            column => column.selected,
+        );
+        const worksheet = XLSX.utils.aoa_to_sheet([
+            selectedColumns.map(column =>
+                headerColumnName === 'key'
+                    ? column.id
+                    : this.translate.instant(column.label),
+            ),
+            ...entries.map(entry =>
+                selectedColumns.map(column => entry[column.id] ?? ''),
+            ),
+        ]);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Audit log');
+        this.saveFile(
+            XLSX.write(workbook, { bookType: 'xlsx', type: 'array' }),
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'audit-log.xlsx',
+        );
+    }
+
     private selectedEntries(
         entries: AuditEntry[],
         exportConfig: AuditExportConfig,
@@ -125,7 +161,7 @@ export class AuditExportService {
         );
     }
 
-    private saveFile(data: string, type: string, filename: string): void {
+    private saveFile(data: BlobPart, type: string, filename: string): void {
         const link = document.createElement('a');
         const url = URL.createObjectURL(new Blob([data], { type }));
         link.href = url;

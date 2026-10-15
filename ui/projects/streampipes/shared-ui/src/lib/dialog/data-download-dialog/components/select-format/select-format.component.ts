@@ -63,11 +63,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class SelectFormatComponent implements OnInit {
     @Input() formatExportConfig: FormatExportConfig;
-    @Input() availableFormats: FormatExportConfig['format'][] = [
-        'json',
-        'csv',
-        'xlsx',
-    ];
 
     hasReadFilePrivilege = false;
     excelTemplates: FileMetadata[] = [];

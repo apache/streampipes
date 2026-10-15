@@ -30,9 +30,8 @@
                     }}</ng-template>
                 </mat-step>
                 <mat-step>
-                    <sp-select-format
+                    <sp-audit-select-format
                         [formatExportConfig]="exportConfig.formatExportConfig"
-                        [availableFormats]="availableFormats"
                     />
                     <ng-template matStepLabel>{{
                         'Export Format' | translate

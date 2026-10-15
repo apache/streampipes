@@ -26,14 +26,11 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
-import {
-    DialogRef,
-    FormatExportConfig,
-    SelectFormatComponent,
-} from '@streampipes/shared-ui';
+import { DialogRef } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuditDownloadComponent } from './components/download/download.component';
 import { AuditSelectDataComponent } from './components/select-data/select-data.component';
+import { AuditSelectFormatComponent } from './components/select-format/select-format.component';
 import {
     AuditActorOption,
     AuditDownloadDialogModel,
@@ -53,7 +50,7 @@ import { AuditExportService } from './services/audit-export.service';
         MatStep,
         MatStepLabel,
         AuditSelectDataComponent,
-        SelectFormatComponent,
+        AuditSelectFormatComponent,
         AuditDownloadComponent,
         TranslatePipe,
     ],
@@ -70,7 +67,6 @@ export class AuditDownloadDialogComponent implements OnInit {
 
     dialogModel: AuditDownloadDialogModel;
     exportConfig: AuditExportConfig;
-    readonly availableFormats: FormatExportConfig['format'][] = ['json', 'csv'];
     downloading = false;
     downloadFailed = false;
 

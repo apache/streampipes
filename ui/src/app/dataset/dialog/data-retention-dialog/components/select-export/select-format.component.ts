@@ -60,6 +60,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class SelectDataExportComponent implements OnInit {
     @Input()
+    showHeaderColumnName = true;
+    @Input()
     dataExplorerDataConfig: DataExplorerDataConfig;
     @Input()
     dataRetentionConfig: RetentionTimeConfig;

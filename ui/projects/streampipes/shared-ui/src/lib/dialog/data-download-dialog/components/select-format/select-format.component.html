@@ -23,33 +23,27 @@
             class="sp-radio-group"
             [(ngModel)]="formatExportConfig.format"
         >
-            @if (availableFormats.includes('json')) {
-                <mat-radio-button
-                    value="json"
-                    class="sp-radio-button"
-                    data-cy="download-configuration-json"
-                >
-                    JSON
-                </mat-radio-button>
-            }
-            @if (availableFormats.includes('csv')) {
-                <mat-radio-button
-                    value="csv"
-                    class="sp-radio-button"
-                    data-cy="download-configuration-csv"
-                >
-                    CSV
-                </mat-radio-button>
-            }
-            @if (availableFormats.includes('xlsx')) {
-                <mat-radio-button
-                    value="xlsx"
-                    class="sp-radio-button"
-                    data-cy="download-configuration-xlsx"
-                >
-                    EXCEL (XLSX)
-                </mat-radio-button>
-            }
+            <mat-radio-button
+                value="json"
+                class="sp-radio-button"
+                data-cy="download-configuration-json"
+            >
+                JSON
+            </mat-radio-button>
+            <mat-radio-button
+                value="csv"
+                class="sp-radio-button"
+                data-cy="download-configuration-csv"
+            >
+                CSV
+            </mat-radio-button>
+            <mat-radio-button
+                value="xlsx"
+                class="sp-radio-button"
+                data-cy="download-configuration-xlsx"
+            >
+                EXCEL (XLSX)
+            </mat-radio-button>
         </mat-radio-group>
     </sp-split-section>
 </div>
