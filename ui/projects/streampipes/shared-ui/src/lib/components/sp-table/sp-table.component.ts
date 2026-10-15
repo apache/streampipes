@@ -225,6 +225,8 @@ export class SpTableComponent<T>
      * also applies to the others and survives a reload.
      */
     @Input() rememberViewMode = false;
+    @Input() groupLabel?: string;
+    @Input() groupForRow?: (row: T) => { id: string; title: string };
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -371,6 +373,9 @@ export class SpTableComponent<T>
         if (changes['nameSearchConfig'] && !changes['dataSource']) {
             this.configureNameSearch();
         }
+        if (changes['groupForRow']) {
+            this.refreshRenderedRows();
+        }
     }
 
     ngOnDestroy() {
@@ -416,7 +421,7 @@ export class SpTableComponent<T>
     }
 
     get shouldShowGroupingControls(): boolean {
-        return !!this.assetContextConfig;
+        return !!this.assetContextConfig || !!this.groupForRow;
     }
 
     get showCardView(): boolean {
@@ -801,6 +806,23 @@ export class SpTableComponent<T>
         this.dataSource.filter = this.nameSearchTerm.trim().toLocaleLowerCase();
     }
 
+<<<<<<< HEAD
+=======
+    private getCurrentPageRows(): T[] {
+        let rows = this.dataSource?.filteredData ?? this.dataSource?.data ?? [];
+        if (this.dataSource?.sort) {
+            rows = this.dataSource.sortData([...rows], this.dataSource.sort);
+        }
+        if (!this.paginator) {
+            return rows;
+        }
+
+        const pageSize = this.paginator.pageSize || this.pageSize();
+        const startIndex = this.paginator.pageIndex * pageSize;
+        return rows.slice(startIndex, startIndex + pageSize);
+    }
+
+>>>>>>> dd5d4c6b20 (rebase to newer dev branch and favorite sorting priority)
     private updateRenderedState(rows: T[], reconcileSelection = true) {
         this.visiblePageRows = rows;
         this.rebuildGroupedSections(rows);
@@ -951,7 +973,7 @@ export class SpTableComponent<T>
     }
 
     private rebuildGroupedSections(rows: T[]) {
-        if (!this.assetContextConfig || this.viewMode !== 'grouped') {
+        if (!this.shouldShowGroupingControls || this.viewMode !== 'grouped') {
             this.groupedSections = [];
             this.renderedGroupedRows = [];
             return;
@@ -1016,6 +1038,9 @@ export class SpTableComponent<T>
     private resolveGroups(
         row: T,
     ): { id: string; title: string; color?: string }[] {
+        if (this.groupForRow) {
+            return [this.groupForRow(row)];
+        }
         const assetContext = this.getAssetContext(row);
 
         if (this.groupBy === 'label') {

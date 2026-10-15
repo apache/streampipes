@@ -70,12 +70,16 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { PipelineOverviewCardComponent } from './pipeline-overview-card/pipeline-overview-card.component';
 import { getPipelineStatus, PipelineStatus } from './pipeline-status';
 
+import { FavoriteToggleComponent } from '../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../favorites/favorites.store';
+
 @Component({
     selector: 'sp-pipeline-overview',
     templateUrl: './pipeline-overview.component.html',
     styleUrls: ['./pipeline-overview.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        FavoriteToggleComponent,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -109,6 +113,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         new EventEmitter<boolean>();
 
     displayedColumns: string[] = [
+        'favorite',
         'status',
         'start',
         'name',
@@ -144,6 +149,10 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
 
     readonly pipelineLinkType$ =
         this.assetBrowserService.getAssetLinkType$('pipeline');
+
+    constructor() {
+        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'PIPELINE');
+    }
 
     ngOnInit() {
         this.userSub = this.currentUserService.user$.subscribe(() => {

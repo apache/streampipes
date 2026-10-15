@@ -71,6 +71,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { ChartRegistry } from '../../../../chart-shared/registry/chart-registry.service';
 import { ChartOverviewRow } from '../chart-overview-row';
 import { ChartOverviewCardComponent } from '../chart-overview-card/chart-overview-card.component';
+import { FavoriteToggleComponent } from '../../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../../favorites/favorites.store';
 
 type ManageableChart = DataExplorerWidgetModel & {
     name: string;
@@ -82,6 +84,7 @@ type ManageableChart = DataExplorerWidgetModel & {
     templateUrl: './chart-overview-table.component.html',
     styleUrls: ['../chart-overview.component.scss'],
     imports: [
+        FavoriteToggleComponent,
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
@@ -120,6 +123,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
 
     dataSource = new MatTableDataSource<ChartOverviewRow>();
     displayedColumns: string[] = [
+        'favorite',
         'name',
         'chartType',
         'assetContext',
@@ -159,6 +163,10 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         string,
         { icon: string; label: string }
     >();
+
+    constructor() {
+        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'CHART');
+    }
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('chart');

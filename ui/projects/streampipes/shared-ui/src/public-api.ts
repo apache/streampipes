@@ -17,6 +17,7 @@
  */
 
 export * from './lib/dialog/base-dialog/base-dialog.model';
+export * from './lib/components/favorite-button/favorite-button.component';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
 export * from './lib/dialog/data-download-dialog/data-download-dialog.component';

@@ -19,8 +19,8 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,8 +41,8 @@ public class PermissionResource extends AbstractAuthGuardedRestResource {
 
   private final PermissionResourceManager permissionResourceManager;
 
-  public PermissionResource(IPermissionStorage permissionStorage) {
-    this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
+  public PermissionResource(SpResourceManager resourceManager) {
+    this.permissionResourceManager = resourceManager.managePermissions();
   }
 
   @GetMapping(path = "objects/{objectInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
