@@ -46,7 +46,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-/** Single-writer append adapter with independent bounded reads. Retention is not implemented. */
+/** Single-writer append adapter with independent bounded reads. */
 public final class InfluxAuditEventStore implements AuditEventStore, AuditEventReader {
   private static final String DEFAULT_ORGANIZATION = "sp";
   private static final String WATERMARK_QUERY = "SELECT LAST(\"%s\") FROM \"%s\""
@@ -180,6 +180,16 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
   @Override
   public Optional<AuditEntryDetails> find(UUID eventId, String locator) {
     return new InfluxAuditEventReader(queries).find(eventId, locator);
+  }
+
+  @Override
+  public synchronized void deleteEventsOlderThan(Instant cutoff) {
+    if (cutoff == null) {
+      throw new IllegalArgumentException("Audit retention cutoff is required");
+    }
+    initialize();
+    queries.execute(new Query("DELETE FROM \"%s\" WHERE time < %dms"
+        .formatted(InfluxAuditSchema.MEASUREMENT, cutoff.toEpochMilli())));
   }
 
   private void initializeWatermark() {
