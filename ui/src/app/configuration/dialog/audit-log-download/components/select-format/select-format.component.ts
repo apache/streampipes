@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AuditFormatExportConfig } from '../../model/audit-export-config.model';
+import { AuditFormatExportConfig } from '../../model/format-export-config.model';
 
 @Component({
     selector: 'sp-audit-select-format',

@@ -17,17 +17,9 @@
  */
 
 import { SelectedAuditExportColumn } from './audit-download-dialog.model';
+import { AuditFormatExportConfig } from './format-export-config.model';
 
 export type AuditDateRangeSelection = 'current' | 'custom';
-
-export type AuditFormatExportConfig =
-    | { format: 'json' }
-    | {
-          format: 'csv';
-          delimiter: 'comma' | 'semicolon';
-          headerColumnName: 'key' | 'label';
-      }
-    | { format: 'xlsx'; headerColumnName: 'key' | 'label' };
 
 export interface AuditExportConfig {
     dateRangeSelection: AuditDateRangeSelection;
