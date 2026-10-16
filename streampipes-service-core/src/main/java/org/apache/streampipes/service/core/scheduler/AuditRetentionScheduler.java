@@ -53,6 +53,9 @@ public class AuditRetentionScheduler implements SchedulingConfigurer {
   @Override
   public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
     var environment = Environments.getEnvironment();
+    if (!environment.getAuditEnabled().getValueOrDefault()) {
+      return;
+    }
     taskRegistrar.addTriggerTask(this::cleanupAuditEvents,
         triggerContext -> new CronTrigger(environment.getAuditRetentionSchedulerCron().getValueOrDefault())
             .nextExecution(triggerContext));
