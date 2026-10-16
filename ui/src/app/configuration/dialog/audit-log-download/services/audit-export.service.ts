@@ -17,12 +17,11 @@
  */
 
 import { Injectable, inject } from '@angular/core';
-import { AuditEntry, AuditService } from '@streampipes/platform-services';
+import { AuditService } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
-import { EMPTY, Observable, expand, map, reduce, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { AuditDownloadDialogModel } from '../model/audit-download-dialog.model';
 import { AuditExportConfig } from '../model/audit-export-config.model';
-import { createXlsx } from './xlsx-writer';
 
 @Injectable({
     providedIn: 'root',
@@ -43,123 +42,36 @@ export class AuditExportService {
             cursor: undefined,
         };
 
-        return this.auditService.getEvents(query).pipe(
-            expand(page =>
-                page.nextCursor
-                    ? this.auditService.getEvents({
-                          ...query,
-                          cursor: page.nextCursor,
-                      })
-                    : EMPTY,
-            ),
-            reduce(
-                (entries: AuditEntry[], page) => entries.concat(page.items),
-                [],
-            ),
-            tap(entries => this.saveExport(entries, exportConfig)),
-            map(() => undefined),
-        );
-    }
-
-    private saveExport(
-        entries: AuditEntry[],
-        exportConfig: AuditExportConfig,
-    ): void {
-        if (exportConfig.formatExportConfig.format === 'xlsx') {
-            this.saveXlsx(
-                entries,
-                exportConfig,
-                exportConfig.formatExportConfig.headerColumnName,
-            );
-            return;
-        }
-        if (exportConfig.formatExportConfig.format === 'json') {
-            this.saveFile(
-                JSON.stringify(
-                    this.selectedEntries(entries, exportConfig),
-                    null,
-                    2,
-                ),
-                'application/json;charset=utf-8',
-                'audit-log.json',
-            );
-            return;
-        }
-
         const selectedColumns = exportConfig.columns.filter(
             column => column.selected,
+        );
+        const formatConfig = exportConfig.formatExportConfig;
+        const headers = selectedColumns.map(column =>
+            formatConfig.format === 'json' ||
+            formatConfig.headerColumnName === 'key'
+                ? column.id
+                : this.translate.instant(column.label),
         );
         const delimiter =
-            exportConfig.formatExportConfig.format === 'csv' &&
-            exportConfig.formatExportConfig.delimiter === 'semicolon'
-                ? ';'
-                : ',';
-        const headerColumnName =
-            exportConfig.formatExportConfig.format === 'csv'
-                ? exportConfig.formatExportConfig.headerColumnName
-                : 'label';
-        const csv = [
-            selectedColumns
-                .map(column =>
-                    this.escape(
-                        headerColumnName === 'key'
-                            ? column.id
-                            : this.translate.instant(column.label),
+            formatConfig.format === 'csv' ? formatConfig.delimiter : undefined;
+        return this.auditService
+            .download(
+                query,
+                selectedColumns.map(column => column.id),
+                headers,
+                formatConfig.format,
+                delimiter,
+            )
+            .pipe(
+                tap(file =>
+                    this.saveFile(
+                        file,
+                        this.contentType(formatConfig.format),
+                        `audit-log.${formatConfig.format}`,
                     ),
-                )
-                .join(delimiter),
-            ...entries.map(entry =>
-                selectedColumns
-                    .map(column => this.escape(entry[column.id]))
-                    .join(delimiter),
-            ),
-        ].join('\r\n');
-        this.saveFile(csv, 'text/csv;charset=utf-8', 'audit-log.csv');
-    }
-
-    private saveXlsx(
-        entries: AuditEntry[],
-        exportConfig: AuditExportConfig,
-        headerColumnName: 'key' | 'label',
-    ): void {
-        const selectedColumns = exportConfig.columns.filter(
-            column => column.selected,
-        );
-        const workbook = createXlsx(
-            [
-                selectedColumns.map(column =>
-                    headerColumnName === 'key'
-                        ? column.id
-                        : this.translate.instant(column.label),
                 ),
-                ...entries.map(entry =>
-                    selectedColumns.map(column => entry[column.id] ?? ''),
-                ),
-            ],
-            'Audit log',
-        );
-        this.saveFile(
-            workbook,
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'audit-log.xlsx',
-        );
-    }
-
-    private selectedEntries(
-        entries: AuditEntry[],
-        exportConfig: AuditExportConfig,
-    ): Record<string, unknown>[] {
-        const selectedColumns = exportConfig.columns.filter(
-            column => column.selected,
-        );
-        return entries.map(entry =>
-            Object.fromEntries(
-                selectedColumns.map(column => [
-                    column.id,
-                    entry[column.id] ?? '',
-                ]),
-            ),
-        );
+                map(() => undefined),
+            );
     }
 
     private saveFile(data: BlobPart, type: string, filename: string): void {
@@ -171,7 +83,14 @@ export class AuditExportService {
         URL.revokeObjectURL(url);
     }
 
-    private escape(value: unknown): string {
-        return `"${String(value ?? '').replaceAll('"', '""')}"`;
+    private contentType(format: 'csv' | 'json' | 'xlsx'): string {
+        switch (format) {
+            case 'csv':
+                return 'text/csv;charset=utf-8';
+            case 'json':
+                return 'application/json;charset=utf-8';
+            case 'xlsx':
+                return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        }
     }
 }
