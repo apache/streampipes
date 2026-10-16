@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.audit.management;
+package org.apache.streampipes.audit.management.export;
 
 import org.apache.streampipes.audit.api.AuditEventReader;
 import org.apache.streampipes.audit.api.AuditExportConfiguration;
@@ -26,11 +26,11 @@ import org.apache.streampipes.audit.api.AuditQuery;
 import java.io.IOException;
 import java.io.OutputStream;
 
-final class AuditExportService {
+public final class AuditExportService {
   private final AuditEventReader reader;
   private final AuditOutputWriterFactory writerFactory;
 
-  AuditExportService(AuditEventReader reader) {
+  public AuditExportService(AuditEventReader reader) {
     this(reader, new AuditOutputWriterFactory());
   }
 
@@ -39,7 +39,7 @@ final class AuditExportService {
     this.writerFactory = writerFactory;
   }
 
-  void export(AuditQuery query, AuditExportConfiguration configuration, OutputStream outputStream)
+  public void export(AuditQuery query, AuditExportConfiguration configuration, OutputStream outputStream)
       throws IOException {
     try (var writer = writerFactory.create(configuration)) {
       writer.beforeFirstItem(outputStream);

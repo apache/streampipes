@@ -31,6 +31,7 @@ import org.apache.streampipes.audit.api.AuditPage;
 import org.apache.streampipes.audit.api.AuditQuery;
 import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.audit.api.AuditStatus;
+import org.apache.streampipes.audit.management.export.AuditExportService;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;

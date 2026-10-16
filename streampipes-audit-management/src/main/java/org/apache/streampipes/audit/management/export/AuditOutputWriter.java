@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.audit.management;
+package org.apache.streampipes.audit.management.export;
 
 import org.apache.streampipes.audit.api.AuditEntry;
 
