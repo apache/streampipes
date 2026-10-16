@@ -20,9 +20,9 @@ import { Injectable, inject } from '@angular/core';
 import { AuditEntry, AuditService } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, expand, map, reduce, tap } from 'rxjs';
-import * as XLSX from 'xlsx';
 import { AuditDownloadDialogModel } from '../model/audit-download-dialog.model';
 import { AuditExportConfig } from '../model/audit-export-config.model';
+import { createXlsx } from './xlsx-writer';
 
 @Injectable({
     providedIn: 'root',
@@ -125,20 +125,21 @@ export class AuditExportService {
         const selectedColumns = exportConfig.columns.filter(
             column => column.selected,
         );
-        const worksheet = XLSX.utils.aoa_to_sheet([
-            selectedColumns.map(column =>
-                headerColumnName === 'key'
-                    ? column.id
-                    : this.translate.instant(column.label),
-            ),
-            ...entries.map(entry =>
-                selectedColumns.map(column => entry[column.id] ?? ''),
-            ),
-        ]);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Audit log');
+        const workbook = createXlsx(
+            [
+                selectedColumns.map(column =>
+                    headerColumnName === 'key'
+                        ? column.id
+                        : this.translate.instant(column.label),
+                ),
+                ...entries.map(entry =>
+                    selectedColumns.map(column => entry[column.id] ?? ''),
+                ),
+            ],
+            'Audit log',
+        );
         this.saveFile(
-            XLSX.write(workbook, { bookType: 'xlsx', type: 'array' }),
+            workbook,
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'audit-log.xlsx',
         );
