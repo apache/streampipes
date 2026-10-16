@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AuditRetentionManagerTest {
 
   @Test
-  void deletesAuditEventsOlderThanTheConfiguredNumberOfMinutes() {
+  void deletesAuditEventsOlderThanTheConfiguredNumberOfDays() {
     var coreConfiguration = new SpCoreConfiguration();
     coreConfiguration.setAuditRetentionConfiguration(new RetentionTimeConfig(
         new DataRetentionConfig(RetentionInterval.DAILY, 7, RetentionAction.DELETE), null));
@@ -60,8 +60,16 @@ class AuditRetentionManagerTest {
 
     new AuditRetentionManager(store, storage(coreConfiguration), null).cleanup();
 
-    assertTrue(deletedBefore.get().isAfter(Instant.now().minus(8, ChronoUnit.MINUTES)));
-    assertTrue(deletedBefore.get().isBefore(Instant.now().minus(6, ChronoUnit.MINUTES)));
+    assertTrue(deletedBefore.get().isAfter(Instant.now().minus(8, ChronoUnit.DAYS)));
+    assertTrue(deletedBefore.get().isBefore(Instant.now().minus(6, ChronoUnit.DAYS)));
+  }
+
+  @Test
+  void startsTheNextExportAtThePreviousRetentionCutoff() {
+    var lastExport = Instant.parse("2026-10-16T12:00:00Z");
+
+    assertEquals(lastExport.minus(7, ChronoUnit.DAYS),
+        AuditRetentionManager.exportStart(lastExport.toString(), 7));
   }
 
   @Test

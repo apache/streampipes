@@ -81,7 +81,7 @@ public final class AuditRetentionManager {
     }
 
     var now = Instant.now();
-    var cutoff = now.minus(days, ChronoUnit.MINUTES);
+    var cutoff = now.minus(days, ChronoUnit.DAYS);
     var action = retention.getDataRetentionConfig().action();
     String exportPath = null;
     try {
@@ -118,17 +118,20 @@ public final class AuditRetentionManager {
         new ProvidedRestQueryParams(AUDIT_EXPORT_NAME, params), false);
     var objectStorage = ExportProviderFactory.createExportProvider(exportProvider.getProviderType(), AUDIT_EXPORT_NAME,
         exportProvider, formatName);
-    objectStorage.store(writeAuditEvents(writer, cutoff));
+    objectStorage.store(writeAuditEvents(writer, cutoff, exportConfig.getLastExport(),
+        retention.getDataRetentionConfig().olderThanDays()));
     return objectStorage.getFileName();
   }
 
   private StreamingResponseBody writeAuditEvents(ConfiguredOutputWriter writer,
-                                                  Instant cutoff) {
+                                                  Instant cutoff,
+                                                  String lastExport,
+                                                  int olderThanDays) {
     return output -> {
       writer.beforeFirstItem(output);
       boolean first = true;
       var reader = reader();
-      for (var rangeStart = Instant.EPOCH; rangeStart.isBefore(cutoff);
+      for (var rangeStart = exportStart(lastExport, olderThanDays); rangeStart.isBefore(cutoff);
            rangeStart = rangeEnd(rangeStart, cutoff)) {
         var rangeEnd = rangeEnd(rangeStart, cutoff);
         String cursor = null;
@@ -166,6 +169,18 @@ public final class AuditRetentionManager {
       return reader;
     }
     throw new IllegalStateException("Audit export is unavailable");
+  }
+
+  static Instant exportStart(String lastExport, int olderThanDays) {
+    if (lastExport == null || lastExport.isBlank()) {
+      return Instant.EPOCH;
+    }
+    try {
+      var start = Instant.parse(lastExport).minus(olderThanDays, ChronoUnit.DAYS);
+      return start.isBefore(Instant.EPOCH) ? Instant.EPOCH : start;
+    } catch (RuntimeException e) {
+      return Instant.EPOCH;
+    }
   }
 
   private Instant rangeEnd(Instant start, Instant cutoff) {
