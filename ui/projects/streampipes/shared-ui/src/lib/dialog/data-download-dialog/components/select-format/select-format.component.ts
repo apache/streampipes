@@ -36,6 +36,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ExportFormatSelectionComponent } from '../export-format-selection/export-format-selection.component';
 
 @Component({
     selector: 'sp-select-format',
@@ -59,6 +60,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatLabel,
         MatInput,
         TranslatePipe,
+        ExportFormatSelectionComponent,
     ],
 })
 export class SelectFormatComponent implements OnInit {

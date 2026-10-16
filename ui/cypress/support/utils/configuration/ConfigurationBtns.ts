@@ -57,4 +57,30 @@ export class ConfigurationBtns {
     public static inputGroupName(groupName: string) {
         return cy.dataCy('group-name-input').type(groupName);
     }
+
+    public static auditLogDownloadBtn() {
+        return cy.dataCy('audit-log-download-button');
+    }
+
+    public static auditDownloadDialog() {
+        return cy.dataCy('audit-download-dialog');
+    }
+
+    public static auditDownloadNextBtn() {
+        return cy.dataCy('audit-download-next-button');
+    }
+
+    public static auditDownloadBtn() {
+        return cy.dataCy('audit-download-download-button');
+    }
+
+    public static auditDownloadFormat(format: 'csv' | 'json' | 'xlsx') {
+        return cy.dataCy(`audit-download-format-${format}`).find('.mdc-radio');
+    }
+
+    public static auditDownloadDelimiter(delimiter: 'comma' | 'semicolon') {
+        return cy
+            .dataCy(`audit-download-delimiter-${delimiter}`)
+            .find('.mdc-radio');
+    }
 }
