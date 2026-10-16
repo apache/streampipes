@@ -18,6 +18,7 @@
 
 import { TranslateService } from '@ngx-translate/core';
 import { AuditDialogComponent } from './audit-dialog.component';
+import { AuditRetentionDialogComponent } from '../dialog/audit-retention/audit-retention-dialog.component';
 import { TestBed } from '@angular/core/testing';
 import {
     AuditService,
@@ -46,6 +47,7 @@ describe('AuditLogComponent', () => {
     };
     const api = {
         getStatus: vi.fn(),
+        getRetention: vi.fn(),
         getEventTypes: vi.fn(),
         getEvents: vi.fn(),
         getDetails: vi.fn(),
@@ -63,6 +65,7 @@ describe('AuditLogComponent', () => {
             type => type === 'adapter',
         );
         api.getStatus.mockReturnValue(of({ enabled: true }));
+        api.getRetention.mockReturnValue(of(null));
         api.getEventTypes.mockReturnValue(of(['sp.adapter.create']));
         api.getEvents.mockReturnValue(
             of({ items: [event], nextCursor: 'next' }),
@@ -172,6 +175,16 @@ describe('AuditLogComponent', () => {
             AuditDialogComponent,
             expect.objectContaining({ title: 'Audit status' }),
         );
+    });
+
+    it('opens the retention configuration panel and refreshes its icon state after saving', () => {
+        dialogs.open.mockReturnValue({ afterClosed: () => of(true) });
+        component.showRetention();
+        expect(dialogs.open).toHaveBeenCalledWith(
+            AuditRetentionDialogComponent,
+            expect.objectContaining({ title: 'Retention' }),
+        );
+        expect(api.getRetention).toHaveBeenCalled();
     });
 
     it('distinguishes storage failure from empty results and allows retry', () => {
