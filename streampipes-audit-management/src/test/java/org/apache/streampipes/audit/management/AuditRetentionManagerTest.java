@@ -20,25 +20,29 @@ package org.apache.streampipes.audit.management;
 
 import org.apache.streampipes.audit.api.AuditEvent;
 import org.apache.streampipes.audit.api.AuditEventStore;
+import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.model.dataset.DataRetentionConfig;
+import org.apache.streampipes.model.dataset.ExportConfig;
 import org.apache.streampipes.model.dataset.RetentionAction;
+import org.apache.streampipes.model.dataset.RetentionExportConfig;
 import org.apache.streampipes.model.dataset.RetentionInterval;
 import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AuditRetentionManagerTest {
 
   @Test
-  void deletesAuditEventsOlderThanTheConfiguredNumberOfDays() {
+  void deletesAuditEventsOlderThanTheConfiguredNumberOfMinutes() {
     var coreConfiguration = new SpCoreConfiguration();
     coreConfiguration.setAuditRetentionConfiguration(new RetentionTimeConfig(
         new DataRetentionConfig(RetentionInterval.DAILY, 7, RetentionAction.DELETE), null));
@@ -54,11 +58,19 @@ class AuditRetentionManagerTest {
       }
     };
 
-    var before = Instant.now().minus(Duration.ofDays(7));
     new AuditRetentionManager(store, storage(coreConfiguration), null).cleanup();
-    var after = Instant.now().minus(Duration.ofDays(7));
 
-    assertTrue(!deletedBefore.get().isBefore(before) && !deletedBefore.get().isAfter(after));
+    assertTrue(deletedBefore.get().isAfter(Instant.now().minus(8, ChronoUnit.MINUTES)));
+    assertTrue(deletedBefore.get().isBefore(Instant.now().minus(6, ChronoUnit.MINUTES)));
+  }
+
+  @Test
+  void defaultsStringExportFormatToCsv() {
+    var exportConfig = new RetentionExportConfig(new ExportConfig("string", null, null, null), "provider", null, null);
+
+    assertEquals(OutputFormat.CSV, AuditRetentionManager.outputFormat(exportConfig));
+    assertEquals("csv", exportConfig.getExportConfig().format());
+    assertEquals("comma", exportConfig.getExportConfig().csvDelimiter());
   }
 
   private ISpCoreConfigurationStorage storage(SpCoreConfiguration configuration) {

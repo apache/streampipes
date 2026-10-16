@@ -27,6 +27,7 @@ import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.export.objectstorage.ExportProviderFactory;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
+import org.apache.streampipes.model.dataset.ExportConfig;
 import org.apache.streampipes.model.dataset.RetentionAction;
 import org.apache.streampipes.model.dataset.RetentionExportConfig;
 import org.apache.streampipes.model.dataset.RetentionLog;
@@ -42,6 +43,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /** Exports audit events through configured providers before applying their retention action. */
@@ -79,7 +81,7 @@ public final class AuditRetentionManager {
     }
 
     var now = Instant.now();
-    var cutoff = now.minus(days, ChronoUnit.DAYS);
+    var cutoff = now.minus(days, ChronoUnit.MINUTES);
     var action = retention.getDataRetentionConfig().action();
     String exportPath = null;
     try {
@@ -105,30 +107,28 @@ public final class AuditRetentionManager {
   private String export(RetentionTimeConfig retention, Instant cutoff) throws Exception {
     var exportConfig = requireExportConfig(retention);
     var exportProvider = findExportProvider(exportConfig.getExportProviderId());
-    var format = OutputFormat.fromString(exportConfig.getExportConfig().format());
+    var format = outputFormat(exportConfig);
+    var formatName = format.name().toLowerCase(Locale.ROOT);
     var params = new HashMap<String, String>();
     params.put("delimiter", exportConfig.getExportConfig().csvDelimiter());
-    params.put("format", exportConfig.getExportConfig().format());
+    params.put("format", formatName);
     params.put("headerColumnName", exportConfig.getExportConfig().headerColumnName());
     params.put("missingValueBehaviour", exportConfig.getExportConfig().missingValueBehaviour());
     var writer = outputWriterFactory.getConfiguredWriter(null, format,
         new ProvidedRestQueryParams(AUDIT_EXPORT_NAME, params), false);
     var objectStorage = ExportProviderFactory.createExportProvider(exportProvider.getProviderType(), AUDIT_EXPORT_NAME,
-        exportProvider, exportConfig.getExportConfig().format());
-    objectStorage.store(writeAuditEvents(writer, cutoff, exportConfig.getLastExport(), retention
-        .getDataRetentionConfig().olderThanDays()));
+        exportProvider, formatName);
+    objectStorage.store(writeAuditEvents(writer, cutoff));
     return objectStorage.getFileName();
   }
 
   private StreamingResponseBody writeAuditEvents(ConfiguredOutputWriter writer,
-                                                  Instant cutoff,
-                                                  String lastExport,
-                                                  int olderThanDays) {
+                                                  Instant cutoff) {
     return output -> {
       writer.beforeFirstItem(output);
       boolean first = true;
       var reader = reader();
-      for (var rangeStart = exportStart(lastExport, olderThanDays); rangeStart.isBefore(cutoff);
+      for (var rangeStart = Instant.EPOCH; rangeStart.isBefore(cutoff);
            rangeStart = rangeEnd(rangeStart, cutoff)) {
         var rangeEnd = rangeEnd(rangeStart, cutoff);
         String cursor = null;
@@ -168,18 +168,6 @@ public final class AuditRetentionManager {
     throw new IllegalStateException("Audit export is unavailable");
   }
 
-  private Instant exportStart(String lastExport, int olderThanDays) {
-    if (lastExport == null || lastExport.isBlank()) {
-      return Instant.EPOCH;
-    }
-    try {
-      var start = Instant.parse(lastExport).minus(olderThanDays, ChronoUnit.DAYS);
-      return start.isBefore(Instant.EPOCH) ? Instant.EPOCH : start;
-    } catch (RuntimeException e) {
-      return Instant.EPOCH;
-    }
-  }
-
   private Instant rangeEnd(Instant start, Instant cutoff) {
     var candidate = start.plus(MAXIMUM_QUERY_RANGE_DAYS, ChronoUnit.DAYS);
     return candidate.isAfter(cutoff) ? cutoff : candidate;
@@ -192,6 +180,19 @@ public final class AuditRetentionManager {
       throw new IllegalArgumentException("Audit retention export configuration is required");
     }
     return exportConfig;
+  }
+
+  static OutputFormat outputFormat(RetentionExportConfig retentionExportConfig) {
+    var exportConfig = retentionExportConfig.getExportConfig();
+    if (exportConfig.format() == null || exportConfig.format().isBlank() || "string".equals(exportConfig.format())) {
+      retentionExportConfig.setExportConfig(new ExportConfig(
+          OutputFormat.CSV.name().toLowerCase(Locale.ROOT),
+          exportConfig.csvDelimiter() == null ? "comma" : exportConfig.csvDelimiter(),
+          exportConfig.missingValueBehaviour() == null ? "ignore" : exportConfig.missingValueBehaviour(),
+          exportConfig.headerColumnName() == null ? "key" : exportConfig.headerColumnName()));
+      return OutputFormat.CSV;
+    }
+    return OutputFormat.fromString(exportConfig.format());
   }
 
   private ExportProviderSettings findExportProvider(String providerId) {
