@@ -17,8 +17,9 @@
 -->
 
 <div fxLayout="column">
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+    <sp-split-section [title]="'Application' | translate">
         <sp-split-section
+            [level]="3"
             [title]="'Export' | translate"
             [subtitle]="'Export assets and all linked resources' | translate"
         >
@@ -66,9 +67,9 @@
                 </button>
             </div>
         </sp-split-section>
-    </div>
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+
         <sp-split-section
+            [level]="3"
             [title]="'Import' | translate"
             [subtitle]="'Import from application package' | translate"
         >
@@ -85,5 +86,7 @@
                 </button>
             </div>
         </sp-split-section>
-    </div>
+    </sp-split-section>
+
+    <sp-export-provider-configuration></sp-export-provider-configuration>
 </div>
