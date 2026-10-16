@@ -65,7 +65,7 @@ import { AuditDialogComponent } from './audit-dialog.component';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';
-import { AuditRetentionDialogComponent } from './audit-retention-dialog.component';
+import { AuditRetentionDialogComponent } from '../dialog/audit-retention/audit-retention-dialog.component';
 
 interface AuditActorOption {
     id: string;

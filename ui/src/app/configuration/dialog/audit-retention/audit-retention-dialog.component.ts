@@ -31,8 +31,8 @@ import {
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { SelectDataExportComponent } from '../../dataset/dialog/data-retention-dialog/components/select-export/select-format.component';
-import { SelectDataComponent } from '../../dataset/dialog/data-retention-dialog/components/select-retention/select-data.component';
+import { SelectDataExportComponent } from '../../../dataset/dialog/data-retention-dialog/components/select-export/select-format.component';
+import { SelectDataComponent } from '../../../dataset/dialog/data-retention-dialog/components/select-retention/select-data.component';
 
 @Component({
     selector: 'sp-audit-retention-dialog',
