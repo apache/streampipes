@@ -43,6 +43,7 @@ import {
     AuditEntry,
     AuditQuery,
     AuditStatus,
+    RetentionTimeConfig,
     UserService,
 } from '@streampipes/platform-services';
 import {
@@ -64,6 +65,7 @@ import { AuditDialogComponent } from './audit-dialog.component';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';
+import { AuditRetentionDialogComponent } from './audit-retention-dialog.component';
 
 interface AuditActorOption {
     id: string;
@@ -112,6 +114,7 @@ export class AuditLogComponent implements OnInit {
     private featureCards = inject(FeatureCardService);
     private listRequest?: Subscription;
     status?: AuditStatus;
+    retention?: RetentionTimeConfig | null;
     statusError = false;
     types: string[] = [];
     days = 1;
@@ -230,6 +233,7 @@ export class AuditLogComponent implements OnInit {
                 next: status => {
                     this.status = status;
                     if (status.enabled) {
+                        this.loadRetention();
                         this.apply();
                     }
                 },
@@ -323,6 +327,26 @@ export class AuditLogComponent implements OnInit {
             width: '32rem',
             title: this.translate.instant('Audit status'),
         });
+    }
+
+    showRetention(): void {
+        const dialogRef = this.dialogs.open(AuditRetentionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            width: '32rem',
+            title: this.translate.instant('Retention'),
+        });
+        dialogRef.afterClosed().subscribe(changed => {
+            if (changed) {
+                this.loadRetention();
+            }
+        });
+    }
+
+    private loadRetention(): void {
+        this.api
+            .getRetention()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({ next: retention => (this.retention = retention) });
     }
 
     outcomeLabel(outcome: string): string {

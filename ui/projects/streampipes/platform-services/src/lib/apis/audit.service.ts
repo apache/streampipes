@@ -27,6 +27,7 @@ import {
     AuditQuery,
     AuditStatus,
 } from '../model/audit/audit.model';
+import { RetentionTimeConfig } from '../model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class AuditService {
@@ -35,6 +36,20 @@ export class AuditService {
 
     getStatus(): Observable<AuditStatus> {
         return this.http.get<AuditStatus>(`${this.baseUrl}/status`);
+    }
+
+    getRetention(): Observable<RetentionTimeConfig | null> {
+        return this.http.get<RetentionTimeConfig | null>(
+            `${this.baseUrl}/retention`,
+        );
+    }
+
+    setRetention(config: RetentionTimeConfig): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/retention`, config);
+    }
+
+    deleteRetention(): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/retention`);
     }
 
     getEventTypes(): Observable<string[]> {

@@ -23,6 +23,20 @@
     <button
         section-actions
         mat-icon-button
+        [attr.aria-label]="'Set retention rate' | translate"
+        [matTooltip]="'Set retention rate' | translate"
+        (click)="showRetention()"
+        [disabled]="!status?.enabled"
+    >
+        <mat-icon
+            [class.audit-retention-configured]="retention"
+            [class.audit-retention-unconfigured]="!retention"
+            >history</mat-icon
+        >
+    </button>
+    <button
+        section-actions
+        mat-icon-button
         [attr.aria-label]="'Audit status' | translate"
         [matTooltip]="'Audit status' | translate"
         (click)="showStatus()"
