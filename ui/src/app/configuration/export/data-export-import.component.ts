@@ -47,8 +47,6 @@ import { ExportProviderConfigurationComponent } from './export-provider-configur
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
@@ -69,8 +67,6 @@ interface AssetReferenceExportItems {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         LayoutGapDirective,
         SplitSectionComponent,
         MatCheckbox,

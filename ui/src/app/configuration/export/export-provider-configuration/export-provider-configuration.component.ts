@@ -42,9 +42,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
-    FlexOrderDirective,
     LayoutAlignDirective,
-    LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import {
@@ -70,9 +68,7 @@ import { ExportProviderComponent } from '../../../dataset/dialog/export-provider
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
-        FlexOrderDirective,
         LayoutAlignDirective,
-        LayoutDirective,
         LayoutGapDirective,
         MatButton,
         MatCell,

@@ -33,11 +33,6 @@ import {
     MatColumnDef,
     MatHeaderCell,
     MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatTable,
     MatTableDataSource,
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
@@ -119,11 +114,6 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         StyleDirective,
         MatMenuItem,
         MatButton,
-        MatTable,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatRowDef,
-        MatRow,
         TranslatePipe,
         SpTableComponent,
         SpBasicViewComponent,
