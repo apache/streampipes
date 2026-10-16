@@ -57,6 +57,7 @@
         <div class="sp-dialog-actions actions-align-left">
             <button
                 mat-button
+                mat-flat-button
                 class="mat-basic"
                 data-cy="audit-download-close-button"
                 (click)="close()"
@@ -65,6 +66,7 @@
             </button>
             @if (stepper.selectedIndex === 0) {
                 <button
+                    mat-button
                     mat-flat-button
                     color="accent"
                     data-cy="audit-download-next-button"
@@ -77,6 +79,7 @@
             @if (stepper.selectedIndex > 0) {
                 <button
                     mat-button
+                    mat-flat-button
                     class="mat-basic"
                     data-cy="audit-download-previous-button"
                     (click)="stepper.previous()"
@@ -86,6 +89,7 @@
             }
             @if (stepper.selectedIndex === 1) {
                 <button
+                    mat-button
                     mat-flat-button
                     color="accent"
                     data-cy="audit-download-download-button"
