@@ -17,16 +17,12 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import {
-    HttpClient,
-    HttpEvent,
-    HttpParams,
-    HttpRequest,
-} from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FileMetadata } from '../model/gen/streampipes-model';
+import { uploadMultipartFile } from './upload-file';
 
 @Injectable({
     providedIn: 'root',
@@ -36,22 +32,12 @@ export class FilesService {
     private platformServicesCommons = inject(PlatformServicesCommons);
 
     uploadFile(file: File): Observable<HttpEvent<any>> {
-        const data: FormData = new FormData();
-        data.append('file_upload', file, file.name);
-
-        const params = new HttpParams();
-        const options = {
-            params,
-            reportProgress: true,
-        };
-
-        const req = new HttpRequest(
-            'POST',
+        return uploadMultipartFile<FileMetadata>(
+            this.http,
             this.platformServicesCommons.apiBasePath + '/files',
-            data,
-            options,
+            'file_upload',
+            file,
         );
-        return this.http.request(req);
     }
 
     getFileMetadata(requiredFiletypes?: string[]): Observable<FileMetadata[]> {

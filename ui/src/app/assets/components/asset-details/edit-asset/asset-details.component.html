@@ -98,7 +98,12 @@
                         (imageFileDeletionRequested)="
                             handleImageFileDeletionRequested($event)
                         "
-                        (imageUploaded)="trackUploadedImage($event)"
+                        (imageUploaded)="
+                            trackUploadedImage(
+                                $event.fileId,
+                                $event.replacedFileIds
+                            )
+                        "
                         [asset]="selectedAsset"
                         [assetModel]="asset"
                         [sites]="sites"

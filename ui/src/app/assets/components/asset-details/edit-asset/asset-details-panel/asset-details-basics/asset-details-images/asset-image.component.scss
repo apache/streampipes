@@ -16,24 +16,16 @@
  *
  */
 
-.asset-image-list {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-
-    overflow-x: auto;
-
-    margin-top: 15px;
-    padding-bottom: 5px;
+.asset-image-upload {
+    width: fit-content;
 }
 
 .asset-image-thumbnail-wrapper {
     position: relative;
+    margin-top: 1rem;
 
     width: 100px;
     height: 75px;
-
-    flex: 0 0 100px;
 }
 
 .asset-image-thumbnail {
@@ -125,52 +117,6 @@
     max-height: 80vh;
 
     object-fit: contain;
-}
-
-.viewer-navigation {
-    position: absolute;
-    top: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 48px;
-    height: 48px;
-
-    padding: 0;
-
-    border: 0;
-    border-radius: 50%;
-
-    background: rgba(0, 0, 0, 0.55);
-    color: #ffffff;
-
-    cursor: pointer;
-
-    transform: translateY(-50%);
-}
-
-.viewer-navigation:hover {
-    background: rgba(0, 0, 0, 0.75);
-}
-
-.viewer-navigation mat-icon {
-    width: 32px;
-    height: 32px;
-
-    font-size: 32px;
-    line-height: 32px;
-
-    color: #ffffff;
-}
-
-.viewer-previous {
-    left: 30px;
-}
-
-.viewer-next {
-    right: 30px;
 }
 
 .viewer-close {

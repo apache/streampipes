@@ -25,6 +25,7 @@ import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProv
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
+import org.apache.streampipes.service.core.migrations.v099.AddAssetImageReferenceViewMigration;
 import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementViewMigration;
 import org.apache.streampipes.service.core.migrations.v099.AddFunctionStateViewMigration;
 import org.apache.streampipes.service.core.migrations.v099.AddRefreshTokenViewsMigration;
@@ -138,7 +139,8 @@ public class AvailableMigrations {
         new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
         new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage),
-        new RenameAssetLinkTypesMigration(genericStorage)
+        new RenameAssetLinkTypesMigration(genericStorage),
+        new AddAssetImageReferenceViewMigration()
     );
   }
 }

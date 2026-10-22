@@ -20,15 +20,18 @@ import {
     ChangeDetectionStrategy,
     EventEmitter,
     Component,
+    ElementRef,
     Input,
-    OnInit,
+    OnChanges,
+    OnDestroy,
     Output,
+    ViewChild,
     inject,
 } from '@angular/core';
 import {
     FileMetadata,
-    FilesService,
-    SpAssetModel,
+    ImagesService,
+    SpAsset,
 } from '@streampipes/platform-services';
 import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
@@ -42,8 +45,13 @@ import {
 } from '@streampipes/shared-ui';
 import { AssetImageUploadDialogComponent } from './asset-image-upload/asset-image-upload-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+export interface AssetImageChange {
+    asset: SpAsset;
+    file: FileMetadata;
+}
 
 @Component({
     selector: 'sp-asset-image',
@@ -52,66 +60,98 @@ import { map } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormFieldComponent, MatButton, MatIcon, TranslatePipe],
 })
-export class AssetImageComponent implements OnInit {
-    private filesService = inject(FilesService);
+export class AssetImageComponent implements OnChanges, OnDestroy {
+    private imagesService = inject(ImagesService);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private dialog = inject(MatDialog);
 
     @Input()
-    asset: SpAssetModel;
+    asset: SpAsset;
 
     @Input()
     editMode: boolean;
 
     @Output()
-    imageUploaded: EventEmitter<FileMetadata> =
-        new EventEmitter<FileMetadata>();
+    imageUploaded = new EventEmitter<AssetImageChange>();
 
     @Output()
-    imageLinkRemoval = new EventEmitter<string>();
+    imageLinkRemoval = new EventEmitter<AssetImageChange>();
 
     @Output()
-    imageFileDeletionRequested = new EventEmitter<string>();
+    imageFileDeletionRequested = new EventEmitter<AssetImageChange>();
 
-    imageFiles: FileMetadata[] = [];
-    imageUrls: string[] = [];
-    selectedImageIndex: number | null = null;
+    imageFile: FileMetadata | undefined;
+    imageUrl: string | undefined;
 
-    ngOnInit(): void {
-        this.refreshImages();
+    @ViewChild('imageViewer')
+    private imageViewer?: ElementRef<HTMLElement>;
+
+    private loadGeneration = 0;
+
+    ngOnChanges(): void {
+        this.refreshImage();
     }
 
-    refreshImages(): void {
-        this.imageFiles = this.asset.assetImages ?? [];
+    ngOnDestroy(): void {
+        this.loadGeneration++;
+        this.closeImageViewer();
+        this.clearImageUrl();
+    }
 
-        this.imageUrls.forEach(url => URL.revokeObjectURL(url));
-        this.imageUrls = [];
+    refreshImage(): void {
+        const generation = ++this.loadGeneration;
+        this.closeImageViewer();
+        this.imageFile = this.asset.assetImages?.[0];
+        this.clearImageUrl();
 
-        if (this.imageFiles.length === 0) {
-            this.selectedImageIndex = null;
+        if (!this.imageFile) {
             return;
         }
 
-        forkJoin(
-            this.imageFiles.map(file =>
-                this.filesService
-                    .getFile(file.filename)
-                    .pipe(map(blob => URL.createObjectURL(blob))),
-            ),
-        ).subscribe(urls => {
-            this.imageUrls = urls;
-
-            if (
-                this.selectedImageIndex !== null &&
-                this.selectedImageIndex >= urls.length
-            ) {
-                this.selectedImageIndex = null;
-            }
-        });
+        this.imagesService
+            .getImage(this.imageFile.fileId)
+            .pipe(
+                map(blob => URL.createObjectURL(blob)),
+                catchError(() => of(undefined)),
+            )
+            .subscribe(url => {
+                if (generation !== this.loadGeneration) {
+                    if (url) URL.revokeObjectURL(url);
+                    return;
+                }
+                this.imageUrl = url;
+            });
     }
 
     openImageUploadDialog(): void {
+        const asset = this.asset;
+        if (asset.assetImages?.length) {
+            this.dialog
+                .open(ConfirmDialogComponent, {
+                    width: '500px',
+                    data: {
+                        title: this.translateService.instant(
+                            'Replace asset image?',
+                        ),
+                        subtitle: this.translateService.instant(
+                            'The new image will replace the current image. The old file will be deleted when you save.',
+                        ),
+                        cancelTitle: this.translateService.instant('Cancel'),
+                        confirmTitle:
+                            this.translateService.instant('Replace image'),
+                    },
+                })
+                .afterClosed()
+                .subscribe((action: ConfirmDialogAction | undefined) => {
+                    if (action === 'confirm') this.uploadImageForAsset(asset);
+                });
+        } else {
+            this.uploadImageForAsset(asset);
+        }
+    }
+
+    private uploadImageForAsset(asset: SpAsset): void {
         const dialogRef = this.dialogService.open(
             AssetImageUploadDialogComponent,
             {
@@ -126,32 +166,24 @@ export class AssetImageComponent implements OnInit {
                 return;
             }
 
-            this.imageUploaded.emit(uploadedFile);
-            this.refreshImages();
+            this.imageUploaded.emit({ asset, file: uploadedFile });
+            this.refreshImage();
         });
     }
 
-    previousImage(): void {
-        if (this.selectedImageIndex === null) {
-            return;
-        }
-
-        this.selectedImageIndex =
-            (this.selectedImageIndex - 1 + this.imageUrls.length) %
-            this.imageUrls.length;
+    private clearImageUrl(): void {
+        if (this.imageUrl) URL.revokeObjectURL(this.imageUrl);
+        this.imageUrl = undefined;
     }
 
-    nextImage(): void {
-        if (this.selectedImageIndex === null) {
-            return;
-        }
-
-        this.selectedImageIndex =
-            (this.selectedImageIndex + 1) % this.imageUrls.length;
+    private closeImageViewer(): void {
+        const viewer = this.imageViewer?.nativeElement;
+        if (viewer?.matches(':popover-open')) viewer.hidePopover();
     }
 
     openImageRemovalDialog(event: MouseEvent, file: FileMetadata): void {
         event.stopPropagation();
+        const asset = this.asset;
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
@@ -171,12 +203,11 @@ export class AssetImageComponent implements OnInit {
             .afterClosed()
             .subscribe((action: ConfirmDialogAction | undefined) => {
                 if (action === 'neutral') {
-                    this.imageLinkRemoval.emit(file.fileId);
-                    this.refreshImages();
+                    this.imageLinkRemoval.emit({ asset, file });
+                    this.refreshImage();
                 } else if (action === 'confirm') {
-                    this.imageLinkRemoval.emit(file.fileId);
-                    this.imageFileDeletionRequested.emit(file.fileId);
-                    this.refreshImages();
+                    this.imageFileDeletionRequested.emit({ asset, file });
+                    this.refreshImage();
                 }
             });
     }

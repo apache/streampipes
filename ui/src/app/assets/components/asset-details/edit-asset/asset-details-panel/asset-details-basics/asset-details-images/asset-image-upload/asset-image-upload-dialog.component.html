@@ -35,7 +35,7 @@
             "
         >
         </sp-alert-banner>
-        @if (this.duplicateFileNames.length === 0) {
+        @if (!duplicateFilename) {
             <div fxFlex="100">
                 <div fxFlex="100" style="margin: 5px; width: 100%">
                     <mat-form-field
@@ -47,7 +47,7 @@
                             matInput
                             [placeholder]="'Image' | translate"
                             disabled
-                            (value)="(fileNames)"
+                            [value]="selectedUploadFile?.name ?? ''"
                         />
 
                         <input
@@ -59,12 +59,6 @@
                         />
 
                         <div>
-                            @for (filename of fileNames; track filename) {
-                                <div fxLayout="column">
-                                    {{ filename }}
-                                </div>
-                            }
-
                             @if (uploadStatus > 0) {
                                 <mat-progress-bar
                                     mode="determinate"
@@ -102,7 +96,7 @@
                         mat-button
                         mat-flat-button
                         class="mat-basic mt-10"
-                        (click)="removeFilesFromUpload()"
+                        (click)="clearSelectedFile()"
                     >
                         {{ 'Clear' | translate }}
                     </button>
@@ -110,7 +104,7 @@
             </div>
         }
 
-        @if (this.duplicateFileNames.length !== 0) {
+        @if (duplicateFilename) {
             <div fxLayout="column" style="width: 100%">
                 <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
                     <b>
@@ -122,27 +116,23 @@
                         </h4>
                     </b>
 
-                    @for (
-                        name of this.duplicateFileNames;
-                        track name;
-                        let i = $index
-                    ) {
-                        <div>
-                            <div class="input-group">
-                                <span style="margin-right: 10px">
-                                    {{ name }}:
-                                </span>
+                    <div>
+                        <div class="input-group">
+                            <span style="margin-right: 10px">
+                                {{ duplicateFilename }}:
+                            </span>
 
-                                <mat-form-field>
-                                    <input
-                                        matInput
-                                        placeholder="e.g. {{ '_' + name }}"
-                                        [(ngModel)]="this.renamedFileNames[i]"
-                                    />
-                                </mat-form-field>
-                            </div>
+                            <mat-form-field>
+                                <input
+                                    matInput
+                                    placeholder="e.g. {{
+                                        '_' + duplicateFilename
+                                    }}"
+                                    [(ngModel)]="renamedFilename"
+                                />
+                            </mat-form-field>
                         </div>
-                    }
+                    </div>
                 </div>
             </div>
         }
@@ -151,26 +141,26 @@
     <mat-divider></mat-divider>
 
     <div class="sp-dialog-actions">
-        @if (this.duplicateFileNames.length === 0) {
+        @if (!duplicateFilename) {
             <button
                 mat-button
                 mat-flat-button
                 color="accent"
                 (click)="store()"
-                [disabled]="fileNames.length === 0"
+                [disabled]="!hasInput"
                 style="margin-right: 10px"
             >
                 {{ 'Import image' | translate }}
             </button>
         }
 
-        @if (this.duplicateFileNames.length !== 0) {
+        @if (duplicateFilename) {
             <button
                 mat-button
                 mat-flat-button
                 color="accent"
-                (click)="renameDuplicateFiles()"
-                [disabled]="fileNames.length === 0"
+                (click)="renameDuplicateFile()"
+                [disabled]="!renamedFilename.trim()"
                 style="margin-right: 10px"
             >
                 {{ 'Rename image' | translate }}

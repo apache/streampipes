@@ -1,0 +1,104 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-split-section
+    [title]="'Images' | translate"
+    [subtitle]="'Upload and manage images used by assets.' | translate"
+>
+    <div section-actions>
+        <button
+            mat-flat-button
+            color="accent"
+            (click)="openImageUploadDialog()"
+            data-cy="sp-open-image-upload-dialog"
+        >
+            <mat-icon>cloud_upload</mat-icon>
+            {{ 'Upload new image' | translate }}
+        </button>
+    </div>
+
+    @if (errorMessage) {
+        <sp-alert-banner
+            class="mb-10"
+            type="error"
+            [title]="errorMessage"
+        ></sp-alert-banner>
+    }
+
+    <sp-table
+        [columns]="displayedColumns"
+        [dataSource]="dataSource"
+        [nameSearchConfig]="{
+            enabled: nameSearchConfig.enabled,
+            searchKey: nameSearchConfig.searchKey,
+            placeholder: 'Search by filename' | translate,
+        }"
+        resourceIdKey="fileId"
+        data-cy="available-images-list"
+    >
+        <ng-container matColumnDef="filename">
+            <th mat-header-cell *matHeaderCellDef>
+                {{ 'Filename' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let image">{{ image.filename }}</td>
+        </ng-container>
+        <ng-container matColumnDef="filetype">
+            <th mat-header-cell *matHeaderCellDef>
+                {{ 'Filetype' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let image">
+                <sp-label [labelText]="image.filetype" size="medium"></sp-label>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="uploaded">
+            <th mat-header-cell *matHeaderCellDef>
+                {{ 'Uploaded' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let image">
+                {{ image.createdAt | date: 'dd.MM.yyyy HH:mm' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let image">
+                <div fxLayout="row" fxLayoutAlign="end center">
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        [matTooltip]="'Download image' | translate"
+                        [attr.aria-label]="'Download image' | translate"
+                        (click)="downloadImage(image)"
+                        data-cy="download"
+                    >
+                        <mat-icon>download</mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        [matTooltip]="'Delete image' | translate"
+                        [attr.aria-label]="'Delete image' | translate"
+                        (click)="deleteImage(image)"
+                        data-cy="delete"
+                    >
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </td>
+        </ng-container>
+    </sp-table>
+</sp-split-section>

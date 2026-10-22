@@ -317,6 +317,7 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
             assetName: 'New Asset',
             assetDescription: '',
             assetLinks: [],
+            assetImages: [],
             assetType: undefined,
             assets: [],
             assetSite: undefined,

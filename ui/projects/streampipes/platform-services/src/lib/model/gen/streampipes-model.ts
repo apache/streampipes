@@ -3951,6 +3951,7 @@ export class SpAsset {
     additionalData: { [index: string]: any };
     assetDescription: string;
     assetId: string;
+    assetImages: FileMetadata[];
     assetLinks: AssetLink[];
     assetName: string;
     assetSite: AssetSite;
@@ -3968,6 +3969,9 @@ export class SpAsset {
         );
         instance.assetDescription = data.assetDescription;
         instance.assetId = data.assetId;
+        instance.assetImages = __getCopyArrayFn(FileMetadata.fromData)(
+            data.assetImages,
+        );
         instance.assetLinks = __getCopyArrayFn(AssetLink.fromData)(
             data.assetLinks,
         );
@@ -3984,7 +3988,6 @@ export class SpAsset {
 
 export class SpAssetModel extends SpAsset implements Storable {
     appDocType: string;
-    assetImages: FileMetadata[];
     elementId: string;
     removable: boolean;
     rev: string;
@@ -3996,9 +3999,6 @@ export class SpAssetModel extends SpAsset implements Storable {
         const instance = target || new SpAssetModel();
         super.fromData(data, instance);
         instance.appDocType = data.appDocType;
-        instance.assetImages = __getCopyArrayFn(FileMetadata.fromData)(
-            data.assetImages,
-        );
         instance.elementId = data.elementId;
         instance.removable = data.removable;
         instance.rev = data.rev;

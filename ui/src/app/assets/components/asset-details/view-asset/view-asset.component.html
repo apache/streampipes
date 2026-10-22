@@ -57,7 +57,7 @@
         @if (selectedAsset) {
             <sp-asset-top-banner
                 [assetModel]="selectedAsset"
-                [assetImages]="asset.assetImages"
+                [assetImages]="selectedAsset.assetImages ?? []"
                 [locationConfig]="locationConfig"
             ></sp-asset-top-banner>
 
