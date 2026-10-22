@@ -46,4 +46,39 @@ public final class DatasetAuditReporter {
     auditService.record(StandardAuditEvents.DATASET_DELETE, AuditOutcome.SUCCEEDED, actor, datasetId,
         new DatasetDeletedDetails());
   }
+
+  public void dataDeleted(String actor, String datasetId, Long startDate, Long endDate) {
+    auditService.record(StandardAuditEvents.DATASET_DATA_DELETE, AuditOutcome.SUCCEEDED, actor, datasetId,
+        new DatasetDataDeletedDetails(startDate, endDate));
+  }
+
+  public void dataTruncated(String actor, String datasetId) {
+    auditService.record(StandardAuditEvents.DATASET_DATA_TRUNCATE, AuditOutcome.SUCCEEDED, actor, datasetId,
+        new DatasetDataTruncatedDetails());
+  }
+
+  public void dropped(String actor, String datasetId) {
+    auditService.record(StandardAuditEvents.DATASET_DROP, AuditOutcome.SUCCEEDED, actor, datasetId,
+        new DatasetDroppedDetails());
+  }
+
+  public void allDataCleared(String actor) {
+    auditService.record(StandardAuditEvents.DATASET_DATA_CLEAR, AuditOutcome.SUCCEEDED, actor, null,
+        new DatasetDataClearedDetails());
+  }
+
+  public void retentionConfigured(String actor, String datasetId) {
+    auditService.record(StandardAuditEvents.DATASET_RETENTION_CONFIGURE, AuditOutcome.SUCCEEDED, actor, datasetId,
+        new DatasetRetentionConfiguredDetails());
+  }
+
+  public void retentionRemoved(String actor, String datasetId) {
+    auditService.record(StandardAuditEvents.DATASET_RETENTION_REMOVE, AuditOutcome.SUCCEEDED, actor, datasetId,
+        new DatasetRetentionRemovedDetails());
+  }
+
+  public void retentionRun(String actor, String datasetId) {
+    auditService.record(StandardAuditEvents.DATASET_RETENTION_RUN, AuditOutcome.SUCCEEDED, actor, datasetId,
+        new DatasetRetentionRunDetails());
+  }
 }
