@@ -19,15 +19,11 @@
 package org.apache.streampipes.model.assets;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
-import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @TsModel
 public class SpAssetModel extends SpAsset implements Storable {
@@ -44,8 +40,6 @@ public class SpAssetModel extends SpAsset implements Storable {
   private String rev;
 
   private boolean removable;
-
-  private List<FileMetadata> assetImages = new ArrayList<>();
 
   public SpAssetModel() {
     super();
@@ -81,13 +75,5 @@ public class SpAssetModel extends SpAsset implements Storable {
 
   public String getAppDocType() {
     return appDocType;
-  }
-
-  public List<FileMetadata> getAssetImages() {
-    return assetImages;
-  }
-
-  public void setAssetImages(List<FileMetadata> assetImages) {
-    this.assetImages = assetImages;
   }
 }

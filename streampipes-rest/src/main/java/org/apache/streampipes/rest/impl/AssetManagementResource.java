@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
 import org.apache.streampipes.audit.events.asset.AssetAuditRecorder;
-import org.apache.streampipes.manager.file.FileManager;
+import org.apache.streampipes.manager.file.ImageManager;
 import org.apache.streampipes.model.assets.AssetSummaryDto;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
@@ -29,7 +29,7 @@ import org.apache.streampipes.resource.management.AssetResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IImageMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.springframework.http.HttpStatus;
@@ -38,15 +38,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -56,17 +59,17 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   private final AssetResourceManager assetResourceManager;
   private final AssetAuditRecorder assetAudit;
   private final SpResourceManager resourceManager;
-  private final FileManager fileManager;
+  private final ImageManager imageManager;
 
   public AssetManagementResource(
       SpResourceManager resourceManager,
       ISpCoreConfigurationStorage coreConfigurationStorage,
-      IFileMetadataStorage fileMetadataStorage
+      IImageMetadataStorage imageMetadataStorage
   ) {
     this.resourceManager = resourceManager;
     this.assetResourceManager = resourceManager.manageAssets();
     this.assetAudit = new AssetAuditRecorder(resourceManager.getAuditService());
-    this.fileManager = new FileManager(coreConfigurationStorage, fileMetadataStorage);
+    this.imageManager = new ImageManager(coreConfigurationStorage, imageMetadataStorage, assetResourceManager.getDb());
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -115,29 +118,26 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(
-      path = "/{id}/files/{fileId}",
+      path = "/{id}/images/{imageId}",
       produces = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize(
-      AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE
-          + " and "
-          + AuthConstants.HAS_WRITE_FILE_PRIVILEGE
-          + " and hasPermission(#elementId, 'WRITE')"
-  )
-  public ResponseEntity<SpAssetModel> deleteLinkedFile(
+  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
+  public ResponseEntity<SpAssetModel> deleteLinkedImage(
       @PathVariable("id") String elementId,
-      @PathVariable("fileId") String fileId
-  ) {
+      @PathVariable("imageId") String imageId,
+      @RequestParam("assetId") String assetId
+  ) throws IOException {
     var asset = assetResourceManager.find(elementId);
 
     if (asset == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    asset.getAssetImages().removeIf(image -> fileId.equals(image.getFileId()));
-    assetResourceManager.update(asset);
-    
-    fileManager.deleteFile(fileId);
+    if (!assetResourceManager.removeAssetImage(asset, assetId, imageId)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    imageManager.deleteImageIfUnused(imageId);
 
     var updatedAsset = assetResourceManager.find(elementId);
 
@@ -148,13 +148,17 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
     return ok(updatedAsset);
   }
 
-
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Void> delete(@PathVariable("id") String elementId) {
     assetResourceManager.delete(elementId);
     assetAudit.deleted(getAuthenticatedUserSid(), elementId, AuditOutcome.SUCCEEDED);
     return ok();
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<String> invalidAsset(IllegalArgumentException exception) {
+    return badRequest(exception.getMessage());
   }
 
   /**

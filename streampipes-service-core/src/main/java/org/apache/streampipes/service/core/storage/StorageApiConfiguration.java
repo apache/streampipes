@@ -38,6 +38,7 @@ import org.apache.streampipes.storage.api.system.IExtensionsServiceConfiguration
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IImageMetadataStorage;
 import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
@@ -70,6 +71,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfi
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ImageMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
@@ -176,6 +178,11 @@ public class StorageApiConfiguration {
   @Bean
   public IFileMetadataStorage fileMetadataStorage() {
     return new FileMetadataStorageImpl();
+  }
+
+  @Bean
+  public IImageMetadataStorage imageMetadataStorage() {
+    return new ImageMetadataStorageImpl();
   }
 
   @Bean

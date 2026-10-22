@@ -26,44 +26,36 @@
             mat-flat-button
             color="accent"
             type="button"
+            class="asset-image-upload"
             (click)="openImageUploadDialog()"
             [disabled]="!editMode"
-            style="width: fit-content"
         >
             <mat-icon>cloud_upload</mat-icon>
-            {{ 'Upload image' | translate }}
+            {{ (imageFile ? 'Replace image' : 'Upload image') | translate }}
         </button>
 
-        @if (imageUrls.length > 0) {
-            <div class="asset-image-list">
-                @for (imageUrl of imageUrls; track imageUrl; let i = $index) {
-                    <div class="asset-image-thumbnail-wrapper">
-                        <img
-                            class="asset-image-thumbnail"
-                            [src]="imageUrl"
-                            alt="Asset image"
-                            (click)="
-                                selectedImageIndex = i;
-                                imageViewer.showPopover()
-                            "
-                        />
+        @if (imageFile) {
+            <div class="asset-image-thumbnail-wrapper">
+                @if (imageUrl) {
+                    <img
+                        class="asset-image-thumbnail"
+                        [src]="imageUrl"
+                        [alt]="'Asset image' | translate"
+                        (click)="imageViewer.showPopover()"
+                    />
+                } @else {
+                    <mat-icon>broken_image</mat-icon>
+                }
 
-                        @if (editMode) {
-                            <button
-                                type="button"
-                                class="asset-image-remove"
-                                [attr.aria-label]="'Remove image'"
-                                (click)="
-                                    openImageRemovalDialog(
-                                        $event,
-                                        imageFiles[i]
-                                    )
-                                "
-                            >
-                                <mat-icon>close</mat-icon>
-                            </button>
-                        }
-                    </div>
+                @if (editMode) {
+                    <button
+                        type="button"
+                        class="asset-image-remove"
+                        [attr.aria-label]="'Remove image' | translate"
+                        (click)="openImageRemovalDialog($event, imageFile)"
+                    >
+                        <mat-icon>close</mat-icon>
+                    </button>
                 }
             </div>
         }
@@ -72,42 +64,22 @@
             #imageViewer
             popover="auto"
             class="asset-image-overlay"
-            (click)="imageViewer.hidePopover(); selectedImageIndex = null"
+            (click)="imageViewer.hidePopover()"
         >
-            @if (selectedImageIndex !== null) {
-                <button
-                    type="button"
-                    class="viewer-navigation viewer-previous"
-                    aria-label="Previous image"
-                    (click)="previousImage(); $event.stopPropagation()"
-                >
-                    <mat-icon>chevron_left</mat-icon>
-                </button>
-
+            @if (imageUrl) {
                 <img
                     class="viewer-image"
-                    [src]="imageUrls[selectedImageIndex]"
-                    alt="Asset image"
+                    [src]="imageUrl"
+                    [alt]="'Asset image' | translate"
                     (click)="$event.stopPropagation()"
                 />
 
                 <button
                     type="button"
-                    class="viewer-navigation viewer-next"
-                    aria-label="Next image"
-                    (click)="nextImage(); $event.stopPropagation()"
-                >
-                    <mat-icon>chevron_right</mat-icon>
-                </button>
-
-                <button
-                    type="button"
                     class="viewer-close"
-                    aria-label="Close image viewer"
+                    [attr.aria-label]="'Close image viewer' | translate"
                     (click)="
-                        imageViewer.hidePopover();
-                        selectedImageIndex = null;
-                        $event.stopPropagation()
+                        imageViewer.hidePopover(); $event.stopPropagation()
                     "
                 >
                     <mat-icon>close</mat-icon>

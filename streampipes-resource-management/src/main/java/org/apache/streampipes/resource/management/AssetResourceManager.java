@@ -19,6 +19,7 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.assets.AssetSummaryDto;
+import org.apache.streampipes.model.assets.SpAsset;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
@@ -44,6 +45,52 @@ public class AssetResourceManager extends CrudResourceManager<SpAssetModel, IAss
         .toList();
 
     return new ResourceSummaryDto<>(assets, assets.size());
+  }
+
+  @Override
+  public SpAssetModel create(SpAssetModel asset, String principalSid) {
+    validateAssetImages(asset);
+    return super.create(asset, principalSid);
+  }
+
+  @Override
+  public void update(SpAssetModel asset) {
+    validateAssetImages(asset);
+    super.update(asset);
+  }
+
+  private void validateAssetImages(SpAsset asset) {
+    if (asset.getAssetImages() != null && asset.getAssetImages().size() > 1) {
+      throw new IllegalArgumentException("Each asset may have at most one image.");
+    }
+    if (asset.getAssets() != null) {
+      asset.getAssets().forEach(this::validateAssetImages);
+    }
+  }
+
+  public boolean removeAssetImage(SpAssetModel model, String assetId, String fileId) {
+    var asset = findAsset(model, assetId);
+    if (asset == null || asset.getAssetImages() == null
+        || !asset.getAssetImages().removeIf(image -> fileId.equals(image.getFileId()))) {
+      return false;
+    }
+    update(model);
+    return true;
+  }
+
+  private SpAsset findAsset(SpAsset asset, String assetId) {
+    if (assetId.equals(asset.getAssetId())) {
+      return asset;
+    }
+    if (asset.getAssets() != null) {
+      for (var child : asset.getAssets()) {
+        var match = findAsset(child, assetId);
+        if (match != null) {
+          return match;
+        }
+      }
+    }
+    return null;
   }
 
   private boolean canReadAsset(Authentication auth, SpAssetModel asset) {

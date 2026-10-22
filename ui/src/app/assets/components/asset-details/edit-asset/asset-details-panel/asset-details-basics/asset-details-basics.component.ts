@@ -34,7 +34,6 @@ import {
     Isa95TypeService,
     SpAsset,
     SpAssetModel,
-    FileMetadata,
 } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
@@ -49,7 +48,10 @@ import { AssetDetailsLabelsComponent } from './asset-details-labels/asset-detail
 import { AssetDetailsCustomFieldsComponent } from './asset-details-custom-fields/asset-details-custom-fields.component';
 import { AssetDetailsSiteComponent } from './asset-details-site/asset-details-site.component';
 import { AssetDetailsLinksComponent } from '../asset-details-links/asset-details-links.component';
-import { AssetImageComponent } from './asset-details-images/asset-image.component';
+import {
+    AssetImageComponent,
+    AssetImageChange,
+} from './asset-details-images/asset-image.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -102,10 +104,16 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     assetDetailsLinks: AssetDetailsLinksComponent;
 
     @Output()
-    imageUploaded = new EventEmitter<string>();
+    imageUploaded = new EventEmitter<{
+        fileId: string;
+        replacedFileIds: string[];
+    }>();
 
     @Output()
-    imageFileDeletionRequested = new EventEmitter<string>();
+    imageFileDeletionRequested = new EventEmitter<{
+        assetId: string;
+        fileId: string;
+    }>();
 
     isa95Types: Isa95TypeDesc[] = [];
 
@@ -125,23 +133,25 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
         }
     }
 
-    handleImageUploaded(file: FileMetadata): void {
-        this.assetModel.assetImages = [
-            ...(this.assetModel.assetImages ?? []),
-            file,
-        ];
-
-        this.imageUploaded.emit(file.fileId);
+    handleImageUploaded({ asset, file }: AssetImageChange): void {
+        const replacedFileIds = (asset.assetImages ?? []).map(
+            image => image.fileId,
+        );
+        asset.assetImages = [file];
+        this.imageUploaded.emit({ fileId: file.fileId, replacedFileIds });
     }
 
-    handleImageLinkRemoval(fileId: string): void {
-        this.assetModel.assetImages = (
-            this.assetModel.assetImages ?? []
-        ).filter(image => image.fileId !== fileId);
+    handleImageLinkRemoval({ asset, file }: AssetImageChange): void {
+        asset.assetImages = (asset.assetImages ?? []).filter(
+            image => image.fileId !== file.fileId,
+        );
     }
 
-    handleImageFileDeletionRequested(fileId: string): void {
-        this.handleImageLinkRemoval(fileId);
-        this.imageFileDeletionRequested.emit(fileId);
+    handleImageFileDeletionRequested(change: AssetImageChange): void {
+        this.handleImageLinkRemoval(change);
+        this.imageFileDeletionRequested.emit({
+            assetId: change.asset.assetId,
+            fileId: change.file.fileId,
+        });
     }
 }

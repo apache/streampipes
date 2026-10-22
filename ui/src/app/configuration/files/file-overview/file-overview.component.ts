@@ -22,11 +22,7 @@ import {
     inject,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    AssetManagementService,
-    FileMetadata,
-    FilesService,
-} from '@streampipes/platform-services';
+import { FileMetadata, FilesService } from '@streampipes/platform-services';
 import {
     MatCell,
     MatCellDef,
@@ -78,7 +74,6 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class FileOverviewComponent implements OnInit {
     private filesService = inject(FilesService);
-    private assetManagementService = inject(AssetManagementService);
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
 
@@ -101,35 +96,6 @@ export class FileOverviewComponent implements OnInit {
     }
 
     deleteFile(fileMetadata: FileMetadata): void {
-        this.assetManagementService.getAllAssets().subscribe(assets => {
-            const imageInUse = assets.some(asset =>
-                (asset.assetImages ?? []).some(
-                    image => image.fileId === fileMetadata.fileId,
-                ),
-            );
-
-            if (imageInUse) {
-                this.showImageInUseWarning();
-            } else {
-                this.showDeleteFileDialog(fileMetadata);
-            }
-        });
-    }
-
-    private showImageInUseWarning(): void {
-        this.dialog.open(ConfirmDialogComponent, {
-            width: '500px',
-            data: {
-                title: this.translateService.instant('Image is still in use'),
-                subtitle: this.translateService.instant(
-                    'To delete this image, please remove the image from all assets.',
-                ),
-                confirmTitle: this.translateService.instant('Ok'),
-            },
-        });
-    }
-
-    private showDeleteFileDialog(fileMetadata: FileMetadata): void {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {

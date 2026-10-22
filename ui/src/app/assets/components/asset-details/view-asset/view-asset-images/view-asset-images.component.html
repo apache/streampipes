@@ -17,72 +17,42 @@
 -->
 
 <div class="asset-image-summary">
-    @if (imageUrls.length > 0) {
+    @if (imageUrl) {
         <button
             type="button"
             class="asset-image-preview"
-            aria-label="View asset images"
-            (click)="openViewer(0)"
+            [attr.aria-label]="'View asset image' | translate"
+            (click)="viewerOpen = true"
         >
-            <img [src]="imageUrls[0]" alt="Asset image" />
-
-            @if (additionalImageCount > 0) {
-                <span class="asset-image-count">
-                    +{{ additionalImageCount }}
-                </span>
-            }
+            <img [src]="imageUrl" [alt]="'Asset image' | translate" />
         </button>
     } @else {
-        <div class="asset-image-placeholder" aria-label="No asset image">
+        <div
+            class="asset-image-placeholder"
+            [attr.aria-label]="'No asset image' | translate"
+        >
             <mat-icon>image</mat-icon>
         </div>
     }
 </div>
 
-@if (selectedImageIndex !== null) {
-    <div class="asset-image-overlay" (click)="closeViewer()">
+@if (viewerOpen && imageUrl) {
+    <div class="asset-image-overlay" (click)="viewerOpen = false">
         <button
             type="button"
             class="viewer-close"
-            aria-label="Close image viewer"
-            (click)="closeViewer()"
+            [attr.aria-label]="'Close image viewer' | translate"
+            (click)="viewerOpen = false"
         >
             <mat-icon>close</mat-icon>
         </button>
 
         <div class="viewer-content" (click)="$event.stopPropagation()">
-            @if (imageUrls.length > 1) {
-                <button
-                    type="button"
-                    class="viewer-navigation viewer-previous"
-                    aria-label="Previous image"
-                    (click)="previousImage()"
-                >
-                    <mat-icon>chevron_left</mat-icon>
-                </button>
-            }
-
             <img
                 class="viewer-image"
-                [src]="imageUrls[selectedImageIndex]"
-                alt="Asset image"
+                [src]="imageUrl"
+                [alt]="'Asset image' | translate"
             />
-
-            @if (imageUrls.length > 1) {
-                <button
-                    type="button"
-                    class="viewer-navigation viewer-next"
-                    aria-label="Next image"
-                    (click)="nextImage()"
-                >
-                    <mat-icon>chevron_right</mat-icon>
-                </button>
-
-                <div class="viewer-counter">
-                    {{ selectedImageIndex + 1 }} /
-                    {{ imageUrls.length }}
-                </div>
-            }
         </div>
     </div>
 }

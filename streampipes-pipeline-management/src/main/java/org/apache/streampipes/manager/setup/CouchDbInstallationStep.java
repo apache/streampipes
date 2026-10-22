@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
+import org.apache.streampipes.manager.setup.tasks.AddAssetImageReferenceViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDatasetMetadataViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDefaultPipelineTemplatesTask;
@@ -83,6 +84,7 @@ public class CouchDbInstallationStep extends InstallationStep {
     addPipelineView();
     new AddDatasetMetadataViewTask().execute();
     new AddAssetManagementViewTask().execute();
+    new AddAssetImageReferenceViewTask().execute();
     new AddScriptTemplateViewTask().execute();
     new AddFunctionStateViewTask().execute();
   }

@@ -19,7 +19,7 @@
 import { Component, inject } from '@angular/core';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { FilesService } from '@streampipes/platform-services';
+import { ImagesService } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -62,17 +62,15 @@ export class AssetImageUploadDialogComponent {
     private dialogRef =
         inject<DialogRef<AssetImageUploadDialogComponent>>(DialogRef);
 
-    private filesService = inject(FilesService);
+    private imagesService = inject(ImagesService);
     private translateService = inject(TranslateService);
 
-    fileNames: string[] = [];
-    duplicateFileNames: string[] = [];
-    renamedFileNames: string[] = [];
-
-    selectedUploadFiles: FileList;
+    selectedUploadFile: File | undefined;
+    duplicateFilename = '';
+    renamedFilename = '';
 
     get hasInput(): boolean {
-        return !!this.selectedUploadFiles?.length;
+        return !!this.selectedUploadFile;
     }
 
     uploadStatus = 0;
@@ -84,82 +82,72 @@ export class AssetImageUploadDialogComponent {
 
     private readonly allowedFileTypes = ['image/jpeg', 'image/png'];
 
-    handleFileInput(files: FileList): void {
-        this.uploadError = false;
-        this.uploadErrorMessage = '';
-        this.fileNames = [];
-
-        const dataTransfer = new DataTransfer();
-
-        for (let i = 0; i < files.length; i++) {
-            const file = files.item(i);
-
-            if (!file) {
-                continue;
-            }
-
-            if (!this.allowedFileTypes.includes(file.type)) {
-                this.uploadError = true;
-                this.uploadErrorMessage = this.translateService.instant(
-                    'Only JPEG, JPG and PNG images are supported',
-                );
-                continue;
-            }
-
-            dataTransfer.items.add(file);
-            this.fileNames.push(file.name);
-        }
-
-        this.selectedUploadFiles = dataTransfer.files;
-        this.uploadStatus = 0;
-    }
-
-    removeFilesFromUpload(): void {
-        this.selectedUploadFiles = undefined;
-        this.fileNames = [];
-    }
-
-    store(): void {
-        if (!this.selectedUploadFiles?.length) {
-            return;
-        }
-
-        this.filesService.getAllFilenames().subscribe(data => {
-            const allFileNames = new Set(data);
-
-            this.duplicateFileNames = this.fileNames.filter(fileName =>
-                allFileNames.has(fileName.toLowerCase()),
-            );
-
-            if (this.duplicateFileNames.length === 0) {
-                this.uploadStatus = 0;
-                this.uploadFile(0);
-            }
-        });
-    }
-
-    uploadFile(index: number): void {
-        this.uploadError = false;
-
-        const file = this.selectedUploadFiles.item(index);
-
+    handleFileInput(files: FileList | null): void {
+        this.clearSelectedFile();
+        const file = files?.item(0);
         if (!file) {
             return;
         }
 
-        this.filesService.uploadFile(file).subscribe(
+        if (!this.allowedFileTypes.includes(file.type)) {
+            this.uploadError = true;
+            this.uploadErrorMessage = this.translateService.instant(
+                'Only JPEG, JPG and PNG images are supported',
+            );
+            return;
+        }
+
+        this.selectedUploadFile = file;
+    }
+
+    clearSelectedFile(): void {
+        this.selectedUploadFile = undefined;
+        this.duplicateFilename = '';
+        this.renamedFilename = '';
+        this.uploadStatus = 0;
+        this.uploadError = false;
+        this.uploadErrorMessage = '';
+    }
+
+    store(): void {
+        const file = this.selectedUploadFile;
+        if (!file) {
+            return;
+        }
+
+        this.imagesService.getImageMetadata().subscribe(images => {
+            if (file !== this.selectedUploadFile) return;
+            const duplicate = images.some(
+                image =>
+                    image.filename.toLowerCase() === file.name.toLowerCase(),
+            );
+
+            this.duplicateFilename = duplicate ? file.name : '';
+
+            if (!duplicate) {
+                this.uploadStatus = 0;
+                this.uploadImage(file);
+            }
+        });
+    }
+
+    private uploadImage(file: File): void {
+        this.uploadError = false;
+
+        this.imagesService.uploadImage(file).subscribe(
             event => {
                 if (event.type === HttpEventType.UploadProgress) {
                     this.uploadStatus = Math.round(
                         (100 * event.loaded) / event.total,
                     );
                 } else if (event instanceof HttpResponse) {
-                    index++;
-
-                    if (index === this.selectedUploadFiles.length) {
-                        this.resolveUploadedFile(file.name);
+                    if (event.body?.fileId) {
+                        this.dialogRef.close(event.body);
                     } else {
-                        this.uploadFile(index);
+                        this.uploadError = true;
+                        this.uploadErrorMessage = this.translateService.instant(
+                            'Uploaded image could not be found',
+                        );
                     }
                 }
             },
@@ -176,50 +164,22 @@ export class AssetImageUploadDialogComponent {
         );
     }
 
-    private resolveUploadedFile(filename: string): void {
-        this.filesService.getFileMetadata().subscribe(files => {
-            const uploadedFile = files.find(file => file.filename === filename);
-
-            if (uploadedFile) {
-                this.dialogRef.close(uploadedFile);
-            } else {
-                this.uploadError = true;
-                this.uploadErrorMessage = this.translateService.instant(
-                    'Uploaded image could not be found',
-                );
-            }
-        });
-    }
-
     cancel(): void {
         this.dialogRef.close();
     }
 
-    renameDuplicateFiles(): void {
-        const dataTransfer = new DataTransfer();
-
-        for (let i = 0; i < this.fileNames.length; i++) {
-            let fileName = this.fileNames[i];
-
-            const index = this.duplicateFileNames.indexOf(fileName);
-
-            if (index !== -1) {
-                this.fileNames[i] = this.renamedFileNames[index];
-                fileName = this.renamedFileNames[index];
-            }
-
-            const selectedUploadFile = this.selectedUploadFiles[i];
-
-            const renamedFile = new File([selectedUploadFile], fileName, {
-                type: selectedUploadFile.type,
-                lastModified: selectedUploadFile.lastModified,
-            });
-
-            dataTransfer.items.add(renamedFile);
+    renameDuplicateFile(): void {
+        const file = this.selectedUploadFile;
+        const filename = this.renamedFilename.trim();
+        if (!file || !filename) {
+            return;
         }
 
-        this.selectedUploadFiles = dataTransfer.files;
-        this.duplicateFileNames = [];
-        this.renamedFileNames = [];
+        this.selectedUploadFile = new File([file], filename, {
+            type: file.type,
+            lastModified: file.lastModified,
+        });
+        this.duplicateFilename = '';
+        this.renamedFilename = '';
     }
 }
