@@ -18,12 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dataset;
 
-import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.api.AuditService;
-import org.apache.streampipes.audit.events.StandardAuditEvents;
-import org.apache.streampipes.audit.events.chart.ChartCreatedDetails;
-import org.apache.streampipes.audit.events.chart.ChartDeletedDetails;
-import org.apache.streampipes.audit.events.chart.ChartEditedDetails;
+import org.apache.streampipes.audit.events.chart.ChartAuditReporter;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dataset.ChartSummaryDto;
 import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
@@ -53,11 +48,11 @@ import java.util.List;
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
 public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
 
-  private final AuditService auditService;
+  private final ChartAuditReporter chartAudit;
   private final ChartResourceManager resourceManager;
 
   public DatasetWidgetResource(SpResourceManager resourceManager) {
-    this.auditService = resourceManager.getAuditService();
+    this.chartAudit = new ChartAuditReporter(resourceManager.getAuditService());
     this.resourceManager = resourceManager.manageCharts();
   }
 
@@ -93,8 +88,7 @@ public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<DataExplorerWidgetModel> modifyChart(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     resourceManager.update(dataExplorerWidgetModel);
-    auditService.record(StandardAuditEvents.CHART_EDIT, AuditOutcome.SUCCEEDED, getAuthenticatedUserSid(),
-        dataExplorerWidgetModel.getElementId(), new ChartEditedDetails());
+    chartAudit.edited(getAuthenticatedUserSid(), dataExplorerWidgetModel.getElementId());
     return ok(resourceManager.find(dataExplorerWidgetModel.getElementId()));
   }
 
@@ -102,8 +96,7 @@ public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Void> deleteChart(@PathVariable("chartId") String elementId) {
     resourceManager.delete(elementId);
-    auditService.record(StandardAuditEvents.CHART_DELETE, AuditOutcome.SUCCEEDED, getAuthenticatedUserSid(), elementId,
-        new ChartDeletedDetails());
+    chartAudit.deleted(getAuthenticatedUserSid(), elementId);
     return ok();
   }
 
@@ -115,8 +108,7 @@ public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<DataExplorerWidgetModel> createChart(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     var chart = resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid());
-    auditService.record(StandardAuditEvents.CHART_CREATE, AuditOutcome.SUCCEEDED, getAuthenticatedUserSid(),
-        chart.getElementId(), new ChartCreatedDetails());
+    chartAudit.created(getAuthenticatedUserSid(), chart.getElementId());
     return ok(chart);
   }
 
