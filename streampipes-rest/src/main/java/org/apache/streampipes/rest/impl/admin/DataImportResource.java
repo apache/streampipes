@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.audit.api.AuditOutcome;
+import org.apache.streampipes.audit.events.settings.SettingsAuditRecorder;
 import org.apache.streampipes.export.ImportManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -48,12 +50,14 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
+  private final SettingsAuditRecorder audit;
 
   public DataImportResource(ExtensionServiceRequestManager extensionServiceRequestManager,
                             SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.pipelineManager = new PipelineManager(resourceManager);
     this.resourceManager = resourceManager;
+    this.audit = new SettingsAuditRecorder(resourceManager.getAuditService());
   }
 
   @PostMapping(
@@ -76,6 +80,8 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> importData(@RequestPart("file_upload") MultipartFile fileDetail,
                                          @RequestPart("configuration") AssetExportConfiguration exportConfiguration) {
+    var actor = getAuthenticatedUserSid();
+    audit.imported(actor, AuditOutcome.REQUESTED, exportConfiguration);
     try {
       ImportManager.performImport(
           fileDetail.getInputStream(),
@@ -85,10 +91,15 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
           resourceManager,
           pipelineManager
       );
+      audit.imported(actor, AuditOutcome.SUCCEEDED, exportConfiguration);
       return ok();
     } catch (IOException e) {
+      audit.imported(actor, AuditOutcome.FAILED, exportConfiguration);
       LOG.error("An error occurred while importing resources", e);
       return fail();
+    } catch (RuntimeException e) {
+      audit.imported(actor, AuditOutcome.FAILED, exportConfiguration);
+      throw e;
     }
 
   }

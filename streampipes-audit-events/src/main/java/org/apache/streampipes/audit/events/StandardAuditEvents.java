@@ -24,6 +24,10 @@ import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
+import org.apache.streampipes.audit.events.settings.AssetTransferDetails;
+import org.apache.streampipes.audit.events.settings.ExportProviderAuditDetails;
+import org.apache.streampipes.audit.events.settings.FileAuditDetails;
+import org.apache.streampipes.audit.events.settings.MailAuditDetails;
 
 import java.util.List;
 
@@ -43,9 +47,32 @@ public final class StandardAuditEvents implements AuditEventProvider {
   public static final AuditEventDefinition<AuthenticationDetails> AUTH_LOGOUT =
       new AuditEventDefinition<>("sp.auth.logout", AuthenticationDetails.class);
 
+  public static final AuditEventDefinition<AssetTransferDetails> EXPORT_DOWNLOAD =
+      new AuditEventDefinition<>("sp.export.download", AssetTransferDetails.class, "export");
+  public static final AuditEventDefinition<AssetTransferDetails> IMPORT_EXECUTE =
+      new AuditEventDefinition<>("sp.import.execute", AssetTransferDetails.class, "import");
+
+  public static final AuditEventDefinition<ExportProviderAuditDetails> EXPORT_PROVIDER_CREATE =
+      new AuditEventDefinition<>("sp.export-provider.create", ExportProviderAuditDetails.class, "export-provider");
+  public static final AuditEventDefinition<ExportProviderAuditDetails> EXPORT_PROVIDER_UPDATE =
+      new AuditEventDefinition<>("sp.export-provider.update", ExportProviderAuditDetails.class, "export-provider");
+  public static final AuditEventDefinition<ExportProviderAuditDetails> EXPORT_PROVIDER_DELETE =
+      new AuditEventDefinition<>("sp.export-provider.delete", ExportProviderAuditDetails.class, "export-provider");
+  public static final AuditEventDefinition<FileAuditDetails> FILE_UPLOAD =
+      new AuditEventDefinition<>("sp.file.upload", FileAuditDetails.class, "file");
+  public static final AuditEventDefinition<FileAuditDetails> FILE_DELETE =
+      new AuditEventDefinition<>("sp.file.delete", FileAuditDetails.class, "file");
+
+  public static final AuditEventDefinition<MailAuditDetails> MAIL_CONFIGURATION_UPDATE =
+      new AuditEventDefinition<>("sp.mail.configuration.update", MailAuditDetails.class, "mail-configuration");
+  public static final AuditEventDefinition<MailAuditDetails> MAIL_TEMPLATE_UPDATE =
+      new AuditEventDefinition<>("sp.mail.template.update", MailAuditDetails.class, "mail-template");
 
   private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(
-      ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
+      ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT,
+      EXPORT_DOWNLOAD, IMPORT_EXECUTE,
+      EXPORT_PROVIDER_CREATE, EXPORT_PROVIDER_UPDATE, EXPORT_PROVIDER_DELETE,
+      FILE_UPLOAD, FILE_DELETE, MAIL_CONFIGURATION_UPDATE, MAIL_TEMPLATE_UPDATE);
 
   @Override
   public List<AuditEventDefinition<?>> eventTypes() {
