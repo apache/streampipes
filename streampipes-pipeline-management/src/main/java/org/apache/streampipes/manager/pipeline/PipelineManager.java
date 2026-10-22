@@ -18,6 +18,9 @@
 
 package org.apache.streampipes.manager.pipeline;
 
+import org.apache.streampipes.audit.api.AuditOutcome;
+import org.apache.streampipes.audit.api.AuditService;
+import org.apache.streampipes.audit.events.pipeline.PipelineAuditRecorder;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
@@ -42,10 +45,12 @@ public class PipelineManager {
 
   private final SpResourceManager resourceManager;
   private final IPipelineStorage pipelineStorage;
+  private final PipelineAuditRecorder pipelineAudit;
 
   public PipelineManager(SpResourceManager resourceManager) {
     this.pipelineStorage = resourceManager.managePipelines().getDb();
     this.resourceManager = resourceManager;
+    this.pipelineAudit = new PipelineAuditRecorder(auditService(resourceManager));
   }
 
   /**
@@ -82,13 +87,19 @@ public class PipelineManager {
     String pipelineId = Objects.isNull(pipeline.getPipelineId())
         ? UUIDGenerator.generateUuid()
         : pipeline.getPipelineId();
-    preparePipelineBasics(principalSid, pipeline, pipelineId);
-    new PipelineStorageService(pipelineStorage, pipeline).addPipeline();
+    try {
+      preparePipelineBasics(principalSid, pipeline, pipelineId);
+      new PipelineStorageService(pipelineStorage, pipeline).addPipeline();
 
-    Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
-    resourceManager.managePermissions().create(permission);
+      Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
+      resourceManager.managePermissions().create(permission);
 
-    return pipelineId;
+      pipelineAudit.created(principalSid, pipelineId, AuditOutcome.SUCCEEDED);
+      return pipelineId;
+    } catch (RuntimeException e) {
+      pipelineAudit.created(principalSid, pipelineId, AuditOutcome.FAILED);
+      throw e;
+    }
   }
 
   /**
@@ -99,8 +110,21 @@ public class PipelineManager {
    */
   public PipelineOperationStatus startPipeline(String pipelineId,
                                                       ExtensionServiceRequestManager requestManager) {
+    return startPipeline(pipelineId, requestManager, null);
+  }
+
+  public PipelineOperationStatus startPipeline(String pipelineId,
+                                               ExtensionServiceRequestManager requestManager,
+                                               String actor) {
     Pipeline pipeline = getPipeline(pipelineId);
-    return new PipelineExecutor(pipeline, requestManager, resourceManager).startPipeline();
+    try {
+      var status = new PipelineExecutor(pipeline, requestManager, resourceManager).startPipeline();
+      pipelineAudit.started(actor, pipelineId, outcome(status));
+      return status;
+    } catch (RuntimeException e) {
+      pipelineAudit.started(actor, pipelineId, AuditOutcome.FAILED);
+      throw e;
+    }
   }
 
   /**
@@ -117,9 +141,24 @@ public class PipelineManager {
       boolean forceStop,
       ExtensionServiceRequestManager requestManager
   ) {
-    Pipeline pipeline = getPipeline(pipelineId);
+    return stopPipeline(pipelineId, forceStop, requestManager, null);
+  }
 
-    return new PipelineExecutor(pipeline, requestManager, resourceManager).stopPipeline(forceStop);
+  public PipelineOperationStatus stopPipeline(
+      String pipelineId,
+      boolean forceStop,
+      ExtensionServiceRequestManager requestManager,
+      String actor
+  ) {
+    Pipeline pipeline = getPipeline(pipelineId);
+    try {
+      var status = new PipelineExecutor(pipeline, requestManager, resourceManager).stopPipeline(forceStop);
+      pipelineAudit.stopped(actor, pipelineId, outcome(status), forceStop);
+      return status;
+    } catch (RuntimeException e) {
+      pipelineAudit.stopped(actor, pipelineId, AuditOutcome.FAILED, forceStop);
+      throw e;
+    }
   }
 
   /**
@@ -175,6 +214,15 @@ public class PipelineManager {
         pipeline.getActions()
                 .stream()
     );
+  }
+
+  private AuditOutcome outcome(PipelineOperationStatus status) {
+    return status.isSuccess() ? AuditOutcome.SUCCEEDED : AuditOutcome.FAILED;
+  }
+
+  private AuditService auditService(SpResourceManager resourceManager) {
+    var auditService = resourceManager.getAuditService();
+    return auditService == null ? AuditService.disabled() : auditService;
   }
 
   private void preparePipelineBasics(

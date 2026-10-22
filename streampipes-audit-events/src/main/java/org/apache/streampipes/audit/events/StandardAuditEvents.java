@@ -24,6 +24,9 @@ import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
+import org.apache.streampipes.audit.events.pipeline.PipelineCreatedDetails;
+import org.apache.streampipes.audit.events.pipeline.PipelineEditedDetails;
+import org.apache.streampipes.audit.events.pipeline.PipelineLifecycleDetails;
 
 import java.util.List;
 
@@ -38,6 +41,15 @@ public final class StandardAuditEvents implements AuditEventProvider {
   public static final AuditEventDefinition<AdapterEditedDetails> ADAPTER_EDIT =
       new AuditEventDefinition<>("sp.adapter.edit", AdapterEditedDetails.class, "adapter");
 
+  public static final AuditEventDefinition<PipelineCreatedDetails> PIPELINE_CREATE =
+      new AuditEventDefinition<>("sp.pipeline.create", PipelineCreatedDetails.class, "pipeline");
+  public static final AuditEventDefinition<PipelineLifecycleDetails> PIPELINE_START =
+      new AuditEventDefinition<>("sp.pipeline.start", PipelineLifecycleDetails.class, "pipeline");
+  public static final AuditEventDefinition<PipelineLifecycleDetails> PIPELINE_STOP =
+      new AuditEventDefinition<>("sp.pipeline.stop", PipelineLifecycleDetails.class, "pipeline");
+  public static final AuditEventDefinition<PipelineEditedDetails> PIPELINE_EDIT =
+      new AuditEventDefinition<>("sp.pipeline.edit", PipelineEditedDetails.class, "pipeline");
+
   public static final AuditEventDefinition<AuthenticationDetails> AUTH_LOGIN =
       new AuditEventDefinition<>("sp.auth.login", AuthenticationDetails.class);
   public static final AuditEventDefinition<AuthenticationDetails> AUTH_LOGOUT =
@@ -45,7 +57,9 @@ public final class StandardAuditEvents implements AuditEventProvider {
 
 
   private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(
-      ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
+      ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT,
+      PIPELINE_CREATE, PIPELINE_START, PIPELINE_STOP, PIPELINE_EDIT,
+      AUTH_LOGIN, AUTH_LOGOUT);
 
   @Override
   public List<AuditEventDefinition<?>> eventTypes() {
