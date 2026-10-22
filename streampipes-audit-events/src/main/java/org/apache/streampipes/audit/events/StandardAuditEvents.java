@@ -23,11 +23,21 @@ import org.apache.streampipes.audit.api.AuditEventProvider;
 import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
+import org.apache.streampipes.audit.events.asset.AssetCreatedDetails;
+import org.apache.streampipes.audit.events.asset.AssetDeletedDetails;
+import org.apache.streampipes.audit.events.asset.AssetEditedDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
 
 import java.util.List;
 
 public final class StandardAuditEvents implements AuditEventProvider {
+
+  public static final AuditEventDefinition<AssetCreatedDetails> ASSET_CREATE =
+      new AuditEventDefinition<>("sp.asset.create", AssetCreatedDetails.class, "asset");
+  public static final AuditEventDefinition<AssetEditedDetails> ASSET_EDIT =
+      new AuditEventDefinition<>("sp.asset.edit", AssetEditedDetails.class, "asset");
+  public static final AuditEventDefinition<AssetDeletedDetails> ASSET_DELETE =
+      new AuditEventDefinition<>("sp.asset.delete", AssetDeletedDetails.class, "asset");
 
   public static final AuditEventDefinition<AdapterCreatedDetails> ADAPTER_CREATE =
       new AuditEventDefinition<>("sp.adapter.create", AdapterCreatedDetails.class, "adapter");
@@ -45,6 +55,7 @@ public final class StandardAuditEvents implements AuditEventProvider {
 
 
   private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(
+      ASSET_CREATE, ASSET_EDIT, ASSET_DELETE,
       ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
 
   @Override
