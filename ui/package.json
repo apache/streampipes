@@ -15,6 +15,8 @@
     "test": "node ./deployment/prebuild.js && npm run build-libraries && ng test",
     "run-prebuild-script": "node ./deployment/prebuild.js",
     "build": "npm run i18n:validate && node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=8192 && npm run build-libraries && ng build --configuration production",
+    "postbuild": "node ./scripts/write-build-version.cjs dist/streampipes/ui/browser",
+    "postbuild-dev": "node ./scripts/write-build-version.cjs dist/streampipes/ui/browser",
     "build-dev": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=8192 && npm run build-libraries && ng build",
     "lint": "ng lint app && ng lint app-e2e && ng lint @streampipes/platform-services && ng lint @streampipes/shared-ui",
     "lint:fix": "ng lint app --fix && ng lint app-e2e --fix && ng lint @streampipes/platform-services --fix && ng lint @streampipes/shared-ui --fix",
