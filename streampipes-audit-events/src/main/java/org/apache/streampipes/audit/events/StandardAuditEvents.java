@@ -24,6 +24,9 @@ import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardCreatedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardDeletedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardEditedDetails;
 import org.apache.streampipes.audit.events.chart.ChartCreatedDetails;
 import org.apache.streampipes.audit.events.chart.ChartDeletedDetails;
 import org.apache.streampipes.audit.events.chart.ChartEditedDetails;
@@ -32,6 +35,12 @@ import java.util.List;
 
 public final class StandardAuditEvents implements AuditEventProvider {
 
+  public static final AuditEventDefinition<DashboardCreatedDetails> DASHBOARD_CREATE =
+      new AuditEventDefinition<>("sp.dashboard.create", DashboardCreatedDetails.class, "dashboard");
+  public static final AuditEventDefinition<DashboardEditedDetails> DASHBOARD_EDIT =
+      new AuditEventDefinition<>("sp.dashboard.edit", DashboardEditedDetails.class, "dashboard");
+  public static final AuditEventDefinition<DashboardDeletedDetails> DASHBOARD_DELETE =
+      new AuditEventDefinition<>("sp.dashboard.delete", DashboardDeletedDetails.class, "dashboard");
   public static final AuditEventDefinition<ChartCreatedDetails> CHART_CREATE =
       new AuditEventDefinition<>("sp.chart.create", ChartCreatedDetails.class, "chart");
   public static final AuditEventDefinition<ChartEditedDetails> CHART_EDIT =
@@ -55,6 +64,7 @@ public final class StandardAuditEvents implements AuditEventProvider {
 
 
   private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(
+      DASHBOARD_CREATE, DASHBOARD_EDIT, DASHBOARD_DELETE,
       CHART_CREATE, CHART_EDIT, CHART_DELETE,
       ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
 
