@@ -17,12 +17,10 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.audit.events.settings.SettingsAuditRecorder;
 import org.apache.streampipes.mail.MailTester;
 import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.model.configuration.EmailTemplateConfig;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -59,12 +57,9 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   private static final Logger LOG = LoggerFactory.getLogger(EmailConfigurationResource.class);
 
   private final ISpCoreConfigurationStorage configurationStorage;
-  private final SettingsAuditRecorder audit;
 
-  public EmailConfigurationResource(ISpCoreConfigurationStorage coreConfigurationStorage,
-                                    SpResourceManager resourceManager) {
+  public EmailConfigurationResource(ISpCoreConfigurationStorage coreConfigurationStorage) {
     this.configurationStorage = coreConfigurationStorage;
-    this.audit = new SettingsAuditRecorder(resourceManager.getAuditService());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +80,6 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
     var config = configurationStorage.get();
     config.setEmailTemplateConfig(templateConfig);
     configurationStorage.updateElement(config);
-    audit.mailTemplateUpdated(getAuthenticatedUserSid());
     return ok();
   }
 
@@ -103,10 +97,8 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
       config.setSmtpPassEncrypted(true);
     }
     var cfg = configurationStorage.get();
-    var oldConfig = cfg.getEmailConfig();
     cfg.setEmailConfig(config);
     configurationStorage.updateElement(cfg);
-    audit.mailConfigurationUpdated(getAuthenticatedUserSid(), oldConfig, config);
 
     return ok();
   }

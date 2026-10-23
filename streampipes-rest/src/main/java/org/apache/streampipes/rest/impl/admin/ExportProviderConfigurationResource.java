@@ -17,11 +17,9 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.audit.events.settings.SettingsAuditRecorder;
 import org.apache.streampipes.dataexplorer.export.objectstorage.TestExportProviderConnection;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
@@ -49,12 +47,9 @@ import java.util.stream.Collectors;
 public class ExportProviderConfigurationResource extends AbstractAuthGuardedRestResource {
 
   private final ISpCoreConfigurationStorage configurationStorage;
-  private final SettingsAuditRecorder audit;
 
-  public ExportProviderConfigurationResource(ISpCoreConfigurationStorage configurationStorage,
-                                             SpResourceManager resourceManager) {
+  public ExportProviderConfigurationResource(ISpCoreConfigurationStorage configurationStorage) {
     this.configurationStorage = configurationStorage;
-    this.audit = new SettingsAuditRecorder(resourceManager.getAuditService());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +80,10 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
     if (exportProviderSetting.isPresent()) {
       try {
         Map<String, Object> response = TestExportProviderConnection.connectionTest(exportProviderSetting.get());
-        return ok(response);
+ 
+
+      return ok(response);
+   
       }  catch (Exception e) {
         return serverError(SpLogMessage.from(e));
       }
@@ -111,10 +109,6 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
       providerSettings = new ArrayList<>();
     }
 
-    var existingSetting = providerSettings.stream()
-        .filter(existing -> existing != null && existing.getProviderId().equals(config.getProviderId()))
-        .findFirst();
-
     List<ExportProviderSettings> providerSettingsWithoutExisting = providerSettings.stream()
         .filter(existing -> existing != null && !existing.getProviderId().equals(config.getProviderId()))
         .collect(Collectors.toList());
@@ -123,11 +117,6 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
 
     cfg.setExportProviderSettings(providerSettingsWithoutExisting);
     configurationStorage.updateElement(cfg);
-    if (existingSetting.isPresent()) {
-      audit.exportProviderUpdated(getAuthenticatedUserSid(), existingSetting.get(), config);
-    } else {
-      audit.exportProviderCreated(getAuthenticatedUserSid(), config);
-    }
 
     return ok();
   }
@@ -138,10 +127,6 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
 
     List<ExportProviderSettings> allProviders = configurationStorage.get().getExportProviderSettings();
 
-    var deletedProvider = allProviders.stream()
-        .filter(provider -> provider.getProviderId().equals(providerId))
-        .findFirst();
-
     List<ExportProviderSettings> filteredProviders = allProviders.stream()
         .filter(provider -> !provider.getProviderId().equals(providerId))
         .collect(Collectors.toList());
@@ -149,7 +134,6 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
     var cfg = configurationStorage.get();
     cfg.setExportProviderSettings(filteredProviders);
     configurationStorage.updateElement(cfg);
-    deletedProvider.ifPresent(provider -> audit.exportProviderDeleted(getAuthenticatedUserSid(), provider));
     return ok();
   }
 
