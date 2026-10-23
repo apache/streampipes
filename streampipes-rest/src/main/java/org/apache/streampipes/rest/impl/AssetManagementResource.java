@@ -19,7 +19,6 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.audit.events.asset.AssetAuditRecorder;
 import org.apache.streampipes.model.assets.AssetSummaryDto;
 import org.apache.streampipes.model.assets.SpAssetModel;
@@ -58,7 +57,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   public AssetManagementResource(SpResourceManager resourceManager) {
     this.resourceManager = resourceManager;
     this.assetResourceManager = resourceManager.manageAssets();
-    this.assetAudit = new AssetAuditRecorder(auditService(resourceManager));
+    this.assetAudit = new AssetAuditRecorder(resourceManager.getAuditService());
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -121,8 +120,4 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE);
   }
 
-  private AuditService auditService(SpResourceManager resourceManager) {
-    var auditService = resourceManager.getAuditService();
-    return auditService == null ? AuditService.disabled() : auditService;
-  }
 }
