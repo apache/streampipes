@@ -24,10 +24,64 @@ import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
+import org.apache.streampipes.audit.events.security.GroupAuditDetails;
+import org.apache.streampipes.audit.events.settings.AssetTransferDetails;
+import org.apache.streampipes.audit.events.settings.ExportProviderAuditDetails;
+import org.apache.streampipes.audit.events.settings.FileAuditDetails;
+import org.apache.streampipes.audit.events.settings.MailAuditDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetCreatedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDataClearedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDataDeletedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDataTruncatedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDeletedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDroppedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetEditedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetRetentionConfiguredDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetRetentionRemovedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetRetentionRunDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardCreatedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardDeletedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardEditedDetails;
+import org.apache.streampipes.audit.events.chart.ChartCreatedDetails;
+import org.apache.streampipes.audit.events.chart.ChartDeletedDetails;
+import org.apache.streampipes.audit.events.chart.ChartEditedDetails;
 
 import java.util.List;
 
 public final class StandardAuditEvents implements AuditEventProvider {
+
+  public static final AuditEventDefinition<DatasetCreatedDetails> DATASET_CREATE =
+      new AuditEventDefinition<>("sp.dataset.create", DatasetCreatedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetEditedDetails> DATASET_EDIT =
+      new AuditEventDefinition<>("sp.dataset.edit", DatasetEditedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDeletedDetails> DATASET_DELETE =
+      new AuditEventDefinition<>("sp.dataset.delete", DatasetDeletedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDataDeletedDetails> DATASET_DATA_DELETE =
+      new AuditEventDefinition<>("sp.dataset.data.delete", DatasetDataDeletedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDataTruncatedDetails> DATASET_DATA_TRUNCATE =
+      new AuditEventDefinition<>("sp.dataset.data.truncate", DatasetDataTruncatedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDroppedDetails> DATASET_DROP =
+      new AuditEventDefinition<>("sp.dataset.drop", DatasetDroppedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDataClearedDetails> DATASET_DATA_CLEAR =
+      new AuditEventDefinition<>("sp.dataset.data.clear", DatasetDataClearedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetRetentionConfiguredDetails> DATASET_RETENTION_CONFIGURE =
+      new AuditEventDefinition<>("sp.dataset.retention.configure", DatasetRetentionConfiguredDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetRetentionRemovedDetails> DATASET_RETENTION_REMOVE =
+      new AuditEventDefinition<>("sp.dataset.retention.remove", DatasetRetentionRemovedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetRetentionRunDetails> DATASET_RETENTION_RUN =
+      new AuditEventDefinition<>("sp.dataset.retention.run", DatasetRetentionRunDetails.class, "dataset");
+  public static final AuditEventDefinition<DashboardCreatedDetails> DASHBOARD_CREATE =
+      new AuditEventDefinition<>("sp.dashboard.create", DashboardCreatedDetails.class, "dashboard");
+  public static final AuditEventDefinition<DashboardEditedDetails> DASHBOARD_EDIT =
+      new AuditEventDefinition<>("sp.dashboard.edit", DashboardEditedDetails.class, "dashboard");
+  public static final AuditEventDefinition<DashboardDeletedDetails> DASHBOARD_DELETE =
+      new AuditEventDefinition<>("sp.dashboard.delete", DashboardDeletedDetails.class, "dashboard");
+  public static final AuditEventDefinition<ChartCreatedDetails> CHART_CREATE =
+      new AuditEventDefinition<>("sp.chart.create", ChartCreatedDetails.class, "chart");
+  public static final AuditEventDefinition<ChartEditedDetails> CHART_EDIT =
+      new AuditEventDefinition<>("sp.chart.edit", ChartEditedDetails.class, "chart");
+  public static final AuditEventDefinition<ChartDeletedDetails> CHART_DELETE =
+      new AuditEventDefinition<>("sp.chart.delete", ChartDeletedDetails.class, "chart");
 
   public static final AuditEventDefinition<AdapterCreatedDetails> ADAPTER_CREATE =
       new AuditEventDefinition<>("sp.adapter.create", AdapterCreatedDetails.class, "adapter");
@@ -43,8 +97,45 @@ public final class StandardAuditEvents implements AuditEventProvider {
   public static final AuditEventDefinition<AuthenticationDetails> AUTH_LOGOUT =
       new AuditEventDefinition<>("sp.auth.logout", AuthenticationDetails.class);
 
+  public static final AuditEventDefinition<GroupAuditDetails> SECURITY_GROUP_CREATE =
+      new AuditEventDefinition<>("sp.security.group.create", GroupAuditDetails.class, "security-group");
+  public static final AuditEventDefinition<GroupAuditDetails> SECURITY_GROUP_UPDATE =
+      new AuditEventDefinition<>("sp.security.group.update", GroupAuditDetails.class, "security-group");
+  public static final AuditEventDefinition<GroupAuditDetails> SECURITY_GROUP_DELETE =
+      new AuditEventDefinition<>("sp.security.group.delete", GroupAuditDetails.class, "security-group");
+
+  public static final AuditEventDefinition<AssetTransferDetails> EXPORT_DOWNLOAD =
+      new AuditEventDefinition<>("sp.export.download", AssetTransferDetails.class, "export");
+  public static final AuditEventDefinition<AssetTransferDetails> IMPORT_EXECUTE =
+      new AuditEventDefinition<>("sp.import.execute", AssetTransferDetails.class, "import");
+
+  public static final AuditEventDefinition<ExportProviderAuditDetails> EXPORT_PROVIDER_CREATE =
+      new AuditEventDefinition<>("sp.export-provider.create", ExportProviderAuditDetails.class, "export-provider");
+  public static final AuditEventDefinition<ExportProviderAuditDetails> EXPORT_PROVIDER_UPDATE =
+      new AuditEventDefinition<>("sp.export-provider.update", ExportProviderAuditDetails.class, "export-provider");
+  public static final AuditEventDefinition<ExportProviderAuditDetails> EXPORT_PROVIDER_DELETE =
+      new AuditEventDefinition<>("sp.export-provider.delete", ExportProviderAuditDetails.class, "export-provider");
+  public static final AuditEventDefinition<FileAuditDetails> FILE_UPLOAD =
+      new AuditEventDefinition<>("sp.file.upload", FileAuditDetails.class, "file");
+  public static final AuditEventDefinition<FileAuditDetails> FILE_DELETE =
+      new AuditEventDefinition<>("sp.file.delete", FileAuditDetails.class, "file");
+
+  public static final AuditEventDefinition<MailAuditDetails> MAIL_CONFIGURATION_UPDATE =
+      new AuditEventDefinition<>("sp.mail.configuration.update", MailAuditDetails.class, "mail-configuration");
+  public static final AuditEventDefinition<MailAuditDetails> MAIL_TEMPLATE_UPDATE =
+      new AuditEventDefinition<>("sp.mail.template.update", MailAuditDetails.class, "mail-template");
 
   private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(
+      ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT,
+      SECURITY_GROUP_CREATE, SECURITY_GROUP_UPDATE, SECURITY_GROUP_DELETE,
+      EXPORT_DOWNLOAD, IMPORT_EXECUTE,
+      EXPORT_PROVIDER_CREATE, EXPORT_PROVIDER_UPDATE, EXPORT_PROVIDER_DELETE,
+      FILE_UPLOAD, FILE_DELETE, MAIL_CONFIGURATION_UPDATE, MAIL_TEMPLATE_UPDATE);
+      DATASET_CREATE, DATASET_EDIT, DATASET_DELETE,
+      DATASET_DATA_DELETE, DATASET_DATA_TRUNCATE, DATASET_DROP, DATASET_DATA_CLEAR,
+      DATASET_RETENTION_CONFIGURE, DATASET_RETENTION_REMOVE, DATASET_RETENTION_RUN,
+      DASHBOARD_CREATE, DASHBOARD_EDIT, DASHBOARD_DELETE,
+      CHART_CREATE, CHART_EDIT, CHART_DELETE,
       ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
 
   @Override
