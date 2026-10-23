@@ -25,6 +25,7 @@ import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableExcepti
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.pipeline.PipelineEditChanges;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
@@ -303,6 +304,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<SuccessMessage> updatePipeline(@PathVariable("pipelineId") String pipelineId,
                                                        @RequestBody Pipeline pipeline) {
     Pipeline storedPipeline = resourceManager.managePipelines().getDb().getElementById(pipelineId);
+    Pipeline pipelineBeforeUpdate = storedPipeline.clone();
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());
@@ -314,11 +316,12 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     storedPipeline.setHealthStatus(pipeline.getHealthStatus());
     storedPipeline.setPipelineNotifications(pipeline.getPipelineNotifications());
     storedPipeline.setValid(pipeline.isValid());
+    var changes = new PipelineEditChanges().detect(pipelineBeforeUpdate, storedPipeline);
     try {
       new PipelineStorageService(resourceManager.managePipelines().getDb(), storedPipeline).updatePipeline();
-      pipelineAudit.edited(getAuthenticatedUserSid(), pipelineId, AuditOutcome.SUCCEEDED, null);
+      pipelineAudit.edited(getAuthenticatedUserSid(), pipelineId, AuditOutcome.SUCCEEDED, changes);
     } catch (RuntimeException e) {
-      pipelineAudit.edited(getAuthenticatedUserSid(), pipelineId, AuditOutcome.FAILED, null);
+      pipelineAudit.edited(getAuthenticatedUserSid(), pipelineId, AuditOutcome.FAILED, changes);
       throw e;
     }
     SuccessMessage message = Notifications.success("Pipeline modified");
