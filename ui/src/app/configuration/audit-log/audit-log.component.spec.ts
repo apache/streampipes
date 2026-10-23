@@ -140,6 +140,21 @@ describe('AuditLogComponent', () => {
         expect(dialogs.open).not.toHaveBeenCalled();
     });
 
+    it('opens the dataset card from the audit preview', () => {
+        cards.supportsFeatureCard.mockImplementation(
+            type => type === 'adapter' || type === 'dataset',
+        );
+        const click = new Event('click');
+        component.openResourcePreview(
+            { ...event, resourceType: 'dataset', resourceId: 'dataset-1' },
+            click,
+        );
+        expect(cards.openFeatureCard).toHaveBeenCalledWith(
+            'dataset',
+            'dataset-1',
+        );
+    });
+
     it('keeps time bounds stable across pages and resets cursors when filters change', () => {
         component.ngOnInit();
         const first = api.getEvents.mock.calls[0][0];
