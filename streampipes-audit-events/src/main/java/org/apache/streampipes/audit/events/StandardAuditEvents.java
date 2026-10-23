@@ -24,6 +24,16 @@ import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetCreatedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDataClearedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDataDeletedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDataTruncatedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDeletedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetDroppedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetEditedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetRetentionConfiguredDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetRetentionRemovedDetails;
+import org.apache.streampipes.audit.events.dataset.DatasetRetentionRunDetails;
 import org.apache.streampipes.audit.events.dashboard.DashboardCreatedDetails;
 import org.apache.streampipes.audit.events.dashboard.DashboardDeletedDetails;
 import org.apache.streampipes.audit.events.dashboard.DashboardEditedDetails;
@@ -35,6 +45,26 @@ import java.util.List;
 
 public final class StandardAuditEvents implements AuditEventProvider {
 
+  public static final AuditEventDefinition<DatasetCreatedDetails> DATASET_CREATE =
+      new AuditEventDefinition<>("sp.dataset.create", DatasetCreatedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetEditedDetails> DATASET_EDIT =
+      new AuditEventDefinition<>("sp.dataset.edit", DatasetEditedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDeletedDetails> DATASET_DELETE =
+      new AuditEventDefinition<>("sp.dataset.delete", DatasetDeletedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDataDeletedDetails> DATASET_DATA_DELETE =
+      new AuditEventDefinition<>("sp.dataset.data.delete", DatasetDataDeletedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDataTruncatedDetails> DATASET_DATA_TRUNCATE =
+      new AuditEventDefinition<>("sp.dataset.data.truncate", DatasetDataTruncatedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDroppedDetails> DATASET_DROP =
+      new AuditEventDefinition<>("sp.dataset.drop", DatasetDroppedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetDataClearedDetails> DATASET_DATA_CLEAR =
+      new AuditEventDefinition<>("sp.dataset.data.clear", DatasetDataClearedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetRetentionConfiguredDetails> DATASET_RETENTION_CONFIGURE =
+      new AuditEventDefinition<>("sp.dataset.retention.configure", DatasetRetentionConfiguredDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetRetentionRemovedDetails> DATASET_RETENTION_REMOVE =
+      new AuditEventDefinition<>("sp.dataset.retention.remove", DatasetRetentionRemovedDetails.class, "dataset");
+  public static final AuditEventDefinition<DatasetRetentionRunDetails> DATASET_RETENTION_RUN =
+      new AuditEventDefinition<>("sp.dataset.retention.run", DatasetRetentionRunDetails.class, "dataset");
   public static final AuditEventDefinition<DashboardCreatedDetails> DASHBOARD_CREATE =
       new AuditEventDefinition<>("sp.dashboard.create", DashboardCreatedDetails.class, "dashboard");
   public static final AuditEventDefinition<DashboardEditedDetails> DASHBOARD_EDIT =
@@ -64,6 +94,9 @@ public final class StandardAuditEvents implements AuditEventProvider {
 
 
   private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(
+      DATASET_CREATE, DATASET_EDIT, DATASET_DELETE,
+      DATASET_DATA_DELETE, DATASET_DATA_TRUNCATE, DATASET_DROP, DATASET_DATA_CLEAR,
+      DATASET_RETENTION_CONFIGURE, DATASET_RETENTION_REMOVE, DATASET_RETENTION_RUN,
       DASHBOARD_CREATE, DASHBOARD_EDIT, DASHBOARD_DELETE,
       CHART_CREATE, CHART_EDIT, CHART_DELETE,
       ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
