@@ -19,7 +19,6 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.audit.events.pipeline.PipelineAuditRecorder;
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -123,7 +122,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     this.pipelineManager = new PipelineManager(resourceManager);
     this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
     this.dataSinkResourceManager = resourceManager.manageDataSinks();
-    this.pipelineAudit = new PipelineAuditRecorder(auditService(resourceManager));
+    this.pipelineAudit = new PipelineAuditRecorder(resourceManager.getAuditService());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -356,8 +355,4 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
   }
 
-  private AuditService auditService(SpResourceManager resourceManager) {
-    var auditService = resourceManager.getAuditService();
-    return auditService == null ? AuditService.disabled() : auditService;
-  }
 }

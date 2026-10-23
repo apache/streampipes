@@ -19,7 +19,6 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.audit.events.pipeline.PipelineAuditRecorder;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -50,7 +49,7 @@ public class PipelineManager {
   public PipelineManager(SpResourceManager resourceManager) {
     this.pipelineStorage = resourceManager.managePipelines().getDb();
     this.resourceManager = resourceManager;
-    this.pipelineAudit = new PipelineAuditRecorder(auditService(resourceManager));
+    this.pipelineAudit = new PipelineAuditRecorder(resourceManager.getAuditService());
   }
 
   /**
@@ -218,11 +217,6 @@ public class PipelineManager {
 
   private AuditOutcome outcome(PipelineOperationStatus status) {
     return status.isSuccess() ? AuditOutcome.SUCCEEDED : AuditOutcome.FAILED;
-  }
-
-  private AuditService auditService(SpResourceManager resourceManager) {
-    var auditService = resourceManager.getAuditService();
-    return auditService == null ? AuditService.disabled() : auditService;
   }
 
   private void preparePipelineBasics(
