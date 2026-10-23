@@ -45,6 +45,8 @@ services:
     volumes:
       - backend:/root/.streampipes
     logging: *default-logging
+    ports:
+      - "8030:8030"
     networks:
       spnet:
 

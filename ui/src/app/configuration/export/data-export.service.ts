@@ -20,6 +20,7 @@ import { Injectable, inject } from '@angular/core';
 import {
     AssetExportConfiguration,
     ExportConfiguration,
+    OverviewExport,
     PlatformServicesCommons,
 } from '@streampipes/platform-services';
 import {
@@ -46,6 +47,12 @@ export class DataExportService {
         return this.http.post(this.exportBasePath + '/download', exportConfig, {
             responseType: 'blob',
         });
+    }
+
+    getOverviewExport(): Observable<OverviewExport> {
+        return this.http
+            .get(this.exportBasePath + '/overview')
+            .pipe(map(res => res as OverviewExport));
     }
 
     triggerImport(file: File, config: AssetExportConfiguration) {

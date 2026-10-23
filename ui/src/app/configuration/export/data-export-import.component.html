@@ -69,6 +69,28 @@
     </div>
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
         <sp-split-section
+            [title]="'Overview export' | translate"
+            [subtitle]="
+                'Export a read-only overview of adapters, pipelines, charts and dashboards, including resource owners and adapter security settings'
+                    | translate
+            "
+        >
+            <div class="mt-10">
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="exportOverview()"
+                    data-cy="export-overview-button"
+                >
+                    <mat-icon>summarize</mat-icon
+                    ><span>{{ 'Export overview' | translate }}</span>
+                </button>
+            </div>
+        </sp-split-section>
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <sp-split-section
             [title]="'Import' | translate"
             [subtitle]="'Import from application package' | translate"
         >

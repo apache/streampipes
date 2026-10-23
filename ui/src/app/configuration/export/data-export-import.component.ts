@@ -37,6 +37,7 @@ import {
     ExportItem,
     GenericStorageService,
     LabelsService,
+    OverviewExport,
     SpAsset,
     SpAssetModel,
     SpLabel,
@@ -44,6 +45,7 @@ import {
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
+import { DataExportService } from './data-export.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -86,6 +88,7 @@ export class SpDataExportImportComponent implements OnInit {
     private dialogService = inject(DialogService);
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
+    private dataExportService = inject(DataExportService);
 
     assets: SpAssetModel[] = [];
     selectedAssets: string[] = [];
@@ -150,6 +153,29 @@ export class SpDataExportImportComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(() => {});
+    }
+
+    exportOverview(): void {
+        this.dataExportService.getOverviewExport().subscribe(overview => {
+            this.downloadOverviewFile(overview);
+        });
+    }
+
+    private downloadOverviewFile(overview: OverviewExport): void {
+        const blob = new Blob([JSON.stringify(overview, null, 2)], {
+            type: 'application/json',
+        });
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+
+        anchor.href = url;
+        anchor.download = 'streampipes-overview-export.json';
+        anchor.style.display = 'none';
+        document.body.appendChild(anchor);
+
+        anchor.click();
+
+        window.URL.revokeObjectURL(url);
     }
 
     openImportDialog(): void {
