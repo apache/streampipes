@@ -24,11 +24,12 @@ import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
-import org.apache.streampipes.audit.events.security.GroupAuditDetails;
-import org.apache.streampipes.audit.events.settings.AssetTransferDetails;
-import org.apache.streampipes.audit.events.settings.ExportProviderAuditDetails;
-import org.apache.streampipes.audit.events.settings.FileAuditDetails;
-import org.apache.streampipes.audit.events.settings.MailAuditDetails;
+import org.apache.streampipes.audit.events.chart.ChartCreatedDetails;
+import org.apache.streampipes.audit.events.chart.ChartDeletedDetails;
+import org.apache.streampipes.audit.events.chart.ChartEditedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardCreatedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardDeletedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardEditedDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetCreatedDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetDataClearedDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetDataDeletedDetails;
@@ -39,12 +40,11 @@ import org.apache.streampipes.audit.events.dataset.DatasetEditedDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetRetentionConfiguredDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetRetentionRemovedDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetRetentionRunDetails;
-import org.apache.streampipes.audit.events.dashboard.DashboardCreatedDetails;
-import org.apache.streampipes.audit.events.dashboard.DashboardDeletedDetails;
-import org.apache.streampipes.audit.events.dashboard.DashboardEditedDetails;
-import org.apache.streampipes.audit.events.chart.ChartCreatedDetails;
-import org.apache.streampipes.audit.events.chart.ChartDeletedDetails;
-import org.apache.streampipes.audit.events.chart.ChartEditedDetails;
+import org.apache.streampipes.audit.events.security.GroupAuditDetails;
+import org.apache.streampipes.audit.events.settings.AssetTransferDetails;
+import org.apache.streampipes.audit.events.settings.ExportProviderAuditDetails;
+import org.apache.streampipes.audit.events.settings.FileAuditDetails;
+import org.apache.streampipes.audit.events.settings.MailAuditDetails;
 
 import java.util.List;
 
@@ -130,13 +130,12 @@ public final class StandardAuditEvents implements AuditEventProvider {
       SECURITY_GROUP_CREATE, SECURITY_GROUP_UPDATE, SECURITY_GROUP_DELETE,
       EXPORT_DOWNLOAD, IMPORT_EXECUTE,
       EXPORT_PROVIDER_CREATE, EXPORT_PROVIDER_UPDATE, EXPORT_PROVIDER_DELETE,
-      FILE_UPLOAD, FILE_DELETE, MAIL_CONFIGURATION_UPDATE, MAIL_TEMPLATE_UPDATE);
+      FILE_UPLOAD, FILE_DELETE, MAIL_CONFIGURATION_UPDATE, MAIL_TEMPLATE_UPDATE,
       DATASET_CREATE, DATASET_EDIT, DATASET_DELETE,
       DATASET_DATA_DELETE, DATASET_DATA_TRUNCATE, DATASET_DROP, DATASET_DATA_CLEAR,
       DATASET_RETENTION_CONFIGURE, DATASET_RETENTION_REMOVE, DATASET_RETENTION_RUN,
       DASHBOARD_CREATE, DASHBOARD_EDIT, DASHBOARD_DELETE,
-      CHART_CREATE, CHART_EDIT, CHART_DELETE,
-      ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
+      CHART_CREATE, CHART_EDIT, CHART_DELETE);
 
   @Override
   public List<AuditEventDefinition<?>> eventTypes() {
