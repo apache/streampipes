@@ -34,6 +34,12 @@ import org.apache.streampipes.audit.events.dataset.DatasetEditedDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetRetentionConfiguredDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetRetentionRemovedDetails;
 import org.apache.streampipes.audit.events.dataset.DatasetRetentionRunDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardCreatedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardDeletedDetails;
+import org.apache.streampipes.audit.events.dashboard.DashboardEditedDetails;
+import org.apache.streampipes.audit.events.chart.ChartCreatedDetails;
+import org.apache.streampipes.audit.events.chart.ChartDeletedDetails;
+import org.apache.streampipes.audit.events.chart.ChartEditedDetails;
 
 import java.util.List;
 
@@ -59,6 +65,18 @@ public final class StandardAuditEvents implements AuditEventProvider {
       new AuditEventDefinition<>("sp.dataset.retention.remove", DatasetRetentionRemovedDetails.class, "dataset");
   public static final AuditEventDefinition<DatasetRetentionRunDetails> DATASET_RETENTION_RUN =
       new AuditEventDefinition<>("sp.dataset.retention.run", DatasetRetentionRunDetails.class, "dataset");
+  public static final AuditEventDefinition<DashboardCreatedDetails> DASHBOARD_CREATE =
+      new AuditEventDefinition<>("sp.dashboard.create", DashboardCreatedDetails.class, "dashboard");
+  public static final AuditEventDefinition<DashboardEditedDetails> DASHBOARD_EDIT =
+      new AuditEventDefinition<>("sp.dashboard.edit", DashboardEditedDetails.class, "dashboard");
+  public static final AuditEventDefinition<DashboardDeletedDetails> DASHBOARD_DELETE =
+      new AuditEventDefinition<>("sp.dashboard.delete", DashboardDeletedDetails.class, "dashboard");
+  public static final AuditEventDefinition<ChartCreatedDetails> CHART_CREATE =
+      new AuditEventDefinition<>("sp.chart.create", ChartCreatedDetails.class, "chart");
+  public static final AuditEventDefinition<ChartEditedDetails> CHART_EDIT =
+      new AuditEventDefinition<>("sp.chart.edit", ChartEditedDetails.class, "chart");
+  public static final AuditEventDefinition<ChartDeletedDetails> CHART_DELETE =
+      new AuditEventDefinition<>("sp.chart.delete", ChartDeletedDetails.class, "chart");
 
   public static final AuditEventDefinition<AdapterCreatedDetails> ADAPTER_CREATE =
       new AuditEventDefinition<>("sp.adapter.create", AdapterCreatedDetails.class, "adapter");
@@ -79,6 +97,8 @@ public final class StandardAuditEvents implements AuditEventProvider {
       DATASET_CREATE, DATASET_EDIT, DATASET_DELETE,
       DATASET_DATA_DELETE, DATASET_DATA_TRUNCATE, DATASET_DROP, DATASET_DATA_CLEAR,
       DATASET_RETENTION_CONFIGURE, DATASET_RETENTION_REMOVE, DATASET_RETENTION_RUN,
+      DASHBOARD_CREATE, DASHBOARD_EDIT, DASHBOARD_DELETE,
+      CHART_CREATE, CHART_EDIT, CHART_DELETE,
       ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT);
 
   @Override
