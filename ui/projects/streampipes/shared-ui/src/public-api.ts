@@ -102,3 +102,5 @@ export * from './lib/components/sp-table/sp-paginator/sp-paginator.service';
 export * from './lib/components/feature-card-host/feature-card.service';
 
 export * from './lib/pipes/sort-by-runtime-name.pipe';
+
+export * from './lib/services/ui-update.service';
