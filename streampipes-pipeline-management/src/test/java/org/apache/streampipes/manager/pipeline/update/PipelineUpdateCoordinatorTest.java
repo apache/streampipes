@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.pipeline.update;
 
+import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
@@ -305,6 +306,7 @@ class PipelineUpdateCoordinatorTest {
     when(resourceManager.manageCharts()).thenReturn(chartResourceManager);
     when(chartResourceManager.getDb()).thenReturn(chartStorage);
     when(chartStorage.findAll()).thenReturn(List.of());
+    when(resourceManager.getAuditService()).thenReturn(AuditService.disabled());
     return new PipelineUpdateCoordinator(requestManager, resourceManager);
   }
 
