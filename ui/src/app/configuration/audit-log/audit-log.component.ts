@@ -362,6 +362,8 @@ export class AuditLogComponent implements OnInit {
             .getRetention()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({ next: retention => (this.retention = retention) });
+    }
+
     openDownloadDialog(): void {
         if (!this.query) {
             return;
