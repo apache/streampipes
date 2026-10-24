@@ -23,6 +23,9 @@ import org.apache.streampipes.audit.api.AuditEventProvider;
 import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.adapter.AdapterLifecycleDetails;
+import org.apache.streampipes.audit.events.asset.AssetCreatedDetails;
+import org.apache.streampipes.audit.events.asset.AssetDeletedDetails;
+import org.apache.streampipes.audit.events.asset.AssetEditedDetails;
 import org.apache.streampipes.audit.events.authentication.AuthenticationDetails;
 import org.apache.streampipes.audit.events.chart.ChartCreatedDetails;
 import org.apache.streampipes.audit.events.chart.ChartDeletedDetails;
@@ -50,6 +53,12 @@ import java.util.List;
 
 public final class StandardAuditEvents implements AuditEventProvider {
 
+  public static final AuditEventDefinition<AssetCreatedDetails> ASSET_CREATE =
+      new AuditEventDefinition<>("sp.asset.create", AssetCreatedDetails.class, "asset");
+  public static final AuditEventDefinition<AssetEditedDetails> ASSET_EDIT =
+      new AuditEventDefinition<>("sp.asset.edit", AssetEditedDetails.class, "asset");
+  public static final AuditEventDefinition<AssetDeletedDetails> ASSET_DELETE =
+      new AuditEventDefinition<>("sp.asset.delete", AssetDeletedDetails.class, "asset");
   public static final AuditEventDefinition<DatasetCreatedDetails> DATASET_CREATE =
       new AuditEventDefinition<>("sp.dataset.create", DatasetCreatedDetails.class, "dataset");
   public static final AuditEventDefinition<DatasetEditedDetails> DATASET_EDIT =
@@ -126,6 +135,7 @@ public final class StandardAuditEvents implements AuditEventProvider {
       new AuditEventDefinition<>("sp.mail.template.update", MailAuditDetails.class, "mail-template");
 
   private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(
+      ASSET_CREATE, ASSET_EDIT, ASSET_DELETE,
       ADAPTER_CREATE, ADAPTER_START, ADAPTER_STOP, ADAPTER_EDIT, AUTH_LOGIN, AUTH_LOGOUT,
       SECURITY_GROUP_CREATE, SECURITY_GROUP_UPDATE, SECURITY_GROUP_DELETE,
       EXPORT_DOWNLOAD, IMPORT_EXECUTE,
