@@ -18,13 +18,19 @@
 
 package org.apache.streampipes.audit.api;
 
-/** Append contract. Browsing is defined separately by AuditEventReader. */
+import java.time.Instant;
+
+/** Persistence contract. Browsing is defined separately by AuditEventReader. */
 public interface AuditEventStore extends AutoCloseable {
   /** Called on the audit worker at startup; implementations may provision storage idempotently. */
   default void initialize() {
   }
 
   void append(AuditEvent<?> event);
+
+  default void deleteEventsOlderThan(Instant cutoff) {
+    throw new IllegalStateException("Audit retention is unavailable");
+  }
 
   @Override
   default void close() {
