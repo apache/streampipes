@@ -23,6 +23,17 @@
     <button
         section-actions
         mat-icon-button
+        data-cy="audit-log-download-button"
+        [attr.aria-label]="'Download audit log' | translate"
+        [matTooltip]="'Download audit log' | translate"
+        (click)="openDownloadDialog()"
+        [disabled]="!status?.enabled"
+    >
+        <mat-icon>download</mat-icon>
+    </button>
+    <button
+        section-actions
+        mat-icon-button
         [attr.aria-label]="'Audit status' | translate"
         [matTooltip]="'Audit status' | translate"
         (click)="showStatus()"

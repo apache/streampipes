@@ -60,16 +60,15 @@ import {
 } from '@streampipes/shared-ui';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
-import { AuditDialogComponent } from './audit-dialog.component';
+import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
+import { AuditDownloadDialogComponent } from '../dialog/audit-log-download/audit-download-dialog.component';
+import {
+    AuditActorOption,
+    AuditExportColumn,
+} from '../dialog/audit-log-download/model/audit-download-dialog.model';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';
-
-interface AuditActorOption {
-    id: string;
-    label: string;
-    username?: string;
-}
 
 @Component({
     selector: 'sp-audit-log',
@@ -175,10 +174,26 @@ export class AuditLogComponent implements OnInit {
     failed = false;
     dataSource = new MatTableDataSource<AuditEntry>([]);
     columns = ['time', 'eventType', 'outcome', 'actor', 'resource', 'preview'];
+    readonly exportColumnByTableColumn: Record<
+        string,
+        AuditExportColumn | undefined
+    > = {
+        time: { id: 'storedAt', label: 'Stored at' },
+        eventType: { id: 'eventType', label: 'Event type' },
+        outcome: { id: 'outcome', label: 'Outcome' },
+        actor: { id: 'actor', label: 'Actor username' },
+        resource: { id: 'resourceId', label: 'Resource' },
+    };
     page = 0;
     nextCursor: string | null = null;
     private cursors: (string | undefined)[] = [undefined];
     private query?: AuditQuery;
+
+    get exportColumns(): AuditExportColumn[] {
+        return this.columns.flatMap(
+            column => this.exportColumnByTableColumn[column] ?? [],
+        );
+    }
 
     ngOnInit(): void {
         this.breadcrumbs.updateBreadcrumb([
@@ -322,6 +337,23 @@ export class AuditLogComponent implements OnInit {
             panelType: PanelType.SLIDE_IN_PANEL,
             width: '32rem',
             title: this.translate.instant('Audit status'),
+        });
+    }
+
+    openDownloadDialog(): void {
+        if (!this.query) {
+            return;
+        }
+        this.dialogs.open(AuditDownloadDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translate.instant('Download audit log'),
+            width: '50vw',
+            data: {
+                query: { ...this.query },
+                eventTypes: this.types,
+                actors: this.actorOptions,
+                availableColumns: this.exportColumns,
+            },
         });
     }
 

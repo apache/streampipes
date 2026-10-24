@@ -51,6 +51,40 @@ export class AuditService {
         return this.http.get<AuditPage>(`${this.baseUrl}/events`, { params });
     }
 
+    download(
+        query: AuditQuery,
+        columns: string[],
+        headers: string[],
+        format: 'csv' | 'json' | 'xlsx',
+        delimiter?: 'comma' | 'semicolon',
+    ): Observable<Blob> {
+        let params = new HttpParams();
+        Object.entries(query).forEach(([key, value]) => {
+            if (
+                key !== 'limit' &&
+                key !== 'cursor' &&
+                value !== undefined &&
+                value !== ''
+            ) {
+                params = params.set(key, String(value));
+            }
+        });
+        columns.forEach(column => {
+            params = params.append('columns', column);
+        });
+        headers.forEach(header => {
+            params = params.append('headers', header);
+        });
+        params = params.set('format', format);
+        if (delimiter) {
+            params = params.set('delimiter', delimiter);
+        }
+        return this.http.get(`${this.baseUrl}/events/download`, {
+            params,
+            responseType: 'blob',
+        });
+    }
+
     getDetails(event: AuditEntry): Observable<AuditEntryDetails> {
         return this.http.get<AuditEntryDetails>(
             `${this.baseUrl}/events/${encodeURIComponent(event.eventId)}`,

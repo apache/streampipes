@@ -17,7 +17,8 @@
  */
 
 import { TranslateService } from '@ngx-translate/core';
-import { AuditDialogComponent } from './audit-dialog.component';
+import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
+import { AuditDownloadDialogComponent } from '../dialog/audit-log-download/audit-download-dialog.component';
 import { TestBed } from '@angular/core/testing';
 import {
     AuditService,
@@ -186,6 +187,22 @@ describe('AuditLogComponent', () => {
         expect(dialogs.open).toHaveBeenLastCalledWith(
             AuditDialogComponent,
             expect.objectContaining({ title: 'Audit status' }),
+        );
+    });
+
+    it('opens a download dialog with the active audit filters', () => {
+        component.ngOnInit();
+        component.openDownloadDialog();
+        expect(dialogs.open).toHaveBeenCalledWith(
+            AuditDownloadDialogComponent,
+            expect.objectContaining({
+                data: expect.objectContaining({
+                    query: expect.objectContaining({
+                        from: expect.any(String),
+                        to: expect.any(String),
+                    }),
+                }),
+            }),
         );
     });
 
