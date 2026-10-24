@@ -17,8 +17,9 @@
  */
 
 import { TranslateService } from '@ngx-translate/core';
-import { AuditDialogComponent } from './audit-dialog.component';
 import { AuditRetentionDialogComponent } from '../dialog/audit-retention/audit-retention-dialog.component';
+import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
+import { AuditDownloadDialogComponent } from '../dialog/audit-log-download/audit-download-dialog.component';
 import { TestBed } from '@angular/core/testing';
 import {
     AuditService,
@@ -200,6 +201,20 @@ describe('AuditLogComponent', () => {
             expect.objectContaining({ title: 'Retention' }),
         );
         expect(api.getRetention).toHaveBeenCalled();
+    it('opens a download dialog with the active audit filters', () => {
+        component.ngOnInit();
+        component.openDownloadDialog();
+        expect(dialogs.open).toHaveBeenCalledWith(
+            AuditDownloadDialogComponent,
+            expect.objectContaining({
+                data: expect.objectContaining({
+                    query: expect.objectContaining({
+                        from: expect.any(String),
+                        to: expect.any(String),
+                    }),
+                }),
+            }),
+        );
     });
 
     it('distinguishes storage failure from empty results and allows retry', () => {

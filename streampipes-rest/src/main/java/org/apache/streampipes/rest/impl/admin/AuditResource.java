@@ -19,6 +19,9 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.audit.api.AuditEntryDetails;
+import org.apache.streampipes.audit.api.AuditExportColumn;
+import org.apache.streampipes.audit.api.AuditExportConfiguration;
+import org.apache.streampipes.audit.api.AuditExportFormat;
 import org.apache.streampipes.audit.api.AuditPage;
 import org.apache.streampipes.audit.api.AuditQuery;
 import org.apache.streampipes.audit.api.AuditStatus;
@@ -28,8 +31,10 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.time.Instant;
 import java.util.List;
@@ -108,6 +114,50 @@ public class AuditResource extends AbstractAuthGuardedRestResource {
     } catch (RuntimeException e) {
       throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Audit storage unavailable");
     }
+  }
+
+  @GetMapping(path = "/events/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Download filtered audit events", tags = {"Audit"})
+  public ResponseEntity<StreamingResponseBody> download(@RequestParam String from, @RequestParam String to,
+                                                         @RequestParam(required = false) String eventType,
+                                                         @RequestParam(required = false) String actor,
+                                                         @RequestParam(required = false) String outcome,
+                                                         @RequestParam(defaultValue = "xlsx") String format,
+                                                         @RequestParam(required = false) String delimiter,
+                                                         @RequestParam List<String> columns,
+                                                         @RequestParam List<String> headers) {
+    final AuditQuery query;
+    final AuditExportConfiguration configuration;
+    try {
+      query = new AuditQuery(Instant.parse(from), Instant.parse(to), eventType, actor, outcome, 200, null);
+      var exportFormat = AuditExportFormat.fromString(format);
+      configuration = new AuditExportConfiguration(
+          exportFormat, columns.stream().map(AuditExportColumn::fromId).toList(), headers,
+          delimiter(exportFormat, delimiter));
+    } catch (RuntimeException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid audit export request");
+    }
+
+    StreamingResponseBody body = outputStream -> resourceManager.getAuditService()
+        .export(query, configuration, outputStream);
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    responseHeaders.setContentDispositionFormData(
+        "attachment", "audit-log." + configuration.format().name().toLowerCase());
+    return ResponseEntity.ok()
+        .headers(responseHeaders)
+        .body(body);
+  }
+
+  private char delimiter(AuditExportFormat format, String delimiter) {
+    if (format != AuditExportFormat.CSV || delimiter == null || delimiter.equals("comma")) {
+      return ',';
+    }
+    if (delimiter.equals("semicolon")) {
+      return ';';
+    }
+    throw new IllegalArgumentException("Invalid audit export delimiter");
   }
 
   @GetMapping(path = "/events/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)

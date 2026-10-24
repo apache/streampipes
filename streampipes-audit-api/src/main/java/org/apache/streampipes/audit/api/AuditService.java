@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.audit.api;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +37,11 @@ public interface AuditService extends AutoCloseable {
 
   default AuditPage query(AuditQuery query) {
     throw new IllegalStateException("Audit reading unavailable");
+  }
+
+  default void export(AuditQuery query, AuditExportConfiguration configuration, OutputStream outputStream)
+      throws IOException {
+    throw new IllegalStateException("Audit exporting unavailable");
   }
 
   default Optional<AuditEntryDetails> find(UUID eventId, String locator) {
