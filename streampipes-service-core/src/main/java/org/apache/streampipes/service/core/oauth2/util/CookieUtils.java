@@ -18,13 +18,10 @@
 
 package org.apache.streampipes.service.core.oauth2.util;
 
-import org.springframework.util.SerializationUtils;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.Base64;
 import java.util.Optional;
 
 public class CookieUtils {
@@ -44,15 +41,27 @@ public class CookieUtils {
     return Optional.empty();
   }
 
-  public static void addCookie(HttpServletResponse response,
+  /**
+   * SameSite is Lax and not Strict, because the identity provider redirects back to StreamPipes with a
+   * cross-site navigation that must still carry the cookie.
+   */
+  public static void addCookie(HttpServletRequest request,
+                               HttpServletResponse response,
                                String name,
                                String value,
                                int maxAge) {
     Cookie cookie = new Cookie(name, value);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
+    cookie.setSecure(isSecureRequest(request));
+    cookie.setAttribute("SameSite", "Lax");
     cookie.setMaxAge(maxAge);
     response.addCookie(cookie);
+  }
+
+  public static boolean isSecureRequest(HttpServletRequest request) {
+    String forwardedProto = request.getHeader("X-Forwarded-Proto");
+    return request.isSecure() || "https".equalsIgnoreCase(forwardedProto);
   }
 
   public static void deleteCookie(HttpServletRequest request,
@@ -69,13 +78,5 @@ public class CookieUtils {
         }
       }
     }
-  }
-
-  public static String serialize(Object object) {
-    return Base64.getUrlEncoder().encodeToString(SerializationUtils.serialize(object));
-  }
-
-  public static <T> T deserialize(Cookie cookie, Class<T> clazz) {
-    return clazz.cast(SerializationUtils.deserialize(Base64.getUrlDecoder().decode(cookie.getValue())));
   }
 }
