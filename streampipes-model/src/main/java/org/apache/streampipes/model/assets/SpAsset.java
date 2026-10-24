@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.assets;
 
+import org.apache.streampipes.model.file.FileMetadata;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +35,7 @@ public class SpAsset {
 
   private AssetType assetType;
   private List<AssetLink> assetLinks;
+  private List<FileMetadata> assetImages = new ArrayList<>();
 
   private AssetSite assetSite;
   private List<SpAsset> assets;
@@ -116,5 +119,13 @@ public class SpAsset {
 
   public void setAssetSite(AssetSite assetSite) {
     this.assetSite = assetSite;
+  }
+
+  public List<FileMetadata> getAssetImages() {
+    return assetImages;
+  }
+
+  public void setAssetImages(List<FileMetadata> assetImages) {
+    this.assetImages = assetImages;
   }
 }

@@ -95,6 +95,15 @@
                 <div fxLayout="column">
                     <sp-asset-details-basics
                         (reloadSites)="reloadSites()"
+                        (imageFileDeletionRequested)="
+                            handleImageFileDeletionRequested($event)
+                        "
+                        (imageUploaded)="
+                            trackUploadedImage(
+                                $event.fileId,
+                                $event.replacedFileIds
+                            )
+                        "
                         [asset]="selectedAsset"
                         [assetModel]="asset"
                         [sites]="sites"

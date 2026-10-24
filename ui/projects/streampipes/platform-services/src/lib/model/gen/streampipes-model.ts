@@ -3951,6 +3951,7 @@ export class SpAsset {
     additionalData: { [index: string]: any };
     assetDescription: string;
     assetId: string;
+    assetImages: FileMetadata[];
     assetLinks: AssetLink[];
     assetName: string;
     assetSite: AssetSite;
@@ -3968,6 +3969,9 @@ export class SpAsset {
         );
         instance.assetDescription = data.assetDescription;
         instance.assetId = data.assetId;
+        instance.assetImages = __getCopyArrayFn(FileMetadata.fromData)(
+            data.assetImages,
+        );
         instance.assetLinks = __getCopyArrayFn(AssetLink.fromData)(
             data.assetLinks,
         );
