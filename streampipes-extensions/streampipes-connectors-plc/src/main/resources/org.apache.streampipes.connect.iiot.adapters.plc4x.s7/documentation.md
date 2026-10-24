@@ -47,12 +47,12 @@ In addition to the pure IP, other parameters supported by Apache PLC4X can be pr
 * `local-rack`
 * `local-slot`
 * `local-tsap`
-* `remote-rack`
-* `remote-slot`
+* `cotp.remote-rack`
+* `cotp.remote-slot`
 
 Additional configs are separated by `&`.
 
-Example address: `192.68.34.56?remote-rack=0&remote-slot=3&controller-type=S7_400`
+Example address: `192.68.34.56?cotp.remote-rack=0&cotp.remote-slot=3&controller-type=S7_400`
 
 See the <a href="https://plc4x.apache.org/plc4x/latest/users/protocols/s7.html">Apache PLC4X documentation</a> for more information.
 
@@ -61,6 +61,10 @@ See the <a href="https://plc4x.apache.org/plc4x/latest/users/protocols/s7.html">
 The polling interval requires a number in milliseconds, which represents the interval in which the adapter will poll the
 PLC for new data. For instance, a polling interval of 1000 milliseconds will configure the adapter to send a request to
 the PLC every second.
+
+If a read is still running when the next poll is due, that poll is skipped. Read requests are bounded to five seconds;
+configure driver request timeouts below this bound. After a failure, retries back off from one second up to sixty seconds.
+Successful reads reset this backoff.
 
 ### Nodes
 
