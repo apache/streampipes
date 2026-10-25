@@ -26,6 +26,8 @@ import org.apache.streampipes.audit.influx.InfluxAuditEventStore;
 import org.apache.streampipes.commons.constants.CustomEnvs;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.impl.admin.AuditResource;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -59,7 +61,11 @@ class AuditConfigurationTest {
   @Test
   void defaultsToDisabledWithoutConnectingToStorage() {
     try (var envs = mockStatic(CustomEnvs.class);
-         var context = new AnnotationConfigApplicationContext(AuditConfiguration.class)) {
+         var context = new AnnotationConfigApplicationContext()) {
+      registerRetentionStorage(context);
+      context.register(AuditConfiguration.class);
+      context.refresh();
+
       assertFalse(context.getBean(AuditService.class).status().enabled());
     }
   }
@@ -70,6 +76,7 @@ class AuditConfigurationTest {
          var context = new AnnotationConfigApplicationContext()) {
       envs.when(() -> CustomEnvs.exists("SP_AUDIT_ENABLED")).thenReturn(true);
       envs.when(() -> CustomEnvs.getEnv("SP_AUDIT_ENABLED")).thenReturn("true");
+      registerRetentionStorage(context);
       context.register(AuditConfiguration.class);
       context.refresh();
       var service = context.getBean(AuditService.class);
@@ -96,12 +103,31 @@ class AuditConfigurationTest {
         envs.when(() -> CustomEnvs.exists(key)).thenReturn(true);
         envs.when(() -> CustomEnvs.getEnv(key)).thenReturn(value);
       });
+      registerRetentionStorage(context);
       context.register(AuditConfiguration.class);
       context.refresh();
       assertInstanceOf(InfluxAuditEventStore.class, context.getBean(AuditEventStore.class));
       assertTrue(context.getBean(AuditService.class).status().enabled());
       verify(stores.constructed().getFirst(), timeout(2000)).initialize();
     }
+  }
+
+  @Test
+  void createsRetentionManagerWhenRetentionStorageIsAvailable() {
+    try (var context = new AnnotationConfigApplicationContext()) {
+      registerRetentionStorage(context);
+      context.register(AuditConfiguration.class);
+      context.refresh();
+
+      assertTrue(context.containsBean("auditRetentionManager"));
+    }
+  }
+
+  private void registerRetentionStorage(AnnotationConfigApplicationContext context) {
+    context.registerBean(ISpCoreConfigurationStorage.class,
+        () -> mock(ISpCoreConfigurationStorage.class));
+    context.registerBean(IFileMetadataStorage.class,
+        () -> mock(IFileMetadataStorage.class));
   }
 
   @Test

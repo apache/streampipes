@@ -25,6 +25,7 @@ import org.apache.streampipes.audit.api.AuditExportFormat;
 import org.apache.streampipes.audit.api.AuditPage;
 import org.apache.streampipes.audit.api.AuditQuery;
 import org.apache.streampipes.audit.api.AuditStatus;
+import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -35,8 +36,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,6 +66,32 @@ public class AuditResource extends AbstractAuthGuardedRestResource {
   public AuditStatus status() {
     return resourceManager.getAuditService().status();
   }
+
+  @GetMapping(path = "/retention", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Inspect audit retention configuration", tags = {"Audit"})
+  public RetentionTimeConfig retention() {
+    return resourceManager.getCoreConfigurationStorage().get().getAuditRetentionConfiguration();
+  }
+
+  @PutMapping(path = "/retention", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Configure audit retention", tags = {"Audit"})
+  public void configureRetention(@RequestBody RetentionTimeConfig config) {
+    var coreConfiguration = resourceManager.getCoreConfigurationStorage().get();
+    coreConfiguration.setAuditRetentionConfiguration(config);
+    resourceManager.getCoreConfigurationStorage().updateElement(coreConfiguration);
+  }
+
+  @DeleteMapping(path = "/retention")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @Operation(summary = "Delete audit retention configuration", tags = {"Audit"})
+  public void deleteRetention() {
+    var coreConfiguration = resourceManager.getCoreConfigurationStorage().get();
+    coreConfiguration.setAuditRetentionConfiguration(null);
+    resourceManager.getCoreConfigurationStorage().updateElement(coreConfiguration);
+  }
+
   @GetMapping(path = "/events", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   @Operation(summary = "Fetch a bounded page of audit events", tags = {"Audit"})

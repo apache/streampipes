@@ -27,6 +27,7 @@ import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.Test;
 
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Instant;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -122,6 +124,52 @@ class InfluxAuditEventStoreTest {
       assertEquals(0, writes.get());
       store.append(event(Instant.now()));
       assertEquals(1, writes.get());
+    } finally {
+      server.stop(0);
+    }
+  }
+
+  @Test
+  void deletesEventsBeforeTheConfiguredRetentionCutoff() throws Exception {
+    var statement = new AtomicReference<String>();
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/query", exchange -> {
+      for (var parameter : exchange.getRequestURI().getRawQuery().split("&")) {
+        if (parameter.startsWith("q=")) {
+          statement.set(URLDecoder.decode(parameter.substring(2), StandardCharsets.UTF_8));
+        }
+      }
+      byte[] body = "{\"results\":[{}]}".getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200, body.length);
+      exchange.getResponseBody().write(body);
+      exchange.close();
+    });
+    InfluxAuditDatabaseProvisionerTest.existingDatabase(server);
+    server.start();
+    var cutoff = Instant.parse("2026-10-01T00:00:00Z");
+    try (var store = new InfluxAuditEventStore("http://127.0.0.1:" + server.getAddress().getPort(),
+        "audit-only", "audit-token")) {
+      store.deleteEventsOlderThan(cutoff);
+      assertEquals("DELETE FROM \"audit_events\" WHERE time < " + cutoff.toEpochMilli() + "ms", statement.get());
+    } finally {
+      server.stop(0);
+    }
+  }
+
+  @Test
+  void reportsInfluxDeleteErrors() throws Exception {
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/query", exchange -> {
+      byte[] body = "{\"results\":[{\"error\":\"delete denied\"}]}".getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200, body.length);
+      exchange.getResponseBody().write(body);
+      exchange.close();
+    });
+    InfluxAuditDatabaseProvisionerTest.existingDatabase(server);
+    server.start();
+    try (var store = new InfluxAuditEventStore("http://127.0.0.1:" + server.getAddress().getPort(),
+        "audit-only", "audit-token")) {
+      assertThrows(IllegalStateException.class, () -> store.deleteEventsOlderThan(Instant.now()));
     } finally {
       server.stop(0);
     }
