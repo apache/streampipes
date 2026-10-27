@@ -125,3 +125,15 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-iiot-minimal:${{ env.MVN_VERSION }}
+
+      # Single-container demo image; copies the images pushed above, so it must run last.
+      - name: Build and Push Docker Image all-in-one
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
+        with:
+          context: ./installer/all-in-one
+          platforms: linux/amd64,linux/arm64/v8
+          push: true
+          build-args: |
+            SP_VERSION=${{ env.MVN_VERSION }}
+            SP_DOCKER_REGISTRY=${{ env.DOCKERHUB_APACHE_REPO }}
+          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/all-in-one:${{ env.MVN_VERSION }}
