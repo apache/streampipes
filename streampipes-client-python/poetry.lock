@@ -1011,7 +1011,7 @@ version = "4.0.12"
 description = "Git Object Database"
 optional = false
 python-versions = ">=3.7"
-groups = ["dev", "docs"]
+groups = ["docs"]
 files = [
     {file = "gitdb-4.0.12-py3-none-any.whl", hash = "sha256:67073e15955400952c6565cc3e707c554a4eea2e428946f7a4c162fab9bd9bcf"},
     {file = "gitdb-4.0.12.tar.gz", hash = "sha256:5ef71f855d191a3326fcfbc0d5da835f26b13fbcba60c32c21091c349ffdb571"},
@@ -1026,7 +1026,7 @@ version = "3.2.1"
 description = "GitPython is a Python library used to interact with Git repositories"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev", "docs"]
+groups = ["docs"]
 files = [
     {file = "gitpython-3.2.1-py3-none-any.whl", hash = "sha256:d66b0832aa8755c1a84892937282df0befb16c97e5a64aeebd68be9c5e323f53"},
     {file = "gitpython-3.2.1.tar.gz", hash = "sha256:0f1229ec5c057bdabdeeda8bda4f17bda679ab33dbccc00f24e6a480553c8613"},
@@ -2313,14 +2313,14 @@ files = [
 
 [[package]]
 name = "nats-py"
-version = "2.15.0"
+version = "2.16.0"
 description = "NATS client for Python"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "nats_py-2.15.0-py3-none-any.whl", hash = "sha256:9f8d36aa52a9926a88b8f1d70cf1fdce0ad387941479b500ee9ab3e51073cefd"},
-    {file = "nats_py-2.15.0.tar.gz", hash = "sha256:6622c547d9a7d2313d9c147d46c386188f4ec2c7b5c9f9a0438a4d1b55f54a93"},
+    {file = "nats_py-2.16.0-py3-none-any.whl", hash = "sha256:aeb1ff123966c05833d26c7df7e1d54c1c6d32b612428b21677a2e921f1fecae"},
+    {file = "nats_py-2.16.0.tar.gz", hash = "sha256:1d137ed7afc9b59033b3199324c6237df2016a5091935871344a787eba6b72fc"},
 ]
 
 [package.extras]
@@ -4146,7 +4146,7 @@ version = "5.0.2"
 description = "A pure Python implementation of a sliding window memory map manager"
 optional = false
 python-versions = ">=3.7"
-groups = ["dev", "docs"]
+groups = ["docs"]
 files = [
     {file = "smmap-5.0.2-py3-none-any.whl", hash = "sha256:b30115f0def7d7531d22a0fb6502488d879e75b260a9db4d0819cfb25403af5e"},
     {file = "smmap-5.0.2.tar.gz", hash = "sha256:26ea65a03958fa0c8a1c7e8c7a58fdc77221b8910f6be2131affade476898ad5"},
@@ -4762,4 +4762,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "862957b219fce1f9a12fcfb582d06d9d16daf48975c6c8ed0ac96742fe062e55"
+content-hash = "7319587a8e659350824ebf47f32a5920e04d9614b95393e1bea74c73b913963d"
