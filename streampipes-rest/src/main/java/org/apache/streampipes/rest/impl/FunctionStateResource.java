@@ -22,7 +22,7 @@ import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 
 import org.springframework.context.annotation.Conditional;
@@ -56,7 +56,7 @@ public class FunctionStateResource extends AbstractAuthGuardedRestResource {
     if (functionState != null) {
       return ok(functionState.getState());
     } else {
-      throw new SpMessageException(HttpStatus.NOT_FOUND, Notifications.error("Function state not found"));
+      throw SpProblemException.of(HttpStatus.NOT_FOUND, "Function state not found");
     }
   }
 
@@ -84,7 +84,7 @@ public class FunctionStateResource extends AbstractAuthGuardedRestResource {
     var existingFunctionState = functionStateStorage.getElementById(functionId);
 
     if (existingFunctionState == null) {
-      throw new SpMessageException(HttpStatus.NOT_FOUND, Notifications.error("Function state not found"));
+      throw SpProblemException.of(HttpStatus.NOT_FOUND, "Function state not found");
     }
 
     functionStateStorage.deleteElementById(functionId);

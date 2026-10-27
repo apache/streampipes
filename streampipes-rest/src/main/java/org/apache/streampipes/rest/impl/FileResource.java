@@ -20,12 +20,11 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.audit.events.settings.SettingsAuditRecorder;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.file.FileMetadata;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
@@ -52,8 +51,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("/api/v2/files")
@@ -88,12 +85,12 @@ public class FileResource extends AbstractAuthGuardedRestResource {
       return ok(metadata);
     } catch (IllegalArgumentException e) {
       audit.fileUploadFailed(getAuthenticatedUserSid());
-      return badRequest(Notifications.error(
+      throw SpProblemException.badRequest(
           String.format(
               "This file type is not supported. Allowed file types are %s.",
               Filetypes.getAllFileExtensions().toString()
           )
-      ));
+      );
     } catch (Exception e) {
       audit.fileUploadFailed(getAuthenticatedUserSid());
       return fail();
@@ -147,10 +144,7 @@ public class FileResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(getFileContents(fileManager.getFile(filename)));
     } catch (IOException e) {
-      throw new SpMessageException(
-          NOT_FOUND,
-          Notifications.error("File not found")
-      );
+      throw SpProblemException.notFound("File not found");
     }
   }
 
@@ -179,10 +173,7 @@ public class FileResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(fileManager.checkFileContentChanged(filename, hash));
     } catch (IOException e) {
-      throw new SpMessageException(
-          NOT_FOUND,
-          Notifications.error("File not found")
-      );
+      throw SpProblemException.notFound("File not found");
     }
   }
 

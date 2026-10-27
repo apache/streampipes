@@ -161,3 +161,6 @@ __pycache__
 # Generated Compose credentials
 /installer/compose/.env
 /.env
+
+docs/
+plugins/

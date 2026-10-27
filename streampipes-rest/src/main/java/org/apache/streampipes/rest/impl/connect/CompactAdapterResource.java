@@ -38,8 +38,7 @@ import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
-import org.apache.streampipes.rest.shared.exception.BadRequestException;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
@@ -50,7 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -131,7 +129,9 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
           "Rejected compact adapter creation for user {}: persist option requires privilege {}",
           getAuthenticatedUsername(), DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE
       );
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+      throw SpProblemException.forbidden(String.format(
+          "Persisting the adapter's data requires the privilege %s",
+          DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE));
     }
 
     var principalSid = getAuthenticatedUserSid();
@@ -146,36 +146,28 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
           "Error while storing the adapterDescription with appId {}. An adapter with the given id already exists.",
           adapterDescription.getAppId(), e
       );
-      return ResponseEntity.status(HttpStatus.CONFLICT)
-                           .body(Notifications.error(e.getMessage()));
+      throw SpProblemException.conflict(e.getMessage());
     }
 
-    try {
-      if (compactAdapter.createOptions() != null) {
-        if (compactAdapter.createOptions()
-                          .persist()) {
-          var storedAdapter = managementService.getAdapter(adapterId);
-          new PersistPipelineHandler(
-              pipelineTemplateStorage,
-              new CompactPipelineManagement(
-                  serviceDiscovery,
-                  descriptionStorage,
-                  requestManager
-              ),
-              pipelineManager,
-              getAuthenticatedUserSid()
-          ).createAndStartPersistPipeline(storedAdapter, requestManager, compactAdapter.createOptions().persistDatasetName());
-        }
-        if (compactAdapter.createOptions()
-                          .start()) {
-          managementService.startAdapter(adapterId, getAuthenticatedUserSid());
-        }
+    if (compactAdapter.createOptions() != null) {
+      if (Boolean.TRUE.equals(compactAdapter.createOptions().persist())) {
+        var storedAdapter = managementService.getAdapter(adapterId);
+        new PersistPipelineHandler(
+            pipelineTemplateStorage,
+            new CompactPipelineManagement(
+                serviceDiscovery,
+                descriptionStorage,
+                requestManager
+            ),
+            pipelineManager,
+            getAuthenticatedUserSid()
+        ).createAndStartPersistPipeline(storedAdapter, requestManager, compactAdapter.createOptions().persistDatasetName());
       }
-      return ok(Notifications.success(adapterId));
-    } catch (AdapterException e) {
-      LOG.error("Error while starting adapter with id {}", adapterDescription.getAppId(), e);
-      return ok(Notifications.error(e.getMessage()));
+      if (Boolean.TRUE.equals(compactAdapter.createOptions().start())) {
+        managementService.startAdapter(adapterId, getAuthenticatedUserSid());
+      }
     }
+    return ok(Notifications.success(adapterId));
   }
 
   @PutMapping(
@@ -192,26 +184,22 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
 
-    var existingAdapter = managementService.getAdapter(elementId);
-    if (existingAdapter != null) {
-      var principalSid = getAuthenticatedUserSid();
-      var adapterDescription = convertToAdapterDescription(
-          compactAdapter,
-          existingAdapter,
-          principalSid
-      );
-
-      try {
-        adapterUpdateManagement.updateAdapter(adapterDescription, getAuthenticatedUserSid());
-      } catch (AdapterException e) {
-        LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
-        return ok(Notifications.error(e.getMessage()));
-      }
-
-      return ok(Notifications.success(adapterDescription.getElementId()));
-    } else {
-      throw new BadRequestException(String.format("Adapter with id %s not found", elementId));
+    AdapterDescription existingAdapter;
+    try {
+      existingAdapter = managementService.getAdapter(elementId);
+    } catch (AdapterException e) {
+      throw SpProblemException.notFound("Adapter", elementId);
     }
+    var principalSid = getAuthenticatedUserSid();
+    var adapterDescription = convertToAdapterDescription(
+        compactAdapter,
+        existingAdapter,
+        principalSid
+    );
+
+    adapterUpdateManagement.updateAdapter(adapterDescription, getAuthenticatedUserSid());
+
+    return ok(Notifications.success(adapterDescription.getElementId()));
   }
 
   private boolean isPersistRequested(CompactAdapter compactAdapter) {
@@ -230,7 +218,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     try {
       return compactAdapterManagement.convertToAdapterDescription(compactAdapter, principalSid);
     } catch (AdapterException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+      throw SpProblemException.badRequest(e.getMessage(), e);
     }
   }
 
@@ -242,7 +230,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     try {
       return compactAdapterManagement.convertToAdapterDescription(compactAdapter, existingAdapter, principalSid);
     } catch (AdapterException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+      throw SpProblemException.badRequest(e.getMessage(), e);
     }
   }
 }

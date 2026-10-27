@@ -112,11 +112,10 @@ describe('Add Compact Adapters', () => {
         CompactAdapterUtils.storeCompactAdapter(compactAdapter, false).then(
             response => {
                 expect(response.status).to.equal(400);
-                expect(response.body.success).to.equal(false);
-                expect(response.body.notifications).to.have.length.greaterThan(
-                    0,
+                expect(response.body.type).to.equal(
+                    'urn:streampipes:problem:bad-request',
                 );
-                expect(response.body.notifications[0].title).to.contain(
+                expect(response.body.detail).to.contain(
                     'Could not execute script',
                 );
             },

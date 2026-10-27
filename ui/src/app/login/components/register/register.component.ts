@@ -44,6 +44,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { problemDetailMessage } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-register-user',
@@ -90,7 +91,7 @@ export class RegisterComponent extends BaseLoginPageDirective {
             error => {
                 this.registrationInProcess = false;
                 this.registrationSuccess = false;
-                this.registrationError = error.error.notifications[0].title;
+                this.registrationError = problemDetailMessage(error);
             },
         );
     }

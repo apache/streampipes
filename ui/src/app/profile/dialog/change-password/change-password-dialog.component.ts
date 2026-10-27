@@ -44,6 +44,7 @@ import {
     ChangePasswordRequest,
     UserAccount,
     UserService,
+    problemDetailMessage,
 } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
@@ -132,7 +133,7 @@ export class ChangePasswordDialogComponent implements OnInit {
             error => {
                 this.operationApplied = true;
                 this.error = true;
-                this.errorMessage = error.error.notifications[0].title;
+                this.errorMessage = problemDetailMessage(error);
             },
         );
     }

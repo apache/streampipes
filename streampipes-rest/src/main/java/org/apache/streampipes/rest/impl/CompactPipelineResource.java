@@ -22,15 +22,17 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.model.message.Notification;
-import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.ProblemError;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,22 +78,21 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
   ) throws Exception {
 
     var pipelineGenerationResult = compactPipelineManagement.makePipeline(compactPipeline);
-    if (pipelineGenerationResult.allPipelineElementsValid()) {
-      String pipelineId = pipelineManager.addPipeline(getAuthenticatedUserSid(), pipelineGenerationResult.pipeline());
-      if (compactPipeline.createOptions().start()) {
-        try {
-          PipelineOperationStatus status = pipelineManager.startPipeline(pipelineId, requestManager);
-          return ok(status);
-        } catch (Exception e) {
-          return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
-        }
-      }
-      var message = Notifications.success("Pipeline stored");
-      message.addNotification(new Notification("id", pipelineId));
-      return ok(message);
-    } else {
-      return ResponseEntity.status(400).body(pipelineGenerationResult.validationInfos());
+    if (!pipelineGenerationResult.allPipelineElementsValid()) {
+      var validationInfos = pipelineGenerationResult.validationInfos();
+      throw SpProblemException.validationFailed(
+              "The pipeline could not be built from the given elements",
+              validationInfos.stream().map(info -> ProblemError.of(info.getMessage())).toList())
+          .withProperty("validationInfos", validationInfos);
     }
+    String pipelineId = pipelineManager.addPipeline(getAuthenticatedUserSid(), pipelineGenerationResult.pipeline());
+    if (compactPipeline.createOptions() != null && Boolean.TRUE.equals(compactPipeline.createOptions().start())) {
+      PipelineOperationStatus status = pipelineManager.startPipeline(pipelineId, requestManager);
+      return ok(status);
+    }
+    var message = Notifications.success("Pipeline stored");
+    message.addNotification(new Notification("id", pipelineId));
+    return ok(message);
   }
 
   @PutMapping(
@@ -106,8 +107,8 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> updatePipelineCompact(
       @PathVariable("id") String elementId,
       @RequestBody CompactPipeline compactPipeline
-  ) throws Exception {
-
-    return null;
+  ) {
+    throw SpProblemException.of(HttpStatus.NOT_IMPLEMENTED,
+        "Updating a pipeline through the compact API is not supported yet");
   }
 }

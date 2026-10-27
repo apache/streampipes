@@ -29,6 +29,7 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -70,81 +71,64 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
 
   @GetMapping(path = "/{id}/assets", produces = "application/zip")
   @PreAuthorize("this.hasReadAuthority()")
-  public ResponseEntity<?> getAdapterAssets(@PathVariable("id") String id) {
-    try {
-      String result = null;
+  public ResponseEntity<?> getAdapterAssets(@PathVariable("id") String id)
+      throws AdapterException, NoServiceEndpointsAvailableException {
+    String result = null;
 
-      Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
-      if (adapterDescriptionOptional.isPresent()) {
-        AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        var service = getService(adapterDescription.getAppId());
+    Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
+    if (adapterDescriptionOptional.isPresent()) {
+      AdapterDescription adapterDescription = adapterDescriptionOptional.get();
+      var service = getService(adapterDescription.getAppId());
 
-        result = managementService.getAssets(service, adapterDescription.getAppId());
-      }
-
-      if (result == null) {
-        LOG.error("Not found adapter with id {}", id);
-        return fail();
-      }
-      return ok(result);
-    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
-      LOG.error("Not found adapter with id {}", id, e);
-      return fail();
+      result = managementService.getAssets(service, adapterDescription.getAppId());
     }
+
+    if (result == null) {
+      throw SpProblemException.notFound("Adapter type", id);
+    }
+    return ok(result);
   }
 
   @GetMapping(path = "/{id}/assets/icon")
   @PreAuthorize("this.hasReadAuthority()")
-  public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id) {
-    try {
+  public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id)
+      throws AdapterException, NoServiceEndpointsAvailableException {
+    byte[] result = null;
 
-      byte[] result = null;
+    Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
+    if (adapterDescriptionOptional.isPresent()) {
+      AdapterDescription adapterDescription = adapterDescriptionOptional.get();
+      var service = getService(adapterDescription.getAppId());
 
-      Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
-      if (adapterDescriptionOptional.isPresent()) {
-        AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        var service = getService(adapterDescription.getAppId());
-
-        result = managementService.getIconAsset(service, adapterDescription.getAppId());
-      }
-
-      if (result == null) {
-        LOG.error("Not found adapter with id {}", id);
-        return fail();
-      } else {
-        return ResponseEntity.ok()
-            .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(result)))
-            .body(result);
-      }
-    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
-      LOG.error("Not found adapter with id {}", id, e);
-      return fail();
+      result = managementService.getIconAsset(service, adapterDescription.getAppId());
     }
+
+    if (result == null) {
+      throw SpProblemException.notFound("Adapter type", id);
+    }
+    return ResponseEntity.ok()
+        .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(result)))
+        .body(result);
   }
 
   @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
-  public ResponseEntity<?> getAdapterDocumentationAsset(@PathVariable("id") String id) {
-    try {
-      String result = null;
+  public ResponseEntity<?> getAdapterDocumentationAsset(@PathVariable("id") String id)
+      throws AdapterException, NoServiceEndpointsAvailableException {
+    String result = null;
 
-      Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
-      if (adapterDescriptionOptional.isPresent()) {
-        AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        var service = getService(adapterDescription.getAppId());
+    Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
+    if (adapterDescriptionOptional.isPresent()) {
+      AdapterDescription adapterDescription = adapterDescriptionOptional.get();
+      var service = getService(adapterDescription.getAppId());
 
-        result = managementService.getDocumentationAsset(service, adapterDescription.getAppId());
-      }
-
-      if (result == null) {
-        LOG.error("Not found adapter with id {}", id);
-        return fail();
-      }
-      return ok(result);
-    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
-      LOG.error("Not found adapter with id {}", id, e);
-      return fail();
+      result = managementService.getDocumentationAsset(service, adapterDescription.getAppId());
     }
+
+    if (result == null) {
+      throw SpProblemException.notFound("Adapter type", id);
+    }
+    return ok(result);
   }
 
   @DeleteMapping(path = "{adapterId}")
@@ -154,7 +138,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       this.managementService.deleteAdapterDescription(adapterId);
       return ok();
     } catch (SpRuntimeException e) {
-      return badRequest(e);
+      throw SpProblemException.badRequest(e.getMessage(), e);
     }
   }
 

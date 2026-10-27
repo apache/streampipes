@@ -105,14 +105,16 @@ public abstract class HttpRequest<K, V, T> {
       if (status.getStatusCode() == HttpStatus.SC_OK || status.getStatusCode() == HttpStatus.SC_CREATED) {
         return afterRequest(serializer, response.getEntity());
       } else {
+        var detail = extractErrorMessage(response.getEntity());
         switch (status.getStatusCode()) {
           case HttpStatus.SC_UNAUTHORIZED -> throw new SpHttpErrorStatusCode(
-              " 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?",
+              withDetail(" 401 - Access to this resource is forbidden - did you provide a proper API key or client secret?",
+                  detail),
               HttpStatus.SC_UNAUTHORIZED);
           case HttpStatus.SC_NOT_FOUND ->
-              throw new SpHttpErrorStatusCode(" 404 - The requested resource could not be found.",
+              throw new SpHttpErrorStatusCode(withDetail(" 404 - The requested resource could not be found.", detail),
                       HttpStatus.SC_NOT_FOUND);
-          default -> throw new SpHttpErrorStatusCode(makeErrorMessage(status, response.getEntity()),
+          default -> throw new SpHttpErrorStatusCode(makeErrorMessage(status, detail),
               status.getStatusCode());
         }
       }
@@ -123,29 +125,45 @@ public abstract class HttpRequest<K, V, T> {
   }
 
   private String makeErrorMessage(StatusLine status,
-                                  HttpEntity entity) throws IOException {
+                                  String detail) {
+    var reason = status.getReasonPhrase() != null ? status.getReasonPhrase() : "";
     String message;
-    if (!status.getReasonPhrase().isBlank()) {
-      message = status.getReasonPhrase();
+    if (!detail.isBlank()) {
+      message = reason.isBlank() ? detail : reason + ": " + detail;
     } else {
-      String body = entity != null ? entityAsString(entity) : "";
-      message = extractErrorMessage(body);
+      message = reason;
     }
     return status.getStatusCode() + " - " + message;
   }
 
+  private String withDetail(String message, String detail) {
+    return detail.isBlank() ? message : message + " Server said: " + detail;
+  }
+
+  private String extractErrorMessage(HttpEntity entity) throws IOException {
+    String body = entity != null ? entityAsString(entity) : "";
+    return body == null ? "" : extractErrorMessage(body);
+  }
+
+  /**
+   * The API answers errors with an RFC 9457 problem detail: {@code detail} carries the specific
+   * sentence, {@code title} the generic one. Older services may still send a log message with a
+   * {@code cause}, or plain text.
+   */
   private String extractErrorMessage(String responseBody) {
+    if (responseBody.isBlank()) {
+      return "";
+    }
     try {
       JsonNode jsonNode = JacksonSerializer.getObjectMapper().readTree(responseBody);
 
       if (jsonNode.isTextual()) {
         return jsonNode.asText();
-      } else if (jsonNode.hasNonNull("cause")) {
-        return jsonNode.get("cause").asText();
-      } else if (jsonNode.hasNonNull("title")) {
-        return jsonNode.get("title").asText();
-      } else if (jsonNode.hasNonNull("detail")) {
-        return jsonNode.get("detail").asText();
+      }
+      for (String field : List.of("detail", "title", "cause")) {
+        if (jsonNode.hasNonNull(field) && !jsonNode.get(field).asText().isBlank()) {
+          return jsonNode.get(field).asText();
+        }
       }
     } catch (JsonProcessingException e) {
       return responseBody;

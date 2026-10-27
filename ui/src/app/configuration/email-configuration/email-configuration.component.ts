@@ -31,7 +31,11 @@ import {
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
+import {
+    EmailConfig,
+    MailConfigService,
+    problemOf,
+} from '@streampipes/platform-services';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
@@ -254,17 +258,15 @@ export class EmailConfigurationComponent implements OnInit {
     }
 
     private extractTestMailErrorMessage(error: HttpErrorResponse): string {
-        const notification = error.error?.notifications?.[0];
-        const message = [notification?.title, notification?.description]
+        const problem = problemOf(error);
+        const message = [problem?.title, problem?.detail]
             .filter(
                 (messagePart, index, messageParts) =>
                     messagePart && messageParts.indexOf(messagePart) === index,
             )
             .join('. ');
         const cause =
-            notification?.additionalInformation ||
-            error.error?.localizedMessage ||
-            error.error?.cause?.localizedMessage;
+            typeof problem?.cause === 'string' ? problem.cause : undefined;
 
         if (message && cause && message !== cause) {
             return `${message} ${cause}`;

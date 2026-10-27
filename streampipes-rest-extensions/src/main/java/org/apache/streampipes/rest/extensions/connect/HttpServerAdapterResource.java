@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.extensions.management.connect.HttpServerAdapterRequestManagement;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +50,7 @@ public class HttpServerAdapterResource {
       adapterRequestManagement.receiveEvent(endpointId, body);
       return ResponseEntity.ok().build();
     } catch (Exception e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, e);
     }
 
   }
