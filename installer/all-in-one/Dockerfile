@@ -17,20 +17,33 @@
 #
 # Bundles CouchDB, NATS, InfluxDB, the StreamPipes core, the IIoT extensions
 # service and the UI (nginx) into a single container supervised by
-# supervisord. It reuses the published StreamPipes images and the same
-# third-party images as installer/compose/docker-compose.yml; nothing is
-# rebuilt here. Only port 80 is exposed.
+# supervisord. The StreamPipes parts come from the build artifacts of this
+# repository, handed in as named build contexts (see build.sh):
+#
+#   core        -> streampipes-service-core/target (streampipes-core.jar)
+#   extensions  -> streampipes-extensions/streampipes-extensions-all-iiot/target
+#                  (streampipes-extensions-all-iiot.jar)
+#   ui          -> ui/dist/streampipes/ui/browser
+#
+# The third-party services use the same images as installer/compose.
+# Only port 80 is exposed.
 
-ARG SP_VERSION=0.99.0-SNAPSHOT
-ARG SP_DOCKER_REGISTRY=apachestreampipes
 ARG COUCHDB_VERSION=3.4.3
 ARG INFLUXDB_VERSION=2.6
 ARG NATS_VERSION=2.11
 
-FROM ${SP_DOCKER_REGISTRY}/backend:${SP_VERSION} AS backend
-FROM ${SP_DOCKER_REGISTRY}/extensions-all-iiot:${SP_VERSION} AS extensions
-FROM ${SP_DOCKER_REGISTRY}/ui:${SP_VERSION} AS ui
 FROM eclipse-temurin:25-jre-jammy AS jre
+
+# Explode the Spring Boot jars into layers, as the component images do
+FROM eclipse-temurin:25-jre-jammy AS backend-layers
+WORKDIR /layers
+COPY --from=core streampipes-core.jar application.jar
+RUN java -Djarmode=layertools -jar application.jar extract && rm application.jar
+
+FROM eclipse-temurin:25-jre-jammy AS extensions-layers
+WORKDIR /layers
+COPY --from=extensions streampipes-extensions-all-iiot.jar application.jar
+RUN java -Djarmode=layertools -jar application.jar extract && rm application.jar
 FROM influxdb:${INFLUXDB_VERSION} AS influxdb
 FROM nats:${NATS_VERSION} AS nats
 
@@ -59,15 +72,17 @@ COPY --from=influxdb /entrypoint.sh /opt/streampipes/bin/influxdb-entrypoint.sh
 COPY --from=influxdb /etc/defaults/influxdb2/config.yml /etc/defaults/influxdb2/config.yml
 
 # StreamPipes core and extensions (exploded Spring Boot layers)
-COPY --from=backend /BOOT-INF /opt/streampipes/backend/BOOT-INF
-COPY --from=backend /META-INF /opt/streampipes/backend/META-INF
-COPY --from=backend /org /opt/streampipes/backend/org
-COPY --from=extensions /BOOT-INF /opt/streampipes/extensions/BOOT-INF
-COPY --from=extensions /META-INF /opt/streampipes/extensions/META-INF
-COPY --from=extensions /org /opt/streampipes/extensions/org
+COPY --from=backend-layers /layers/dependencies/ /opt/streampipes/backend/
+COPY --from=backend-layers /layers/snapshot-dependencies/ /opt/streampipes/backend/
+COPY --from=backend-layers /layers/spring-boot-loader/ /opt/streampipes/backend/
+COPY --from=backend-layers /layers/application/ /opt/streampipes/backend/
+COPY --from=extensions-layers /layers/dependencies/ /opt/streampipes/extensions/
+COPY --from=extensions-layers /layers/snapshot-dependencies/ /opt/streampipes/extensions/
+COPY --from=extensions-layers /layers/spring-boot-loader/ /opt/streampipes/extensions/
+COPY --from=extensions-layers /layers/application/ /opt/streampipes/extensions/
 
-# StreamPipes UI
-COPY --from=ui /usr/share/nginx/html /usr/share/nginx/html
+# StreamPipes UI (production build of ui/)
+COPY --from=ui / /usr/share/nginx/html/
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY nginx/streampipes.conf /etc/nginx/conf.d/streampipes.conf

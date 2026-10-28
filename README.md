@@ -54,12 +54,13 @@ docker run --rm -p 80:80 apachestreampipes/all-in-one:0.99.0-SNAPSHOT
 ```
 
 Then open [http://localhost](http://localhost) and sign in with `admin@streampipes.apache.org` / `admin`.
-The container seeds a small water works with simulated machines: click **Dashboards** in the left menu and
-open **Plant Overview** to watch live charts of the intake pumps, the pressure line and the storage tanks
-(they refresh every five seconds). The home page shows the plant's sites on a map, **Assets** holds the
-plant structure with links to everything, **Pipelines** has the persist and analytics pipelines, and the
-simulated machines are listed under **Adapters**. The first start takes about a minute while the services
-boot and the demo is seeded.
+The container seeds a fictional company with simulated machines: a water works with pumps and tanks, and an
+automotive plant with CNC machining centres, screwing stations and an end-of-line test. Click **Dashboards**
+in the left menu and open **CNC Machining** or **Plant Overview** to watch live charts of most chart types,
+from KPI tiles to histograms and heatmaps (they refresh every five seconds). The home page shows the sites on a map, **Assets** holds the plant structure with links to
+everything, **Pipelines** has the persist and analytics pipelines, and the simulated machines are listed under
+**Adapters**, one of them with a JavaScript transformation. The first start takes about a minute while the
+services boot and the demo is seeded.
 
 The image bundles CouchDB, NATS, InfluxDB, the core, the IIoT extensions and the UI, and is meant for
 trying things out. For a real installation use the Compose installer below. Details, options and how to
