@@ -18,10 +18,13 @@
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.AssemblyStationSimulator;
+import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.CncMachineSimulator;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.DiagnosticSimulator;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.EventSimulator;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.FlowSimulator;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.PressureSimulator;
+import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.QualityTestSimulator;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.SensorValueSimulator;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.event.WaterlevelSimulator;
 
@@ -42,6 +45,9 @@ public class MachineDataSimulatorUtils {
       case "pressure" -> new PressureSimulator(new SensorValueSimulator());
       case "waterlevel" -> new WaterlevelSimulator(new SensorValueSimulator());
       case "diagnostics" -> new DiagnosticSimulator(new SensorValueSimulator());
+      case "cnc" -> new CncMachineSimulator();
+      case "assembly" -> new AssemblyStationSimulator();
+      case "quality" -> new QualityTestSimulator();
       default -> throw new AdapterException("resource not found");
     };
   }

@@ -24,8 +24,11 @@ import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.audit.events.StandardAuditEvents;
 import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
 import org.apache.streampipes.audit.influx.InfluxAuditEventStore;
+import org.apache.streampipes.audit.management.AuditRetentionManager;
 import org.apache.streampipes.audit.management.DefaultAuditService;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -82,5 +85,12 @@ public class AuditConfiguration {
     return new DefaultAuditService(providers, auditEventStore, Clock.systemUTC(),
         environment.getAuditQueueCapacity().getValueOrDefault(),
         Duration.ofSeconds(environment.getAuditShutdownTimeoutSeconds().getValueOrDefault()));
+  }
+
+  @Bean
+  public AuditRetentionManager auditRetentionManager(AuditEventStore auditEventStore,
+                                                      ISpCoreConfigurationStorage coreConfigurationStorage,
+                                                      IFileMetadataStorage fileMetadataStorage) {
+    return new AuditRetentionManager(auditEventStore, coreConfigurationStorage, fileMetadataStorage);
   }
 }

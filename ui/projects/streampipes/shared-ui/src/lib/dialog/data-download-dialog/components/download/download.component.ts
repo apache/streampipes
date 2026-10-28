@@ -26,16 +26,8 @@ import {
 import { DataExportService } from '../../services/data-export.service';
 import { DownloadProgress } from '../../model/download-progress.model';
 import { Subscription } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatStepLabel } from '@angular/material/stepper';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { DecimalPipe } from '@angular/common';
+import { DownloadStatusComponent } from '../download-status/download-status.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -43,17 +35,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './download.component.html',
     styleUrls: ['./download.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        MatStepLabel,
-        LayoutDirective,
-        LayoutAlignDirective,
-        MatProgressSpinner,
-        MatButton,
-        MatIcon,
-        DecimalPipe,
-        TranslatePipe,
-    ],
+    imports: [MatStepLabel, DownloadStatusComponent, TranslatePipe],
 })
 export class DownloadComponent implements OnInit, OnDestroy {
     dataExportService = inject(DataExportService);
