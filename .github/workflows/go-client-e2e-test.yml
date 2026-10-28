@@ -18,6 +18,9 @@ name: run-e2e-tests
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build-and-push-to-docker:
     runs-on: ubuntu-latest
