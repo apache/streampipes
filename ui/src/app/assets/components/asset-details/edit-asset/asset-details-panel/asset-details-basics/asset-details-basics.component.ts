@@ -26,6 +26,7 @@ import {
     SimpleChanges,
     inject,
     ChangeDetectionStrategy,
+    ViewChild,
 } from '@angular/core';
 import {
     AssetSiteDesc,
@@ -47,6 +48,10 @@ import { AssetDetailsLabelsComponent } from './asset-details-labels/asset-detail
 import { AssetDetailsCustomFieldsComponent } from './asset-details-custom-fields/asset-details-custom-fields.component';
 import { AssetDetailsSiteComponent } from './asset-details-site/asset-details-site.component';
 import { AssetDetailsLinksComponent } from '../asset-details-links/asset-details-links.component';
+import {
+    AssetImageComponent,
+    AssetImageChange,
+} from './asset-details-images/asset-image.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -67,6 +72,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         AssetDetailsCustomFieldsComponent,
         AssetDetailsSiteComponent,
         AssetDetailsLinksComponent,
+        AssetImageComponent,
         TranslatePipe,
     ],
 })
@@ -94,6 +100,21 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     @Output()
     reloadSites: EventEmitter<void> = new EventEmitter();
 
+    @ViewChild(AssetDetailsLinksComponent)
+    assetDetailsLinks: AssetDetailsLinksComponent;
+
+    @Output()
+    imageUploaded = new EventEmitter<{
+        fileId: string;
+        replacedFileIds: string[];
+    }>();
+
+    @Output()
+    imageFileDeletionRequested = new EventEmitter<{
+        assetId: string;
+        fileId: string;
+    }>();
+
     isa95Types: Isa95TypeDesc[] = [];
 
     ngOnInit() {
@@ -110,5 +131,27 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
                 isa95AssetType: 'OTHER',
             };
         }
+    }
+
+    handleImageUploaded({ asset, file }: AssetImageChange): void {
+        const replacedFileIds = (asset.assetImages ?? []).map(
+            image => image.fileId,
+        );
+        asset.assetImages = [file];
+        this.imageUploaded.emit({ fileId: file.fileId, replacedFileIds });
+    }
+
+    handleImageLinkRemoval({ asset, file }: AssetImageChange): void {
+        asset.assetImages = (asset.assetImages ?? []).filter(
+            image => image.fileId !== file.fileId,
+        );
+    }
+
+    handleImageFileDeletionRequested(change: AssetImageChange): void {
+        this.handleImageLinkRemoval(change);
+        this.imageFileDeletionRequested.emit({
+            assetId: change.asset.assetId,
+            fileId: change.file.fileId,
+        });
     }
 }

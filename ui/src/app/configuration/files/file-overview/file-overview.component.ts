@@ -95,7 +95,7 @@ export class FileOverviewComponent implements OnInit {
         });
     }
 
-    deleteFile(fileMetadata: FileMetadata) {
+    deleteFile(fileMetadata: FileMetadata): void {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
@@ -114,7 +114,7 @@ export class FileOverviewComponent implements OnInit {
             if (ev === 'confirm') {
                 this.filesService
                     .deleteFile(fileMetadata.fileId)
-                    .subscribe(_response => {
+                    .subscribe(() => {
                         this.refreshFiles();
                     });
             }

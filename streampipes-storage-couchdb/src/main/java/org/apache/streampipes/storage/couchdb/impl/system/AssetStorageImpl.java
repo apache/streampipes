@@ -22,6 +22,8 @@ import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import com.google.gson.JsonObject;
+
 public class AssetStorageImpl extends DefaultViewCrudStorage<SpAssetModel> implements IAssetStorage {
 
   public AssetStorageImpl() {
@@ -30,5 +32,15 @@ public class AssetStorageImpl extends DefaultViewCrudStorage<SpAssetModel> imple
         SpAssetModel.class,
         "assets/all-assets"
     );
+  }
+
+  @Override
+  public boolean isImageReferenced(String imageId) {
+    return !couchDbClientSupplier.get()
+        .view("asset-images/by-image")
+        .key(imageId)
+        .limit(1)
+        .query(JsonObject.class)
+        .isEmpty();
   }
 }

@@ -48,6 +48,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import {
+    ImagesService,
     PermissionsService,
     SpAsset,
     SpAssetModel,
@@ -72,6 +73,8 @@ import {
     removeAssetFromParent,
 } from '../../../utils/move-asset';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
+import { collectAssetImageFileIds } from '../../../utils/asset-images';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type ManageableAsset = SpAssetModel & {
     name: string;
@@ -109,12 +112,15 @@ export class SpAssetDetailsComponent
     private translateService = inject(TranslateService);
     private permissionsService = inject(PermissionsService);
     private idGeneratorService = inject(IdGeneratorService);
+    private imagesService = inject(ImagesService);
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
     private originalAsset: SpAssetModel;
     private initialGeneratedAssetId?: string;
     private initialGeneratedElementId?: string;
     private pendingConfirmLeaveDialog?: Observable<boolean>;
+    private uploadedImageFileIds = new Set<string>();
+    private replacedImageFileIds = new Set<string>();
     @ViewChild(SpAssetSelectionPanelComponent)
     assetSelectionPanel: SpAssetSelectionPanelComponent;
 
@@ -395,7 +401,9 @@ export class SpAssetDetailsComponent
                 }
 
                 if (dialogResult === 'cancel') {
-                    return of(true);
+                    return from(this.deleteDiscardedImageUploads()).pipe(
+                        map(() => true),
+                    );
                 }
 
                 return of(false);
@@ -409,7 +417,8 @@ export class SpAssetDetailsComponent
     setShouldShowConfirm(): boolean {
         return (
             this.pendingManageAssetResult !== undefined ||
-            this.hasAssetChanged()
+            this.hasAssetChanged() ||
+            this.uploadedImageFileIds.size > 0
         );
     }
 
@@ -444,10 +453,58 @@ export class SpAssetDetailsComponent
             await firstValueFrom(this.assetService.createAsset(this.asset));
             this.isNewAsset = false;
         } else {
-            await firstValueFrom(this.assetService.updateAsset(this.asset));
+            const savedAsset = await this.updateExistingAsset();
+            this.asset.rev = savedAsset.rev;
         }
+        await this.cleanupUnusedImageUploadsAfterSave();
         await this.savePendingManageAssetChanges();
         this.originalAsset = this.normalizeAssetForComparison(this.asset);
+    }
+
+    private async updateExistingAsset(): Promise<SpAssetModel> {
+        try {
+            return await firstValueFrom(
+                this.assetService.updateAsset(this.asset),
+            );
+        } catch (error) {
+            if (
+                !(error instanceof HttpErrorResponse) ||
+                ![409, 500].includes(error.status)
+            ) {
+                throw error;
+            }
+
+            const latest = await firstValueFrom(
+                this.assetService.getAsset(this.asset.elementId),
+            );
+            if (!latest?.rev || latest.rev === this.asset.rev) {
+                throw error;
+            }
+
+            if (this.hasSameAssetContent(latest, this.asset)) {
+                return latest;
+            }
+            if (!this.hasSameAssetContent(latest, this.originalAsset)) {
+                throw error;
+            }
+
+            this.asset.rev = latest.rev;
+            return firstValueFrom(this.assetService.updateAsset(this.asset));
+        }
+    }
+
+    private hasSameAssetContent(
+        first: SpAssetModel,
+        second: SpAssetModel,
+    ): boolean {
+        if (!first || !second) {
+            return false;
+        }
+        const firstContent = this.normalizeAssetForComparison(first);
+        const secondContent = this.normalizeAssetForComparison(second);
+        firstContent.rev = undefined;
+        secondContent.rev = undefined;
+        return JSON.stringify(firstContent) === JSON.stringify(secondContent);
     }
 
     private async savePendingManageAssetChanges(): Promise<void> {
@@ -520,5 +577,67 @@ export class SpAssetDetailsComponent
         }
 
         asset.assets?.forEach(child => this.cleanupEmptyCustomFields(child));
+    }
+
+    async handleImageFileDeletionRequested({
+        assetId,
+        fileId,
+    }: {
+        assetId: string;
+        fileId: string;
+    }): Promise<void> {
+        if (this.isNewAsset || this.uploadedImageFileIds.has(fileId)) {
+            await firstValueFrom(this.imagesService.deleteImage(fileId));
+
+            this.uploadedImageFileIds.delete(fileId);
+
+            return;
+        }
+
+        const persistedAsset = await firstValueFrom(
+            this.assetService.deleteAssetImage(
+                this.assetModelId,
+                fileId,
+                assetId,
+            ),
+        );
+
+        this.uploadedImageFileIds.delete(fileId);
+
+        this.asset.rev = persistedAsset.rev;
+
+        this.originalAsset = this.normalizeAssetForComparison(persistedAsset);
+
+        this.assetBrowserService.refreshBrowserAssetData();
+    }
+
+    trackUploadedImage(fileId: string, replacedFileIds: string[] = []): void {
+        this.uploadedImageFileIds.add(fileId);
+        replacedFileIds.forEach(id => this.replacedImageFileIds.add(id));
+    }
+
+    private async deleteDiscardedImageUploads(): Promise<void> {
+        const fileIds = [...this.uploadedImageFileIds];
+
+        await Promise.all(
+            fileIds.map(async fileId => {
+                await firstValueFrom(this.imagesService.deleteImage(fileId));
+                this.uploadedImageFileIds.delete(fileId);
+                this.replacedImageFileIds.delete(fileId);
+            }),
+        );
+    }
+
+    private async cleanupUnusedImageUploadsAfterSave(): Promise<void> {
+        const currentAssetImageFileIds = collectAssetImageFileIds(this.asset);
+
+        currentAssetImageFileIds.forEach(fileId =>
+            this.uploadedImageFileIds.delete(fileId),
+        );
+        await this.deleteDiscardedImageUploads();
+        for (const fileId of this.replacedImageFileIds) {
+            await firstValueFrom(this.imagesService.deleteImage(fileId));
+            this.replacedImageFileIds.delete(fileId);
+        }
     }
 }
