@@ -95,7 +95,7 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
         widgetConfig: ValueHeatmapChartWidgetModel,
         index: number,
     ): HeatmapSeriesOption {
-        const decimals = this.getDecimals(widgetConfig);
+        const numberFormat = this.getNumberFormat(widgetConfig);
         return {
             universalTransition: true,
             animation: true,
@@ -108,7 +108,10 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
             tooltip: {
                 valueFormatter: value => {
                     if (typeof value === 'number' && isFinite(value)) {
-                        return this.formatNumber(value * 100, decimals) + '%';
+                        return this.numberFormatService.formatPercent(
+                            value,
+                            numberFormat,
+                        );
                     } else {
                         return value as string;
                     }

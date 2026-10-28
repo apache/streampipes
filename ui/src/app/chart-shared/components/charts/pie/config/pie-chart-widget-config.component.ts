@@ -82,7 +82,7 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
         config.minAngle ??= 0;
         config.labelMode ??= 'name_percent';
         config.labelPosition ??= 'outside';
-        config.labelAlignTo ??= 'edge';
+        config.labelAlignTo ??= 'labelLine';
         config.avoidLabelOverlap ??= true;
         config.showLabelLine ??= true;
         config.topNEnabled ??= false;

@@ -42,6 +42,28 @@ import type { ToolboxDataZoomFeatureOption } from 'echarts/types/src/component/t
 import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared';
 import type { CartesianAxisPosition } from 'echarts/types/src/coord/cartesian/AxisModel.d.ts';
 import type { FieldUpdateInfo } from '../../../models/field-update.model';
+import {
+    NumberFormatOptions,
+    TimestampInput,
+} from '../../../services/formatting';
+import { SeriesPosition } from '../../../services/chart-colorization.service';
+import {
+    TOOLBOX_HEIGHT,
+    TOOLBOX_TOP,
+} from '../../../echarts-renderer/echarts-basic-options-generator.service';
+
+/** Height of the single, paged legend row above the plot (ECharts default). */
+const LEGEND_ROW_HEIGHT = 24;
+
+/** The subset of ECharts' axis-trigger tooltip params the renderer reads. */
+interface TooltipSeriesParam {
+    seriesIndex: number;
+    seriesName?: string;
+    marker?: string;
+    axisValue?: number | string;
+    value: unknown;
+    encode?: { y?: number[] };
+}
 
 @Injectable({ providedIn: 'root' })
 export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSeriesChartWidgetModel> {
@@ -55,72 +77,81 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         widgetConfig: TimeSeriesChartWidgetModel,
         widgetSize: WidgetSize,
     ): void {
-        const decimals = this.getDecimals(widgetConfig);
-        this.addAxisOptions(widgetConfig, options, widgetSize, decimals);
+        const axisFormat = this.getAxisNumberFormat(widgetConfig);
+        this.addAxisOptions(widgetConfig, options, widgetSize, axisFormat);
         const finalSeries: SeriesOption[] = [];
+        const seriesFormats: NumberFormatOptions[] = [];
+        const plottedFields =
+            widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties;
 
-        widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
-            field => {
-                const sourceIndex = field.sourceIndex;
-                const dataset = this.datasetUtilsService.findPreparedDataset(
-                    generatedDataset,
-                    sourceIndex,
+        plottedFields.forEach((field, plottedFieldIndex) => {
+            const sourceIndex = field.sourceIndex;
+            const dataset = this.datasetUtilsService.findPreparedDataset(
+                generatedDataset,
+                sourceIndex,
+            );
+            for (
+                let i = dataset.meta.preparedDataStartIndex;
+                i <
+                dataset.meta.preparedDataStartIndex +
+                    dataset.meta.preparedDataLength;
+                i++
+            ) {
+                const rawDatasetDimensions = dataset.rawDataset.dimensions;
+                const groupIndex = i - dataset.meta.preparedDataStartIndex;
+                const tag = dataset.tagValues[groupIndex];
+                const legacyDisplayName =
+                    widgetConfig.visualizationConfig.displayName[
+                        field.fullDbName + field.sourceIndex
+                    ];
+                const displayName = this.resultLabelService.resolveLabel(
+                    widgetConfig.dataConfig.sourceConfigs[field.sourceIndex]
+                        .queryConfig,
+                    field,
+                    legacyDisplayName,
                 );
-                for (
-                    let i = dataset.meta.preparedDataStartIndex;
-                    i <
-                    dataset.meta.preparedDataStartIndex +
-                        dataset.meta.preparedDataLength;
-                    i++
-                ) {
-                    const rawDatasetDimensions = dataset.rawDataset.dimensions;
-                    const groupIndex = i - dataset.meta.preparedDataStartIndex;
-                    const tag = dataset.tagValues[groupIndex];
-                    const legacyDisplayName =
-                        widgetConfig.visualizationConfig.displayName[
-                            field.fullDbName + field.sourceIndex
-                        ];
-                    const displayName = this.resultLabelService.resolveLabel(
-                        widgetConfig.dataConfig.sourceConfigs[field.sourceIndex]
-                            .queryConfig,
+                const mappedGroupLabel = this.colorizationService.findLabel(
+                    widgetConfig.visualizationConfig,
+                    field,
+                    tag,
+                );
+                const seriesName =
+                    dataset.groupedDatasets.length > 0
+                        ? (mappedGroupLabel ??
+                          this.makeGroupedSeriesName(
+                              tag,
+                              displayName,
+                              plottedFields.length,
+                          ))
+                        : displayName;
+                const fieldIndex = rawDatasetDimensions.indexOf(
+                    field.fullDbName,
+                );
+                finalSeries.push(
+                    this.makeSeries(
+                        widgetConfig,
+                        i,
                         field,
-                        legacyDisplayName,
-                    );
-                    const mappedGroupLabel = this.colorizationService.findLabel(
-                        widgetConfig.visualizationConfig,
-                        field,
+                        fieldIndex,
+                        seriesName,
                         tag,
-                    );
-                    const seriesName =
-                        dataset.groupedDatasets.length > 0
-                            ? (mappedGroupLabel ??
-                              this.echartsUtilsService.toTagString(
-                                  tag,
-                                  displayName,
-                              ))
-                            : displayName;
-                    const fieldIndex = rawDatasetDimensions.indexOf(
-                        field.fullDbName,
-                    );
-                    finalSeries.push(
-                        this.makeSeries(
-                            widgetConfig,
-                            i,
-                            field,
-                            fieldIndex,
-                            seriesName,
-                            tag,
-                        ),
-                    );
-                }
-            },
-        );
+                        {
+                            groupIndex,
+                            groupCount: dataset.meta.preparedDataLength,
+                            fieldIndex: plottedFieldIndex,
+                        },
+                    ),
+                );
+                seriesFormats.push(this.getNumberFormat(widgetConfig, field));
+            }
+        });
 
         this.addDataZoomOptions(widgetConfig, options);
         this.applyResponsiveLayoutOptions(options, widgetConfig, widgetSize);
 
         const showTooltip =
             widgetConfig.baseAppearanceConfig.chartAppearance?.showTooltip;
+        const timeSpan = this.getTimeSpan(generatedDataset);
 
         Object.assign(options, {
             series: finalSeries,
@@ -132,13 +163,72 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             tooltip: {
                 show: showTooltip,
                 trigger: 'axis',
-                valueFormatter: (value: unknown) =>
-                    this.formatNumber(value, decimals),
+                formatter: (params: unknown) =>
+                    this.makeTooltipContent(
+                        Array.isArray(params) ? params : [params],
+                        seriesFormats,
+                        timeSpan,
+                    ),
                 axisPointer: {
                     type: 'cross',
                 },
             },
         });
+    }
+
+    /**
+     * Renders the axis tooltip like ECharts does (time header, one line per
+     * series with marker, name and value) but with the shared formatters.
+     */
+    private makeTooltipContent(
+        params: TooltipSeriesParam[],
+        seriesFormats: NumberFormatOptions[],
+        timeSpan: number | undefined,
+    ): string {
+        if (params.length === 0) {
+            return '';
+        }
+        const header = this.timeFormatService.formatTimestamp(
+            params[0].axisValue,
+            timeSpan,
+        );
+        const lines = params.map(param => {
+            const value = this.formatNumber(
+                this.getTooltipValue(param),
+                seriesFormats[param.seriesIndex] ?? {},
+            );
+            return (
+                `<div style="display:flex;justify-content:space-between;gap:1rem">` +
+                `<span>${param.marker ?? ''}${param.seriesName ?? ''}</span>` +
+                `<b>${value}</b></div>`
+            );
+        });
+        return [header, ...lines].join('');
+    }
+
+    /** The y value of a dataset-backed series row, as ECharts encodes it. */
+    private getTooltipValue(param: TooltipSeriesParam): unknown {
+        if (!Array.isArray(param.value)) {
+            return param.value;
+        }
+        const dimensionIndex = param.encode?.y?.[0] ?? 1;
+        return param.value[dimensionIndex];
+    }
+
+    /** Span of the plotted timestamps, which decides the time label detail. */
+    private getTimeSpan(
+        generatedDataset: GeneratedDataset,
+    ): number | undefined {
+        const timestamps: TimestampInput[] = [];
+        generatedDataset.preparedDatasets.forEach(pd => {
+            const source = pd.rawDataset.source;
+            if (Array.isArray(source)) {
+                (source as unknown[][]).forEach(row =>
+                    timestamps.push(row?.[0] as TimestampInput),
+                );
+            }
+        });
+        return this.timeFormatService.spanOf(timestamps);
     }
 
     public handleUpdatedFields(
@@ -161,6 +251,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         fieldIndex: number,
         seriesName: string,
         tag?: TagValue,
+        position?: SeriesPosition,
     ): SeriesOption {
         const seriesType = this.makeSeriesType(
             widgetConfig.visualizationConfig.displayType,
@@ -170,6 +261,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             widgetConfig.visualizationConfig,
             field,
             tag,
+            position,
         );
 
         const series = {
@@ -199,6 +291,22 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             this.appendScatterOptions(series as ScatterSeriesOption);
         }
         return series;
+    }
+
+    /**
+     * Legend entry of a grouped series: with a single plotted field the group
+     * value alone identifies the series ("cnc01"), with several fields the
+     * field label is needed as well ("Spindle load (cnc01)").
+     */
+    private makeGroupedSeriesName(
+        tag: TagValue,
+        displayName: string,
+        plottedFieldCount: number,
+    ): string {
+        if (plottedFieldCount === 1 && tag?.values?.length > 0) {
+            return tag.values.map(value => String(value)).join(', ');
+        }
+        return this.echartsUtilsService.toTagString(tag, displayName);
     }
 
     private makeSeriesType(
@@ -291,7 +399,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         config: TimeSeriesChartWidgetModel,
         options: EChartsOption,
         widgetSize: WidgetSize,
-        decimals: number | undefined,
+        numberFormat: NumberFormatOptions,
     ): void {
         const xAxisOption = this.axisGeneratorService.makeAxis(
             'time',
@@ -332,7 +440,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 max: settings.autoScaleActive ? undefined : settings.axisMax,
                 axisLabel: {
                     formatter: (value: number | string) =>
-                        this.formatNumber(value, decimals),
+                        this.formatNumber(value, numberFormat),
                 },
             });
             axisIndex++;
@@ -367,30 +475,33 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         const showLegend = legend.show ?? true;
         const showToolbox = toolbox.show ?? true;
         const horizontalPadding = isSmallWidget ? 14 : 18;
-        const topToolboxTop = 4;
-        const toolboxHeight = showToolbox ? 28 : 0;
-        const topLegendTop = showToolbox
-            ? topToolboxTop + toolboxHeight + 4
-            : 6;
-        const topLegendHeight = showLegend ? 24 : 0;
+        const topLegendTop = showToolbox ? TOOLBOX_TOP + TOOLBOX_HEIGHT + 4 : 6;
         const topControlsBottom = Math.max(
-            showToolbox ? topToolboxTop + toolboxHeight : 0,
-            showLegend ? topLegendTop + topLegendHeight : 0,
+            showToolbox ? TOOLBOX_TOP + TOOLBOX_HEIGHT : 0,
+            showLegend ? topLegendTop + LEGEND_ROW_HEIGHT : 0,
         );
         const gridTop = topControlsBottom > 0 ? topControlsBottom + 8 : 16;
 
-        options.toolbox = {
-            ...toolbox,
-            show: showToolbox,
-            left: 10,
-            right: 'auto',
-            top: topToolboxTop,
-        };
+        options.toolbox = widgetSize.toolboxOverlay
+            ? {
+                  ...toolbox,
+                  ...this.basicOptionsGeneratorService.overlayToolboxPlacement(
+                      gridTop,
+                  ),
+              }
+            : {
+                  ...toolbox,
+                  show: showToolbox,
+                  left: 10,
+                  right: 'auto',
+                  top: TOOLBOX_TOP,
+              };
 
         options.legend = {
             ...legend,
             show: showLegend,
             orient: 'horizontal',
+            // one paged row keeps the plot height constant however many series there are
             type: 'scroll',
             left: 'center',
             right: 'auto',

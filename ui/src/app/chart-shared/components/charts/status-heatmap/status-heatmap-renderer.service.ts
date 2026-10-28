@@ -88,9 +88,12 @@ export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<Status
 
             options.dataset = { source: transformedDataset };
 
-            (options.xAxis as any).data = rawDatasetSource.map(s => {
-                return new Date(s[0]).toLocaleString();
-            });
+            const timestamps = rawDatasetSource.map(
+                s => s[0] as number | string,
+            );
+            const timeSpan = this.timeFormatService.spanOf(timestamps);
+            (options.xAxis as any).data =
+                this.timeFormatService.formatTimestamps(timestamps);
 
             options.tooltip = {
                 formatter: params => {
@@ -102,8 +105,12 @@ export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<Status
                         colorMapping.find(
                             c => c.value === originalValue.toString(),
                         )?.label || originalValue.toString();
+                    const timeLabel = this.timeFormatService.formatTimestamp(
+                        timestamp as number | string,
+                        timeSpan,
+                    );
 
-                    return `${params.marker} ${new Date(timestamp).toLocaleString()}<br/>Status: <b>${statusLabel}</b>`;
+                    return `${params.marker} ${timeLabel}<br/>Status: <b>${statusLabel}</b>`;
                 },
             };
 
@@ -114,7 +121,7 @@ export class SpStatusHeatmapRendererService extends SpBaseEchartsRenderer<Status
                     val.toString(),
                 color:
                     colorMapping.find(c => c.value === val.toString())?.color ||
-                    this.colorMappingService.getDefaultColor(val.toString()),
+                    this.colorMappingService.getPaletteColor(index),
             }));
 
             options.visualMap = {

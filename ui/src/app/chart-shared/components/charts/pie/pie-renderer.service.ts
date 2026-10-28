@@ -27,6 +27,8 @@ import {
 import { FieldUpdateInfo } from '../../../models/field-update.model';
 import { ZRColor } from 'echarts/types/dist/shared';
 import { ColorMappingService } from '../../../services/color-mapping.service';
+import { NumberFormatOptions } from '../../../services/formatting';
+import { WidgetSize } from '../../../models/dataset.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
@@ -78,6 +80,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
     addAdditionalConfigs(
         option: EChartsOption,
         widgetConfig: PieChartWidgetModel,
+        widgetSize?: WidgetSize,
     ): void {
         const config = this.getSafeConfig(widgetConfig);
         if (config.selectedProperty.fieldCharacteristics.binary) {
@@ -94,7 +97,10 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                 },
             };
         }
-        this.applySinglePieResponsiveLayout(option);
+        this.applySinglePieResponsiveLayout(
+            option,
+            widgetSize?.toolboxOverlay ?? false,
+        );
     }
 
     addSeriesItem(
@@ -105,7 +111,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         const config = this.getSafeConfig(widgetConfig);
         const innerRadius = config.selectedRadius;
         const colorMapping = config.colorMappingsPieChart;
-        const decimals = this.getDecimals(widgetConfig);
+        const numberFormat = this.getNumberFormat(widgetConfig);
         const labelMode = config.labelMode;
         const labelPosition = config.labelPosition;
         const labelAlignTo = config.labelAlignTo;
@@ -132,7 +138,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                         params.value[1],
                         params.percent,
                         labelMode,
-                        decimals,
+                        numberFormat,
                         true,
                     )}`;
                 },
@@ -154,7 +160,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                         params.value[1],
                         params.percent,
                         labelMode,
-                        decimals,
+                        numberFormat,
                     );
                 },
             },
@@ -171,8 +177,8 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                     return (colorMapping.find(
                         c => c.value === category.toString(),
                     )?.color ||
-                        this.colorMappingService.getDefaultColor(
-                            params.data[0],
+                        this.colorMappingService.getPaletteColor(
+                            params.dataIndex,
                         )) as ZRColor;
                 },
             },
@@ -184,16 +190,22 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         rawValue: unknown,
         rawPercent: unknown,
         labelMode: PieChartWidgetModel['visualizationConfig']['labelMode'],
-        decimals: number | undefined,
+        numberFormat: NumberFormatOptions,
         boldValue = false,
     ): string {
-        const value = this.formatNumber(rawValue, decimals);
+        // pie slices are event counts, so the value never has fraction digits
+        const value = this.formatNumber(rawValue, {
+            ...numberFormat,
+            integer: true,
+        });
         const valueText = boldValue ? `<b>${value}</b>` : value;
-        const percent =
+        const percentText =
             typeof rawPercent === 'number'
-                ? this.formatNumber(rawPercent, decimals)
-                : String(rawPercent ?? '');
-        const percentText = `${percent}%`;
+                ? this.numberFormatService.formatPercent(
+                      rawPercent / 100,
+                      numberFormat,
+                  )
+                : `${String(rawPercent ?? '')}%`;
 
         if (labelMode === 'name') {
             return mappedLabel;
@@ -262,7 +274,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
             minAngle: Number.isFinite(config.minAngle) ? config.minAngle : 0,
             labelMode: config.labelMode || 'name_percent',
             labelPosition: config.labelPosition || 'outside',
-            labelAlignTo: config.labelAlignTo || 'edge',
+            labelAlignTo: config.labelAlignTo || 'labelLine',
             avoidLabelOverlap:
                 typeof config.avoidLabelOverlap === 'boolean'
                     ? config.avoidLabelOverlap
@@ -284,7 +296,10 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         };
     }
 
-    private applySinglePieResponsiveLayout(option: EChartsOption): void {
+    private applySinglePieResponsiveLayout(
+        option: EChartsOption,
+        toolboxOverlay: boolean,
+    ): void {
         const pieSeries = Array.isArray(option.series)
             ? option.series
             : option.series
@@ -316,13 +331,20 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         const pieTop = topControlsBottom > 0 ? topControlsBottom + 8 : 8;
         const pieBottom = 8;
 
-        option.toolbox = {
-            ...toolbox,
-            show: showToolbox,
-            left: 10,
-            right: 'auto',
-            top: toolboxTop,
-        };
+        option.toolbox = toolboxOverlay
+            ? {
+                  ...toolbox,
+                  ...this.basicOptionsGeneratorService.overlayToolboxPlacement(
+                      legendTop + legendHeight + 4,
+                  ),
+              }
+            : {
+                  ...toolbox,
+                  show: showToolbox,
+                  left: 10,
+                  right: 'auto',
+                  top: toolboxTop,
+              };
         option.legend = {
             ...legend,
             show: showLegend,
