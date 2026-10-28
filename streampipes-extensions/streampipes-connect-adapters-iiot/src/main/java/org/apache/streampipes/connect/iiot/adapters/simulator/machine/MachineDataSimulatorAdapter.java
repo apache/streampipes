@@ -36,20 +36,23 @@ public class MachineDataSimulatorAdapter implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
   private static final String WAIT_TIME_MS = "wait-time-ms";
-  private static final String SELECTED_SIMULATOR_OPTION = "selected-simulator-option";
+  public static final String SELECTED_SIMULATOR_OPTION = "selected-simulator-option";
   public static final String NUMBER_OF_SENSORS = "numberOfSensors";
+  public static final String[] SIMULATOR_OPTIONS = {
+      "flowrate", "pressure", "waterlevel", "diagnostics", "cnc", "assembly", "quality"
+  };
 
   private MachineDataSimulator machineDataSimulator;
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 1, MachineDataSimulatorAdapter::new)
+    return AdapterConfigurationBuilder.create(ID, 2, MachineDataSimulatorAdapter::new)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
         .requiredIntegerParameter(Labels.withId(NUMBER_OF_SENSORS), 1)
         .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
-            "flowrate", "pressure", "waterlevel", "diagnostics"))
+            SIMULATOR_OPTIONS))
         .buildConfiguration();
   }
 
