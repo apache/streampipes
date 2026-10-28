@@ -40,6 +40,13 @@ describe('Download audit log', () => {
             items: [auditEntry],
             nextCursor: null,
         }).as('getAuditEvents');
+        // The glob above does not cross the slash in `events/download`, and the
+        // CI stack runs with auditing disabled, so the export must be stubbed too.
+        cy.intercept('GET', '**/admin/audit/events/download*', {
+            statusCode: 200,
+            headers: { 'content-type': 'application/octet-stream' },
+            body: JSON.stringify([auditEntry]),
+        }).as('downloadAuditEvents');
 
         ConfigurationUtils.goToAuditLogConfiguration();
         cy.wait('@getAuditEvents');
@@ -58,6 +65,7 @@ describe('Download audit log', () => {
             ConfigurationBtns.auditDownloadDelimiter(delimiter).click();
         }
         ConfigurationBtns.auditDownloadBtn().click();
+        cy.wait('@downloadAuditEvents');
 
         ConfigurationBtns.auditDownloadDialog().should(
             'contain.text',
