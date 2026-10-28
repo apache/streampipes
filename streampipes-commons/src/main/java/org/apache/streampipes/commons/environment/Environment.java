@@ -296,6 +296,8 @@ public interface Environment {
 
   IntEnvironmentVariable getAuditQueueCapacity();
 
+  StringEnvironmentVariable getAuditRetentionSchedulerCron();
+
   IntEnvironmentVariable getAuditShutdownTimeoutSeconds();
 
   StringEnvironmentVariable getAuditInfluxOrg();

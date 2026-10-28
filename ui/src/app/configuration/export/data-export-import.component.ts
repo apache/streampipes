@@ -43,11 +43,10 @@ import {
 } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
+import { ExportProviderConfigurationComponent } from './export-provider-configuration/export-provider-configuration.component';
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
@@ -68,14 +67,13 @@ interface AssetReferenceExportItems {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         LayoutGapDirective,
         SplitSectionComponent,
         MatCheckbox,
         MatButton,
         TranslatePipe,
         MatIcon,
+        ExportProviderConfigurationComponent,
     ],
 })
 export class SpDataExportImportComponent implements OnInit {

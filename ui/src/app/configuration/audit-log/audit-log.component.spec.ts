@@ -17,7 +17,9 @@
  */
 
 import { TranslateService } from '@ngx-translate/core';
-import { AuditDialogComponent } from './audit-dialog.component';
+import { AuditRetentionDialogComponent } from '../dialog/audit-retention/audit-retention-dialog.component';
+import { AuditDialogComponent } from '../dialog/audit-log/audit-dialog.component';
+import { AuditDownloadDialogComponent } from '../dialog/audit-log-download/audit-download-dialog.component';
 import { TestBed } from '@angular/core/testing';
 import {
     AuditService,
@@ -46,6 +48,7 @@ describe('AuditLogComponent', () => {
     };
     const api = {
         getStatus: vi.fn(),
+        getRetention: vi.fn(),
         getEventTypes: vi.fn(),
         getEvents: vi.fn(),
         getDetails: vi.fn(),
@@ -63,6 +66,7 @@ describe('AuditLogComponent', () => {
             type => type === 'adapter',
         );
         api.getStatus.mockReturnValue(of({ enabled: true }));
+        api.getRetention.mockReturnValue(of(null));
         api.getEventTypes.mockReturnValue(of(['sp.adapter.create']));
         api.getEvents.mockReturnValue(
             of({ items: [event], nextCursor: 'next' }),
@@ -189,93 +193,125 @@ describe('AuditLogComponent', () => {
         );
     });
 
-    it('distinguishes storage failure from empty results and allows retry', () => {
-        api.getEvents.mockReturnValueOnce(throwError(() => ({ status: 503 })));
-        component.ngOnInit();
-        expect(component.failed).toBe(true);
-        expect(component.loading).toBe(false);
-        component.retry();
-        expect(component.failed).toBe(false);
-        expect(component.dataSource.data).toEqual([event]);
-    });
-
-    it('does not query storage when auditing is disabled', () => {
-        api.getStatus.mockReturnValue(of({ enabled: false }));
-        component.ngOnInit();
-        expect(api.getEvents).not.toHaveBeenCalled();
-    });
-    it('loads usernames once per refresh and reuses them across pages and dialogs', () => {
-        component.ngOnInit();
-        expect(component.usernames.get(event.actor)).toBe('operator');
-        component.next();
-        component.previous();
-        expect(users.listUsers).toHaveBeenCalledExactlyOnceWith(true);
-        component.showDetails(event);
-        expect(dialogs.open.mock.calls.at(-1)[1].data).toEqual({
-            event,
-            username: 'operator',
-        });
-        expect(event.actor).toBe('user-1');
-    });
-
-    it('refreshes renamed users and removes deleted usernames', () => {
-        component.refresh();
-        users.listUsers.mockReturnValue(
-            of([{ principalId: 'user-1', email: 'renamed' }]),
+    it('opens the retention configuration panel and refreshes its icon state after saving', () => {
+        dialogs.open.mockReturnValue({ afterClosed: () => of(true) });
+        component.showRetention();
+        expect(dialogs.open).toHaveBeenCalledWith(
+            AuditRetentionDialogComponent,
+            expect.objectContaining({ title: 'Retention' }),
         );
-        component.refresh();
-        expect(component.usernames.get(event.actor)).toBe('renamed');
-        users.listUsers.mockReturnValue(of([]));
-        component.refresh();
-        expect(component.usernames.get(event.actor)).toBeUndefined();
-    });
-
-    it('keeps audit events available when username lookup fails', () => {
-        users.listUsers.mockReturnValue(
-            throwError(() => new Error('unavailable')),
-        );
-        component.refresh();
-        expect(component.usernames.size).toBe(0);
-        expect(component.dataSource.data).toEqual([event]);
-        expect(component.failed).toBe(false);
-    });
-    it('resolves typed usernames and selected users to principal IDs', () => {
-        component.refresh();
-        component.actor = 'OPERATOR';
-        component.apply();
-        expect(api.getEvents.mock.calls.at(-1)[0].actor).toBe('user-1');
-        component.onActorChange(component.actorFromText('operator'));
-        expect(component.actor).toBe('user-1');
-        component.onActorChange(component.actorFromText('deleted-user'));
-        component.apply();
-        expect(api.getEvents.mock.calls.at(-1)[0].actor).toBe('deleted-user');
-        component.onActorChange(undefined);
-        component.apply();
-        expect(api.getEvents.mock.calls.at(-1)[0].actor).toBe('');
-    });
-    it('selects and clears event and outcome filters using their stored IDs', () => {
-        component.refresh();
-        component.onEventTypeChange('sp.adapter.start');
-        component.onOutcomeChange({ id: 'succeeded', label: 'Erfolgreich' });
-        component.apply();
-        expect(api.getEvents.mock.calls.at(-1)[0]).toMatchObject({
-            eventType: 'sp.adapter.start',
-            outcome: 'succeeded',
+        expect(api.getRetention).toHaveBeenCalled();
+        it('opens a download dialog with the active audit filters', () => {
+            component.ngOnInit();
+            component.openDownloadDialog();
+            expect(dialogs.open).toHaveBeenCalledWith(
+                AuditDownloadDialogComponent,
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        query: expect.objectContaining({
+                            from: expect.any(String),
+                            to: expect.any(String),
+                        }),
+                    }),
+                }),
+            );
         });
-        component.onEventTypeChange(undefined);
-        component.onOutcomeChange(undefined);
-        component.apply();
-        expect(api.getEvents.mock.calls.at(-1)[0]).toMatchObject({
-            eventType: '',
-            outcome: '',
-        });
-    });
 
-    it('displays only usernames while keeping IDs searchable', () => {
-        component.refresh();
-        expect(component.actorOptions[0].label).toBe('operator');
-        expect(component.actorSearchText(component.actorOptions[0])).toBe(
-            'operator user-1',
-        );
+        it('distinguishes storage failure from empty results and allows retry', () => {
+            api.getEvents.mockReturnValueOnce(
+                throwError(() => ({ status: 503 })),
+            );
+            component.ngOnInit();
+            expect(component.failed).toBe(true);
+            expect(component.loading).toBe(false);
+            component.retry();
+            expect(component.failed).toBe(false);
+            expect(component.dataSource.data).toEqual([event]);
+        });
+
+        it('does not query storage when auditing is disabled', () => {
+            api.getStatus.mockReturnValue(of({ enabled: false }));
+            component.ngOnInit();
+            expect(api.getEvents).not.toHaveBeenCalled();
+        });
+        it('loads usernames once per refresh and reuses them across pages and dialogs', () => {
+            component.ngOnInit();
+            expect(component.usernames.get(event.actor)).toBe('operator');
+            component.next();
+            component.previous();
+            expect(users.listUsers).toHaveBeenCalledExactlyOnceWith(true);
+            component.showDetails(event);
+            expect(dialogs.open.mock.calls.at(-1)[1].data).toEqual({
+                event,
+                username: 'operator',
+            });
+            expect(event.actor).toBe('user-1');
+        });
+
+        it('refreshes renamed users and removes deleted usernames', () => {
+            component.refresh();
+            users.listUsers.mockReturnValue(
+                of([{ principalId: 'user-1', email: 'renamed' }]),
+            );
+            component.refresh();
+            expect(component.usernames.get(event.actor)).toBe('renamed');
+            users.listUsers.mockReturnValue(of([]));
+            component.refresh();
+            expect(component.usernames.get(event.actor)).toBeUndefined();
+        });
+
+        it('keeps audit events available when username lookup fails', () => {
+            users.listUsers.mockReturnValue(
+                throwError(() => new Error('unavailable')),
+            );
+            component.refresh();
+            expect(component.usernames.size).toBe(0);
+            expect(component.dataSource.data).toEqual([event]);
+            expect(component.failed).toBe(false);
+        });
+        it('resolves typed usernames and selected users to principal IDs', () => {
+            component.refresh();
+            component.actor = 'OPERATOR';
+            component.apply();
+            expect(api.getEvents.mock.calls.at(-1)[0].actor).toBe('user-1');
+            component.onActorChange(component.actorFromText('operator'));
+            expect(component.actor).toBe('user-1');
+            component.onActorChange(component.actorFromText('deleted-user'));
+            component.apply();
+            expect(api.getEvents.mock.calls.at(-1)[0].actor).toBe(
+                'deleted-user',
+            );
+            component.onActorChange(undefined);
+            component.apply();
+            expect(api.getEvents.mock.calls.at(-1)[0].actor).toBe('');
+        });
+        it('selects and clears event and outcome filters using their stored IDs', () => {
+            component.refresh();
+            component.onEventTypeChange('sp.adapter.start');
+            component.onOutcomeChange({
+                id: 'succeeded',
+                label: 'Erfolgreich',
+            });
+            component.apply();
+            expect(api.getEvents.mock.calls.at(-1)[0]).toMatchObject({
+                eventType: 'sp.adapter.start',
+                outcome: 'succeeded',
+            });
+            component.onEventTypeChange(undefined);
+            component.onOutcomeChange(undefined);
+            component.apply();
+            expect(api.getEvents.mock.calls.at(-1)[0]).toMatchObject({
+                eventType: '',
+                outcome: '',
+            });
+        });
+
+        it('displays only usernames while keeping IDs searchable', () => {
+            component.refresh();
+            expect(component.actorOptions[0].label).toBe('operator');
+            expect(component.actorSearchText(component.actorOptions[0])).toBe(
+                'operator user-1',
+            );
+        });
     });
 });

@@ -25,11 +25,13 @@ import org.apache.streampipes.audit.api.AuditEventDefinition;
 import org.apache.streampipes.audit.api.AuditEventProvider;
 import org.apache.streampipes.audit.api.AuditEventReader;
 import org.apache.streampipes.audit.api.AuditEventStore;
+import org.apache.streampipes.audit.api.AuditExportConfiguration;
 import org.apache.streampipes.audit.api.AuditOutcome;
 import org.apache.streampipes.audit.api.AuditPage;
 import org.apache.streampipes.audit.api.AuditQuery;
 import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.audit.api.AuditStatus;
+import org.apache.streampipes.audit.management.export.AuditExportService;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -222,6 +225,12 @@ public final class DefaultAuditService implements AuditService {
   @Override
   public AuditPage query(AuditQuery query) {
     return reader().query(query);
+  }
+
+  @Override
+  public void export(AuditQuery query, AuditExportConfiguration configuration, OutputStream outputStream)
+      throws IOException {
+    new AuditExportService(reader()).export(query, configuration, outputStream);
   }
 
   @Override

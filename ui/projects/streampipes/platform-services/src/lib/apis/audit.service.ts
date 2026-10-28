@@ -27,6 +27,7 @@ import {
     AuditQuery,
     AuditStatus,
 } from '../model/audit/audit.model';
+import { RetentionTimeConfig } from '../model/gen/streampipes-model';
 
 @Injectable({ providedIn: 'root' })
 export class AuditService {
@@ -35,6 +36,20 @@ export class AuditService {
 
     getStatus(): Observable<AuditStatus> {
         return this.http.get<AuditStatus>(`${this.baseUrl}/status`);
+    }
+
+    getRetention(): Observable<RetentionTimeConfig | null> {
+        return this.http.get<RetentionTimeConfig | null>(
+            `${this.baseUrl}/retention`,
+        );
+    }
+
+    setRetention(config: RetentionTimeConfig): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/retention`, config);
+    }
+
+    deleteRetention(): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/retention`);
     }
 
     getEventTypes(): Observable<string[]> {
@@ -49,6 +64,40 @@ export class AuditService {
             }
         });
         return this.http.get<AuditPage>(`${this.baseUrl}/events`, { params });
+    }
+
+    download(
+        query: AuditQuery,
+        columns: string[],
+        headers: string[],
+        format: 'csv' | 'json' | 'xlsx',
+        delimiter?: 'comma' | 'semicolon',
+    ): Observable<Blob> {
+        let params = new HttpParams();
+        Object.entries(query).forEach(([key, value]) => {
+            if (
+                key !== 'limit' &&
+                key !== 'cursor' &&
+                value !== undefined &&
+                value !== ''
+            ) {
+                params = params.set(key, String(value));
+            }
+        });
+        columns.forEach(column => {
+            params = params.append('columns', column);
+        });
+        headers.forEach(header => {
+            params = params.append('headers', header);
+        });
+        params = params.set('format', format);
+        if (delimiter) {
+            params = params.set('delimiter', delimiter);
+        }
+        return this.http.get(`${this.baseUrl}/events/download`, {
+            params,
+            responseType: 'blob',
+        });
     }
 
     getDetails(event: AuditEntry): Observable<AuditEntryDetails> {
