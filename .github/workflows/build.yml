@@ -53,8 +53,15 @@ jobs:
 
       - name: Set env variables for Docker builds
         run: |
-          echo "MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "MVN_VERSION=$MVN_VERSION" >> $GITHUB_ENV
           echo "DOCKERHUB_APACHE_REPO=apachestreampipes" >> $GITHUB_ENV
+          # Floating tag of the all-in-one image: "dev" follows the snapshot builds of the dev branch,
+          # "latest" follows the newest release built from a rel/** branch.
+          case "$MVN_VERSION" in
+            *-SNAPSHOT) echo "ALL_IN_ONE_FLOATING_TAG=dev" >> $GITHUB_ENV ;;
+            *) echo "ALL_IN_ONE_FLOATING_TAG=latest" >> $GITHUB_ENV ;;
+          esac
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1
@@ -137,4 +144,6 @@ jobs:
             ui=./ui/dist/streampipes/ui/browser
           platforms: linux/amd64,linux/arm64/v8
           push: true
-          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/all-in-one:${{ env.MVN_VERSION }}
+          tags: |
+            ${{ env.DOCKERHUB_APACHE_REPO }}/all-in-one:${{ env.MVN_VERSION }}
+            ${{ env.DOCKERHUB_APACHE_REPO }}/all-in-one:${{ env.ALL_IN_ONE_FLOATING_TAG }}

@@ -50,7 +50,7 @@
 No hardware, no setup wizard: one container runs the whole platform with a simulated machine already streaming data.
 
 ```bash
-docker run --rm -p 80:80 apachestreampipes/all-in-one:0.99.0-SNAPSHOT
+docker run --rm -p 80:80 apachestreampipes/all-in-one:dev
 ```
 
 Then open [http://localhost](http://localhost) and sign in with `admin@streampipes.apache.org` / `admin`.
@@ -62,8 +62,9 @@ everything, **Pipelines** has the persist and analytics pipelines, and the simul
 **Adapters**, one of them with a JavaScript transformation. The first start takes about a minute while the
 services boot and the demo is seeded.
 
-The image bundles CouchDB, NATS, InfluxDB, the core, the IIoT extensions and the UI, and is meant for
-trying things out. For a real installation use the Compose installer below. Details, options and how to
+The `dev` tag follows the latest build of the `dev` branch; `latest` and version tags such as `0.99.0` are
+published with each release. The image bundles CouchDB, NATS, InfluxDB, the core, the IIoT extensions and the
+UI, and is meant for trying things out. For a real installation use the Compose installer below. Details, options and how to
 build the image yourself are in [installer/all-in-one](installer/all-in-one).
 
 ## Overview

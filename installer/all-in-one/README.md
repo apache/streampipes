@@ -29,8 +29,11 @@ seeds a demo scenario on first start, so you see live machine data without conne
 ## Run it
 
 ```bash
-docker run --rm -p 80:80 apachestreampipes/all-in-one:0.99.0-SNAPSHOT
+docker run --rm -p 80:80 apachestreampipes/all-in-one:dev
 ```
+
+Tags: `dev` follows the latest build of the `dev` branch, `latest` the newest release, and version tags
+(`0.99.0-SNAPSHOT` for development builds, `0.99.0` for releases) pin a specific build.
 
 1. Open [http://localhost](http://localhost). While the services boot (about a minute) the UI shows a
    progress screen that moves on by itself.
@@ -105,7 +108,7 @@ environment variables (`SP_COUCHDB_HOST`, `SP_TS_STORAGE_HOST`, `SP_NATS_HOST`, 
 The initial administrator is `admin@streampipes.apache.org` / `admin`. Override it on the first start:
 
 ```bash
-docker run --rm -p 80:80 -e SP_INITIAL_ADMIN_PASSWORD=change-me apachestreampipes/all-in-one:0.99.0-SNAPSHOT
+docker run --rm -p 80:80 -e SP_INITIAL_ADMIN_PASSWORD=change-me apachestreampipes/all-in-one:dev
 ```
 
 The secrets the services share (service account, JWT signing, CouchDB and InfluxDB credentials,
