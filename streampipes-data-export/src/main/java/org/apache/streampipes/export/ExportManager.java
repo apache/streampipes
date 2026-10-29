@@ -47,7 +47,7 @@ public class ExportManager {
             .resolveResources())
         .collect(Collectors.toList());
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
-    addGenericStoragePreview(exportConfig, resourceManager.getGenericStorage());
+    addGenericStoragePreview(exportConfig, resourceManager.getGenericStorage(), selectedAssetIds);
 
     return exportConfig;
   }
@@ -61,7 +61,9 @@ public class ExportManager {
         .generateExportPackage();
   }
 
-  private static void addGenericStoragePreview(ExportConfiguration config, IGenericStorage storage) {
+  private static void addGenericStoragePreview(ExportConfiguration config,
+                                                IGenericStorage storage,
+                                                List<String> selectedAssetIds) {
     var resolvers = new GenericStorageResolverProvider(storage);
     try {
       for (var appDocType : storage.getAllAppDocTypes()) {
@@ -70,7 +72,10 @@ public class ExportManager {
         }
         var exportType = GenericStorageResourceRegistry.INSTANCE.find(appDocType).filter(type -> type.category() != null);
         if (exportType.isPresent()) {
-          // Fall back to the existing bulk export option if document enumeration fails.
+          if (!selectedAssetIds.isEmpty()) {
+            continue;
+          }
+          // Global exports list all documents; asset exports are resolved by AssetLinkResolver.
           try {
             var items = new ArrayList<ExportItem>();
             for (var document : storage.findAll(appDocType)) {

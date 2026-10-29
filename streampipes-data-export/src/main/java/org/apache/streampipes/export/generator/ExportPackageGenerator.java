@@ -28,6 +28,7 @@ import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.export.utils.ArchiveEntryNames;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -214,7 +215,7 @@ public class ExportPackageGenerator {
     try {
       if (exportItem.isSelected()) {
         var resourceId = exportItem.getResourceId();
-        var sanitizedResourceId = sanitize(resourceId);
+        var sanitizedResourceId = ArchiveEntryNames.forResourceId(resourceId);
         builder.addText(sanitizedResourceId, exporter.serialize(resourceId));
         function.accept(sanitizedResourceId);
       }
@@ -251,10 +252,6 @@ public class ExportPackageGenerator {
     if (exportItem.isSelected() && exportedGenericStorageDocumentIds.add(exportItem.getResourceId())) {
       addDoc(builder, exportItem, genericStorageResolvers::getSerializedDocument, function);
     }
-  }
-
-  private String sanitize(String resourceId) {
-    return resourceId.replaceAll(":", "").replaceAll("\\.", "");
   }
 
   private void addAssets(ZipFileBuilder builder,

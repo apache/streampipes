@@ -292,18 +292,37 @@ export class SpDataExportDialogComponent implements OnInit {
                     .filter(config => config.items.length > 0);
         });
 
+        const genericSections = new Map<string, SectionAssetConfiguration[]>();
+        for (const config of this.preview.assetExportConfiguration) {
+            for (const [title, items] of Object.entries(
+                groupExportItems(config.genericStorageDocuments),
+            )) {
+                const rows = genericSections.get(title) ?? [];
+                rows.push({
+                    assetId: config.assetId,
+                    assetName: config.assetName,
+                    items,
+                });
+                genericSections.set(title, rows);
+            }
+        }
         for (const [title, items] of Object.entries(
             groupExportItems(this.preview.genericStorageDocuments),
-        ).sort(([left], [right]) => left.localeCompare(right))) {
+        )) {
+            const rows = genericSections.get(title) ?? [];
+            rows.push({
+                assetId: `genericStorage::${title}`,
+                assetName: '',
+                items,
+            });
+            genericSections.set(title, rows);
+        }
+        for (const [title, rows] of [...genericSections].sort(
+            ([left], [right]) => left.localeCompare(right),
+        )) {
             const key = `genericStorage::${title}`;
             this.exportSections.push({ key, title });
-            this.sectionAssets[key] = [
-                {
-                    assetId: key,
-                    assetName: '',
-                    items,
-                },
-            ];
+            this.sectionAssets[key] = rows;
         }
     }
 

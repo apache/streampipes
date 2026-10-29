@@ -156,6 +156,8 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
     Map<String, Object> payload = defaultMapper.readValue(document, new TypeReference<>() { });
     var resolvers = new GenericStorageResolverProvider(resourceManager.getGenericStorage());
     var item = resolvers.toExportItem(payload, true);
+    // Import selections identify archive entries, whose names may differ from stored document IDs.
+    item.setResourceId(genericDocId);
     importConfig.addGenericStorageDocument(item);
   }
 

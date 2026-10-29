@@ -30,6 +30,7 @@ import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
 import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.export.utils.ArchiveEntryNames;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -191,14 +192,15 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     if (shouldStore(documentId, config.getGenericStorageDocuments())) {
       var resolver = new GenericStorageDocumentResolver(genericStorage);
       var storedDocument = resolver.readDocument(document);
-      if (!documentId.equals(storedDocument.get("_id"))) {
+      if (!(storedDocument.get("_id") instanceof String resourceId)
+          || !(documentId.equals(resourceId) || documentId.equals(ArchiveEntryNames.forResourceId(resourceId)))) {
         throw new IllegalArgumentException("Generic document id does not match manifest: " + documentId);
       }
       writeDocument(document, genericStorageResolvers.resolverFor(storedDocument));
       genericStorageResolvers.registrationFor(storedDocument).ifPresent(registration -> {
         var permissions = registration.permissions();
-        if (resourceManager.managePermissions().findForObjectId(documentId).isEmpty()) {
-          resourceManager.managePermissions().createDefault(documentId,
+        if (resourceManager.managePermissions().findForObjectId(resourceId).isEmpty()) {
+          resourceManager.managePermissions().createDefault(resourceId,
               permissions.resourceClass(), ownerSid, permissions.publicElement());
         }
       });

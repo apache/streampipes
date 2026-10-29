@@ -21,7 +21,9 @@ package org.apache.streampipes.export;
 import org.apache.streampipes.commons.zip.ZipFileExtractor;
 import org.apache.streampipes.export.dataimport.PerformImportGenerator;
 import org.apache.streampipes.export.dataimport.PreviewImportGenerator;
+import org.apache.streampipes.export.generator.ZipFileBuilder;
 import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
+import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
@@ -36,6 +38,7 @@ import org.mockito.ArgumentCaptor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,9 +46,13 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -180,6 +187,126 @@ class GenericStorageCategoryExportTest {
     var document = ArgumentCaptor.forClass(String.class);
     verify(storage).create(document.capture());
     assertEquals("pipeline-2", JacksonSerializer.getObjectMapper().readTree(document.getValue()).get("_id").asText());
+  }
+
+  @Test
+  void shouldRoundTripDocumentsWithSanitizedArchiveIds() throws IOException {
+    when(resources.managePermissions().findForObjectId(anyString())).thenReturn(List.of());
+    var archive = exportDocumentsWithSpecialIds();
+    var importConfig = new PreviewImportGenerator(null, resources, null)
+        .generate(new ByteArrayInputStream(archive));
+
+    new PerformImportGenerator(importConfig, "importer", null, resources, null)
+        .generate(new ByteArrayInputStream(archive));
+
+    var document = ArgumentCaptor.forClass(String.class);
+    verify(storage, times(3)).create(document.capture());
+    var importedIds = new HashSet<String>();
+    for (var payload : document.getAllValues()) {
+      importedIds.add(JacksonSerializer.getObjectMapper().readTree(payload).get("_id").asText());
+    }
+    assertEquals(Set.of("pipeline:1", "pipeline.2", "pipeline:3.4"), importedIds);
+    for (var id : importedIds) {
+      verify(resources.managePermissions()).createDefault(id, getClass(), "importer", false);
+    }
+  }
+
+  @Test
+  void shouldRespectDeselectionForSanitizedArchiveIds() throws IOException {
+    var archive = exportDocumentsWithSpecialIds();
+    var importConfig = new PreviewImportGenerator(null, resources, null)
+        .generate(new ByteArrayInputStream(archive));
+    importConfig.getGenericStorageDocuments().forEach(item -> item.setSelected(false));
+
+    new PerformImportGenerator(importConfig, "importer", null, resources, null)
+        .generate(new ByteArrayInputStream(archive));
+
+    verify(storage, never()).create(anyString());
+  }
+
+  @Test
+  void shouldRejectDocumentIdsThatDoNotMatchArchiveEntries() throws IOException {
+    var mapper = JacksonSerializer.getObjectMapper();
+    var manifest = new StreamPipesApplicationPackage();
+    manifest.addGenericStorageDocument("different-id");
+    var archive = ZipFileBuilder.create()
+        .addManifest(mapper.writeValueAsString(manifest))
+        .addText("different-id", mapper.writeValueAsString(Map.of("_id", "pipeline:1", "appDocType", TYPE)))
+        .buildZip();
+    var generator = new PerformImportGenerator(new AssetExportConfiguration(), "importer", null, resources, null);
+
+    assertThrows(IllegalArgumentException.class, () -> generator.generate(new ByteArrayInputStream(archive)));
+    verify(storage, never()).create(anyString());
+  }
+
+  private byte[] exportDocumentsWithSpecialIds() throws IOException {
+    var config = new ExportConfiguration();
+    for (var id : List.of("pipeline:1", "pipeline.2", "pipeline:3.4")) {
+      when(storage.findOne(id)).thenReturn(Map.of("_id", id, "appDocType", TYPE));
+      config.getGenericStorageDocuments().add(new ExportItem(id, id, true));
+    }
+    return export(config);
+  }
+
+  @Test
+  void shouldOnlyPreviewDocumentsLinkedToSelectedAssetsAndTheirChildren() throws IOException {
+    when(storage.findAll(TYPE)).thenReturn(List.of(first, second,
+        Map.of("_id", "unrelated", "appDocType", TYPE)));
+    when(storage.findOne("asset-1")).thenReturn(Map.of(
+        "assetName", "First asset",
+        "assetLinks", List.of(Map.of("resourceId", "pipeline-1", "queryHint", "ai-pipeline")),
+        "assets", List.of()));
+    when(storage.findOne("asset-2")).thenReturn(Map.of(
+        "assetName", "Second asset",
+        "assetLinks", List.of(Map.of("resourceId", "pipeline-1", "queryHint", "ai-pipeline")),
+        "assets", List.of(Map.of("assetLinks", List.of(
+            Map.of("resourceId", "pipeline-2", "queryHint", "ai-notebook"))))));
+
+    var firstPreview = ExportManager.getExportPreview(List.of("asset-1"), null, resources, null);
+    assertTrue(firstPreview.getGenericStorageDocuments().isEmpty());
+    assertEquals(List.of("pipeline-1"), firstPreview.getAssetExportConfiguration().getFirst()
+        .getGenericStorageDocuments().stream()
+        .map(ExportItem::getResourceId).toList());
+
+    var bothPreview = ExportManager.getExportPreview(List.of("asset-1", "asset-2"), null, resources, null);
+    assertTrue(bothPreview.getGenericStorageDocuments().isEmpty());
+    var firstAsset = bothPreview.getAssetExportConfiguration().getFirst();
+    var secondAsset = bothPreview.getAssetExportConfiguration().get(1);
+    assertEquals("First asset", firstAsset.getAssetName());
+    assertEquals("Second asset", secondAsset.getAssetName());
+    assertEquals(Set.of("pipeline-1", "pipeline-2"), new HashSet<>(secondAsset.getGenericStorageDocuments().stream()
+        .map(ExportItem::getResourceId).toList()));
+    firstAsset.getGenericStorageDocuments().forEach(item -> item.setSelected(false));
+    assertTrue(secondAsset.getGenericStorageDocuments().stream().allMatch(ExportItem::isSelected));
+    verify(storage, never()).findAll(TYPE);
+  }
+
+  @Test
+  void shouldNotPreviewRegisteredDocumentsForAssetsWithoutLinks() throws IOException {
+    when(storage.findOne("asset-1")).thenReturn(Map.of("assetName", "Empty asset"));
+
+    var config = ExportManager.getExportPreview(List.of("asset-1"), null, resources, null);
+
+    assertTrue(config.getGenericStorageDocuments().isEmpty());
+    assertTrue(config.getGenericStorageAppDocTypes().stream().noneMatch(item -> TYPE.equals(item.getResourceId())));
+  }
+
+  @Test
+  void shouldSkipMissingLinksWithoutOfferingBulkFallback() throws IOException {
+    when(storage.findOne("asset-1")).thenReturn(Map.of(
+        "assetName", "Test asset",
+        "assetLinks", List.of(Map.of("resourceId", "missing", "queryHint", "ai-pipeline"),
+            Map.of("resourceId", "pipeline-1", "queryHint", "ai-pipeline"))));
+    when(storage.findOne("missing")).thenThrow(new IOException("not found"));
+
+    var config = ExportManager.getExportPreview(List.of("asset-1"), null, resources, null);
+    assertEquals(List.of("pipeline-1"), config.getAssetExportConfiguration().getFirst()
+        .getGenericStorageDocuments().stream().map(ExportItem::getResourceId).toList());
+    verify(storage, never()).findAll(TYPE);
+
+
+    assertTrue(config.getGenericStorageDocuments().isEmpty());
+    assertTrue(config.getGenericStorageAppDocTypes().stream().noneMatch(item -> TYPE.equals(item.getResourceId())));
   }
 
   private ExportConfiguration preview() {

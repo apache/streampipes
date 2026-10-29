@@ -21,18 +21,26 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.GenericStorageResourceRegistry;
 import org.apache.streampipes.export.ResourceRegistration;
+import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /** Selects resource resolvers and bridges generic storage documents to their domain types. */
 public class GenericStorageResolverProvider {
+
+  private static final Logger LOG = LoggerFactory.getLogger(GenericStorageResolverProvider.class);
 
   private final GenericStorageResourceRegistry registry;
   private final IGenericStorage storage;
@@ -62,6 +70,22 @@ public class GenericStorageResolverProvider {
     item.setSelected(selected);
     registrationFor(document).ifPresent(entry -> item.setCategory(entry.category()));
     return item;
+  }
+
+  public Set<ExportItem> resolve(Set<AssetLink> links) {
+    var items = new HashSet<ExportItem>();
+    var resourceIds = links.stream().map(AssetLink::getResourceId).filter(Objects::nonNull).distinct().toList();
+    for (var resourceId : resourceIds) {
+      var document = fallback.findDocument(resourceId);
+      if (document != null && registrationFor(document).filter(entry -> entry.category() != null).isPresent()) {
+        try {
+          items.add(toExportItem(document, true));
+        } catch (JsonProcessingException e) {
+          LOG.warn("Could not resolve linked generic storage document {}", resourceId, e);
+        }
+      }
+    }
+    return items;
   }
 
   public String getSerializedDocument(String resourceId) throws JsonProcessingException, ElementNotFoundException {
