@@ -29,10 +29,6 @@
         This module contains all components and functionalities related to exporting data from the data explorer storage.
     </description>
 
-    <properties>
-        <apache-poi.version>5.4.0</apache-poi.version>
-    </properties>
-
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>

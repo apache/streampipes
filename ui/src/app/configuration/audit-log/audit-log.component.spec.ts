@@ -159,6 +159,13 @@ describe('AuditLogComponent', () => {
         );
     });
 
+    it('offers event details as an export column', () => {
+        expect(component.exportColumns).toContainEqual({
+            id: 'details',
+            label: 'Details',
+        });
+    });
+
     it('keeps time bounds stable across pages and resets cursors when filters change', () => {
         component.ngOnInit();
         const first = api.getEvents.mock.calls[0][0];

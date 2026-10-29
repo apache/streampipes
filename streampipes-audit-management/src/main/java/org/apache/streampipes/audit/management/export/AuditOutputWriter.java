@@ -19,6 +19,7 @@
 package org.apache.streampipes.audit.management.export;
 
 import org.apache.streampipes.audit.api.AuditEntry;
+import org.apache.streampipes.audit.api.AuditEntryDetails;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,7 +28,7 @@ interface AuditOutputWriter extends AutoCloseable {
 
   void beforeFirstItem(OutputStream outputStream) throws IOException;
 
-  void writeItem(AuditEntry entry) throws IOException;
+  void writeItem(AuditEntry entry, AuditEntryDetails details) throws IOException;
 
   void afterLastItem(OutputStream outputStream) throws IOException;
 
