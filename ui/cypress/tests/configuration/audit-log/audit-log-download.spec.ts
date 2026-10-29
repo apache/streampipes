@@ -18,38 +18,17 @@
 
 import { ConfigurationBtns } from '../../../support/utils/configuration/ConfigurationBtns';
 import { ConfigurationUtils } from '../../../support/utils/configuration/ConfigurationUtils';
+import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 
 describe('Download audit log', () => {
-    const auditEntry = {
-        eventId: 'audit-event-1',
-        locator: 'audit-event-1',
-        storedAt: '2026-10-15T10:00:00.000Z',
-        eventType: 'pipeline.started',
-        outcome: 'succeeded',
-        actor: 'admin',
-        resourceId: 'pipeline-1',
-    };
+    const adapterName = 'Audit log download simulator';
 
     beforeEach('Setup test', () => {
         cy.initStreamPipesTest();
-        cy.intercept('GET', '**/admin/audit/status', { enabled: true });
-        cy.intercept('GET', '**/admin/audit/event-types', [
-            auditEntry.eventType,
-        ]);
-        cy.intercept('GET', '**/admin/audit/events*', {
-            items: [auditEntry],
-            nextCursor: null,
-        }).as('getAuditEvents');
-        // The glob above does not cross the slash in `events/download`, and the
-        // CI stack runs with auditing disabled, so the export must be stubbed too.
-        cy.intercept('GET', '**/admin/audit/events/download*', {
-            statusCode: 200,
-            headers: { 'content-type': 'application/octet-stream' },
-            body: JSON.stringify([auditEntry]),
-        }).as('downloadAuditEvents');
+
+        ConnectUtils.addMachineDataSimulator(adapterName);
 
         ConfigurationUtils.goToAuditLogConfiguration();
-        cy.wait('@getAuditEvents');
     });
 
     const downloadAuditLog = (
@@ -65,7 +44,6 @@ describe('Download audit log', () => {
             ConfigurationBtns.auditDownloadDelimiter(delimiter).click();
         }
         ConfigurationBtns.auditDownloadBtn().click();
-        cy.wait('@downloadAuditEvents');
 
         ConfigurationBtns.auditDownloadDialog().should(
             'contain.text',
