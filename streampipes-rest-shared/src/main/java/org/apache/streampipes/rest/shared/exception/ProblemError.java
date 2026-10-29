@@ -18,21 +18,24 @@
 
 package org.apache.streampipes.rest.shared.exception;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@ControllerAdvice
-public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
+/**
+ * One entry of the {@code errors} member of a problem detail.
+ *
+ * @param detail  what is wrong, in a sentence a user can act on
+ * @param pointer where it is wrong: a JSON pointer into the request body (for example
+ *                {@code /configuration/0/host}), a query parameter name, or {@code null} when the
+ *                error does not belong to one input
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record ProblemError(String detail, String pointer) {
 
-  @ExceptionHandler(value = { SpNotificationException.class })
-  protected ResponseEntity<Object> handleException(
-      RuntimeException ex, WebRequest request) {
-    var notificationException = (SpNotificationException) ex;
-    return ResponseEntity
-        .status(notificationException.getStatus())
-        .body(notificationException.getNotification());
+  public static ProblemError of(String detail) {
+    return new ProblemError(detail, null);
+  }
+
+  public static ProblemError of(String detail, String pointer) {
+    return new ProblemError(detail, pointer);
   }
 }

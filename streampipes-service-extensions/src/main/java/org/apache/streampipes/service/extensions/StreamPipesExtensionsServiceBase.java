@@ -39,7 +39,7 @@ import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerT
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
 import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestReceiver;
-import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
+import org.apache.streampipes.rest.shared.exception.SpRestProblemHandler;
 import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
@@ -70,7 +70,7 @@ import java.util.stream.Collectors;
 @Import({
     WebSecurityConfig.class,
     ServiceHealthResource.class,
-    SpRestExceptionHandler.class,
+    SpRestProblemHandler.class,
     StreamPipesPrometheusConfig.class,
     JacksonConfiguration.class
 })

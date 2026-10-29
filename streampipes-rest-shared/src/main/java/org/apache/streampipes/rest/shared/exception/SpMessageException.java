@@ -23,6 +23,10 @@ import org.apache.streampipes.model.message.Notifications;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * @deprecated throw {@link SpProblemException} instead; the response is an RFC 9457 problem detail either way.
+ */
+@Deprecated(since = "0.99.0")
 public class SpMessageException extends RuntimeException {
 
   private final Message message;

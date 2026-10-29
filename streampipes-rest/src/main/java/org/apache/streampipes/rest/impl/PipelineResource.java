@@ -30,7 +30,6 @@ import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dataset.MeasurementUpdateInfo;
-import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
@@ -47,8 +46,7 @@ import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.rest.shared.exception.SpNotificationException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
@@ -61,7 +59,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -77,11 +74,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("/api/v2/pipelines")
@@ -163,42 +157,25 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Get a specific pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#pipelineId, 'READ')")
   public ResponseEntity<Pipeline> getElement(@PathVariable("pipelineId") String pipelineId) {
-    Pipeline foundPipeline = pipelineManager.getPipeline(pipelineId);
-
-    if (foundPipeline == null) {
-      throw new ResponseStatusException(NOT_FOUND, "Pipeline with " + pipelineId + " not found.");
-    } else {
-      return ok(pipelineManager.getPipeline(pipelineId));
-    }
+    return ok(requirePipeline(pipelineId));
   }
 
   @GetMapping(path = "/{pipelineId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Start the pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
-  public ResponseEntity<?> start(@PathVariable("pipelineId") String pipelineId) {
-    try {
-      PipelineOperationStatus status = pipelineManager.startPipeline(pipelineId, requestManager);
-
-      return ok(status);
-    } catch (Exception e) {
-      LOG.error(e.getMessage());
-      return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
-    }
+  public ResponseEntity<PipelineOperationStatus> start(@PathVariable("pipelineId") String pipelineId) {
+    requirePipeline(pipelineId);
+    return ok(pipelineManager.startPipeline(pipelineId, requestManager));
   }
 
   @GetMapping(path = "/{pipelineId}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Stop the pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
-  public ResponseEntity<?> stop(@PathVariable("pipelineId") String pipelineId,
-                                @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
-    try {
-      PipelineOperationStatus status = pipelineManager.stopPipeline(pipelineId, forceStop, requestManager);
-      return ok(status);
-    } catch (Exception e) {
-      LOG.error(e.getMessage());
-      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
-          NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
-    }
+  public ResponseEntity<PipelineOperationStatus> stop(
+      @PathVariable("pipelineId") String pipelineId,
+      @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
+    requirePipeline(pipelineId);
+    return ok(pipelineManager.stopPipeline(pipelineId, forceStop, requestManager));
   }
 
   @PostMapping(
@@ -251,22 +228,10 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
           pipeline, baseRecElement, requestManager, dataProcessorResourceManager, dataSinkResourceManager, descriptionStorage
       ).findRecommendedElements();
     } catch (JsonSyntaxException e) {
-      throw new SpNotificationException(
-          HttpStatus.BAD_REQUEST,
-          new Notification(NotificationType.UNKNOWN_ERROR,
-              e.getMessage())
-      );
+      throw SpProblemException.badRequest(e.getMessage(), e);
     } catch (NoSuitableSepasAvailableException e) {
-      throw new SpNotificationException(
-          HttpStatus.BAD_REQUEST,
-          new Notification(NotificationType.NO_SEPA_FOUND,
-              e.getMessage())
-      );
-    } catch (Exception e) {
-      LOG.error(e.getMessage());
-      throw new SpMessageException(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          new ErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage())));
+      throw SpProblemException.badRequest(
+          NotificationType.NO_SEPA_FOUND.description() + " " + e.getMessage(), e);
     }
   }
 
@@ -280,10 +245,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     try {
       return ok(new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager).verifyPipeline());
     } catch (JsonSyntaxException e) {
-      return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
-    } catch (Exception e) {
-      LOG.error(e.getMessage());
-      return serverError(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
+      throw SpProblemException.badRequest(e.getMessage(), e);
     }
   }
 
@@ -295,7 +257,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<SuccessMessage> updatePipeline(@PathVariable("pipelineId") String pipelineId,
                                                        @RequestBody Pipeline pipeline) {
-    Pipeline storedPipeline = resourceManager.managePipelines().getDb().getElementById(pipelineId);
+    Pipeline storedPipeline = requirePipeline(pipelineId);
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());
@@ -324,6 +286,14 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> getPipelinesContainingElement(@PathVariable("elementId") String elementId) {
     return pipelineManager.getPipelinesContainingElements(elementId);
+  }
+
+  private Pipeline requirePipeline(String pipelineId) {
+    Pipeline pipeline = pipelineManager.getPipeline(pipelineId);
+    if (pipeline == null) {
+      throw SpProblemException.notFound("Pipeline", pipelineId);
+    }
+    return pipeline;
   }
 
   /**

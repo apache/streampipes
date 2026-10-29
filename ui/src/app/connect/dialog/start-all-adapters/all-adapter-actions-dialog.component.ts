@@ -112,10 +112,15 @@ export class AllAdapterActionsComponent implements OnInit {
             ? this.adapterService.startAdapterByElementId(adapter.elementId)
             : this.adapterService.stopAdapterByElementId(adapter.elementId);
         observable
-            .subscribe(data => {
-                this.actionStatus[index].status = data.success
-                    ? this.translate.instant('success')
-                    : this.translate.instant('error');
+            .subscribe({
+                next: () => {
+                    this.actionStatus[index].status =
+                        this.translate.instant('success');
+                },
+                error: () => {
+                    this.actionStatus[index].status =
+                        this.translate.instant('error');
+                },
             })
             .add(() => {
                 if (index < this.adaptersToModify.length - 1) {

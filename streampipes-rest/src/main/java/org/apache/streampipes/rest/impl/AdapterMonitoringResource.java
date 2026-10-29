@@ -28,6 +28,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,12 +67,8 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   public ResponseEntity<?> getLogInfoForAdapter(
       @PathVariable("elementId") String elementId
   ) {
-    var adapterDescription = getAdapter(elementId);
-    if (checkAdapterPermission(adapterDescription, "READ")) {
-      return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(elementId));
-    } else {
-      return unauthorized();
-    }
+    var adapterDescription = requireReadableAdapter(elementId);
+    return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(adapterDescription.getElementId()));
   }
 
   @GetMapping(
@@ -82,12 +79,8 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   public ResponseEntity<?> getMetricsInfoForAdapter(
       @PathVariable("elementId") String elementId
   ) {
-    var adapterDescription = getAdapter(elementId);
-    if (checkAdapterPermission(adapterDescription, "READ")) {
-      return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(elementId));
-    } else {
-      return unauthorized();
-    }
+    var adapterDescription = requireReadableAdapter(elementId);
+    return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(adapterDescription.getElementId()));
   }
 
   @GetMapping(
@@ -104,7 +97,7 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
     new ExtensionsServiceLogExecutor(extensionServiceRequestManager, resourceManager).triggerUpdate();
     var filteredElementIds = elementIds.stream()
         .map(a -> resourceManager.manageAdapters().getDb().getElementById(a))
-        .filter(a -> checkAdapterPermission(a, "READ"))
+        .filter(a -> a != null && checkAdapterPermission(a, "READ"))
         .map(NamedStreamPipesEntity::getElementId)
         .toList();
     return ok(ExtensionsLogProvider.INSTANCE.getMetricsInfoForResources(filteredElementIds));
@@ -126,6 +119,17 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
 
   public AdapterDescription getAdapter(String elementId) {
     return resourceManager.manageAdapters().getDb().getElementById(elementId);
+  }
+
+  private AdapterDescription requireReadableAdapter(String elementId) {
+    var adapterDescription = getAdapter(elementId);
+    if (adapterDescription == null) {
+      throw SpProblemException.notFound("Adapter", elementId);
+    }
+    if (!checkAdapterPermission(adapterDescription, "READ")) {
+      throw SpProblemException.forbidden("Not allowed to read adapter " + elementId);
+    }
+    return adapterDescription;
   }
 
   /**

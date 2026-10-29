@@ -71,6 +71,7 @@ export * from './lib/model/measurement-unit/MeasurementUnit';
 export * from './lib/model/gen/streampipes-model-client';
 export * from './lib/model/gen/streampipes-model';
 export * from './lib/model/resource/resource-summary.model';
+export * from './lib/model/problem/problem-detail.model';
 
 export * from './lib/model/datalake/data-lake-query-config.model';
 export * from './lib/query/DatalakeQueryParameterBuilder';

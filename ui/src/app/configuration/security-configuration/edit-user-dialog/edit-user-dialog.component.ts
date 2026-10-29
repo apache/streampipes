@@ -39,6 +39,7 @@ import {
     UserAccount,
     UserGroupService,
     UserService,
+    problemDetailMessage,
 } from '@streampipes/platform-services';
 import {
     AbstractControl,
@@ -137,9 +138,10 @@ export class EditUserDialogComponent implements OnInit {
 
         const saveCallback = () => this.close(true);
         const errorCallback = (error: any) => {
-            this.registrationError = error.error.notifications
-                ? error.error.notifications[0].title
-                : this.translateService.instant('Unknown error');
+            this.registrationError = problemDetailMessage(
+                error,
+                this.translateService.instant('Unknown error'),
+            );
         };
 
         if (!this.isUserAccount || !this.isExternalProvider) {

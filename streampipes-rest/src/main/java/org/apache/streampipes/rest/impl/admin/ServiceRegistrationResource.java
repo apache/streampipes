@@ -25,11 +25,10 @@ import org.apache.streampipes.health.monitoring.model.RunningExtensionInstances;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.springframework.http.HttpStatus;
@@ -85,7 +84,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
       makeRemovalService().removeAllInstances(serviceId);
       return ok();
     } catch (IOException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 
@@ -97,7 +96,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
       makeRemovalService().removeAdapterInstance(serviceId, instanceId);
       return ok();
     } catch (IOException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 
@@ -109,7 +108,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
       makeRemovalService().removePipelineElementInstance(serviceId, instanceId);
       return ok();
     } catch (IOException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 
@@ -126,8 +125,7 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
       new ServiceRegistrationManager(extensionsServiceStorage).removeService(serviceId);
       return ok();
     } catch (IllegalArgumentException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST,
-          Notifications.error("Could not find registered service with id " + serviceId));
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, "Could not find registered service with id " + serviceId);
     }
   }
 

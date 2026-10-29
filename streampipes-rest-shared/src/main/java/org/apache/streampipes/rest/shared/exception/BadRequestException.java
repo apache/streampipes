@@ -22,6 +22,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
+/**
+ * @deprecated throw {@link SpProblemException#badRequest(String)} instead.
+ */
+@Deprecated(since = "0.99.0")
 public class BadRequestException extends RuntimeException {
 
   public BadRequestException(String message) {

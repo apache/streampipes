@@ -18,41 +18,11 @@
 
 package org.apache.streampipes.rest.shared.exception;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.model.monitoring.SpLogMessage;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-@ControllerAdvice
-public class SpRestExceptionHandler extends ResponseEntityExceptionHandler {
-
-  @ExceptionHandler(value = {AdapterException.class})
-  private ResponseEntity<Object> handleAdapterException(AdapterException ex, WebRequest request) {
-    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
-    return handleSpLogMessageException(spLogMessageException, request);
-  }
-
-  @ExceptionHandler(value = {NoServiceEndpointsAvailableException.class})
-  private ResponseEntity<Object> handleNoServiceEndpointsAvailableException(
-      NoServiceEndpointsAvailableException ex,
-      WebRequest request) {
-    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
-    return handleSpLogMessageException(spLogMessageException, request);
-  }
-
-  @ExceptionHandler(value = {SpLogMessageException.class})
-  protected ResponseEntity<Object> handleSpLogMessageException(
-      SpLogMessageException ex,
-      WebRequest request) {
-    var exception = ex;
-    return ResponseEntity
-        .status(exception.getStatus())
-        .body(exception.getSpMessage());
-  }
+/**
+ * @deprecated All exception mapping lives in {@link SpRestProblemHandler}. This class only remains
+ *     so that subclasses in other code bases keep compiling; it is no longer a
+ *     {@code @ControllerAdvice} by itself. Extend {@link SpRestProblemHandler} instead.
+ */
+@Deprecated(since = "0.99.0", forRemoval = true)
+public class SpRestExceptionHandler extends SpRestProblemHandler {
 }
