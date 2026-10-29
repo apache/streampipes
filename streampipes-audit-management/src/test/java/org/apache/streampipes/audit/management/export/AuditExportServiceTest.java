@@ -35,6 +35,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,7 +52,7 @@ class AuditExportServiceTest {
         List.of("Event ID", "Actor"), ',');
     var output = new ByteArrayOutputStream();
 
-    new AuditExportService(reader(entry)).export(query(), configuration, output);
+    new AuditExportService(reader(entry, null)).export(query(), configuration, output);
 
     try (var workbook = WorkbookFactory.create(new ByteArrayInputStream(output.toByteArray()))) {
       var sheet = workbook.getSheetAt(0);
@@ -71,7 +72,7 @@ class AuditExportServiceTest {
         List.of("Event ID", "Actor"), ';');
     var output = new ByteArrayOutputStream();
 
-    new AuditExportService(reader(entry)).export(query(), configuration, output);
+    new AuditExportService(reader(entry, null)).export(query(), configuration, output);
 
     assertEquals("\"Event ID\";\"Actor\"\r\n\"'=event-1\";\"ad\"\"min\"\r\n",
         output.toString(StandardCharsets.UTF_8));
@@ -86,13 +87,53 @@ class AuditExportServiceTest {
         List.of("Ignored", "Ignored"), ',');
     var output = new ByteArrayOutputStream();
 
-    new AuditExportService(reader(entry)).export(query(), configuration, output);
+    new AuditExportService(reader(entry, null)).export(query(), configuration, output);
 
     assertEquals("[{\"eventId\":\"event-1\",\"actor\":\"admin\"}]",
         output.toString(StandardCharsets.UTF_8));
   }
 
-  private AuditEventReader reader(AuditEntry entry) {
+  @Test
+  void exportsDetailsAsStringToExcel() throws Exception {
+    var entry = entry();
+    var configuration = new AuditExportConfiguration(
+        AuditExportFormat.XLSX, List.of(AuditExportColumn.DETAILS), List.of("Details"), ',');
+    var output = new ByteArrayOutputStream();
+
+    new AuditExportService(reader(entry, details(entry))).export(query(), configuration, output);
+
+    try (var workbook = WorkbookFactory.create(new ByteArrayInputStream(output.toByteArray()))) {
+      var sheet = workbook.getSheetAt(0);
+      assertEquals("{\"reason\":\"manual review\"}", sheet.getRow(1).getCell(0).getStringCellValue());
+    }
+  }
+
+  @Test
+  void exportsDetailsAsStringToCsv() throws Exception {
+    var entry = entry();
+    var configuration = new AuditExportConfiguration(
+        AuditExportFormat.CSV, List.of(AuditExportColumn.DETAILS), List.of("Details"), ';');
+    var output = new ByteArrayOutputStream();
+
+    new AuditExportService(reader(entry, details(entry))).export(query(), configuration, output);
+
+    assertEquals("\"Details\"\r\n\"{\"\"reason\"\":\"\"manual review\"\"}\"\r\n",
+        output.toString(StandardCharsets.UTF_8));
+  }
+
+  @Test
+  void exportsDetailsAsStructuredJson() throws Exception {
+    var entry = entry();
+    var configuration = new AuditExportConfiguration(
+        AuditExportFormat.JSON, List.of(AuditExportColumn.DETAILS), List.of("Ignored"), ',');
+    var output = new ByteArrayOutputStream();
+
+    new AuditExportService(reader(entry, details(entry))).export(query(), configuration, output);
+
+    assertEquals("[{\"details\":{\"reason\":\"manual review\"}}]", output.toString(StandardCharsets.UTF_8));
+  }
+
+  private AuditEventReader reader(AuditEntry entry, AuditEntryDetails details) {
     return new AuditEventReader() {
       @Override
       public AuditPage query(AuditQuery query) {
@@ -101,9 +142,18 @@ class AuditExportServiceTest {
 
       @Override
       public Optional<AuditEntryDetails> find(UUID eventId, String locator) {
-        return Optional.empty();
+        return Optional.ofNullable(details);
       }
     };
+  }
+
+  private AuditEntryDetails details(AuditEntry entry) {
+    return new AuditEntryDetails(entry, "2026-10-16T10:00:00Z", Map.of("reason", "manual review"));
+  }
+
+  private AuditEntry entry() {
+    return new AuditEntry("2f415744-e193-4541-9b29-73dd584fb7a3", "2026-10-16T10:00:00Z", "user.login",
+        "succeeded", "admin", null, null, "locator-1");
   }
 
   private AuditQuery query() {

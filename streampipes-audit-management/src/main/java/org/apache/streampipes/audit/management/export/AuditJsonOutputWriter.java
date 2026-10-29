@@ -19,15 +19,19 @@
 package org.apache.streampipes.audit.management.export;
 
 import org.apache.streampipes.audit.api.AuditEntry;
+import org.apache.streampipes.audit.api.AuditEntryDetails;
 import org.apache.streampipes.audit.api.AuditExportConfiguration;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 final class AuditJsonOutputWriter implements AuditOutputWriter {
+  private static final ObjectMapper MAPPER = new ObjectMapper();
+
   private final AuditExportConfiguration configuration;
   private JsonGenerator generator;
 
@@ -42,10 +46,15 @@ final class AuditJsonOutputWriter implements AuditOutputWriter {
   }
 
   @Override
-  public void writeItem(AuditEntry entry) throws IOException {
+  public void writeItem(AuditEntry entry, AuditEntryDetails details) throws IOException {
     generator.writeStartObject();
     for (var column : configuration.columns()) {
-      generator.writeStringField(column.id(), column.value(entry));
+      if (column.requiresDetails()) {
+        generator.writeFieldName(column.id());
+        MAPPER.writeValue(generator, details == null ? null : details.details());
+      } else {
+        generator.writeStringField(column.id(), column.value(entry));
+      }
     }
     generator.writeEndObject();
   }

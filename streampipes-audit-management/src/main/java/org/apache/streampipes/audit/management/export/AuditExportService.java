@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.audit.management.export;
 
+import org.apache.streampipes.audit.api.AuditEntry;
+import org.apache.streampipes.audit.api.AuditEntryDetails;
 import org.apache.streampipes.audit.api.AuditEventReader;
 import org.apache.streampipes.audit.api.AuditExportConfiguration;
 import org.apache.streampipes.audit.api.AuditPage;
@@ -25,6 +27,7 @@ import org.apache.streampipes.audit.api.AuditQuery;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.UUID;
 
 public final class AuditExportService {
   private final AuditEventReader reader;
@@ -48,13 +51,20 @@ public final class AuditExportService {
       do {
         AuditPage page = reader.query(pageQuery);
         for (var entry : page.items()) {
-          writer.writeItem(entry);
+          writer.writeItem(entry, detailsFor(entry, configuration));
         }
         pageQuery = nextPageQuery(query, page);
       } while (pageQuery != null);
 
       writer.afterLastItem(outputStream);
     }
+  }
+
+  private AuditEntryDetails detailsFor(AuditEntry entry, AuditExportConfiguration configuration) {
+    if (configuration.columns().stream().noneMatch(column -> column.requiresDetails())) {
+      return null;
+    }
+    return reader.find(UUID.fromString(entry.eventId()), entry.locator()).orElse(null);
   }
 
   private AuditQuery nextPageQuery(AuditQuery query, AuditPage page) {
