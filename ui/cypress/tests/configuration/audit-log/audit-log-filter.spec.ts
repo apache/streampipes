@@ -19,12 +19,18 @@
 import { ConfigurationBtns } from '../../../support/utils/configuration/ConfigurationBtns';
 import { ConfigurationUtils } from '../../../support/utils/configuration/ConfigurationUtils';
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
+import { UserUtils } from '../../../support/utils/UserUtils';
+import { UserRole } from '../../../../src/app/core/auth/user-role.enum';
+import { User } from '../../../support/model/User';
 
 describe('Filter audit log', () => {
     const adapterName = 'Audit log filter simulator';
+    const chartName = 'Audit log filter chart';
     const adapterStartEvent = 'sp.adapter.start';
     const adminEmail = 'admin@streampipes.apache.org';
     let testStartedAt: string;
+    let chartOwner: User;
 
     beforeEach('Open audit log', () => {
         cy.initStreamPipesTest();
@@ -32,6 +38,17 @@ describe('Filter audit log', () => {
             testStartedAt = new Date().toISOString();
         });
         ConnectUtils.addMachineDataSimulator(adapterName, true);
+
+        chartOwner = UserUtils.createUser(
+            'auditLogChartOwner',
+            UserRole.ROLE_DATA_EXPLORER_ADMIN,
+        );
+        cy.login(chartOwner);
+        ChartUtils.goToDataset();
+        ChartUtils.createAndEditChart();
+        ChartUtils.saveChartConfiguration(false, false, chartName);
+
+        cy.login(UserUtils.adminUser);
         ConfigurationUtils.goToAuditLogConfiguration();
     });
 
@@ -42,10 +59,10 @@ describe('Filter audit log', () => {
         ConfigurationBtns.auditApplyFiltersBtn()
             .should('not.be.disabled')
             .click();
-
+        //adapter.create, adapter.start, auth.login, auth.login, pipeline.create, pipeline.start, dataset.create, chart.create
         ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
             testStartedAt,
-            5,
+            8,
         );
     });
 
@@ -57,7 +74,7 @@ describe('Filter audit log', () => {
         ConfigurationBtns.auditApplyFiltersBtn()
             .should('not.be.disabled')
             .click();
-
+        //adapter.start
         ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
             testStartedAt,
             1,
@@ -72,10 +89,10 @@ describe('Filter audit log', () => {
         ConfigurationBtns.auditApplyFiltersBtn()
             .should('not.be.disabled')
             .click();
-
+        //adapter.create, adapter.start, auth.login, auth.logout, pipeline.create, pipeline.start, dataset.create
         ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
             testStartedAt,
-            5,
+            7,
         );
     });
 
@@ -85,10 +102,10 @@ describe('Filter audit log', () => {
         ConfigurationBtns.auditApplyFiltersBtn()
             .should('not.be.disabled')
             .click();
-
+        //adapter.create, adapter.start, auth.login, auth.login, pipeline.create, pipeline.start, dataset.create, chart.create
         ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
             testStartedAt,
-            5,
+            8,
         );
     });
 });
