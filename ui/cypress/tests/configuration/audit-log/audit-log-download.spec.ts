@@ -39,14 +39,14 @@ describe('Download audit log', () => {
     ) => {
         const downloadsFolder = Cypress.config('downloadsFolder');
         cy.readFile(`${downloadsFolder}/audit-log.${format}`).then(
-            (content: string) => {
+            (content: unknown) => {
                 const eventTypes =
                     format === 'json'
-                        ? JSON.parse(content).map(
-                              (event: { eventType: string }) => event.eventType,
+                        ? (content as { eventType: string }[]).map(
+                              event => event.eventType,
                           )
                         : CSV.parse(
-                              content,
+                              content as string,
                               delimiter === 'semicolon' ? ';' : ',',
                           )
                               .slice(1)
