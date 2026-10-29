@@ -27,29 +27,29 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DataStreamUpdateManagement {
 
   private final DataStreamResourceManager dataStreamResourceManager;
   private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
+  private final ApplicationEventPublisher eventPublisher;
 
   public DataStreamUpdateManagement(ExtensionServiceRequestManager requestManager,
-                                    SpResourceManager resourceManager) {
+                                    SpResourceManager resourceManager,
+                                    ApplicationEventPublisher eventPublisher) {
+    this.eventPublisher = Objects.requireNonNull(eventPublisher);
     this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(requestManager, resourceManager);
     this.dataStreamResourceManager = resourceManager.manageDataStreams();
   }
 
   public void updateDataStream(SpDataStream dataStream) {
-    dataStreamResourceManager.update(dataStream);
-    pipelineUpdateCoordinator.updatePipelines(dataStream);
-  }
-
-  public void updateDataStream(SpDataStream dataStream, ApplicationEventPublisher eventPublisher) {
     var previous = dataStreamResourceManager.find(dataStream.getElementId());
     boolean schemaChanged = EventSchemaChangeDetector.hasChanged(
         previous == null ? null : previous.getEventSchema(), dataStream.getEventSchema());
-    updateDataStream(dataStream);
-    if (schemaChanged && eventPublisher != null) {
+    dataStreamResourceManager.update(dataStream);
+    pipelineUpdateCoordinator.updatePipelines(dataStream);
+    if (schemaChanged) {
       eventPublisher.publishEvent(new DataStreamSchemaUpdatedEvent(dataStream));
     }
   }

@@ -28,6 +28,7 @@ import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.update.DataStreamDeletedEvent;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -86,18 +87,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   private final SpResourceManager resourceManager;
   private final IAdapterStorage adapterDescriptionStorage;
 
-  public AdapterResource(WorkerRestClient workerRestClient,
-                         ExtensionServiceRequestManager requestManager,
-                         SpResourceManager resourceManager,
-                         @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
-                         IExtensionsServiceStorage extensionsServiceStorage) {
-    this(workerRestClient, requestManager, null, resourceManager, adapterDescriptionStorage, extensionsServiceStorage);
-  }
-
   @Autowired
   public AdapterResource(WorkerRestClient workerRestClient,
                          ExtensionServiceRequestManager requestManager,
                          ApplicationEventPublisher eventPublisher,
+                         DataStreamUpdateManagement dataStreamUpdateManagement,
                          SpResourceManager resourceManager,
                          @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
                          IExtensionsServiceStorage extensionsServiceStorage) {
@@ -118,9 +112,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     );
     this.adapterUpdateManagement = new AdapterUpdateManagement(
         managementService,
-        requestManager,
         resourceManager,
-        eventPublisher
+        dataStreamUpdateManagement
     );
   }
 

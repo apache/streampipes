@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl.pe;
 
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.update.DataStreamDeletedEvent;
 import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.model.SpDataStream;
@@ -56,14 +55,11 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   private final ApplicationEventPublisher eventPublisher;
   private final DataStreamResourceManager dataStreamResourceManager;
 
-  public DataStreamResource(ExtensionServiceRequestManager requestManager,
+  public DataStreamResource(DataStreamUpdateManagement dataStreamUpdateManagement,
                             ApplicationEventPublisher eventPublisher,
                             SpResourceManager resourceManager) {
     this.dataStreamResourceManager = resourceManager.manageDataStreams();
-    this.dataStreamUpdateManagement = new DataStreamUpdateManagement(
-        requestManager,
-        resourceManager
-    );
+    this.dataStreamUpdateManagement = dataStreamUpdateManagement;
     this.eventPublisher = eventPublisher;
   }
 
@@ -110,7 +106,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
       throw new HttpResponseException(400,
           "Element ID in path variable does not match element ID in request body");
     } else {
-      dataStreamUpdateManagement.updateDataStream(updatedElement, eventPublisher);
+      dataStreamUpdateManagement.updateDataStream(updatedElement);
       return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
     }
   }

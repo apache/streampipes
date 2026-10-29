@@ -49,8 +49,8 @@ class DataStreamUpdateManagementTest {
     when(streams.find("stream-1")).thenReturn(previous);
 
     try (var coordinators = mockConstruction(PipelineUpdateCoordinator.class)) {
-      var management = new DataStreamUpdateManagement(null, resources);
-      management.updateDataStream(updated, publisher);
+      var management = new DataStreamUpdateManagement(null, resources, publisher);
+      management.updateDataStream(updated);
 
       var order = inOrder(streams, coordinators.constructed().getFirst(), publisher);
       order.verify(streams).find("stream-1");
@@ -73,7 +73,7 @@ class DataStreamUpdateManagementTest {
     when(streams.find("stream-1")).thenReturn(previous);
 
     try (var coordinators = mockConstruction(PipelineUpdateCoordinator.class)) {
-      new DataStreamUpdateManagement(null, resources).updateDataStream(updated, publisher);
+      new DataStreamUpdateManagement(null, resources, publisher).updateDataStream(updated);
 
       verify(streams).update(updated);
       verify(coordinators.constructed().getFirst()).updatePipelines(updated);
@@ -93,11 +93,17 @@ class DataStreamUpdateManagementTest {
     doThrow(new IllegalStateException("Persistence failed")).when(streams).update(updated);
 
     try (var coordinators = mockConstruction(PipelineUpdateCoordinator.class)) {
-      var management = new DataStreamUpdateManagement(null, resources);
-      assertThrows(IllegalStateException.class, () -> management.updateDataStream(updated, publisher));
+      var management = new DataStreamUpdateManagement(null, resources, publisher);
+      assertThrows(IllegalStateException.class, () -> management.updateDataStream(updated));
 
       verifyNoInteractions(publisher, coordinators.constructed().getFirst());
     }
+  }
+
+  @Test
+  void requiresEventPublisher() {
+    assertThrows(NullPointerException.class,
+        () -> new DataStreamUpdateManagement(null, mock(SpResourceManager.class), null));
   }
 
   private SpDataStream stream() {

@@ -22,7 +22,6 @@ import org.apache.streampipes.audit.api.AuditOutcome;
 import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -30,8 +29,6 @@ import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
-
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 
@@ -43,21 +40,15 @@ public class AdapterUpdateManagement {
   private final AdapterResourceManager adapterResourceManager;
   private final DataStreamResourceManager dataStreamResourceManager;
   private final DataStreamUpdateManagement dataStreamUpdateManagement;
-  private final ApplicationEventPublisher eventPublisher;
 
   public AdapterUpdateManagement(AdapterMasterManagement adapterMasterManagement,
-                                 ExtensionServiceRequestManager requestManager,
                                  SpResourceManager resourceManager,
-                                 ApplicationEventPublisher eventPublisher) {
+                                 DataStreamUpdateManagement dataStreamUpdateManagement) {
     this.adapterAudit = new AdapterAuditRecorder(resourceManager.getAuditService());
     this.adapterMasterManagement = adapterMasterManagement;
     this.adapterResourceManager = resourceManager.manageAdapters();
     this.dataStreamResourceManager = resourceManager.manageDataStreams();
-    this.dataStreamUpdateManagement = new DataStreamUpdateManagement(
-        requestManager,
-        resourceManager
-    );
-    this.eventPublisher = eventPublisher;
+    this.dataStreamUpdateManagement = dataStreamUpdateManagement;
   }
 
   public void updateAdapter(AdapterDescription ad)
@@ -82,7 +73,7 @@ public class AdapterUpdateManagement {
 
       // update data source
       var updatedDataStream = this.updateDataSource(ad);
-      dataStreamUpdateManagement.updateDataStream(updatedDataStream, eventPublisher);
+      dataStreamUpdateManagement.updateDataStream(updatedDataStream);
 
       if (shouldRestart) {
         this.adapterMasterManagement.startAdapter(ad.getElementId(), actor);

@@ -40,7 +40,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -95,10 +94,9 @@ class AdapterUpdateAuditTest {
     if (failRestart) {
       doThrow(new AdapterException("private")).when(master).startAdapter("adapter-1", "user-1");
     }
-    try (var updates = mockConstruction(DataStreamUpdateManagement.class);
-         var sources = mockStatic(SourcesManagement.class)) {
+    try (var sources = mockStatic(SourcesManagement.class)) {
       sources.when(() -> SourcesManagement.updateDataStream(any(), any())).thenReturn(new SpDataStream());
-      var manager = new AdapterUpdateManagement(master, null, resources, null);
+      var manager = new AdapterUpdateManagement(master, resources, mock(DataStreamUpdateManagement.class));
       if (failPersistence || failRestart) {
         assertThrows(AdapterException.class, () -> manager.updateAdapter(after, "user-1"));
       } else {

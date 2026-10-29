@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.manager.pipeline.update.DataStreamSchemaUpdatedEvent;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -77,7 +78,8 @@ class AdapterSchemaUpdateTest {
     updated.setDataStream(adapterStream);
 
     try (var ignored = mockConstruction(PipelineUpdateCoordinator.class)) {
-      new AdapterUpdateManagement(mock(AdapterMasterManagement.class), null, resources, publisher)
+      new AdapterUpdateManagement(mock(AdapterMasterManagement.class), resources,
+          new DataStreamUpdateManagement(null, resources, publisher))
           .updateAdapter(updated, "user-1");
 
       verify(streams).update(any(SpDataStream.class));
