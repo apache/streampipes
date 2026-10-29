@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Find the current pull request
         id: pr
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         with:
