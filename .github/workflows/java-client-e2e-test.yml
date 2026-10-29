@@ -18,6 +18,9 @@ name: run-java-client-e2e-tests
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
