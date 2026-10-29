@@ -19,6 +19,7 @@
 package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.generator.ExportPackageGenerator;
+import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.assets.SpAssetModel;
@@ -28,6 +29,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,10 +46,8 @@ public class ExportManager {
             assetId, extensionServiceRequestManager, resourceManager, pipelineManager)
             .resolveResources())
         .collect(Collectors.toList());
-    var genericStorageAppDocTypes = getGenericStorageAppDocTypes(resourceManager.getGenericStorage());
-
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
-    exportConfig.setGenericStorageAppDocTypes(genericStorageAppDocTypes);
+    addGenericStoragePreview(exportConfig, resourceManager.getGenericStorage());
 
     return exportConfig;
   }
@@ -61,16 +61,31 @@ public class ExportManager {
         .generateExportPackage();
   }
 
-  private static List<ExportItem> getGenericStorageAppDocTypes(IGenericStorage genericStorage) {
+  private static void addGenericStoragePreview(ExportConfiguration config, IGenericStorage storage) {
+    var resolvers = new GenericStorageResolverProvider(storage);
     try {
-      return genericStorage
-          .getAllAppDocTypes()
-          .stream()
-          .filter(appDocType -> !SpAssetModel.APP_DOC_TYPE.equals(appDocType))
-          .map(appDocType -> new ExportItem(appDocType, appDocType, false))
-          .collect(Collectors.toList());
+      for (var appDocType : storage.getAllAppDocTypes()) {
+        if (SpAssetModel.APP_DOC_TYPE.equals(appDocType)) {
+          continue;
+        }
+        var exportType = GenericStorageResourceRegistry.INSTANCE.find(appDocType).filter(type -> type.category() != null);
+        if (exportType.isPresent()) {
+          // Fall back to the existing bulk export option if document enumeration fails.
+          try {
+            var items = new ArrayList<ExportItem>();
+            for (var document : storage.findAll(appDocType)) {
+              items.add(resolvers.toExportItem(document, false));
+            }
+            config.getGenericStorageDocuments().addAll(items);
+          } catch (IOException e) {
+            config.addGenericStorageAppDocType(new ExportItem(appDocType, appDocType, false));
+          }
+        } else {
+          config.addGenericStorageAppDocType(new ExportItem(appDocType, appDocType, false));
+        }
+      }
     } catch (IOException e) {
-        return List.of();
+      // Preserve the asset preview if generic storage is unavailable.
     }
   }
 

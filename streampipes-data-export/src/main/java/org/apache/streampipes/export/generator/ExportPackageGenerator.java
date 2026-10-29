@@ -25,7 +25,7 @@ import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
-import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
+import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -63,6 +63,7 @@ public class ExportPackageGenerator {
   private final ObjectMapper defaultMapper;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
+  private final GenericStorageResolverProvider genericStorageResolvers;
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration,
                                 ExtensionServiceRequestManager extensionServiceRequestManager,
@@ -72,6 +73,7 @@ public class ExportPackageGenerator {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.pipelineManager = pipelineManager;
     this.resourceManager = resourceManager;
+    this.genericStorageResolvers = new GenericStorageResolverProvider(resourceManager.getGenericStorage());
     this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
@@ -136,17 +138,16 @@ public class ExportPackageGenerator {
       config.getGenericStorageDocuments().forEach(item -> {
         addGenericStorageDocument(builder,
             item,
-            new GenericStorageDocumentResolver(resourceManager.getGenericStorage()),
             manifest::addGenericStorageDocument,
             exportedGenericStorageDocumentIds);
       });
 
       config.getLabels().forEach(item -> {
-        addDoc(builder, item, new GenericStorageDocumentResolver(resourceManager.getGenericStorage()), manifest::addGenericStorageDocument);
+        addGenericStorageDocument(builder, item, manifest::addGenericStorageDocument, exportedGenericStorageDocumentIds);
       });
 
       config.getSites().forEach(item -> {
-        addDoc(builder, item, new GenericStorageDocumentResolver(resourceManager.getGenericStorage()), manifest::addGenericStorageDocument);
+        addGenericStorageDocument(builder, item, manifest::addGenericStorageDocument, exportedGenericStorageDocumentIds);
       });
 
       config.getFiles().forEach(item -> {
@@ -167,6 +168,13 @@ public class ExportPackageGenerator {
         }
       });
     });
+
+    if (exportConfiguration.getGenericStorageDocuments() != null) {
+      exportConfiguration.getGenericStorageDocuments().forEach(item -> addGenericStorageDocument(builder,
+          item,
+          manifest::addGenericStorageDocument,
+          exportedGenericStorageDocumentIds));
+    }
 
     if (exportConfiguration.getGenericStorageAppDocTypes() != null) {
       exportConfiguration.getGenericStorageAppDocTypes().forEach(item -> {
@@ -196,34 +204,39 @@ public class ExportPackageGenerator {
                       ExportItem exportItem,
                       AbstractResolver<?> resolver,
                       Consumer<String> function) {
+    addDoc(builder, exportItem, resolver::getSerializedDocument, function);
+  }
+
+  private void addDoc(ZipFileBuilder builder,
+                      ExportItem exportItem,
+                      DocumentExporter exporter,
+                      Consumer<String> function) {
     try {
       if (exportItem.isSelected()) {
         var resourceId = exportItem.getResourceId();
         var sanitizedResourceId = sanitize(resourceId);
-        builder.addText(sanitizedResourceId, resolver.getSerializedDocument(resourceId));
+        builder.addText(sanitizedResourceId, exporter.serialize(resourceId));
         function.accept(sanitizedResourceId);
       }
     } catch (JsonProcessingException | ElementNotFoundException e) {
-      LOG.warn(
-          "Could not find document with resource id {} with resolver {}",
-          exportItem.getResourceId(),
-          resolver.getClass().getCanonicalName(),
-          e);
+      LOG.warn("Could not export document with resource id {}", exportItem.getResourceId(), e);
     }
+  }
+
+  @FunctionalInterface
+  private interface DocumentExporter {
+    String serialize(String resourceId) throws JsonProcessingException, ElementNotFoundException;
   }
 
   private void addGenericStorageDocumentsByType(ZipFileBuilder builder,
                                                 String appDocType,
                                                 Consumer<String> function,
                                                 Set<String> exportedGenericStorageDocumentIds) {
-    var resolver = new GenericStorageDocumentResolver(resourceManager.getGenericStorage());
-
     try {
       resourceManager.getGenericStorage()
           .findAll(appDocType)
           .forEach(document -> addGenericStorageDocument(builder,
-              resolver.convert(document),
-              resolver,
+              new ExportItem(document.get("_id").toString(), "", true),
               function,
               exportedGenericStorageDocumentIds));
     } catch (IOException e) {
@@ -233,11 +246,10 @@ public class ExportPackageGenerator {
 
   private void addGenericStorageDocument(ZipFileBuilder builder,
                                          ExportItem exportItem,
-                                         AbstractResolver<?> resolver,
                                          Consumer<String> function,
                                          Set<String> exportedGenericStorageDocumentIds) {
-    if (exportedGenericStorageDocumentIds.add(exportItem.getResourceId())) {
-      addDoc(builder, exportItem, resolver, function);
+    if (exportItem.isSelected() && exportedGenericStorageDocumentIds.add(exportItem.getResourceId())) {
+      addDoc(builder, exportItem, genericStorageResolvers::getSerializedDocument, function);
     }
   }
 
