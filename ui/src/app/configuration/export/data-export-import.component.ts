@@ -211,6 +211,7 @@ export class SpDataExportImportComponent implements OnInit {
                     resourceId: label._id!,
                     label: label.label,
                     selected: true,
+                    category: null,
                 }));
             referencedSites[asset.elementId] = [...siteIds]
                 .map(siteId => sitesById.get(siteId))
@@ -219,6 +220,7 @@ export class SpDataExportImportComponent implements OnInit {
                     resourceId: site._id,
                     label: site.label,
                     selected: true,
+                    category: null,
                 }));
         });
 
