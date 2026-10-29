@@ -51,6 +51,8 @@ import { GenericStorageItemsComponent } from '../export-dialog/generic-storage-i
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
+import { KeyValuePipe } from '@angular/common';
+import { groupExportItems } from '../export-dialog/data-export-dialog.component';
 
 @Component({
     selector: 'sp-data-import-dialog',
@@ -78,6 +80,7 @@ import { MatDivider } from '@angular/material/divider';
         SpSpinnerComponent,
         MatDivider,
         TranslatePipe,
+        KeyValuePipe,
     ],
 })
 export class SpDataImportDialogComponent {
@@ -88,6 +91,13 @@ export class SpDataImportDialogComponent {
 
     private translateService = inject(TranslateService);
     currentImportStep = 0;
+    readonly groupExportItems = groupExportItems;
+
+    get genericDocuments(): ExportItem[] {
+        return this.importConfiguration.genericStorageDocuments.filter(
+            item => !item.category,
+        );
+    }
 
     inputValue: string;
     fileName: string;

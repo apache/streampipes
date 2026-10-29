@@ -60,7 +60,7 @@ interface SectionAssetConfiguration {
     items: ExportItem[];
 }
 
-type ExportSectionKey =
+type AssetExportSectionKey =
     | 'adapters'
     | 'dashboards'
     | 'dataViews'
@@ -109,7 +109,7 @@ export class SpDataExportDialogComponent implements OnInit {
     @Input()
     referencedSites: Record<string, ExportItem[]> = {};
 
-    exportSections = [
+    private readonly resourceSections = [
         { key: 'adapters', title: 'Adapters' },
         { key: 'dashboards', title: 'Dashboards' },
         { key: 'dataViews', title: 'Charts' },
@@ -120,6 +120,10 @@ export class SpDataExportDialogComponent implements OnInit {
         { key: 'labels', title: 'Labels' },
         { key: 'sites', title: 'Sites' },
     ] as const;
+
+    exportSections: { key: string; title: string }[] = [
+        ...this.resourceSections,
+    ];
 
     preview: ExportConfiguration;
     exportInProgress = false;
@@ -141,12 +145,12 @@ export class SpDataExportDialogComponent implements OnInit {
 
     getExportItems(
         config: AssetExportConfiguration,
-        key: (typeof this.exportSections)[number]['key'],
+        key: AssetExportSectionKey,
     ): ExportItem[] {
         return config[key];
     }
 
-    getAssetsForSection(key: ExportSectionKey): SectionAssetConfiguration[] {
+    getAssetsForSection(key: string): SectionAssetConfiguration[] {
         return this.sectionAssets[key] ?? [];
     }
 
@@ -165,7 +169,7 @@ export class SpDataExportDialogComponent implements OnInit {
     }
 
     selectAllItemsForAsset(
-        key: ExportSectionKey,
+        key: string,
         assetConfig: SectionAssetConfiguration,
         select: boolean,
     ): void {
@@ -177,7 +181,7 @@ export class SpDataExportDialogComponent implements OnInit {
     }
 
     isExportAllSelected(
-        key: ExportSectionKey,
+        key: string,
         assetConfig: SectionAssetConfiguration,
     ): boolean {
         return this.exportAllSelections[
@@ -186,7 +190,7 @@ export class SpDataExportDialogComponent implements OnInit {
     }
 
     changeExportAllSelection(
-        key: ExportSectionKey,
+        key: string,
         assetConfig: SectionAssetConfiguration,
         event: MatSlideToggleChange,
     ): void {
@@ -203,7 +207,7 @@ export class SpDataExportDialogComponent implements OnInit {
     }
 
     getSelectedItemResourceIds(
-        key: ExportSectionKey,
+        key: string,
         assetConfig: SectionAssetConfiguration,
     ): string[] {
         return (
@@ -214,7 +218,7 @@ export class SpDataExportDialogComponent implements OnInit {
     }
 
     updateSelectedItems(
-        key: ExportSectionKey,
+        key: string,
         assetConfig: SectionAssetConfiguration,
         selectedResourceIds: string[],
     ): void {
@@ -276,7 +280,8 @@ export class SpDataExportDialogComponent implements OnInit {
     private initializeSectionAssets(): void {
         this.sectionAssets = {};
 
-        this.exportSections.forEach(section => {
+        this.exportSections = [...this.resourceSections];
+        this.resourceSections.forEach(section => {
             this.sectionAssets[section.key] =
                 this.preview.assetExportConfiguration
                     .map(config => ({
@@ -286,11 +291,25 @@ export class SpDataExportDialogComponent implements OnInit {
                     }))
                     .filter(config => config.items.length > 0);
         });
+
+        for (const [title, items] of Object.entries(
+            groupExportItems(this.preview.genericStorageDocuments),
+        ).sort(([left], [right]) => left.localeCompare(right))) {
+            const key = `genericStorage::${title}`;
+            this.exportSections.push({ key, title });
+            this.sectionAssets[key] = [
+                {
+                    assetId: key,
+                    assetName: '',
+                    items,
+                },
+            ];
+        }
     }
 
     private sortPreviewItems(): void {
         this.preview.assetExportConfiguration.forEach(config => {
-            this.exportSections.forEach(section => {
+            this.resourceSections.forEach(section => {
                 this.sortExportItems(config[section.key]);
             });
         });
@@ -303,7 +322,7 @@ export class SpDataExportDialogComponent implements OnInit {
     }
 
     private getExportAllSelectionKey(
-        key: ExportSectionKey,
+        key: string,
         assetConfig: SectionAssetConfiguration,
     ): string {
         return `${key}::${assetConfig.assetId}`;
@@ -335,4 +354,20 @@ export class SpDataExportDialogComponent implements OnInit {
 
         return [...existingItems, ...missingItems];
     }
+}
+
+export function groupExportItems(
+    items: ExportItem[] = [],
+): Record<string, ExportItem[]> {
+    return [...(items ?? [])]
+        .sort((left, right) => left.label.localeCompare(right.label))
+        .reduce(
+            (groups, item) => {
+                if (item.category) {
+                    (groups[item.category] ??= []).push(item);
+                }
+                return groups;
+            },
+            Object.create(null) as Record<string, ExportItem[]>,
+        );
 }
