@@ -62,6 +62,34 @@ export class ConfigurationBtns {
         return cy.dataCy('audit-log-download-button');
     }
 
+    public static auditTimeRangeFilter() {
+        return cy.dataCy('audit-time-range-filter');
+    }
+
+    public static auditTimeRangeOption(days: 1 | 7 | 30) {
+        return cy.dataCy(`audit-time-range-${days}`);
+    }
+
+    public static auditEventTypeFilter() {
+        return cy.dataCy('audit-event-type-filter');
+    }
+
+    public static auditActorFilter() {
+        return cy.dataCy('audit-actor-filter');
+    }
+
+    public static auditOutcomeFilter() {
+        return cy.dataCy('audit-outcome-filter');
+    }
+
+    public static auditApplyFiltersBtn() {
+        return cy.dataCy('audit-apply-filters-button');
+    }
+
+    public static auditLogRows() {
+        return cy.dataCy('audit-log-table').find('tbody tr');
+    }
+
     public static auditDownloadDialog() {
         return cy.dataCy('audit-download-dialog');
     }
