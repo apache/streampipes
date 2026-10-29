@@ -25,29 +25,54 @@ describe('Filter audit log', () => {
     const adapterStartEvent = 'sp.adapter.start';
     const adminEmail = 'admin@streampipes.apache.org';
 
-    beforeEach('Setup test', () => {
+    beforeEach('Open audit log', () => {
         cy.initStreamPipesTest();
-
         ConnectUtils.addMachineDataSimulator(adapterName, true);
-
         ConfigurationUtils.goToAuditLogConfiguration();
     });
 
-    it('filters events by time range, type, actor, and outcome', () => {
+    it('filters events by time range', () => {
         ConfigurationBtns.auditTimeRangeFilter().click();
         ConfigurationBtns.auditTimeRangeOption(7).click();
+
+        ConfigurationBtns.auditApplyFiltersBtn()
+            .should('not.be.disabled')
+            .click();
+
+        ConfigurationBtns.auditLogRows().should('have.length', 3);
+    });
+
+    it('filters events by type', () => {
         ConfigurationBtns.auditEventTypeFilter()
             .click()
             .type(`${adapterStartEvent}{enter}`);
-        ConfigurationBtns.auditActorFilter()
-            .click()
-            .type(`${adminEmail}{enter}`);
-        ConfigurationBtns.auditOutcomeFilter().click().type('succeeded{enter}');
 
         ConfigurationBtns.auditApplyFiltersBtn()
             .should('not.be.disabled')
             .click();
 
         ConfigurationBtns.auditLogRows().should('have.length', 1);
+    });
+
+    it('filters events by actor', () => {
+        ConfigurationBtns.auditActorFilter()
+            .click()
+            .type(`${adminEmail}{enter}`);
+
+        ConfigurationBtns.auditApplyFiltersBtn()
+            .should('not.be.disabled')
+            .click();
+
+        ConfigurationBtns.auditLogRows().should('have.length', 3);
+    });
+
+    it('filters events by outcome', () => {
+        ConfigurationBtns.auditOutcomeFilter().click().type('succeeded{enter}');
+
+        ConfigurationBtns.auditApplyFiltersBtn()
+            .should('not.be.disabled')
+            .click();
+
+        ConfigurationBtns.auditLogRows().should('have.length', 3);
     });
 });
