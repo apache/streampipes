@@ -24,9 +24,13 @@ describe('Filter audit log', () => {
     const adapterName = 'Audit log filter simulator';
     const adapterStartEvent = 'sp.adapter.start';
     const adminEmail = 'admin@streampipes.apache.org';
+    let testStartedAt: string;
 
     beforeEach('Open audit log', () => {
         cy.initStreamPipesTest();
+        cy.then(() => {
+            testStartedAt = new Date().toISOString();
+        });
         ConnectUtils.addMachineDataSimulator(adapterName, true);
         ConfigurationUtils.goToAuditLogConfiguration();
     });
@@ -39,7 +43,10 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
 
-        ConfigurationBtns.auditLogRows().should('have.length', 3);
+        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
+            testStartedAt,
+            5,
+        );
     });
 
     it('filters events by type', () => {
@@ -51,7 +58,10 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
 
-        ConfigurationBtns.auditLogRows().should('have.length', 1);
+        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
+            testStartedAt,
+            1,
+        );
     });
 
     it('filters events by actor', () => {
@@ -63,7 +73,10 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
 
-        ConfigurationBtns.auditLogRows().should('have.length', 3);
+        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
+            testStartedAt,
+            5,
+        );
     });
 
     it('filters events by outcome', () => {
@@ -73,6 +86,9 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
 
-        ConfigurationBtns.auditLogRows().should('have.length', 3);
+        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
+            testStartedAt,
+            5,
+        );
     });
 });

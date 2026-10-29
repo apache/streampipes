@@ -90,6 +90,21 @@ export class ConfigurationBtns {
         return cy.dataCy('audit-log-table').find('tbody tr');
     }
 
+    public static auditLogRowsRecordedAfterShouldHaveLength(
+        timestamp: string,
+        expectedLength: number,
+    ) {
+        const start = Date.parse(timestamp);
+        return this.auditLogRows().should(rows => {
+            const rowsRecordedAfter = rows.toArray().filter(row => {
+                const storedAt = row.querySelector('time')?.dateTime;
+                return storedAt && Date.parse(storedAt) > start;
+            });
+
+            expect(rowsRecordedAfter).to.have.length(expectedLength);
+        });
+    }
+
     public static auditDownloadDialog() {
         return cy.dataCy('audit-download-dialog');
     }
