@@ -20,5 +20,5 @@ package org.apache.streampipes.manager.pipeline.update;
 
 import org.apache.streampipes.model.SpDataStream;
 
-public record DataStreamUpdatedEvent(SpDataStream dataStream) {
+public record DataStreamSchemaUpdatedEvent(SpDataStream dataStream) {
 }

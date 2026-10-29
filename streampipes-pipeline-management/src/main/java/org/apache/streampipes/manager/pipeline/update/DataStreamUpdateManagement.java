@@ -24,6 +24,8 @@ import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 
+import org.springframework.context.ApplicationEventPublisher;
+
 import java.util.List;
 
 public class DataStreamUpdateManagement {
@@ -40,6 +42,16 @@ public class DataStreamUpdateManagement {
   public void updateDataStream(SpDataStream dataStream) {
     dataStreamResourceManager.update(dataStream);
     pipelineUpdateCoordinator.updatePipelines(dataStream);
+  }
+
+  public void updateDataStream(SpDataStream dataStream, ApplicationEventPublisher eventPublisher) {
+    var previous = dataStreamResourceManager.find(dataStream.getElementId());
+    boolean schemaChanged = EventSchemaChangeDetector.hasChanged(
+        previous == null ? null : previous.getEventSchema(), dataStream.getEventSchema());
+    updateDataStream(dataStream);
+    if (schemaChanged && eventPublisher != null) {
+      eventPublisher.publishEvent(new DataStreamSchemaUpdatedEvent(dataStream));
+    }
   }
 
   public List<PipelineUpdateInfo> checkPipelineMigrations(SpDataStream dataStream) {

@@ -24,7 +24,6 @@ import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
-import org.apache.streampipes.manager.pipeline.update.DataStreamUpdatedEvent;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
@@ -83,8 +82,7 @@ public class AdapterUpdateManagement {
 
       // update data source
       var updatedDataStream = this.updateDataSource(ad);
-      dataStreamUpdateManagement.updateDataStream(updatedDataStream);
-      publishEvent(new DataStreamUpdatedEvent(updatedDataStream));
+      dataStreamUpdateManagement.updateDataStream(updatedDataStream, eventPublisher);
 
       if (shouldRestart) {
         this.adapterMasterManagement.startAdapter(ad.getElementId(), actor);
@@ -104,7 +102,7 @@ public class AdapterUpdateManagement {
     // get data source
     SpDataStream dataStream = this.dataStreamResourceManager.find(ad.getCorrespondingDataStreamElementId());
 
-    return SourcesManagement.updateDataStream(ad, dataStream);
+    return SourcesManagement.updateDataStream(ad, new SpDataStream(dataStream));
   }
 
   private SpDataStream toDataStreamUpdate(AdapterDescription adapterDescription) {
@@ -114,11 +112,5 @@ public class AdapterUpdateManagement {
     dataStream.setName(adapterDescription.getName());
     dataStream.setEventSchema(adapterDescription.getEventSchema());
     return dataStream;
-  }
-
-  private void publishEvent(Object event) {
-    if (eventPublisher != null) {
-      eventPublisher.publishEvent(event);
-    }
   }
 }

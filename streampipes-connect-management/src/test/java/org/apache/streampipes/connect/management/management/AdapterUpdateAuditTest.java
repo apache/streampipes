@@ -84,6 +84,8 @@ class AdapterUpdateAuditTest {
     before.setName("old");
     var after = new AdapterDescription();
     after.setElementId("adapter-1");
+    after.setCorrespondingDataStreamElementId("stream-1");
+    when(streams.find("stream-1")).thenReturn(new SpDataStream());
     after.setName(changed ? "new" : "old");
     after.setRunning(true);
     when(storage.getElementById("adapter-1")).thenReturn(before);
