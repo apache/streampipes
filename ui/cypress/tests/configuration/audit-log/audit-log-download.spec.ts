@@ -74,6 +74,7 @@ describe('Download audit log', () => {
             ConfigurationBtns.auditDownloadDelimiter(delimiter).click();
         }
         ConfigurationBtns.auditDownloadBtn().click();
+        cy.wait('@downloadAuditEvents');
 
         ConfigurationBtns.auditDownloadDialog().should(
             'contain.text',
