@@ -19,17 +19,47 @@
 import { ConfigurationBtns } from '../../../support/utils/configuration/ConfigurationBtns';
 import { ConfigurationUtils } from '../../../support/utils/configuration/ConfigurationUtils';
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
+import * as CSV from 'csv-string';
 
 describe('Download audit log', () => {
     const adapterName = 'Audit log download simulator';
 
     beforeEach('Setup test', () => {
+        cy.removeDownloadDirectory();
         cy.initStreamPipesTest();
 
         ConnectUtils.addMachineDataSimulator(adapterName);
 
         ConfigurationUtils.goToAuditLogConfiguration();
     });
+
+    const assertLatestAdapterEvents = (
+        format: 'csv' | 'json',
+        delimiter?: 'comma' | 'semicolon',
+    ) => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+        cy.readFile(`${downloadsFolder}/audit-log.${format}`).then(
+            (content: string) => {
+                const eventTypes =
+                    format === 'json'
+                        ? JSON.parse(content).map(
+                              (event: { eventType: string }) => event.eventType,
+                          )
+                        : CSV.parse(
+                              content,
+                              delimiter === 'semicolon' ? ';' : ',',
+                          )
+                              .slice(1)
+                              .map(event => event[1]);
+
+                // Audit exports are ordered newest first.
+                expect(eventTypes.slice(0, 2)).to.deep.equal([
+                    'sp.adapter.start',
+                    'sp.adapter.create',
+                ]);
+            },
+        );
+    };
 
     const downloadAuditLog = (
         format: 'csv' | 'json',
@@ -49,6 +79,7 @@ describe('Download audit log', () => {
             'contain.text',
             'Download successful',
         );
+        assertLatestAdapterEvents(format, delimiter);
     };
 
     it('shows a confirmation after downloading the audit log as JSON', () => {
