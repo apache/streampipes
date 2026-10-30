@@ -148,11 +148,23 @@
                     [exportItems]="importConfiguration.sites"
                     [sectionTitle]="'Sites' | translate"
                 ></sp-data-export-item>
-                <sp-generic-storage-items
-                    [exportItems]="importConfiguration.genericStorageDocuments"
-                    [importMode]="true"
-                >
-                </sp-generic-storage-items>
+                @for (
+                    category of groupExportItems(
+                        importConfiguration.genericStorageDocuments
+                    ) | keyvalue;
+                    track category.key
+                ) {
+                    <sp-data-export-item
+                        [exportItems]="category.value"
+                        [sectionTitle]="category.key | translate"
+                    ></sp-data-export-item>
+                }
+                @if (genericDocuments.length > 0) {
+                    <sp-generic-storage-items
+                        [exportItems]="genericDocuments"
+                        [importMode]="true"
+                    ></sp-generic-storage-items>
+                }
                 @if (currentImportStep === 1) {
                     <sp-split-section
                         [level]="3"

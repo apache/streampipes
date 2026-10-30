@@ -24,6 +24,7 @@ import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
+import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -151,8 +152,13 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleGenericStorageDocument(String document, String genericDocId) {
-    addExportItem(genericDocId, genericDocId, importConfig::addGenericStorageDocument);
+  protected void handleGenericStorageDocument(String document, String genericDocId) throws JsonProcessingException {
+    Map<String, Object> payload = defaultMapper.readValue(document, new TypeReference<>() { });
+    var resolvers = new GenericStorageResolverProvider(resourceManager.getGenericStorage());
+    var item = resolvers.toExportItem(payload, true);
+    // Import selections identify archive entries, whose names may differ from stored document IDs.
+    item.setResourceId(genericDocId);
+    importConfig.addGenericStorageDocument(item);
   }
 
   @Override

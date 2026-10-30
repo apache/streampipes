@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.export.dataimport;
 
+import org.apache.streampipes.export.GenericStorageResourceRegistry;
 import org.apache.streampipes.export.model.PermissionInfo;
 import org.apache.streampipes.export.resolver.AbstractResolver;
 import org.apache.streampipes.export.resolver.AdapterResolver;
@@ -26,8 +27,10 @@ import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
+import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.export.utils.ArchiveEntryNames;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -53,6 +56,7 @@ import java.util.Set;
 
 public class PerformImportGenerator extends ImportGenerator<Void> {
 
+  private final GenericStorageResolverProvider genericStorageResolvers;
   private final AssetExportConfiguration config;
   private final IGenericStorage genericStorage;
   private final Set<PermissionInfo> permissionsToStore = new HashSet<>();
@@ -67,8 +71,19 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
                                 ExtensionServiceRequestManager extensionServiceRequestManager,
                                 SpResourceManager resourceManager,
                                 PipelineManager pipelineManager) {
+    this(config, ownerSid, extensionServiceRequestManager, resourceManager, pipelineManager,
+        GenericStorageResourceRegistry.INSTANCE);
+  }
+
+  public PerformImportGenerator(AssetExportConfiguration config,
+                                String ownerSid,
+                                ExtensionServiceRequestManager extensionServiceRequestManager,
+                                SpResourceManager resourceManager,
+                                PipelineManager pipelineManager,
+                                GenericStorageResourceRegistry resourceRegistry) {
     this.config = config;
     this.genericStorage = resourceManager.getGenericStorage();
+    this.genericStorageResolvers = new GenericStorageResolverProvider(genericStorage, resourceRegistry);
     this.ownerSid = ownerSid;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
@@ -175,7 +190,20 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleGenericStorageDocument(String document, String documentId) throws JsonProcessingException {
     if (shouldStore(documentId, config.getGenericStorageDocuments())) {
-      writeDocument(document, new GenericStorageDocumentResolver(genericStorage));
+      var resolver = new GenericStorageDocumentResolver(genericStorage);
+      var storedDocument = resolver.readDocument(document);
+      if (!(storedDocument.get("_id") instanceof String resourceId)
+          || !(documentId.equals(resourceId) || documentId.equals(ArchiveEntryNames.forResourceId(resourceId)))) {
+        throw new IllegalArgumentException("Generic document id does not match manifest: " + documentId);
+      }
+      writeDocument(document, genericStorageResolvers.resolverFor(storedDocument));
+      genericStorageResolvers.registrationFor(storedDocument).ifPresent(registration -> {
+        var permissions = registration.permissions();
+        if (resourceManager.managePermissions().findForObjectId(resourceId).isEmpty()) {
+          resourceManager.managePermissions().createDefault(resourceId,
+              permissions.resourceClass(), ownerSid, permissions.publicElement());
+        }
+      });
     }
   }
 
