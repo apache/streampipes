@@ -23,7 +23,7 @@ import {
 } from '@streampipes/platform-services';
 import {
     DataExplorerVisConfig,
-    WidgetBaseAppearanceConfig,
+    WidgetNumberAppearanceConfig,
 } from '../../../../models/dataview-dashboard.model';
 
 export interface IndicatorChartVisConfig extends DataExplorerVisConfig {
@@ -34,7 +34,7 @@ export interface IndicatorChartVisConfig extends DataExplorerVisConfig {
     description?: string;
 }
 
-export interface IndicatorAppearanceConfig extends WidgetBaseAppearanceConfig {
+export interface IndicatorAppearanceConfig extends WidgetNumberAppearanceConfig {
     valueFontSize?: number;
     deltaFontSize?: number;
 }

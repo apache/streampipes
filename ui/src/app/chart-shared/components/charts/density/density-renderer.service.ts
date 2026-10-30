@@ -39,9 +39,11 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
         widgetConfig: CorrelationChartWidgetModel,
         widgetSize: WidgetSize,
     ): void {
-        const decimals = this.getDecimals(widgetConfig);
         const xField = this.getXField(widgetConfig);
         const yField = this.getYField(widgetConfig);
+        const xFormat = this.getAxisNumberFormat(widgetConfig, xField);
+        const yFormat = this.getAxisNumberFormat(widgetConfig, yField);
+        const valueFormat = this.getNumberFormat(widgetConfig);
         const dataset = this.datasetUtilsService.findPreparedDataset(
             datasets,
             xField.sourceIndex,
@@ -72,7 +74,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: Math.ceil(stats.maxX + 1),
                 axisLabel: {
                     formatter: (value: number | string) =>
-                        this.formatNumber(value, decimals),
+                        this.formatNumber(value, xFormat),
                 },
                 name:
                     widgetConfig.visualizationConfig.labelX ||
@@ -89,7 +91,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: Math.ceil(stats.maxY + 1),
                 axisLabel: {
                     formatter: (value: number | string) =>
-                        this.formatNumber(value, decimals),
+                        this.formatNumber(value, yFormat),
                 },
                 name:
                     widgetConfig.visualizationConfig.labelY ||
@@ -116,7 +118,7 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
             tooltip: {
                 ...tooltip,
                 valueFormatter: (value: unknown) =>
-                    this.formatNumber(value, decimals),
+                    this.formatNumber(value, valueFormat),
             },
             series: [
                 {

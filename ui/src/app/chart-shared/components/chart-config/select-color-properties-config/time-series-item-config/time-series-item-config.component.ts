@@ -22,7 +22,9 @@ import {
     Input,
     Output,
     ChangeDetectionStrategy,
+    inject,
 } from '@angular/core';
+import { ChartPaletteService } from '../../../../services/chart-palette.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import {
     TimeSeriesChartWidgetModel,
@@ -78,6 +80,8 @@ import { MatIcon } from '@angular/material/icon';
     ],
 })
 export class SpTimeseriesItemConfigComponent {
+    private paletteService = inject(ChartPaletteService);
+
     constructor(private resultLabelService: ResultLabelService) {}
 
     @Input()
@@ -95,15 +99,9 @@ export class SpTimeseriesItemConfigComponent {
     @Output()
     configChangeEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    presetColors: string[] = [
-        '#39B54A',
-        '#1B1464',
-        '#f44336',
-        '#4CAF50',
-        '#FFEB3B',
-        '#FFFFFF',
-        '#000000',
-    ];
+    get presetColors(): string[] {
+        return this.paletteService.colors();
+    }
 
     expanded: boolean = false;
 
