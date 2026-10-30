@@ -24,6 +24,7 @@ import org.apache.streampipes.export.resolver.ChartResolver;
 import org.apache.streampipes.export.resolver.DashboardResolver;
 import org.apache.streampipes.export.resolver.DataSourceResolver;
 import org.apache.streampipes.export.resolver.FileResolver;
+import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -100,6 +101,9 @@ public class AssetLinkResolver {
       exportConfig.setFiles(new FileResolver(resourceManager.getFileMetadataStorage())
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.FILE)));
 
+      exportConfig.setGenericStorageDocuments(
+          new GenericStorageResolverProvider(resourceManager.getGenericStorage()).resolve(assetLinks));
+
       return exportConfig;
     } catch (IOException e) {
       LOG.error("IO Exception when writing export configuration", e);
@@ -111,7 +115,7 @@ public class AssetLinkResolver {
                                   String queryHint) {
     return assetLinks
         .stream()
-        .filter(link -> link.getQueryHint().equals(queryHint))
+        .filter(link -> queryHint.equals(link.getQueryHint()))
         .collect(Collectors.toSet());
   }
 

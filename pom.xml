@@ -42,7 +42,7 @@
         <spring-boot.version>4.0.2</spring-boot.version>
         <plc4x.version>0.13.1</plc4x.version>
 
-        <apache-poi.version>5.4.0</apache-poi.version>
+        <apache-poi.version>5.5.1</apache-poi.version>
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
         <bcprov-jdk18on.version>1.86</bcprov-jdk18on.version>
@@ -105,7 +105,7 @@
         <!-- streampipes-maven-plugin -->
         <file-management.version>3.1.0</file-management.version>
         <maven.version>3.8.7</maven.version>
-        <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
+        <maven-plugin-annotations.version>3.16.0</maven-plugin-annotations.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.6.0</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.3</plexus-utils.version>
