@@ -50,7 +50,7 @@ public class DataStreamUpdateManagement {
     dataStreamResourceManager.update(dataStream);
     pipelineUpdateCoordinator.updatePipelines(dataStream);
     if (schemaChanged) {
-      eventPublisher.publishEvent(new DataStreamSchemaUpdatedEvent(dataStream));
+      eventPublisher.publishEvent(new DataStreamSchemaUpdatedEvent(dataStream.getElementId(), dataStream.getName()));
     }
   }
 

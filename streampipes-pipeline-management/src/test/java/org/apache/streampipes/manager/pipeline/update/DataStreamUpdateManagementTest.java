@@ -56,7 +56,7 @@ class DataStreamUpdateManagementTest {
       order.verify(streams).find("stream-1");
       order.verify(streams).update(updated);
       order.verify(coordinators.constructed().getFirst()).updatePipelines(updated);
-      order.verify(publisher).publishEvent(new DataStreamSchemaUpdatedEvent(updated));
+      order.verify(publisher).publishEvent(new DataStreamSchemaUpdatedEvent(updated.getElementId(), updated.getName()));
     }
   }
 
