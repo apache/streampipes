@@ -118,6 +118,10 @@ public class ResetManagement {
     logger.info("Resetting the system was completed");
   }
 
+  public void clearAuditLog() {
+    resourceManager.getAuditService().clear();
+  }
+
   private void setHideTutorialToFalse(String username) {
     resourceManager.manageUsers().setHideTutorial(username, true);
   }

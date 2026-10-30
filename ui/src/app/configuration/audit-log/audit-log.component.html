@@ -103,17 +103,24 @@
                             subscriptSizing="dynamic"
                         >
                             <mat-select
+                                data-cy="audit-time-range-filter"
                                 [attr.aria-label]="'Time range' | translate"
                                 name="days"
                                 [(ngModel)]="days"
                             >
-                                <mat-option [value]="1"
+                                <mat-option
+                                    data-cy="audit-time-range-1"
+                                    [value]="1"
                                     >{{ 'Last 24 hours' | translate }}
                                 </mat-option>
-                                <mat-option [value]="7"
+                                <mat-option
+                                    data-cy="audit-time-range-7"
+                                    [value]="7"
                                     >{{ 'Last 7 days' | translate }}
                                 </mat-option>
-                                <mat-option [value]="30"
+                                <mat-option
+                                    data-cy="audit-time-range-30"
+                                    [value]="30"
                                     >{{ 'Last 30 days' | translate }}
                                 </mat-option>
                             </mat-select>
@@ -125,6 +132,7 @@
                         margin="0"
                     >
                         <sp-search-select
+                            dataCy="audit-event-type-filter"
                             [items]="types"
                             [value]="eventType || undefined"
                             [freeTextValue]="eventTypeFromText"
@@ -139,6 +147,7 @@
                         margin="0"
                     >
                         <sp-search-select
+                            dataCy="audit-actor-filter"
                             [items]="actorOptions"
                             [value]="selectedActor"
                             [freeTextValue]="actorFromText"
@@ -164,6 +173,7 @@
                         margin="0"
                     >
                         <sp-search-select
+                            dataCy="audit-outcome-filter"
                             [items]="outcomeOptions"
                             [value]="selectedOutcome"
                             [placeholder]="'All outcomes' | translate"
@@ -180,6 +190,7 @@
                             <button
                                 mat-flat-button
                                 type="submit"
+                                data-cy="audit-apply-filters-button"
                                 [disabled]="loading"
                             >
                                 {{ 'Apply filters' | translate }}
@@ -219,6 +230,7 @@
                 }
                 <div class="audit-table" [attr.aria-busy]="loading">
                     <sp-table
+                        data-cy="audit-log-table"
                         [rowsClickable]="true"
                         (rowClicked)="showDetails($event)"
                         [columns]="columns"

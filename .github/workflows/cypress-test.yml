@@ -63,6 +63,11 @@ jobs:
         run: |
           ./installer/compose/configure
           docker compose up --build -d
+        env:
+          SP_AUDIT_ENABLED: true
+          SP_AUDIT_INFLUX_URL: http://influxdb:8086
+          SP_AUDIT_INFLUX_DATABASE: audit
+          SP_AUDIT_INFLUX_TOKEN: sp-admin
 
       - name: Wait 80 seconds
         working-directory: ./installer/compose

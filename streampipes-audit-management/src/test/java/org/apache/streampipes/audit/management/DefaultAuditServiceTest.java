@@ -167,6 +167,25 @@ class DefaultAuditServiceTest {
   }
 
   @Test
+  void clearsPersistedAuditEvents() {
+    var cleared = new AtomicBoolean();
+    AuditEventStore store = new AuditEventStore() {
+      @Override
+      public void append(AuditEvent<?> event) {
+      }
+
+      @Override
+      public void clear() {
+        cleared.set(true);
+      }
+    };
+    try (var service = new DefaultAuditService(List.of(new StandardAuditEvents()), store, CLOCK)) {
+      service.clear();
+    }
+    assertTrue(cleared.get());
+  }
+
+  @Test
   void invalidOrOversizedEventsNeverReachStorage() {
     var events = new ArrayList<AuditEvent<?>>();
     var custom = new AuditEventDefinition<>("bytefabrik.sample.create", CustomDetails.class);

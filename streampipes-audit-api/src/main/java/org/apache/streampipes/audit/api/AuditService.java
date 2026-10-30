@@ -35,6 +35,11 @@ public interface AuditService extends AutoCloseable {
   <T extends AuditDetails> void record(AuditEventDefinition<T> definition, AuditOutcome outcome,
                                       String actor, String resourceId, T details);
 
+
+  default void clear() {
+    throw new IllegalStateException("Audit clearing unavailable");
+  }
+
   default AuditPage query(AuditQuery query) {
     throw new IllegalStateException("Audit reading unavailable");
   }
@@ -61,6 +66,11 @@ public interface AuditService extends AutoCloseable {
       @Override
       public <T extends AuditDetails> void record(AuditEventDefinition<T> definition, AuditOutcome outcome,
                                                   String actor, String resourceId, T details) {
+        // Explicitly disabled for deployments without audit configuration and legacy constructors.
+      }
+
+      @Override
+      public void clear() {
         // Explicitly disabled for deployments without audit configuration and legacy constructors.
       }
     };

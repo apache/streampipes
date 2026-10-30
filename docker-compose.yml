@@ -40,6 +40,10 @@ services:
       - SP_PRIORITIZED_PROTOCOL=nats
       - SP_SETUP_PROMETHEUS_ENDPOINT=true
       - SP_RESET_ENDPOINT_ENABLED=true
+      - SP_AUDIT_ENABLED=${SP_AUDIT_ENABLED:-false}
+      - SP_AUDIT_INFLUX_URL=${SP_AUDIT_INFLUX_URL:-}
+      - SP_AUDIT_INFLUX_DATABASE=${SP_AUDIT_INFLUX_DATABASE:-}
+      - SP_AUDIT_INFLUX_TOKEN=${SP_AUDIT_INFLUX_TOKEN:-}
     depends_on:
       - couchdb
     volumes:

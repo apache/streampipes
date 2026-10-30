@@ -183,6 +183,18 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
   }
 
   @Override
+  public synchronized void clear() {
+    initialize();
+    var result = queries.execute(new Query("DELETE FROM \"%s\"".formatted(InfluxAuditSchema.MEASUREMENT)));
+    if (result.hasError() || result.getResults() != null
+        && result.getResults().stream().anyMatch(statement -> statement.hasError())) {
+      throw new IllegalStateException("Audit log clear failed");
+    }
+    initialized = false;
+    lastTimestamp = 0;
+  }
+
+  @Override
   public synchronized void deleteEventsOlderThan(Instant cutoff) {
     if (cutoff == null) {
       throw new IllegalArgumentException("Audit retention cutoff is required");
