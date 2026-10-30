@@ -20,6 +20,7 @@ login:
     favicon: 'deployment/dev/img/favicon.png'
 modules:
     - spHome
+    - spFavorites
     - spPipelines
     - spDashboard
     - spChart

@@ -65,6 +65,24 @@
                     (rowClicked)="goToDetailsView($event)"
                     matSort
                 >
+                    <ng-container matColumnDef="favorite">
+                        <th
+                            mat-header-cell
+                            *matHeaderCellDef
+                            class="favorite-column"
+                            [attr.aria-label]="'Favorite' | translate"
+                        ></th>
+                        <td
+                            mat-cell
+                            *matCellDef="let resource"
+                            class="favorite-column"
+                        >
+                            <sp-resource-favorite
+                                resourceType="ASSET"
+                                [resourceId]="resource.elementId"
+                            />
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="assetName">
                         <th mat-header-cell mat-sort-header *matHeaderCellDef>
                             Asset

@@ -38,6 +38,7 @@ import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
+import org.apache.streampipes.storage.api.user.IFavoriteStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
@@ -61,6 +62,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStora
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.FavoriteStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
@@ -116,6 +118,7 @@ class StorageApiConfigurationTest {
       assertInstanceOf(AdapterDescriptionStorageImpl.class, adapters.descriptions());
 
       assertInstanceOf(FunctionStateStorageImpl.class, context.getBean(IFunctionStateStorage.class));
+      assertInstanceOf(FavoriteStorageImpl.class, context.getBean(IFavoriteStorage.class));
       assertInstanceOf(AssetStorageImpl.class, context.getBean(IAssetStorage.class));
       assertInstanceOf(FileMetadataStorageImpl.class, context.getBean(IFileMetadataStorage.class));
       assertInstanceOf(GenericStorageImpl.class, context.getBean(IGenericStorage.class));

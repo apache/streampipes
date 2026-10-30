@@ -211,7 +211,10 @@
     </ng-template>
 
     <ng-template #groupingControls>
-        @if (viewMode === 'grouped') {
+        @if (groupForRow && viewMode === 'grouped') {
+            <span>{{ groupLabel }}</span>
+        }
+        @if (viewMode === 'grouped' && !groupForRow) {
             <mat-form-field class="form-field-small grouping-toolbar__select">
                 <mat-select
                     [value]="groupBy"

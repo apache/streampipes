@@ -26,12 +26,19 @@ import java.util.List;
 
 public class PermissionResourceManager extends AbstractResourceManager<IPermissionStorage> {
 
+  private final FavoriteCleanupManager favoriteCleanup;
+
   private final List<String> readAnonymousAllowedClasses = List.of(
       DashboardModel.class.getCanonicalName()
   );
 
   public PermissionResourceManager(IPermissionStorage permissionStorage) {
+    this(permissionStorage, null);
+  }
+
+  public PermissionResourceManager(IPermissionStorage permissionStorage, FavoriteCleanupManager favoriteCleanup) {
     super(permissionStorage);
+    this.favoriteCleanup = favoriteCleanup;
   }
 
   public List<Permission> findAll() {
@@ -67,9 +74,21 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
       permission.setReadAnonymous(false);
     }
     db.updateElement(permission);
+    if (favoriteCleanup != null) {
+      favoriteCleanup.permissionsChanged();
+    }
   }
 
   public void delete(Permission permission) {
     db.deleteElementById(permission.getPermissionId());
+    if (favoriteCleanup != null) {
+      favoriteCleanup.permissionsChanged();
+    }
+  }
+
+  public void deleteResourceFavorites(Class<?> resourceClass, String resourceId) {
+    if (favoriteCleanup != null) {
+      favoriteCleanup.resourceDeleted(resourceClass, resourceId);
+    }
   }
 }
