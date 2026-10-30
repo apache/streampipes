@@ -29,14 +29,10 @@ describe('Filter audit log', () => {
     const chartName = 'Audit log filter chart';
     const adapterStartEvent = 'sp.adapter.start';
     const adminEmail = 'admin@streampipes.apache.org';
-    let testStartedAt: string;
     let chartOwner: User;
 
     beforeEach('Open audit log', () => {
         cy.initStreamPipesTest();
-        cy.then(() => {
-            testStartedAt = new Date().toISOString();
-        });
         ConnectUtils.addMachineDataSimulator(adapterName, true);
 
         chartOwner = UserUtils.createUser(
@@ -60,10 +56,7 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
         //adapter.create, adapter.start, auth.login, auth.login, pipeline.create, pipeline.start, dataset.create, chart.create
-        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
-            testStartedAt,
-            8,
-        );
+        ConfigurationBtns.auditLogRows().should('have.length', 8);
     });
 
     it('filters events by type', () => {
@@ -75,10 +68,7 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
         //adapter.start
-        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
-            testStartedAt,
-            1,
-        );
+        ConfigurationBtns.auditLogRows().should('have.length', 1);
     });
 
     it('filters events by actor', () => {
@@ -90,10 +80,7 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
         //adapter.create, adapter.start, auth.login, auth.logout, pipeline.create, pipeline.start, dataset.create
-        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
-            testStartedAt,
-            7,
-        );
+        ConfigurationBtns.auditLogRows().should('have.length', 7);
     });
 
     it('filters events by outcome', () => {
@@ -103,9 +90,6 @@ describe('Filter audit log', () => {
             .should('not.be.disabled')
             .click();
         //adapter.create, adapter.start, auth.login, auth.login, pipeline.create, pipeline.start, dataset.create, chart.create
-        ConfigurationBtns.auditLogRowsRecordedAfterShouldHaveLength(
-            testStartedAt,
-            8,
-        );
+        ConfigurationBtns.auditLogRows().should('have.length', 8);
     });
 });
