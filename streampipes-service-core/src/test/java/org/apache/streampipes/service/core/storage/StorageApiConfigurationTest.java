@@ -17,9 +17,11 @@
  */
 package org.apache.streampipes.service.core.storage;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.manager.setup.InstallationConfiguration;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.core.PipelineManagementConfiguration;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
@@ -81,6 +83,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -106,6 +109,8 @@ class StorageApiConfigurationTest {
     try (var clients = mockStatic(Utils.class);
          var context = new AnnotationConfigApplicationContext()) {
       context.registerBean(CacheManager.class, () -> cacheManager);
+      context.registerBean(ExtensionServiceRequestManager.class, () -> mock(ExtensionServiceRequestManager.class));
+      context.registerBean(SpResourceManager.class, () -> mock(SpResourceManager.class, RETURNS_DEEP_STUBS));
       context.register(StorageApiConfiguration.class, PipelineManagementConfiguration.class, AdapterStorages.class);
       context.refresh();
 
