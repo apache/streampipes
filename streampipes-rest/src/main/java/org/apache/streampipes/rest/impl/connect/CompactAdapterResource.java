@@ -32,6 +32,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
@@ -49,7 +50,6 @@ import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +76,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
 
   public CompactAdapterResource(WorkerRestClient workerRestClient,
                                 ExtensionServiceRequestManager requestManager,
-                                ApplicationEventPublisher eventPublisher,
+                                DataStreamUpdateManagement dataStreamUpdateManagement,
                                 SpResourceManager resourceManager,
                                 @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
                                 IExtensionsServiceStorage extensionsServiceStorage,
@@ -108,9 +108,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     );
     this.adapterUpdateManagement = new AdapterUpdateManagement(
         managementService,
-        requestManager,
         resourceManager,
-        eventPublisher
+        dataStreamUpdateManagement
     );
   }
 

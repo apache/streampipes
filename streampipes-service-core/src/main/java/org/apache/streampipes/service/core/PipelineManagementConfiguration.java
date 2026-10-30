@@ -18,9 +18,12 @@
 
 package org.apache.streampipes.service.core;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.manager.setup.InstallationConfiguration;
 import org.apache.streampipes.resource.management.ResourceDeletionManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
@@ -30,11 +33,19 @@ import org.apache.streampipes.svcdiscovery.SpServiceDiscoveryCore;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class PipelineManagementConfiguration {
+
+  @Bean
+  public DataStreamUpdateManagement dataStreamUpdateManagement(ExtensionServiceRequestManager requestManager,
+                                                              SpResourceManager resourceManager,
+                                                              ApplicationEventPublisher eventPublisher) {
+    return new DataStreamUpdateManagement(requestManager, resourceManager, eventPublisher);
+  }
 
   @Bean
   public ResourceDeletionManager resourceDeletionManager(IGenericStorage genericStorage) {
