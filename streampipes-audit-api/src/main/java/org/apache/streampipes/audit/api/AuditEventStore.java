@@ -28,6 +28,10 @@ public interface AuditEventStore extends AutoCloseable {
 
   void append(AuditEvent<?> event);
 
+  default void clear() {
+    throw new IllegalStateException("Audit clearing is unavailable");
+  }
+
   default void deleteEventsOlderThan(Instant cutoff) {
     throw new IllegalStateException("Audit retention is unavailable");
   }

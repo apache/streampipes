@@ -119,6 +119,11 @@ public final class DefaultAuditService implements AuditService {
     }
   }
 
+  @Override
+  public void clear() {
+    store.clear();
+  }
+
   private <T extends AuditDetails> PendingEvent<T> snapshot(AuditEventDefinition<T> definition, AuditOutcome outcome,
                                                            String actor, String resourceId, T details)
       throws JsonProcessingException {
