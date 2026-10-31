@@ -37,6 +37,42 @@ describe('Test Table View in Charts', () => {
         ChartWidgetTableUtils.checkAmountOfRows(10);
     });
 
+    it('Configures a custom value range for highlighting', () => {
+        ChartUtils.createChart(
+            PrepareTestDataUtils.dataName,
+            ChartWidget.TABLE,
+        );
+
+        cy.contains('.highlight-field', 'randomnumber')
+            .find('mat-checkbox')
+            .click();
+        cy.contains('.highlight-field', 'randomnumber')
+            .contains('mat-radio-button', 'Custom')
+            .click();
+        cy.contains('.highlight-field', 'randomnumber')
+            .find('input[type="number"]')
+            .eq(0)
+            .clear()
+            .type('0');
+        cy.contains('.highlight-field', 'randomnumber')
+            .find('input[type="number"]')
+            .eq(1)
+            .clear()
+            .type('1000000');
+
+        cy.contains('.highlight-field', 'randomnumber')
+            .find('input[type="number"]')
+            .eq(0)
+            .should('have.value', '0');
+        cy.contains('.highlight-field', 'randomnumber')
+            .find('input[type="number"]')
+            .eq(1)
+            .should('have.value', '1000000');
+        cy.contains('.highlight-field', 'randomnumber')
+            .find('.highlight-range-error')
+            .should('not.exist');
+    });
+
     it('Renames table field labels', () => {
         ChartUtils.createChart(
             PrepareTestDataUtils.dataName,

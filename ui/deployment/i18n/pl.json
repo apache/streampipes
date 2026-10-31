@@ -744,6 +744,7 @@
   "Min Slice Angle": "Minimalny kąt segmentu",
   "Minimum angle reserved for each slice (in degrees).": "Minimalny kąt zarezerwowany dla każdego segmentu (w stopniach).",
   "Minimum length 35 characters.": "Minimalna długość 35 znaków.",
+  "Minimum must be lower than maximum.": "Wartość minimalna musi być mniejsza niż maksymalna.",
   "Minimum value": "Wartość minimalna",
   "Minute": "Minuta",
   "Missing timestamp": "Brak znacznika czasu",
