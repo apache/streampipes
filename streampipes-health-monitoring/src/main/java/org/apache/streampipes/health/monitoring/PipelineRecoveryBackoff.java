@@ -23,22 +23,31 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.LongSupplier;
 
-final class PipelineRecoveryBackoff {
+/**
+ * Exponential backoff for recovery attempts of individual instances, keyed by pipeline and
+ * instance id. The delay starts at the health check interval and doubles up to ten minutes.
+ * An attempt becomes due early when an extension service becomes available, see
+ * {@link ServiceAvailabilityGeneration}. Public so that registered {@link HealthCheck}
+ * implementations can apply the same policy to the resources they recover.
+ */
+public final class PipelineRecoveryBackoff {
 
-  static final Duration DEFAULT_INITIAL_DELAY = Duration.ofSeconds(30);
-  static final Duration DEFAULT_MAX_DELAY = Duration.ofMinutes(10);
+  public static final Duration DEFAULT_INITIAL_DELAY = Duration.ofSeconds(30);
+  public static final Duration DEFAULT_MAX_DELAY = Duration.ofMinutes(10);
 
   private final Clock clock;
   private final Duration initialDelay;
   private final Duration maxDelay;
+  private final LongSupplier availabilityGeneration;
   private final Map<RecoveryKey, RecoveryState> recoveryStates = new ConcurrentHashMap<>();
 
-  PipelineRecoveryBackoff() {
+  public PipelineRecoveryBackoff() {
     this(Clock.systemUTC(), DEFAULT_INITIAL_DELAY, DEFAULT_MAX_DELAY);
   }
 
-  PipelineRecoveryBackoff(Duration healthCheckInterval) {
+  public PipelineRecoveryBackoff(Duration healthCheckInterval) {
     this(
         Clock.systemUTC(),
         healthCheckInterval,
@@ -46,42 +55,57 @@ final class PipelineRecoveryBackoff {
     );
   }
 
-  PipelineRecoveryBackoff(Clock clock,
-                          Duration initialDelay,
-                          Duration maxDelay) {
+  public PipelineRecoveryBackoff(Clock clock,
+                                 Duration initialDelay,
+                                 Duration maxDelay) {
+    this(clock, initialDelay, maxDelay, ServiceAvailabilityGeneration.INSTANCE::current);
+  }
+
+  public PipelineRecoveryBackoff(Clock clock,
+                                 Duration initialDelay,
+                                 Duration maxDelay,
+                                 LongSupplier availabilityGeneration) {
     this.clock = clock;
     this.initialDelay = initialDelay;
     this.maxDelay = maxDelay;
+    this.availabilityGeneration = availabilityGeneration;
   }
 
-  boolean isAttemptDue(String pipelineId,
-                       String instanceId) {
-    var state = recoveryStates.get(new RecoveryKey(pipelineId, instanceId));
-    return state == null || !clock.instant().isBefore(state.nextAttemptAt());
-  }
-
-  RecoveryState recordFailure(String pipelineId,
+  /**
+   * An attempt is due when no failure is recorded, when the backoff delay has elapsed,
+   * or when an extension service became available since the last failure.
+   */
+  public boolean isAttemptDue(String pipelineId,
                               String instanceId) {
+    var state = recoveryStates.get(new RecoveryKey(pipelineId, instanceId));
+    return state == null
+        || state.availabilityGeneration() != availabilityGeneration.getAsLong()
+        || !clock.instant().isBefore(state.nextAttemptAt());
+  }
+
+  public RecoveryState recordFailure(String pipelineId,
+                                     String instanceId) {
     var key = new RecoveryKey(pipelineId, instanceId);
     return recoveryStates.compute(key, (ignored, previousState) -> {
       int failedAttempts = previousState == null ? 1 : previousState.failedAttempts() + 1;
       Duration delay = calculateDelay(failedAttempts);
-      return new RecoveryState(failedAttempts, delay, clock.instant().plus(delay));
+      return new RecoveryState(failedAttempts, delay, clock.instant().plus(delay),
+          availabilityGeneration.getAsLong());
     });
   }
 
-  int reset(String pipelineId,
-            String instanceId) {
+  public int reset(String pipelineId,
+                   String instanceId) {
     var previousState = recoveryStates.remove(new RecoveryKey(pipelineId, instanceId));
     return previousState == null ? 0 : previousState.failedAttempts();
   }
 
-  void retainOnly(Set<RecoveryKey> activeInstances) {
+  public void retainOnly(Set<RecoveryKey> activeInstances) {
     recoveryStates.keySet().retainAll(activeInstances);
   }
 
-  RecoveryState getState(String pipelineId,
-                         String instanceId) {
+  public RecoveryState getState(String pipelineId,
+                                String instanceId) {
     return recoveryStates.get(new RecoveryKey(pipelineId, instanceId));
   }
 
@@ -97,11 +121,12 @@ final class PipelineRecoveryBackoff {
     return first.compareTo(second) >= 0 ? first : second;
   }
 
-  record RecoveryKey(String pipelineId, String instanceId) {
+  public record RecoveryKey(String pipelineId, String instanceId) {
   }
 
-  record RecoveryState(int failedAttempts,
+  public record RecoveryState(int failedAttempts,
                        Duration delay,
-                       Instant nextAttemptAt) {
+                       Instant nextAttemptAt,
+                       long availabilityGeneration) {
   }
 }

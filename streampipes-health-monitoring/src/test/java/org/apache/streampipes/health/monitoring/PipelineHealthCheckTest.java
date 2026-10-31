@@ -27,6 +27,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
@@ -45,6 +46,38 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PipelineHealthCheckTest {
+
+  @AfterEach
+  public void tearDown() {
+    ShutdownSignal.INSTANCE.reset();
+  }
+
+  @Test
+  public void elementOnUnreachableServiceIsNotRestoredElsewhere() {
+    var processor = processor("missing", "Missing processor");
+    processor.setSelectedServiceId("unreachable-service");
+    var pipeline = pipeline(processor);
+    var healthCheck = healthCheck(pipeline, Map.of("missing", true), new PipelineRecoveryBackoff(), Set.of(),
+        Set.of("unreachable-service"));
+
+    healthCheck.runCheck();
+
+    assertEquals(0, healthCheck.restoreAttempts("missing"));
+    assertEquals(PipelineHealthStatus.FAILURE, pipeline.getHealthStatus());
+    assertTrue(pipeline.getPipelineNotifications().get(0).contains("currently unreachable"));
+  }
+
+  @Test
+  public void noRecoveryOnceShutdownIsRequested() {
+    var pipeline = pipeline(processor("missing", "Missing processor"));
+    var healthCheck = healthCheck(pipeline, Map.of("missing", true));
+    ShutdownSignal.INSTANCE.requestShutdown();
+
+    healthCheck.runCheck();
+
+    assertEquals(0, healthCheck.restoreAttempts("missing"));
+    assertEquals(PipelineHealthStatus.OK, pipeline.getHealthStatus());
+  }
 
   @Test
   public void retriesRestorationBeyondPreviousLimit() {
@@ -160,6 +193,14 @@ public class PipelineHealthCheckTest {
                                               Map<String, Boolean> restorationResults,
                                               PipelineRecoveryBackoff recoveryBackoff,
                                               Set<String> runningInstanceIds) {
+    return healthCheck(pipeline, restorationResults, recoveryBackoff, runningInstanceIds, Set.of());
+  }
+
+  private TestPipelineHealthCheck healthCheck(Pipeline pipeline,
+                                              Map<String, Boolean> restorationResults,
+                                              PipelineRecoveryBackoff recoveryBackoff,
+                                              Set<String> runningInstanceIds,
+                                              Set<String> unreachableServiceIds) {
     IPipelineStorage pipelineStorage = mock(IPipelineStorage.class);
     when(pipelineStorage.getElementById(pipeline.getPipelineId())).thenReturn(pipeline);
     when(pipelineStorage.updateElement(any())).thenAnswer(invocation -> invocation.getArgument(0));
@@ -175,7 +216,8 @@ public class PipelineHealthCheckTest {
         resourceProvider,
         activeResources,
         Map.of(),
-        Map.of("service-id", new ExtensionInstanceHealth(Map.of(), runningInstanceIds))
+        Map.of("service-id", new ExtensionInstanceHealth(Map.of(), runningInstanceIds)),
+        unreachableServiceIds
     );
 
     return new TestPipelineHealthCheck(

@@ -34,6 +34,7 @@ services:
       context: ./streampipes-service-core
       dockerfile: Dockerfile
     image: streampipes_backend:release-validation
+    stop_grace_period: 60s
     environment:
       - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
       - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
@@ -75,6 +76,7 @@ services:
       context: ./streampipes-extensions/streampipes-extensions-all-iiot
       dockerfile: Dockerfile
     image: streampipes_pipeline-elements-all-iiot:release-validation
+    stop_grace_period: 60s
     environment:
       - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
     logging: *default-logging

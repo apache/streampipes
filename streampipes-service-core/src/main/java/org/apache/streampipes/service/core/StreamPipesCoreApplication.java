@@ -29,16 +29,15 @@ import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
 import org.apache.streampipes.health.monitoring.HealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
+import org.apache.streampipes.health.monitoring.ShutdownSignal;
 import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.loadbalance.service.ExtensionsServiceReportExecutor;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
-import org.apache.streampipes.manager.function.FunctionManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
-import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.manager.setup.InstallationConfiguration;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
@@ -49,8 +48,6 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.messaging.pulsar.SpPulsarProtocolFactory;
 import org.apache.streampipes.model.configuration.SpCoreConfigurationStatus;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
@@ -62,7 +59,6 @@ import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
@@ -80,6 +76,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import jakarta.annotation.PostConstruct;
@@ -89,9 +87,12 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableAutoConfiguration
@@ -108,8 +109,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private static final Logger LOG =
       LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
 
-  @Autowired
-  private IFunctionStateStorage functionStateStorage;
+  private static final Duration EXECUTOR_SHUTDOWN_TIMEOUT = Duration.ofSeconds(5);
+  private static final Duration EXTENSION_DEREGISTRATION_POLL_INTERVAL = Duration.ofMillis(250);
 
   @Autowired
   protected ICertificateStorage certificateStorage;
@@ -141,6 +142,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   @Autowired
   @Qualifier("adapterDescriptionStorage")
   private IAdapterStorage adapterDescriptionStorage;
+
+  private ScheduledExecutorService postStartupExecutor;
+  private ScheduledExecutorService healthCheckExecutor;
+  private ScheduledExecutorService logCheckExecutor;
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -178,8 +183,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @PostConstruct
   public void init() {
-    var executorService = Executors.newSingleThreadScheduledExecutor();
-    var logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    ShutdownSignal.INSTANCE.reset();
+    this.postStartupExecutor = Executors.newSingleThreadScheduledExecutor();
+    this.logCheckExecutor = Executors.newSingleThreadScheduledExecutor();
 
     new StreamPipesEnvChecker(resourceManager.getCoreConfigurationStorage()).updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
@@ -221,7 +227,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         env.getHealthCheckIntervalInMillis().getValueOrDefault()
     );
 
-    executorService.schedule(new PostStartupTask(
+    postStartupExecutor.schedule(new PostStartupTask(
             getPipelineStorage(),
             adapterDescriptionStorage,
             extensionsServiceStorage,
@@ -259,7 +265,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
     LOG.info("Extensions logs will be fetched every {} seconds", TimeUnit.MILLISECONDS.toSeconds(logFetchInterval));
-    logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(
+    logCheckExecutor.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(
           extensionServiceRequestManager, resourceManager
         ),
         logFetchInterval, logFetchInterval,
@@ -267,11 +273,11 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   private void scheduleHealthChecks(Duration healthCheckInterval, List<Runnable> checks) {
-    var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
+    this.healthCheckExecutor = Executors.newSingleThreadScheduledExecutor();
     checks.forEach(check -> {
       LOG.info("Health check {} configured with a delay of {} seconds between runs", check.getClass().getSimpleName(),
           healthCheckInterval.toSeconds());
-      healthCheckExecutorService.scheduleWithFixedDelay(check, healthCheckInterval.toMillis(),
+      healthCheckExecutor.scheduleWithFixedDelay(check, healthCheckInterval.toMillis(),
           healthCheckInterval.toMillis(),
           TimeUnit.MILLISECONDS);
     });
@@ -307,39 +313,103 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     }
   }
 
+  /**
+   * Runs at the very beginning of the context shutdown, before the web server and the
+   * beans are torn down. Pipelines and adapters are intentionally left running on the
+   * extension services: their state in storage stays "running", so a restarted core
+   * re-attaches to them through {@link PostStartupTask} and the health checks, and a
+   * core-only restart causes no processing gap. Extension services clean up their own
+   * instances when they shut down.
+   *
+   * <p>While this listener runs, the web server still serves requests. The core uses that
+   * window to let extension services that are stopping at the same time persist their
+   * function state, see {@link #waitForExtensionServicesToDeregister()}.
+   */
+  @EventListener(ContextClosedEvent.class)
+  public void onShutdownRequested() {
+    LOG.info("Shutting down StreamPipes...");
+    ShutdownSignal.INSTANCE.requestShutdown();
+    LOG.info("Health checks and recovery tasks are disabled, running pipelines are left untouched");
+    stopExecutors(Stream.of(postStartupExecutor, healthCheckExecutor, logCheckExecutor)
+        .filter(Objects::nonNull)
+        .toList());
+    waitForExtensionServicesToDeregister();
+  }
+
+  /**
+   * Extension services persist their function state through the core's REST API and
+   * deregister afterwards. Waiting until all of them are gone, bounded by
+   * {@code SP_SHUTDOWN_WAIT_FOR_EXTENSIONS_MS}, keeps that state from being lost when the
+   * whole stack stops at once. A core-only restart pays the full timeout, since the
+   * extension services stay registered. This is a stopgap until functions checkpoint
+   * their state periodically.
+   */
+  private void waitForExtensionServicesToDeregister() {
+    var timeout = Duration.ofMillis(
+        Environments.getEnvironment().getShutdownWaitForExtensionsInMillis().getValueOrDefault());
+    if (timeout.isZero() || timeout.isNegative()) {
+      return;
+    }
+    var deadline = System.nanoTime() + timeout.toNanos();
+    var registered = countRegisteredExtensionServices();
+    if (registered == 0) {
+      return;
+    }
+    LOG.info("Waiting up to {} ms for {} extension services to persist their state and deregister...",
+        timeout.toMillis(), registered);
+    while (registered > 0 && System.nanoTime() < deadline) {
+      try {
+        TimeUnit.MILLISECONDS.sleep(EXTENSION_DEREGISTRATION_POLL_INTERVAL.toMillis());
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return;
+      }
+      registered = countRegisteredExtensionServices();
+    }
+    if (registered > 0) {
+      LOG.info("{} extension services are still registered, continuing shutdown", registered);
+    } else {
+      LOG.info("All extension services deregistered");
+    }
+  }
+
+  private long countRegisteredExtensionServices() {
+    try {
+      return extensionsServiceStorage.findAll().size();
+    } catch (RuntimeException e) {
+      LOG.warn("Could not read registered extension services during shutdown: {}", e.getMessage());
+      return 0;
+    }
+  }
+
   @PreDestroy
   public void onExit() {
-    LOG.info("Shutting down StreamPipes...");
-    LOG.info("Flagging currently running pipelines for restart...");
-    List<Pipeline> pipelinesToStop =
-        getAllPipelines().stream().filter(Pipeline::isRunning).toList();
-
-    LOG.info("Found {} running pipelines which will be stopped...", pipelinesToStop.size());
-
-    pipelinesToStop.forEach(pipeline -> {
-      pipeline.setRestartOnSystemReboot(true);
-      resourceManager.managePipelines().getDb().updateElement(pipeline);
-    });
-
-    LOG.info("Gracefully stopping all running pipelines...");
-    var pipelineManager = new PipelineManager(resourceManager);
-    List<PipelineOperationStatus> status = pipelineManager.stopAllPipelines(true, extensionServiceRequestManager);
-    status.forEach(s -> {
-      if (s.isSuccess()) {
-        LOG.info("Pipeline {} successfully stopped", s.getPipelineName());
-      } else {
-        LOG.error("Pipeline {} could not be stopped", s.getPipelineName());
-      }
-    });
-
-    new FunctionManager(extensionServiceRequestManager, resourceManager, extensionsServiceStorage)
-        .stopAllFunctionsAndPersistState(functionStateStorage);
-
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }
 
-  private List<Pipeline> getAllPipelines() {
-    return getPipelineStorage().findAll();
+  /**
+   * Interrupts the executors and waits for running tasks to finish, within one shared budget
+   * of {@link #EXECUTOR_SHUTDOWN_TIMEOUT}. A health check that is already past its shutdown
+   * guard may be in the middle of an HTTP request, which does not react to the interrupt, so
+   * the wait keeps it from touching beans that are being destroyed. The checks consult
+   * {@link ShutdownSignal} before every recovery side effect. Idle executors terminate at once.
+   */
+  private void stopExecutors(List<ScheduledExecutorService> executors) {
+    var deadline = System.nanoTime() + EXECUTOR_SHUTDOWN_TIMEOUT.toNanos();
+    executors.forEach(ScheduledExecutorService::shutdownNow);
+    for (var executor : executors) {
+      var remaining = deadline - System.nanoTime();
+      try {
+        if (remaining <= 0 || !executor.awaitTermination(remaining, TimeUnit.NANOSECONDS)) {
+          LOG.warn("A scheduled task did not finish within {} seconds, continuing shutdown",
+              EXECUTOR_SHUTDOWN_TIMEOUT.toSeconds());
+          return;
+        }
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return;
+      }
+    }
   }
 
   private IPipelineStorage getPipelineStorage() {
