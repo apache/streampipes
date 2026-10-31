@@ -25,30 +25,51 @@
         (selectedIndexChange)="selectedIndexChange($event)"
         [mat-stretch-tabs]="false"
     >
-        <mat-tab [label]="'Info' | translate"></mat-tab>
-        @if (showDocumentationTab) {
-            <mat-tab [label]="'Documentation' | translate"></mat-tab>
+        @for (tab of tabs; track tab) {
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    @switch (tab) {
+                        @case ('info') {
+                            {{ 'Info' | translate }}
+                        }
+                        @case ('documentation') {
+                            {{ 'Documentation' | translate }}
+                        }
+                        @case ('sbom') {
+                            {{ 'Software Bill of Materials' | translate }}
+                        }
+                        @case ('shortcuts') {
+                            {{ 'Shortcuts' | translate }}
+                        }
+                    }
+                </ng-template>
+            </mat-tab>
         }
-        <mat-tab [label]="'Shortcuts' | translate"></mat-tab>
     </mat-tab-group>
-
     <div class="fixed-height page-tab-content" fxLayout="column" fxFlex="100">
-        @if (selectedIndex === 0) {
-            <div class="fixed-height" fxLayout="column" fxFlex="100">
-                <sp-info-tab></sp-info-tab>
-            </div>
-        }
-        @if (showDocumentationTab && selectedIndex === 1) {
-            <div class="fixed-height" fxLayout="column" fxFlex="100">
-                <sp-documentation-tab
-                    [documentationLink]="documentationLink"
-                ></sp-documentation-tab>
-            </div>
-        }
-        @if (selectedIndex === shortcutsTabIndex) {
-            <div class="fixed-height" fxLayout="column" fxFlex="100">
-                <sp-shortcuts-tab></sp-shortcuts-tab>
-            </div>
+        @switch (selectedTab) {
+            @case ('info') {
+                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                    <sp-info-tab></sp-info-tab>
+                </div>
+            }
+            @case ('documentation') {
+                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                    <sp-documentation-tab
+                        [documentationLink]="documentationLink"
+                    ></sp-documentation-tab>
+                </div>
+            }
+            @case ('sbom') {
+                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                    <sp-sbom-tab></sp-sbom-tab>
+                </div>
+            }
+            @case ('shortcuts') {
+                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                    <sp-shortcuts-tab></sp-shortcuts-tab>
+                </div>
+            }
         }
     </div>
 </sp-basic-view>
