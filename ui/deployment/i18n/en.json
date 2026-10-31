@@ -744,6 +744,7 @@
   "Min Slice Angle": null,
   "Minimum angle reserved for each slice (in degrees).": null,
   "Minimum length 35 characters.": null,
+  "Minimum must be lower than maximum.": null,
   "Minimum value": null,
   "Minute": null,
   "Missing timestamp": null,

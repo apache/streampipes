@@ -82,41 +82,114 @@
     <sp-split-section [level]="3" [title]="'Value Highlighting' | translate">
         <div fxLayout="column" class="highlight-color-list">
             @for (field of highlightableFields; track colorKey(field)) {
-                <div
-                    class="highlight-color-row"
-                    fxLayout="row"
-                    fxLayoutAlign="space-between center"
-                >
-                    <mat-checkbox
-                        [checked]="isHighlighted(field)"
-                        (change)="toggleHighlightedField(field)"
+                <div class="highlight-field">
+                    <div
+                        class="highlight-color-row"
+                        fxLayout="row"
+                        fxLayoutAlign="space-between center"
                     >
-                        <div class="highlight-color-label">
-                            <b>{{ field.runtimeName }}</b>
-                            <span class="highlight-color-measure">
-                                {{
-                                    '(' +
-                                        field.measure +
-                                        ', ' +
-                                        (fieldTypeLabel(field) | translate) +
-                                        ')'
-                                }}
-                            </span>
+                        <mat-checkbox
+                            [checked]="isHighlighted(field)"
+                            (change)="toggleHighlightedField(field)"
+                        >
+                            <div class="highlight-color-label">
+                                <b>{{ field.runtimeName }}</b>
+                                <span class="highlight-color-measure">
+                                    {{
+                                        '(' +
+                                            field.measure +
+                                            ', ' +
+                                            (fieldTypeLabel(field)
+                                                | translate) +
+                                            ')'
+                                    }}
+                                </span>
+                            </div>
+                        </mat-checkbox>
+                        <input
+                            class="highlight-color-picker"
+                            [colorPicker]="getHighlightColor(field)"
+                            [style.background]="getHighlightColor(field)"
+                            [cpPosition]="'auto'"
+                            [cpPresetColors]="presetColors"
+                            (colorPickerChange)="
+                                setHighlightColor(field, $event)
+                            "
+                            [disabled]="!isHighlighted(field)"
+                            [attr.aria-label]="
+                                'Select highlight color for ' +
+                                    field.runtimeName | translate
+                            "
+                        />
+                    </div>
+                    @if (
+                        isHighlighted(field) && isNumericHighlightField(field)
+                    ) {
+                        <div class="highlight-range-config">
+                            <mat-radio-group
+                                class="highlight-range-mode"
+                                [value]="getRangeMode(field)"
+                                (change)="setRangeMode(field, $event.value)"
+                            >
+                                <mat-radio-button value="automatic">
+                                    {{ 'Automatic' | translate }}
+                                </mat-radio-button>
+                                <mat-radio-button value="custom">
+                                    {{ 'Custom' | translate }}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                            @if (getRangeMode(field) === 'custom') {
+                                <div class="highlight-range-inputs">
+                                    <mat-form-field>
+                                        <mat-label>
+                                            {{ 'Minimum value' | translate }}
+                                        </mat-label>
+                                        <input
+                                            matInput
+                                            type="number"
+                                            [ngModel]="
+                                                getRangeValue(field, 'min')
+                                            "
+                                            (ngModelChange)="
+                                                setRangeValue(
+                                                    field,
+                                                    'min',
+                                                    $event
+                                                )
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>
+                                            {{ 'Maximum value' | translate }}
+                                        </mat-label>
+                                        <input
+                                            matInput
+                                            type="number"
+                                            [ngModel]="
+                                                getRangeValue(field, 'max')
+                                            "
+                                            (ngModelChange)="
+                                                setRangeValue(
+                                                    field,
+                                                    'max',
+                                                    $event
+                                                )
+                                            "
+                                        />
+                                    </mat-form-field>
+                                </div>
+                                @if (!isRangeValid(field)) {
+                                    <span class="highlight-range-error">
+                                        {{
+                                            'Minimum must be lower than maximum.'
+                                                | translate
+                                        }}
+                                    </span>
+                                }
+                            }
                         </div>
-                    </mat-checkbox>
-                    <input
-                        class="highlight-color-picker"
-                        [colorPicker]="getHighlightColor(field)"
-                        [style.background]="getHighlightColor(field)"
-                        [cpPosition]="'auto'"
-                        [cpPresetColors]="presetColors"
-                        (colorPickerChange)="setHighlightColor(field, $event)"
-                        [disabled]="!isHighlighted(field)"
-                        [attr.aria-label]="
-                            'Select highlight color for ' + field.runtimeName
-                                | translate
-                        "
-                    />
+                    }
                 </div>
             } @empty {
                 <sp-alert-banner

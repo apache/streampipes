@@ -27,7 +27,7 @@ import {
     SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -39,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FieldOrderConfigComponent } from '../../../chart-config/field-order-config/field-order-config.component';
 
 @Component({
@@ -51,6 +52,7 @@ import { FieldOrderConfigComponent } from '../../../chart-config/field-order-con
         SelectMultiplePropertiesConfigComponent,
         SplitSectionComponent,
         MatFormField,
+        MatLabel,
         FlexDirective,
         MatInput,
         FormsModule,
@@ -60,6 +62,8 @@ import { FieldOrderConfigComponent } from '../../../chart-config/field-order-con
         LayoutDirective,
         LayoutAlignDirective,
         MatCheckbox,
+        MatRadioGroup,
+        MatRadioButton,
         FieldOrderConfigComponent,
         TranslatePipe,
         FormFieldComponent,
@@ -103,6 +107,7 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         this.currentlyConfiguredWidget.visualizationConfig.highlightedColumns =
             highlightedColumns;
         this.syncHighlightColorMap();
+        this.syncHighlightRangeMap();
         this.triggerViewRefresh();
     }
 
@@ -134,6 +139,72 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
             this.colorKey(field)
         ] = color;
         this.triggerViewRefresh();
+    }
+
+    getRangeMode(field: DataExplorerField): 'automatic' | 'custom' {
+        return this.currentlyConfiguredWidget.visualizationConfig
+            .highlightedColumnRanges?.[this.colorKey(field)]
+            ? 'custom'
+            : 'automatic';
+    }
+
+    setRangeMode(field: DataExplorerField, mode: string): void {
+        const config = this.currentlyConfiguredWidget.visualizationConfig;
+        config.highlightedColumnRanges ??= {};
+        const key = this.colorKey(field);
+        if (mode === 'custom') {
+            config.highlightedColumnRanges[key] ??= {};
+        } else {
+            delete config.highlightedColumnRanges[key];
+        }
+        this.triggerViewRefresh();
+    }
+
+    getRangeValue(
+        field: DataExplorerField,
+        bound: 'min' | 'max',
+    ): number | null {
+        const value =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumnRanges?.[this.colorKey(field)]?.[bound];
+        return typeof value === 'number' ? value : null;
+    }
+
+    setRangeValue(
+        field: DataExplorerField,
+        bound: 'min' | 'max',
+        value: number | null,
+    ): void {
+        const config = this.currentlyConfiguredWidget.visualizationConfig;
+        config.highlightedColumnRanges ??= {};
+        const key = this.colorKey(field);
+        config.highlightedColumnRanges[key] ??= {};
+        if (value === null || Number.isNaN(value)) {
+            delete config.highlightedColumnRanges[key][bound];
+        } else {
+            config.highlightedColumnRanges[key][bound] = value;
+        }
+        this.triggerViewRefresh();
+    }
+
+    isRangeValid(field: DataExplorerField): boolean {
+        const range =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumnRanges?.[this.colorKey(field)];
+        if (!range) return true;
+        if (range.min === undefined && range.max === undefined) return true;
+        return (
+            typeof range.min === 'number' &&
+            typeof range.max === 'number' &&
+            range.min < range.max
+        );
+    }
+
+    isNumericHighlightField(field: DataExplorerField): boolean {
+        return (
+            field.fieldCharacteristics.numeric &&
+            !field.fieldCharacteristics.binary
+        );
     }
 
     get highlightableFields(): DataExplorerField[] {
@@ -175,6 +246,7 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         }
 
         this.syncHighlightColorMap();
+        this.syncHighlightRangeMap();
         this.triggerViewRefresh();
     }
 
@@ -194,7 +266,9 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
             () => [],
         );
         config.highlightedColumnColors ??= {};
+        config.highlightedColumnRanges ??= {};
         this.syncHighlightColorMap();
+        this.syncHighlightRangeMap();
         config.pageSize ??= 20;
         config.stickyHeaders ??= true;
         config.searchValue ??= '';
@@ -231,6 +305,20 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
         this.currentlyConfiguredWidget.visualizationConfig.highlightedColumnColors =
             nextColorMap;
+    }
+
+    private syncHighlightRangeMap(): void {
+        const config = this.currentlyConfiguredWidget.visualizationConfig;
+        const activeKeys = new Set(
+            (config.highlightedColumns ?? []).map(field =>
+                this.colorKey(field),
+            ),
+        );
+        config.highlightedColumnRanges = Object.fromEntries(
+            Object.entries(config.highlightedColumnRanges ?? {}).filter(
+                ([key]) => activeKeys.has(key),
+            ),
+        );
     }
 
     private defaultHighlightColor(field: DataExplorerField): string {
