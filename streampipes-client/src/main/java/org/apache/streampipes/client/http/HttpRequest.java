@@ -49,6 +49,13 @@ import java.util.List;
 
 public abstract class HttpRequest<K, V, T> {
 
+  /**
+   * Bounds the connection attempt so that a core whose address no longer refuses connections
+   * cannot block the caller indefinitely, for example during an extension service's shutdown.
+   * Responses are not bounded, since some requests legitimately take long.
+   */
+  private static final int CONNECT_TIMEOUT_MS = 10_000;
+
   private final StreamPipesClientConfig clientConfig;
   private final ClientConnectionUrlResolver connectionConfig;
   private final StreamPipesApiPath apiPath;
@@ -98,7 +105,7 @@ public abstract class HttpRequest<K, V, T> {
   }
 
   public T executeRequest() {
-    Request request = makeRequest(serializer);
+    Request request = makeRequest(serializer).connectTimeout(CONNECT_TIMEOUT_MS);
     try {
       HttpResponse response = request.execute().returnResponse();
       StatusLine status = response.getStatusLine();

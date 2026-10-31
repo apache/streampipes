@@ -85,6 +85,10 @@ public class ServiceHealthCheck implements Runnable {
 
   @Override
   public void run() {
+    if (ShutdownSignal.INSTANCE.isShutdownRequested()) {
+      LOG.debug("Shutdown in progress, skipping service health check");
+      return;
+    }
     try {
       Environment env = Environments.getEnvironment();
 

@@ -115,7 +115,11 @@ public class PipelineHealthCheck implements HealthCheck {
 
   private void checkAndRestorePipelineElements() {
     recoveryBackoff.retainOnly(getActiveRecoveryKeys());
-    healthCheckData.activeResources().runningPipelines().forEach(pipeline -> {
+    for (Pipeline pipeline : healthCheckData.activeResources().runningPipelines()) {
+      if (ShutdownSignal.INSTANCE.isShutdownRequested()) {
+        LOG.debug("Shutdown in progress, skipping pipeline recovery");
+        return;
+      }
       List<String> missingInstances = new ArrayList<>();
       List<String> recoveredInstances = new ArrayList<>();
       List<String> pipelineNotifications = new ArrayList<>();
@@ -128,7 +132,12 @@ public class PipelineHealthCheck implements HealthCheck {
         String instanceId = HealthCheckUtils.extractInstanceId(pipelineElement);
         if (isNowhereRunning(instanceId)) {
           missingInstances.add(instanceId);
-          if (recoveryBackoff.isAttemptDue(pipeline.getPipelineId(), instanceId)) {
+          if (isOnUnreachableService(pipelineElement)) {
+            // The service is registered but did not answer: the element may well still be
+            // running there, so restoring it elsewhere could start a duplicate.
+            HealthCheckUtils.addUnreachableServiceNotification(pipelineNotifications, pipelineElement);
+          } else if (!ShutdownSignal.INSTANCE.isShutdownRequested()
+              && recoveryBackoff.isAttemptDue(pipeline.getPipelineId(), instanceId)) {
             boolean success = restorePipelineElement(pipelineElement, pipeline.getPipelineId());
             if (!success) {
               var state = recoveryBackoff.recordFailure(pipeline.getPipelineId(), instanceId);
@@ -174,7 +183,7 @@ public class PipelineHealthCheck implements HealthCheck {
         pipelinesStats.updatePipelineHealthState(currentPipeline.getElementId(), currentPipeline.getName(),
             currentPipeline.getHealthStatus().toString());
       }
-    });
+    }
     int healthNum = pipelinesStats.getRunningPipelines() - pipelinesStats.getFailedPipelines()
         - pipelinesStats.getAttentionRequiredPipelines();
     pipelinesStats.setHealthyPipelines(healthNum);
@@ -240,6 +249,11 @@ public class PipelineHealthCheck implements HealthCheck {
     } catch (NoServiceEndpointsAvailableException e) {
       return false;
     }
+  }
+
+  private boolean isOnUnreachableService(InvocableStreamPipesEntity pipelineElement) {
+    var serviceId = pipelineElement.getSelectedServiceId();
+    return serviceId != null && healthCheckData.unreachableServiceIds().contains(serviceId);
   }
 
   private boolean isNowhereRunning(String instanceId) {

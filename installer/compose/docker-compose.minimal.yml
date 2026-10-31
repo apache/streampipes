@@ -41,6 +41,7 @@ services:
       - backend:/root/.streampipes
     logging: *default-logging
     restart: unless-stopped
+    stop_grace_period: 60s
     networks:
       spnet:
 
@@ -107,6 +108,7 @@ services:
       - SP_ENCRYPTION_PASSCODE=${SP_ENCRYPTION_PASSCODE:?Run the Compose configure helper first}
     logging: *default-logging
     restart: unless-stopped
+    stop_grace_period: 60s
     networks:
       spnet:
 

@@ -21,6 +21,7 @@ import org.apache.streampipes.health.monitoring.ExtensionInstanceDetailsProvider
 import org.apache.streampipes.health.monitoring.ExtensionInstanceRemovalService;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
+import org.apache.streampipes.health.monitoring.StaleRegistrationCleanup;
 import org.apache.streampipes.health.monitoring.model.RunningExtensionInstances;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/v2/extensions-services")
@@ -117,6 +119,10 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
   public ResponseEntity<Void> registerService(@RequestBody SpServiceRegistration serviceRegistration) {
     new ServiceRegistrationManager(extensionsServiceStorage).addService(serviceRegistration,
                                                                         SpServiceStatus.REGISTERED);
+    // Probing predecessors may wait for connection timeouts; do not delay the registration.
+    CompletableFuture.runAsync(() -> new StaleRegistrationCleanup(
+        extensionsServiceStorage, extensionServiceRequestManager, resourceManager
+    ).removePredecessorsOf(serviceRegistration));
     return ok();
   }
 
