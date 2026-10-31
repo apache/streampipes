@@ -22,6 +22,7 @@ import {
     Input,
     OnChanges,
     OnInit,
+    SimpleChanges,
     Output,
     TemplateRef,
     ChangeDetectionStrategy,
@@ -62,20 +63,59 @@ export class StaticRuntimeResolvableGroupComponent
 
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    handleConfigurationUpdate(_event: ConfigurationInfo): void {}
+    completedGroupConfigurations: ConfigurationInfo[] = [];
+    childCompletedConfigurations: ConfigurationInfo[] = [];
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        if (changes['completedConfigurations']) {
+            this.updateChildConfigurations();
+        }
+        super.ngOnChanges(changes);
+    }
+
+    private updateChildConfigurations(): void {
+        this.childCompletedConfigurations =
+            this.staticPropertyUtils.mergeCompletedConfigurations(
+                this.completedConfigurations,
+                this.completedGroupConfigurations,
+            );
+    }
+
+    private initializeChildren(): void {
+        this.completedGroupConfigurations =
+            this.staticProperty.staticProperties.map(sp => ({
+                staticPropertyInternalName: sp.internalName,
+                configured: false,
+            }));
+        this.updateChildConfigurations();
+    }
+
+    handleConfigurationUpdate(event: ConfigurationInfo): void {
+        this.staticPropertyUtils.updateCompletedConfiguration(
+            event,
+            this.completedGroupConfigurations,
+        );
+        this.updateChildConfigurations();
+        this.applyCompletedConfiguration(
+            this.completedGroupConfigurations.every(
+                config => config.configured,
+            ),
+        );
+    }
 
     ngOnInit(): void {
         super.onInit();
+        this.initializeChildren();
         if (this.staticProperty.staticProperties.length === 0) {
             this.loadOptionsFromRestApi();
         }
-        this.applyCompletedConfiguration(true);
     }
 
     ctxFor(groupElement: StaticPropertyUnion, index: number): GroupRenderCtx {
         return {
             child: groupElement!,
             index,
+            completedConfigurations: this.childCompletedConfigurations,
             onCompleted: ev => this.handleConfigurationUpdate(ev),
         };
     }
@@ -84,6 +124,10 @@ export class StaticRuntimeResolvableGroupComponent
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableGroupStaticProperty) {
         this.staticProperty.staticProperties = staticProperty.staticProperties;
+        this.initializeChildren();
+        this.applyCompletedConfiguration(
+            this.completedGroupConfigurations.length === 0,
+        );
     }
 
     parse(

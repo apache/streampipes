@@ -40,7 +40,7 @@
 
     <properties>
         <spring-boot.version>4.0.2</spring-boot.version>
-        <plc4x.version>0.13.1</plc4x.version>
+        <plc4x.version>1.0.0</plc4x.version>
 
         <apache-poi.version>5.5.1</apache-poi.version>
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
@@ -85,7 +85,6 @@
         <parquet.version>1.16.0</parquet.version>
         <protobuf.version>4.28.2</protobuf.version>
         <qdrant-java-client.version>1.14.0</qdrant-java-client.version>
-        <plc4x.version>0.13.1</plc4x.version>
 
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
@@ -127,6 +126,7 @@
         <jetbrains.version>26.1.0</jetbrains.version>
         <snakeyaml.version>3.0.1</snakeyaml.version>
         <vertx.version>4.5.31</vertx.version>
+        <zip4j.version>2.11.6</zip4j.version>
 
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
@@ -632,7 +632,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.plc4x</groupId>
-                <artifactId>plc4j-spi</artifactId>
+                <artifactId>plc4j-spi-config</artifactId>
                 <version>${plc4x.version}</version>
             </dependency>
             <dependency>
@@ -657,7 +657,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.plc4x</groupId>
-                <artifactId>plc4j-connection-cache</artifactId>
+                <artifactId>plc4j-tools-connection-cache</artifactId>
+                <version>${plc4x.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.plc4x</groupId>
+                <artifactId>plc4j-tools-event-pump</artifactId>
                 <version>${plc4x.version}</version>
             </dependency>
             <dependency>
@@ -882,6 +887,11 @@
 
 
             <!--dependency convergence -->
+            <dependency>
+                <groupId>net.lingala.zip4j</groupId>
+                <artifactId>zip4j</artifactId>
+                <version>${zip4j.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>

@@ -24,18 +24,21 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.plc.adapter.GenericAdapterGenerator;
+import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xAdapterMigrationV2;
+import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xAdapterMigrationV3;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xModbusAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.plc.adapter.migration.Plc4xS7AdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.plc.adapter.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.Plc4xS7Adapter;
-import org.apache.streampipes.extensions.connectors.plc.cache.SpCachedPlcConnectionManager;
 
 import org.apache.plc4x.java.api.PlcDriverManager;
+import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
+import org.apache.plc4x.java.utils.cache.PlcConnectionCache;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PlcConnectorsModuleExport implements IExtensionModuleExport {
 
@@ -43,10 +46,10 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
   public List<StreamPipesAdapter> adapters() {
     var env = Environments.getEnvironment();
     var driverManager = PlcDriverManager.getDefault();
-    var cachedConnectionManager =  SpCachedPlcConnectionManager
-        .getBuilder(driverManager.getConnectionManager())
-        .withMaxWaitTime(Duration.ofMillis(env.getPlc4xMaxWaitTimeMs().getValueOrDefault()))
-        .withMaxLeaseTime(Duration.ofMillis(env.getPlc4xMaxLeaseTimeMs().getValueOrDefault()))
+    var cachedConnectionManager =  PlcConnectionCache.getBuilder()
+        .withConnectionFactory(driverManager.getConnectionFactory())
+        .withMaxWaitTime(env.getPlc4xMaxWaitTimeMs().getValueOrDefault(), TimeUnit.MILLISECONDS)
+        .withMaxLeaseTime(env.getPlc4xMaxLeaseTimeMs().getValueOrDefault(), TimeUnit.MILLISECONDS)
         .build();
     var adapters = new ArrayList<>(List.of(
         new Plc4xModbusAdapter(cachedConnectionManager),
@@ -63,9 +66,20 @@ public class PlcConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(
+    var migrators = new ArrayList<IModelMigrator<?, ?>>(List.of(
         new Plc4xS7AdapterMigrationV1(),
         new Plc4xModbusAdapterMigrationV1()
-    );
+    ));
+    var driverManager = PlcDriverManager.getDefault();
+    try {
+      for (var protocol : driverManager.getProtocolCodes()) {
+        migrators.add(new Plc4xAdapterMigrationV2(driverManager.getDriver(protocol)));
+        migrators.add(new Plc4xAdapterMigrationV3(protocol));
+      }
+      migrators.add(new Plc4xAdapterMigrationV2(Plc4xS7Adapter.ID, driverManager.getDriver("s7")));
+    } catch (PlcConnectionException e) {
+      throw new IllegalStateException("Could not register PLC adapter migrations", e);
+    }
+    return migrators;
   }
 }
