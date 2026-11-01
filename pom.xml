@@ -137,6 +137,7 @@
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.16.1</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
+        <cyclonedx-maven-plugin.version>2.9.3</cyclonedx-maven-plugin.version>
         <checkstyle.version>14.1.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
@@ -149,6 +150,9 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+
+        <!-- Set to true to skip the per-module CycloneDX SBOM (target/bom.json) -->
+        <sbom.skip>false</sbom.skip>
     </properties>
 
     <dependencyManagement>
@@ -1051,6 +1055,24 @@
                     <version>${typescript-generator-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.cyclonedx</groupId>
+                    <artifactId>cyclonedx-maven-plugin</artifactId>
+                    <version>${cyclonedx-maven-plugin.version}</version>
+                    <configuration>
+                        <skip>${sbom.skip}</skip>
+                        <!-- Describe what ends up in the built jar: provided dependencies are not shipped -->
+                        <includeProvidedScope>false</includeProvidedScope>
+                        <includeTestScope>false</includeTestScope>
+                        <!-- Service modules set maven.deploy.skip; still generate their SBOM -->
+                        <skipNotDeployed>false</skipNotDeployed>
+                        <!-- The SBOM is published through the UI, not as a Maven artifact -->
+                        <skipAttach>true</skipAttach>
+                        <outputFormat>json</outputFormat>
+                        <outputName>bom</outputName>
+                        <schemaVersion>1.6</schemaVersion>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>net.revelc.code.formatter</groupId>
                     <artifactId>formatter-maven-plugin</artifactId>
                     <version>${formatter-maven-plugin.version}</version>
@@ -1138,6 +1160,23 @@
 
 
         <plugins>
+            <!--
+              Software bill of materials: every module writes target/bom.json (CycloneDX JSON).
+              ui/scripts/write-sbom-index.cjs picks selected modules up and publishes them with the UI.
+            -->
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sbom</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

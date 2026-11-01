@@ -150,6 +150,16 @@ public interface Environment {
 
   IntEnvironmentVariable getInitialWaitTimeBeforeInstallationInMillis();
 
+  /**
+   * How long the core keeps serving requests during its shutdown so that extension
+   * services stopping at the same time can persist their function state. The wait ends
+   * early once every extension service has deregistered. Keep it below the container
+   * stop grace period.
+   */
+  default IntEnvironmentVariable getShutdownWaitForExtensionsInMillis() {
+    return new IntEnvironmentVariable(Envs.SP_SHUTDOWN_WAIT_FOR_EXTENSIONS_MS);
+  }
+
   // Broker defaults
   StringEnvironmentVariable getKafkaHost();
 
