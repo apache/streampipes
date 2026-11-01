@@ -60,6 +60,7 @@ public class ServiceRegistrationManager {
     serviceRegistration.setStatus(status);
     storage.updateElement(serviceRegistration);
     logService(serviceRegistration);
+    notifyIfAvailable(status);
   }
 
   public void addService(SpServiceRegistration serviceRegistration, SpServiceStatus status) {
@@ -72,6 +73,13 @@ public class ServiceRegistrationManager {
       storage.persist(serviceRegistration);
     }
     logService(serviceRegistration);
+    notifyIfAvailable(status);
+  }
+
+  private void notifyIfAvailable(SpServiceStatus status) {
+    if (status == SpServiceStatus.HEALTHY) {
+      ServiceAvailabilityGeneration.INSTANCE.serviceBecameAvailable();
+    }
   }
 
   public List<SpServiceRegistration> getAllServices() {

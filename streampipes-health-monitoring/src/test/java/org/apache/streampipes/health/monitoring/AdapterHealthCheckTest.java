@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AdapterHealthCheckTest {
@@ -60,6 +61,50 @@ public class AdapterHealthCheckTest {
     var adaptersToRecover = new AdapterHealthCheck(healthCheckData).getAdaptersToRecover();
 
     assertTrue(adaptersToRecover.isEmpty());
+  }
+
+  @Test
+  public void adapterOnUnreachableServiceIsNotRecovered() {
+    var adapterDescription = new AdapterDescription();
+    adapterDescription.setElementId("adapter-id");
+    adapterDescription.setRunning(true);
+    adapterDescription.setSelectedServiceId("unreachable-service");
+    var activeResources = new ActiveResources(
+        List.of(),
+        List.of(),
+        List.of(adapterDescription),
+        List.of(adapterDescription)
+    );
+    var healthCheckData = new HealthCheckData(
+        null,
+        activeResources,
+        Map.of(),
+        Map.of(),
+        Set.of("unreachable-service")
+    );
+
+    var adaptersToRecover = new AdapterHealthCheck(healthCheckData).getAdaptersToRecover();
+
+    assertTrue(adaptersToRecover.isEmpty());
+  }
+
+  @Test
+  public void adapterOnRemovedServiceIsRecovered() {
+    var adapterDescription = new AdapterDescription();
+    adapterDescription.setElementId("adapter-id");
+    adapterDescription.setRunning(true);
+    adapterDescription.setSelectedServiceId("removed-service");
+    var activeResources = new ActiveResources(
+        List.of(),
+        List.of(),
+        List.of(adapterDescription),
+        List.of(adapterDescription)
+    );
+    var healthCheckData = new HealthCheckData(null, activeResources, Map.of(), Map.of(), Set.of());
+
+    var adaptersToRecover = new AdapterHealthCheck(healthCheckData).getAdaptersToRecover();
+
+    assertEquals(1, adaptersToRecover.size());
   }
 
   @Test
