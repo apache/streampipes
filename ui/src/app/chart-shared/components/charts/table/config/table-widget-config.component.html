@@ -140,7 +140,7 @@
                             </mat-radio-group>
                             @if (getRangeMode(field) === 'custom') {
                                 <div class="highlight-range-inputs">
-                                    <mat-form-field>
+                                    <mat-form-field floatLabel="always">
                                         <mat-label>
                                             {{ 'Minimum value' | translate }}
                                         </mat-label>
@@ -159,7 +159,7 @@
                                             "
                                         />
                                     </mat-form-field>
-                                    <mat-form-field>
+                                    <mat-form-field floatLabel="always">
                                         <mat-label>
                                             {{ 'Maximum value' | translate }}
                                         </mat-label>
