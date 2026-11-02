@@ -52,6 +52,7 @@ import {
     PipelinePreviewModel,
     SpDataStream,
     SpMetricsEntry,
+    problemDetailMessage,
 } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
@@ -486,8 +487,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         status => {
                             pe.settings.loadingStatus = false;
                             this.showErrorDialog(
-                                status.error.title,
-                                status.error.description,
+                                status.error?.title,
+                                problemDetailMessage(status),
                             );
                         },
                     );

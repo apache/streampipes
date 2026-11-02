@@ -25,7 +25,7 @@ import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
-import org.apache.streampipes.rest.shared.exception.BadRequestException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
@@ -131,7 +131,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     try {
       return ok(templateManagement.getStreamsForTemplate(pipelineTemplateId));
     } catch (IllegalArgumentException e) {
-      throw new BadRequestException(e.getMessage());
+      throw SpProblemException.badRequest(e.getMessage());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

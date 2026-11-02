@@ -29,6 +29,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.rest.utils.Utils;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
@@ -36,7 +37,6 @@ import org.apache.streampipes.user.management.encryption.SecretEncryptionManager
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
-import org.apache.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -110,10 +110,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       if (principal != null) {
         return ok(principal);
       } else {
-        return statusMessage(Notifications.error("User not found"));
+        throw SpProblemException.notFound("User not found");
       }
     } else {
-      return badRequest();
+      throw notAllowed();
     }
   }
 
@@ -127,10 +127,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       if (principal != null) {
         return ok(principal);
       } else {
-        return statusMessage(Notifications.error("User not found"));
+        throw SpProblemException.notFound("User not found");
       }
     } else {
-      return badRequest();
+      throw notAllowed();
     }
   }
 
@@ -143,7 +143,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       userStorage.deleteUser(principalId);
       return ok();
     } else {
-      return statusMessage(Notifications.error("User not found"));
+      throw SpProblemException.notFound("User not found");
     }
   }
 
@@ -157,7 +157,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
       return ok(Notifications.success("Appearance updated"));
     } else {
-      return statusMessage(Notifications.error("User not found"));
+      throw SpProblemException.notFound("User not found");
     }
   }
 
@@ -180,7 +180,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         }
         return ok();
       } else {
-        return badRequest(Notifications.error("This user ID already exists. Please choose another address."));
+        throw SpProblemException.badRequest("This user ID already exists. Please choose another address.");
       }
     } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
       return badRequest();
@@ -199,7 +199,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       userStorage.storeUser(serviceAccount);
       return ok();
     } else {
-      return badRequest(Notifications.error("This user ID already exists. Please choose another address."));
+      throw SpProblemException.badRequest("This user ID already exists. Please choose another address.");
     }
   }
 
@@ -216,7 +216,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken, userStorage);
       return ok(generatedToken);
     } else {
-      return statusMessage(Notifications.error("User not found"));
+      throw SpProblemException.notFound("User not found");
     }
   }
 
@@ -237,10 +237,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         userStorage.updateUser(user);
         return ok(Notifications.success("User updated"));
       } else {
-        return badRequest(Notifications.error("Username is not available"));
+        throw SpProblemException.badRequest("Username is not available");
       }
     } else {
-      return statusMessage(Notifications.error("User not found"));
+      throw SpProblemException.notFound("User not found");
     }
   }
 
@@ -264,18 +264,17 @@ public class UserResource extends AbstractAuthGuardedRestResource {
             userStorage.updateUser(existingUser);
             return ok();
           } else {
-            return badRequest(Notifications.error("Username is not available"));
+            throw SpProblemException.badRequest("Username is not available");
           }
         } else {
-          return badRequest(Notifications.error("Incorrect password"));
+          throw SpProblemException.badRequest("Incorrect password");
         }
       } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
         return badRequest();
       }
     }
 
-    return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED)
-                         .build();
+    throw notAllowed();
   }
 
   @PutMapping(path = "user/{principalId}/password",
@@ -297,13 +296,13 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
           return ok();
         } else {
-          return badRequest(Notifications.error("Wrong password"));
+          throw SpProblemException.badRequest("Wrong password");
         }
       } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
         return badRequest();
       }
     } else {
-      return badRequest(Notifications.error("The user ID does not match the current user."));
+      throw notAllowed();
     }
   }
 
@@ -329,8 +328,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       userStorage.updateUser(user);
       return ok(Notifications.success("User updated"));
     } else {
-      return statusMessage(Notifications.error("User not found"));
+      throw SpProblemException.notFound("User not found");
     }
+  }
+
+  private SpProblemException notAllowed() {
+    return SpProblemException.forbidden("Only the account owner or an admin can access this account");
   }
 
   private boolean isAdmin() {

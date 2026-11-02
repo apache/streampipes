@@ -29,7 +29,7 @@ import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -82,7 +82,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
           .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(imageBytes)))
           .body(imageBytes);
     } catch (IOException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, e);
     }
   }
 

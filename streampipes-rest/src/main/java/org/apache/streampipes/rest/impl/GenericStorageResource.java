@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.slf4j.Logger;
@@ -64,7 +64,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       return ok(assets);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -80,7 +80,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -96,7 +96,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       return ok(docs);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -109,7 +109,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -126,7 +126,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 
@@ -140,7 +140,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
       return ok();
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 

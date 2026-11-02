@@ -32,17 +32,32 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
     return statusMessage(new SuccessMessage(notifications));
   }
 
+  /**
+   * @deprecated errors are reported with their HTTP status: throw
+   *     {@link org.apache.streampipes.rest.shared.exception.SpProblemException} instead of answering
+   *     200 with an {@link ErrorMessage}.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = true)
   protected ResponseEntity<Message> constructErrorMessage(Notification... notifications) {
     return statusMessage(new ErrorMessage(notifications));
   }
 
+  /**
+   * @deprecated for success responses use {@link #ok(Object)}; errors are thrown as
+   *     {@link org.apache.streampipes.rest.shared.exception.SpProblemException}.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = true)
   protected ResponseEntity<Message> statusMessage(Message message) {
     return ResponseEntity
         .ok()
         .body(message);
   }
 
-  protected ResponseEntity unauthorized() {
+  /**
+   * An empty 401 for failed authentication attempts. A caller that is authenticated but lacks the
+   * permission throws {@link org.apache.streampipes.rest.shared.exception.SpProblemException#forbidden(String)}.
+   */
+  protected ResponseEntity<Void> unauthorized() {
     return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
   }
 }
