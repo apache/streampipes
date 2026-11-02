@@ -113,7 +113,7 @@ describe('Add Compact Adapters', () => {
             response => {
                 expect(response.status).to.equal(400);
                 expect(response.body.type).to.equal(
-                    'urn:streampipes:problem:bad-request',
+                    'https://streampipes.apache.org/docs/api/problems/bad-request',
                 );
                 expect(response.body.detail).to.contain(
                     'Could not execute script',

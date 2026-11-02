@@ -47,9 +47,12 @@ import java.util.NoSuchElementException;
  * The one error contract of the REST API: every exception that leaves a resource becomes an RFC 9457
  * problem detail (see {@link SpProblemDetails}) with the HTTP status that describes the failure.
  *
- * <p>The handler runs with the lowest precedence and ends with a catch-all for {@link Exception}.
- * A {@code @ControllerAdvice} that must take precedence for its own exception types has to declare a
- * higher precedence (a lower {@link Order} value), otherwise this handler answers first.
+ * <p>The handler maps the StreamPipes exceptions and a few well-known JDK and Spring Security
+ * exceptions and runs with the lowest precedence. It deliberately has no catch-all: an exception it
+ * does not know propagates to the container, where {@link SpProblemErrorController} answers with
+ * a 500 problem detail. That way a narrower {@code @ControllerAdvice} for other exception types is
+ * never shadowed; one that maps the same types as this handler still needs a higher precedence
+ * (a lower {@link Order} value).
  */
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
@@ -126,12 +129,6 @@ public class SpRestProblemHandler extends ResponseEntityExceptionHandler {
   protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
     log(HttpStatus.UNAUTHORIZED, ex);
     return respond(SpProblemDetails.of(HttpStatus.UNAUTHORIZED, ex.getMessage()), request);
-  }
-
-  @ExceptionHandler(Exception.class)
-  protected ResponseEntity<Object> handleUnexpectedException(Exception ex, WebRequest request) {
-    log(HttpStatus.INTERNAL_SERVER_ERROR, ex);
-    return respond(SpProblemDetails.of(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()), request);
   }
 
   @Override

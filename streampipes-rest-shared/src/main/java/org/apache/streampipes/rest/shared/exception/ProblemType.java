@@ -26,7 +26,7 @@ import java.net.URI;
 /**
  * Stable problem types of the REST API. The {@link #uri()} of a type is the {@code type} member of
  * the RFC 9457 problem detail a client receives, so clients can branch on it without parsing the
- * human-readable {@code detail}.
+ * human-readable {@code detail}. The URI points at the documentation page of the type.
  */
 public enum ProblemType {
 
@@ -45,7 +45,11 @@ public enum ProblemType {
   SERVICE_UNAVAILABLE("service-unavailable", "Service unavailable", HttpStatus.SERVICE_UNAVAILABLE),
   INTERNAL_ERROR("internal-error", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
 
-  public static final String URN_PREFIX = "urn:streampipes:problem:";
+  /**
+   * The documentation page under which every problem type is described; the type URI is this base
+   * followed by the slug.
+   */
+  public static final String BASE_URI = "https://streampipes.apache.org/docs/api/problems/";
 
   private final String slug;
   private final String title;
@@ -62,7 +66,7 @@ public enum ProblemType {
   }
 
   public URI uri() {
-    return URI.create(URN_PREFIX + slug);
+    return URI.create(BASE_URI + slug);
   }
 
   public String title() {

@@ -53,7 +53,8 @@ extensions services.
   `NoSuchElementException` (404), `AccessDeniedException` (403) and any other exception
   (500) are mapped by the handler, so a resource only catches what it turns into a better
   status or message.
-- Body: `type` is a stable URN `urn:streampipes:problem:<slug>` (`ProblemType`), `title`
+- Body: `type` is a stable URI `https://streampipes.apache.org/docs/api/problems/<slug>`
+  (`ProblemType`, one documentation page per slug), `title`
   the generic sentence of the type, `detail` the specific sentence a user or an LLM reads,
   `instance` the request path, `errors[]` entries of `{detail, pointer}` for individual
   rejected inputs. Problems raised from an `SpLogMessage` keep `level`, `cause` and
@@ -62,9 +63,15 @@ extensions services.
 - Success responses are unchanged: a 2xx never carries `success: false`.
   `PipelineOperationStatus` (pipeline start/stop) is an operation report, not an error
   envelope; its `success` flag describes the pipeline elements.
-- A `@ControllerAdvice` that needs to answer before the shared handler (which ends with a
-  catch-all for `Exception`) must declare a higher precedence, for example
-  `@Order(Ordered.LOWEST_PRECEDENCE - 100)` as `ConnectRestExceptionHandler` does.
+- The shared handler has no catch-all. An exception it does not map propagates to the
+  container's error dispatch, where `SpProblemErrorController` (the service's `/error`
+  endpoint, replacing Spring Boot's `BasicErrorController`) answers with a 500 problem
+  detail; `sendError` from the security filter chain and unknown paths end up there too. A
+  `@ControllerAdvice` for other exception types therefore never collides with it; one that
+  maps the same types (`IllegalArgumentException`, `NoSuchElementException`,
+  `AccessDeniedException`, `AuthenticationException`, the StreamPipes exceptions) must declare
+  a higher precedence, for example `@Order(Ordered.LOWEST_PRECEDENCE - 100)` as
+  `ConnectRestExceptionHandler` does.
 - Tests: `SpRestProblemHandlerTest` in `streampipes-rest-shared` pins the mapping; a
   resource test asserts the thrown `SpProblemException` and its `getStatus()`.
 - Clients: the UI reads bodies through `problemDetailMessage` / `problemErrors` /

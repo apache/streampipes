@@ -40,9 +40,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.json.JsonMapper;
 
+import jakarta.servlet.RequestDispatcher;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -75,7 +79,7 @@ class SpRestProblemHandlerTest {
     mockMvc.perform(get("/test/validation").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
         .andExpect(content().contentTypeCompatibleWith(PROBLEM_JSON))
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:validation-failed"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/validation-failed"))
         .andExpect(jsonPath("$.title").value("Validation failed"))
         .andExpect(jsonPath("$.status").value(400))
         .andExpect(jsonPath("$.detail").value("2 fields are invalid"))
@@ -92,12 +96,12 @@ class SpRestProblemHandlerTest {
   void notFoundAndForbiddenCarryTheirStatus() throws Exception {
     mockMvc.perform(get("/test/not-found"))
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:not-found"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/not-found"))
         .andExpect(jsonPath("$.detail").value("Adapter with id a-1 not found"));
 
     mockMvc.perform(get("/test/forbidden"))
         .andExpect(status().isForbidden())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:forbidden"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/forbidden"))
         .andExpect(jsonPath("$.title").value("Forbidden"));
   }
 
@@ -105,7 +109,7 @@ class SpRestProblemHandlerTest {
   void customPropertiesAreFlattenedIntoTheProblem() throws Exception {
     mockMvc.perform(get("/test/conflict"))
         .andExpect(status().isConflict())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:conflict"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/conflict"))
         .andExpect(jsonPath("$.pipelineIds[0]").value("p-1"))
         .andExpect(jsonPath("$.properties").doesNotExist());
   }
@@ -114,7 +118,7 @@ class SpRestProblemHandlerTest {
   void logMessageExceptionsKeepTheLogMessageFields() throws Exception {
     mockMvc.perform(get("/test/adapter-exception"))
         .andExpect(status().isInternalServerError())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:operation-failed"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/operation-failed"))
         .andExpect(jsonPath("$.title").value("worker unreachable"))
         .andExpect(jsonPath("$.level").value("ERROR"))
         .andExpect(jsonPath("$.cause").value("worker unreachable"))
@@ -122,14 +126,14 @@ class SpRestProblemHandlerTest {
 
     mockMvc.perform(get("/test/log-message"))
         .andExpect(status().isGatewayTimeout())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:operation-failed"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/operation-failed"))
         .andExpect(jsonPath("$.title").value("timed out"))
         .andExpect(jsonPath("$.detail").value("the model did not answer"))
         .andExpect(jsonPath("$.level").value("WARN"));
 
     mockMvc.perform(get("/test/no-endpoints"))
         .andExpect(status().isServiceUnavailable())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:service-unavailable"));
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/service-unavailable"));
   }
 
   @Test
@@ -137,7 +141,7 @@ class SpRestProblemHandlerTest {
   void legacyMessageExceptionBecomesProblemDetail() throws Exception {
     mockMvc.perform(get("/test/legacy-message"))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:bad-request"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/bad-request"))
         .andExpect(jsonPath("$.detail").value("Wrong group id provided"))
         .andExpect(jsonPath("$.notifications").doesNotExist());
 
@@ -154,28 +158,66 @@ class SpRestProblemHandlerTest {
 
     mockMvc.perform(get("/test/no-such-element"))
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:not-found"));
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/not-found"));
 
     mockMvc.perform(get("/test/access-denied"))
         .andExpect(status().isForbidden())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:forbidden"));
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/forbidden"));
 
     mockMvc.perform(get("/test/bad-credentials"))
         .andExpect(status().isUnauthorized())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:unauthorized"));
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/unauthorized"));
 
-    mockMvc.perform(get("/test/unexpected"))
+    // no catch-all: an unknown exception propagates to the container's error dispatch
+    var unexpected = assertThrows(Exception.class, () -> mockMvc.perform(get("/test/unexpected")));
+    assertInstanceOf(IllegalStateException.class, rootCause(unexpected));
+  }
+
+  @Test
+  void errorDispatchAnswersWithProblemDetail() throws Exception {
+    var errorMvc = MockMvcBuilders.standaloneSetup(new SpProblemErrorController())
+        .setMessageConverters(new JacksonJsonHttpMessageConverter(JsonMapper.builder()
+            .addMixIn(ProblemDetail.class, ProblemDetailJacksonMixin.class).build()))
+        .build();
+
+    errorMvc.perform(get("/error")
+            .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 500)
+            .requestAttr(RequestDispatcher.ERROR_EXCEPTION, new IllegalStateException("boom"))
+            .requestAttr(RequestDispatcher.ERROR_REQUEST_URI, "/api/v2/pipelines"))
         .andExpect(status().isInternalServerError())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:internal-error"))
+        .andExpect(content().contentTypeCompatibleWith(PROBLEM_JSON))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/internal-error"))
         .andExpect(jsonPath("$.title").value("Internal server error"))
-        .andExpect(jsonPath("$.detail").value("boom"));
+        .andExpect(jsonPath("$.detail").value("boom"))
+        .andExpect(jsonPath("$.instance").value("/api/v2/pipelines"));
+
+    errorMvc.perform(get("/error")
+            .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 403)
+            .requestAttr(RequestDispatcher.ERROR_MESSAGE, "Access Denied")
+            .requestAttr(RequestDispatcher.ERROR_REQUEST_URI, "/api/v2/users"))
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/forbidden"))
+        .andExpect(jsonPath("$.detail").value("Access Denied"));
+
+    errorMvc.perform(get("/error").requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 404))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/not-found"))
+        .andExpect(jsonPath("$.detail").doesNotExist());
+  }
+
+  private static Throwable rootCause(Throwable throwable) {
+    var cause = throwable;
+    while (cause.getCause() != null && cause.getCause() != cause) {
+      cause = cause.getCause();
+    }
+    return cause;
   }
 
   @Test
   void springsOwnProblemDetailsGetTheStreamPipesType() throws Exception {
     mockMvc.perform(get("/test/response-status"))
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.type").value("urn:streampipes:problem:not-found"))
+        .andExpect(jsonPath("$.type").value("https://streampipes.apache.org/docs/api/problems/not-found"))
         .andExpect(jsonPath("$.detail").value("Pipeline p-1 not found"))
         .andExpect(jsonPath("$.instance").value("/test/response-status"));
 

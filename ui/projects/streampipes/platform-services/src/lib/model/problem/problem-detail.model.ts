@@ -18,7 +18,7 @@
 
 /**
  * The error contract of the StreamPipes REST API: every non-2xx response carries an RFC 9457
- * problem detail. `type` is a stable URN (`urn:streampipes:problem:<slug>`), `detail` the
+ * problem detail. `type` is a stable URI (`https://streampipes.apache.org/docs/api/problems/<slug>`), `detail` the
  * sentence to show, `errors` the individual inputs that were rejected. Problems raised from an
  * extension service additionally carry the `SpLogMessage` members `level`, `cause` and
  * `fullStackTrace`.
@@ -38,7 +38,8 @@ export interface ProblemError {
     pointer?: string;
 }
 
-export const PROBLEM_TYPE_PREFIX = 'urn:streampipes:problem:';
+export const PROBLEM_TYPE_PREFIX =
+    'https://streampipes.apache.org/docs/api/problems/';
 
 export type ProblemTypeSlug =
     | 'bad-request'
