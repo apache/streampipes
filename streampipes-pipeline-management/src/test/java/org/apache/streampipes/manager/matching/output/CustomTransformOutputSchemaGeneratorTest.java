@@ -33,6 +33,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -63,6 +64,23 @@ class CustomTransformOutputSchemaGeneratorTest {
 
     assertEquals(encryptedValue, secretProperty.getValue());
     assertTrue(secretProperty.getEncrypted());
+  }
+
+  @Test
+  void throwsWhenTheExtensionCannotComputeTheOutputSchema() {
+    var invocation = new DataProcessorInvocation();
+    invocation.setAppId("org.apache.streampipes.test.processor");
+    var generator = new CustomTransformOutputSchemaGenerator(
+        mock(ISpServiceDiscovery.class),
+        new CustomTransformOutputStrategy(),
+        invocation,
+        mock(ExtensionServiceRequestManager.class)
+    );
+
+    var exception = assertThrows(OutputSchemaUnavailableException.class,
+        () -> generator.buildFromOneStream(null));
+
+    assertEquals(invocation.getAppId(), exception.getAppId());
   }
 
   private SecretStaticProperty makeSecretProperty(String value,

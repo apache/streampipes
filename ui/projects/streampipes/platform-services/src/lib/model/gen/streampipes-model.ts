@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-// @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-10-26 15:02:34.
+/* tslint:disable */
+/* eslint-disable */
+// Generated using typescript-generator version 3.2.1263 on 2026-11-02 09:03:36.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -3316,6 +3317,7 @@ export class PipelineUpdateInfo {
     pipelineId: string;
     pipelineName: string;
     validationInfos: { [index: string]: PipelineElementValidationInfo[] };
+    validationUnavailable: boolean;
 
     static fromData(
         data: PipelineUpdateInfo,
@@ -3335,6 +3337,7 @@ export class PipelineUpdateInfo {
         instance.validationInfos = __getCopyObjectFn(
             __getCopyArrayFn(PipelineElementValidationInfo.fromData),
         )(data.validationInfos);
+        instance.validationUnavailable = data.validationUnavailable;
         return instance;
     }
 }

@@ -94,8 +94,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
       var response = requestManager.request(ExtensionServiceRequests.outputSchema(requestTarget, httpRequestBody));
       return handleResponse(response);
     } catch (Exception e) {
-      e.printStackTrace();
-      return new EventSchema();
+      throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), e);
     }
   }
 

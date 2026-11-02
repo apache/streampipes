@@ -22,12 +22,15 @@ import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.matching.output.OutputSchemaUnavailableException;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeValidationStep;
 import org.apache.streampipes.manager.pipeline.PipelineElementUserCleaner;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
@@ -90,12 +93,9 @@ public class PipelineUpdateCoordinator {
 
     affectedPipelines.forEach(pipeline -> {
       var shouldRestartPipeline = pipeline.isRunning();
-      if (shouldRestartPipeline) {
-        new PipelineExecutor(pipeline, requestManager, resourceManager).stopPipeline(true);
-      }
-
       var storedPipeline = pipelineManager.getPipeline(pipeline.getPipelineId());
-      var updatedPipeline = updatePipeline(storedPipeline, affectedElementId, updatedStreamName, updatedEventSchema);
+      var updatedPipeline = updatePipeline(
+          copyPipeline(storedPipeline), affectedElementId, updatedStreamName, updatedEventSchema);
 
       try {
         var verificationHandler = new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), updatedPipeline, requestManager);
@@ -119,6 +119,11 @@ public class PipelineUpdateCoordinator {
           modifiedPipeline.setValid(false);
         }
 
+        if (shouldRestartPipeline) {
+          new PipelineExecutor(pipeline, requestManager, resourceManager).stopPipeline(true);
+          modifiedPipeline.setRunning(false);
+          modifiedPipeline.setRev(pipelineManager.getPipeline(pipeline.getPipelineId()).getRev());
+        }
         PipelineElementUserCleaner.clearCorrespondingUsers(modifiedPipeline);
         pipelineStorage.updateElement(modifiedPipeline);
 
@@ -127,6 +132,9 @@ public class PipelineUpdateCoordinator {
               pipelineManager.getPipeline(pipeline.getPipelineId()), requestManager, resourceManager
           ).startPipeline();
         }
+      } catch (OutputSchemaUnavailableException e) {
+        LOG.warn("Skipped pipeline update for {} because the output schema for {} is unavailable",
+            storedPipeline.getName(), e.getAppId(), e);
       } catch (Exception e) {
         LOG.error("Could not update pipeline {}", updatedPipeline.getName(), e);
       }
@@ -140,7 +148,8 @@ public class PipelineUpdateCoordinator {
     var pipelineUpdateInfos = new ArrayList<PipelineUpdateInfo>();
 
     affectedPipelines.forEach(pipeline -> {
-      var updatedPipeline = updatePipeline(pipeline, affectedElementId, updatedStreamName, updatedEventSchema);
+      var updatedPipeline = updatePipeline(
+          copyPipeline(pipeline), affectedElementId, updatedStreamName, updatedEventSchema);
       try {
         var verificationHandler = new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), updatedPipeline, requestManager);
         var modificationMessage = verificationHandler.verifyPipeline();
@@ -148,12 +157,52 @@ public class PipelineUpdateCoordinator {
         updateInfo.setChartSchemaUpdateInfos(
             chartSchemaUpdateCoordinator.checkChartMigrations(updatedPipeline, updatedEventSchema));
         pipelineUpdateInfos.add(updateInfo);
+      } catch (OutputSchemaUnavailableException e) {
+        pipelineUpdateInfos.add(makeUnavailableUpdateInfo(pipeline, e));
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
     });
 
     return pipelineUpdateInfos;
+  }
+
+  private Pipeline copyPipeline(Pipeline pipeline) {
+    var copy = pipeline.clone();
+    copy.setRunning(pipeline.isRunning());
+    copy.setRestartOnSystemReboot(pipeline.isRestartOnSystemReboot());
+    copy.setStartedAt(pipeline.getStartedAt());
+    copy.setPublicElement(pipeline.isPublicElement());
+    copy.setLabels(new ArrayList<>(pipeline.getLabels()));
+    copy.setLastMigratedAt(pipeline.getLastMigratedAt());
+    copy.setPipelineNotifications(new ArrayList<>(pipeline.getPipelineNotifications()));
+    copy.setStreams(pipeline.getStreams().stream().map(SpDataStream::new).toList());
+    copy.setSepas(pipeline.getSepas().stream().map(this::copyProcessor).toList());
+    copy.setActions(pipeline.getActions().stream().map(this::copySink).toList());
+    return copy;
+  }
+
+  private DataProcessorInvocation copyProcessor(DataProcessorInvocation processor) {
+    var copy = new DataProcessorInvocation(processor);
+    copy.setSelectedServiceId(processor.getSelectedServiceId());
+    return copy;
+  }
+
+  private DataSinkInvocation copySink(DataSinkInvocation sink) {
+    var copy = new DataSinkInvocation(sink);
+    copy.setSelectedServiceId(sink.getSelectedServiceId());
+    return copy;
+  }
+
+  private PipelineUpdateInfo makeUnavailableUpdateInfo(Pipeline pipeline,
+                                                       OutputSchemaUnavailableException exception) {
+    var updateInfo = new PipelineUpdateInfo();
+    updateInfo.setPipelineId(pipeline.getPipelineId());
+    updateInfo.setPipelineName(pipeline.getName());
+    updateInfo.setCanAutoMigrate(false);
+    updateInfo.setValidationUnavailable(true);
+    updateInfo.setMigrationInfo(exception.getMessage());
+    return updateInfo;
   }
 
   private Pipeline updatePipeline(Pipeline pipeline,
