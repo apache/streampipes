@@ -31,9 +31,11 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
         widgetConfig: CorrelationChartWidgetModel,
         _widgetSize: WidgetSize,
     ): void {
-        const decimals = this.getDecimals(widgetConfig);
         const xField = this.getXField(widgetConfig);
         const yField = this.getYField(widgetConfig);
+        const xFormat = this.getAxisNumberFormat(widgetConfig, xField);
+        const yFormat = this.getAxisNumberFormat(widgetConfig, yField);
+        const valueFormat = this.getNumberFormat(widgetConfig);
         const dataset = this.datasetUtilsService.findPreparedDataset(
             generatedDataset,
             xField.sourceIndex,
@@ -73,7 +75,7 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: 'dataMax',
                 axisLabel: {
                     formatter: (value: number | string) =>
-                        this.formatNumber(value, decimals),
+                        this.formatNumber(value, xFormat),
                 },
                 name:
                     widgetConfig.visualizationConfig.labelX ||
@@ -90,7 +92,7 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 max: 'dataMax',
                 axisLabel: {
                     formatter: (value: number | string) =>
-                        this.formatNumber(value, decimals),
+                        this.formatNumber(value, yFormat),
                 },
                 name:
                     widgetConfig.visualizationConfig.labelY ||
@@ -105,7 +107,7 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
             tooltip: {
                 ...tooltip,
                 valueFormatter: (value: unknown) =>
-                    this.formatNumber(value, decimals),
+                    this.formatNumber(value, valueFormat),
             },
         });
     }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.audit.management.export;
 
 import org.apache.streampipes.audit.api.AuditEntry;
+import org.apache.streampipes.audit.api.AuditEntryDetails;
 import org.apache.streampipes.audit.api.AuditExportConfiguration;
 
 import java.io.BufferedWriter;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 final class AuditCsvOutputWriter implements AuditOutputWriter {
@@ -43,8 +45,12 @@ final class AuditCsvOutputWriter implements AuditOutputWriter {
   }
 
   @Override
-  public void writeItem(AuditEntry entry) throws IOException {
-    writeRow(configuration.columns().stream().map(column -> column.value(entry)).toList());
+  public void writeItem(AuditEntry entry, AuditEntryDetails details) throws IOException {
+    var values = new ArrayList<String>();
+    for (var column : configuration.columns()) {
+      values.add(AuditExportValueFormatter.format(column, entry, details));
+    }
+    writeRow(values);
   }
 
   @Override

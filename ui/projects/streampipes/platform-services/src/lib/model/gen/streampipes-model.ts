@@ -17,7 +17,7 @@
  * under the License.
  */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-10-13 16:58:25.
+// Generated using typescript-generator version 3.2.1263 on 2026-10-26 15:02:34.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1993,6 +1993,7 @@ export class ExportConfig {
 export class ExportConfiguration {
     assetExportConfiguration: AssetExportConfiguration[];
     genericStorageAppDocTypes: ExportItem[];
+    genericStorageDocuments: ExportItem[];
 
     static fromData(
         data: ExportConfiguration,
@@ -2008,11 +2009,15 @@ export class ExportConfiguration {
         instance.genericStorageAppDocTypes = __getCopyArrayFn(
             ExportItem.fromData,
         )(data.genericStorageAppDocTypes);
+        instance.genericStorageDocuments = __getCopyArrayFn(
+            ExportItem.fromData,
+        )(data.genericStorageDocuments);
         return instance;
     }
 }
 
 export class ExportItem {
+    category: string;
     label: string;
     resourceId: string;
     selected: boolean;
@@ -2022,6 +2027,7 @@ export class ExportItem {
             return data;
         }
         const instance = target || new ExportItem();
+        instance.category = data.category;
         instance.label = data.label;
         instance.resourceId = data.resourceId;
         instance.selected = data.selected;

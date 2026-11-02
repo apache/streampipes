@@ -26,6 +26,12 @@ import {
 export interface WidgetSize {
     width: number;
     height: number;
+    /**
+     * True when the toolbox is not part of the layout but an overlay that
+     * the widget shows on hover: renderers reserve no space for it and
+     * place it in the top right corner below their legend.
+     */
+    toolboxOverlay?: boolean;
 }
 
 export interface TagValue {

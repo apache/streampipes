@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.health.monitoring;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
@@ -30,7 +31,11 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class ExtensionHealthCheck implements Runnable {
 
@@ -42,6 +47,7 @@ public class ExtensionHealthCheck implements Runnable {
   private final SpResourceManager resourceManager;
   private final List<HealthCheck> registeredHealthChecks;
   private final PipelineRecoveryBackoff pipelineRecoveryBackoff;
+  private final Map<String, Integer> consecutiveUnknownTicks = new HashMap<>();
 
   public ExtensionHealthCheck(ResourceProvider resourceProvider,
                               IExtensionsServiceStorage extensionsServiceStorage,
@@ -74,24 +80,42 @@ public class ExtensionHealthCheck implements Runnable {
 
   @Override
   public void run() {
+    if (ShutdownSignal.INSTANCE.isShutdownRequested()) {
+      LOG.debug("Shutdown in progress, skipping extension health check");
+      return;
+    }
     try {
       var activeResources = resourceProvider.loadActiveResources();
       var activeCoreInstances = resourceProvider.loadActiveInstances(activeResources);
 
       var activeExtensionInstances = new HashMap<String, ExtensionInstanceHealth>();
+      var unreachableServiceIds = new HashSet<String>();
+      consecutiveUnknownTicks.keySet().retainAll(activeCoreInstances.keySet());
       activeCoreInstances.keySet().forEach(serviceId -> {
-        activeExtensionInstances.put(
-            serviceId,
-            new ExtensionInstanceAvailabilityCheck(
-                extensionsServiceStorage, serviceId, extensionRequestManager, resourceManager
-            ).checkRunningInstances());
+        var health = checkInstances(serviceId);
+        if (health.isPresent()) {
+          consecutiveUnknownTicks.remove(serviceId);
+          activeExtensionInstances.put(serviceId, health.get());
+        } else {
+          int unknownTicks = consecutiveUnknownTicks.merge(serviceId, 1, Integer::sum);
+          if (unknownTicks >= maxUnknownTicks()) {
+            // The service answers its health probe but not the instance request, or the
+            // service health check lags behind. Do not defer recovery forever.
+            LOG.warn("Extension service {} did not answer {} instance health requests in a row, "
+                + "treating its instances as not running", serviceId, unknownTicks);
+            activeExtensionInstances.put(serviceId, new ExtensionInstanceHealth(Map.of(), Set.of()));
+          } else {
+            unreachableServiceIds.add(serviceId);
+          }
+        }
       });
 
       var healthCheckData = new HealthCheckData(
           resourceProvider,
           activeResources,
           activeCoreInstances,
-          activeExtensionInstances
+          activeExtensionInstances,
+          unreachableServiceIds
       );
       var healthChecks = getHealthChecks(healthCheckData);
       runHealthChecks(healthChecks);
@@ -100,8 +124,27 @@ public class ExtensionHealthCheck implements Runnable {
     }
   }
 
+  protected Optional<ExtensionInstanceHealth> checkInstances(String serviceId) {
+    return new ExtensionInstanceAvailabilityCheck(
+        extensionsServiceStorage, serviceId, extensionRequestManager, resourceManager
+    ).checkReachableRunningInstances();
+  }
+
+  /**
+   * How many consecutive ticks a registered service may leave its instance state unknown
+   * before it is treated as not running anything. Aligned with the number of failed probes
+   * after which the service health check declares a service unhealthy.
+   */
+  protected int maxUnknownTicks() {
+    return Math.max(1, Environments.getEnvironment().getServiceHealthFailureThreshold().getValueOrDefault());
+  }
+
   private void runHealthChecks(List<HealthCheck> healthChecks) {
     healthChecks.forEach(healthCheck -> {
+      if (ShutdownSignal.INSTANCE.isShutdownRequested()) {
+        LOG.debug("Shutdown in progress, skipping health check {}", healthCheck.getClass().getSimpleName());
+        return;
+      }
       try {
         healthCheck.runCheck();
       } catch (Exception e) {

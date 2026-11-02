@@ -157,6 +157,32 @@ class InfluxAuditEventStoreTest {
   }
 
   @Test
+  void clearsAllAuditEvents() throws Exception {
+    var statement = new AtomicReference<String>();
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/query", exchange -> {
+      for (var parameter : exchange.getRequestURI().getRawQuery().split("&")) {
+        if (parameter.startsWith("q=")) {
+          statement.set(URLDecoder.decode(parameter.substring(2), StandardCharsets.UTF_8));
+        }
+      }
+      byte[] body = "{\"results\":[{}]}".getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200, body.length);
+      exchange.getResponseBody().write(body);
+      exchange.close();
+    });
+    InfluxAuditDatabaseProvisionerTest.existingDatabase(server);
+    server.start();
+    try (var store = new InfluxAuditEventStore("http://127.0.0.1:" + server.getAddress().getPort(),
+        "audit-only", "audit-token")) {
+      store.clear();
+      assertEquals("DELETE FROM \"audit_events\"", statement.get());
+    } finally {
+      server.stop(0);
+    }
+  }
+
+  @Test
   void reportsInfluxDeleteErrors() throws Exception {
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
     server.createContext("/query", exchange -> {

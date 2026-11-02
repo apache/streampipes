@@ -19,6 +19,7 @@
 package org.apache.streampipes.audit.management.export;
 
 import org.apache.streampipes.audit.api.AuditEntry;
+import org.apache.streampipes.audit.api.AuditEntryDetails;
 import org.apache.streampipes.audit.api.AuditExportConfiguration;
 
 import org.apache.poi.ss.usermodel.Sheet;
@@ -49,10 +50,10 @@ final class AuditExcelOutputWriter implements AuditOutputWriter {
   }
 
   @Override
-  public void writeItem(AuditEntry entry) {
+  public void writeItem(AuditEntry entry, AuditEntryDetails details) throws IOException {
     var row = sheet.createRow(rowIndex++);
     for (var index = 0; index < configuration.columns().size(); index++) {
-      String value = configuration.columns().get(index).value(entry);
+      String value = AuditExportValueFormatter.format(configuration.columns().get(index), entry, details);
       row.createCell(index).setCellValue(value == null ? "" : value);
     }
   }

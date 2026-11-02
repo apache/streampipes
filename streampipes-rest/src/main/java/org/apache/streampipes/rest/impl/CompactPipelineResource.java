@@ -87,7 +87,7 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
     }
     String pipelineId = pipelineManager.addPipeline(getAuthenticatedUserSid(), pipelineGenerationResult.pipeline());
     if (compactPipeline.createOptions() != null && Boolean.TRUE.equals(compactPipeline.createOptions().start())) {
-      PipelineOperationStatus status = pipelineManager.startPipeline(pipelineId, requestManager);
+      PipelineOperationStatus status = pipelineManager.startPipeline(pipelineId, requestManager, getAuthenticatedUserSid());
       return ok(status);
     }
     var message = Notifications.success("Pipeline stored");

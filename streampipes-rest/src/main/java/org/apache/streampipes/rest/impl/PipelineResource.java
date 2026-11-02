@@ -18,10 +18,13 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.audit.api.AuditOutcome;
+import org.apache.streampipes.audit.events.pipeline.PipelineAuditRecorder;
 import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.pipeline.PipelineEditChanges;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
@@ -90,6 +93,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   private final PipelineManager pipelineManager;
   private final DataProcessorResourceManager dataProcessorResourceManager;
   private final DataSinkResourceManager dataSinkResourceManager;
+  private final PipelineAuditRecorder pipelineAudit;
   private final SpResourceManager resourceManager;
   private final IPipelineElementDescriptionStorage descriptionStorage;
 
@@ -112,6 +116,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     this.pipelineManager = new PipelineManager(resourceManager);
     this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
     this.dataSinkResourceManager = resourceManager.manageDataSinks();
+    this.pipelineAudit = new PipelineAuditRecorder(resourceManager.getAuditService());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -165,7 +170,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<PipelineOperationStatus> start(@PathVariable("pipelineId") String pipelineId) {
     requirePipeline(pipelineId);
-    return ok(pipelineManager.startPipeline(pipelineId, requestManager));
+    return ok(pipelineManager.startPipeline(pipelineId, requestManager, getAuthenticatedUserSid()));
   }
 
   @GetMapping(path = "/{pipelineId}/stop", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -175,7 +180,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       @PathVariable("pipelineId") String pipelineId,
       @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     requirePipeline(pipelineId);
-    return ok(pipelineManager.stopPipeline(pipelineId, forceStop, requestManager));
+    return ok(pipelineManager.stopPipeline(pipelineId, forceStop, requestManager, getAuthenticatedUserSid()));
   }
 
   @PostMapping(
@@ -258,6 +263,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<SuccessMessage> updatePipeline(@PathVariable("pipelineId") String pipelineId,
                                                        @RequestBody Pipeline pipeline) {
     Pipeline storedPipeline = requirePipeline(pipelineId);
+    Pipeline pipelineBeforeUpdate = storedPipeline.clone();
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());
@@ -269,7 +275,14 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     storedPipeline.setHealthStatus(pipeline.getHealthStatus());
     storedPipeline.setPipelineNotifications(pipeline.getPipelineNotifications());
     storedPipeline.setValid(pipeline.isValid());
-    new PipelineStorageService(resourceManager.managePipelines().getDb(), storedPipeline).updatePipeline();
+    var changes = new PipelineEditChanges().detect(pipelineBeforeUpdate, storedPipeline);
+    try {
+      new PipelineStorageService(resourceManager.managePipelines().getDb(), storedPipeline).updatePipeline();
+      pipelineAudit.edited(getAuthenticatedUserSid(), pipelineId, AuditOutcome.SUCCEEDED, changes);
+    } catch (RuntimeException e) {
+      pipelineAudit.edited(getAuthenticatedUserSid(), pipelineId, AuditOutcome.FAILED, changes);
+      throw e;
+    }
     SuccessMessage message = Notifications.success("Pipeline modified");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);
@@ -309,4 +322,5 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
   }
+
 }

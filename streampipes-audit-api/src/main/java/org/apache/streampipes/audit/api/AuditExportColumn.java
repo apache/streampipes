@@ -68,6 +68,17 @@ public enum AuditExportColumn {
     public String value(AuditEntry entry) {
       return entry.locator();
     }
+  },
+  DETAILS("details") {
+    @Override
+    public String value(AuditEntry entry) {
+      return null;
+    }
+
+    @Override
+    public boolean requiresDetails() {
+      return true;
+    }
   };
 
   private final String id;
@@ -85,6 +96,10 @@ public enum AuditExportColumn {
 
   public String id() {
     return id;
+  }
+
+  public boolean requiresDetails() {
+    return false;
   }
 
   public abstract String value(AuditEntry entry);

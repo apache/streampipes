@@ -16,9 +16,10 @@
  *
  */
 
-package org.apache.streampipes.manager.pipeline.update;
+package org.apache.streampipes.audit.events.asset;
 
-import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.audit.api.AuditDetails;
 
-public record DataStreamUpdatedEvent(SpDataStream dataStream) {
+/** The asset ID is retained in the audit event envelope after deletion. */
+public record AssetDeletedDetails() implements AuditDetails {
 }

@@ -253,13 +253,31 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     client.adminApi().registerServiceConfiguration(serviceConfiguration);
   }
 
+  /**
+   * The web server is already stopped when this runs, and the broker receiver is closed
+   * first, so no further requests from the core can arrive. Running pipeline elements,
+   * adapters and functions are therefore stopped locally. The core keeps their state as
+   * running and re-attaches once this service registers again.
+   */
   @PreDestroy
   public void onExit() {
     if (extensionBrokerRequestReceiver != null) {
       extensionBrokerRequestReceiver.stop();
     }
-    new ExtensionsServiceShutdownHandler().onShutdown();
-    deregisterService(DeclarersSingleton.getInstance().getServiceId());
+    List<ExtensionServiceShutdownHook> additionalHooks;
+    try {
+      additionalHooks = getAdditionalShutdownHooks();
+    } catch (RuntimeException e) {
+      LOG.warn("Could not collect additional shutdown hooks, continuing without them", e);
+      additionalHooks = List.of();
+    }
+    new ExtensionsServiceShutdownHandler(additionalHooks).onShutdown();
+    ServiceLoadDataReportGenerator.getInstance().shutdown();
+    try {
+      deregisterService(DeclarersSingleton.getInstance().getServiceId());
+    } catch (RuntimeException e) {
+      LOG.warn("Could not deregister service at core (core might already be down): {}", e.getMessage());
+    }
   }
 
   public String serviceId() {
@@ -267,6 +285,14 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   }
 
   protected List<ExtensionBrokerOperationHandler> getAdditionalBrokerOperationHandlers() {
+    return List.of();
+  }
+
+  /**
+   * Override to stop instances this service runs outside the standard pipeline element,
+   * adapter and function registries. Hooks run after those registries are cleaned up.
+   */
+  protected List<ExtensionServiceShutdownHook> getAdditionalShutdownHooks() {
     return List.of();
   }
 

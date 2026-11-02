@@ -193,9 +193,12 @@ export class AuditLogComponent implements OnInit {
     private query?: AuditQuery;
 
     get exportColumns(): AuditExportColumn[] {
-        return this.columns.flatMap(
-            column => this.exportColumnByTableColumn[column] ?? [],
-        );
+        return [
+            ...this.columns.flatMap(
+                column => this.exportColumnByTableColumn[column] ?? [],
+            ),
+            { id: 'details', label: 'Details' },
+        ];
     }
 
     ngOnInit(): void {

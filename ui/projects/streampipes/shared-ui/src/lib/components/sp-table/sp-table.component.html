@@ -247,7 +247,7 @@
     <table
         mat-table
         class="sp-table"
-        [dataSource]="renderedDataSource"
+        [dataSource]="renderedRows$"
         [multiTemplateDataRows]="viewMode === 'grouped'"
     >
         <ng-content></ng-content>

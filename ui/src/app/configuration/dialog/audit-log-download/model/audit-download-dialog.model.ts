@@ -24,8 +24,10 @@ export interface AuditActorOption {
     username?: string;
 }
 
+export type AuditExportColumnId = keyof AuditEntry | 'details';
+
 export interface AuditExportColumn {
-    id: keyof AuditEntry;
+    id: AuditExportColumnId;
     label: string;
 }
 
