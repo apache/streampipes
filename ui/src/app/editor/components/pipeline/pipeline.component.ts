@@ -63,7 +63,6 @@ import {
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
-import { PipelineValidationErrorComponent } from '../../dialog/pipeline-validation-error/pipeline-validation-error.component';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import {
     EVENT_CONNECTION,
@@ -580,17 +579,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
         const title = error?.title ?? 'Pipeline validation failed';
         const description = error?.description ?? status.message;
         this.pipelineValid = false;
-        this.dialogService.open(PipelineValidationErrorComponent, {
-            panelType: PanelType.STANDARD_PANEL,
+        this.pipelineValidationService.reportRemoteValidationError(
             title,
-            data: {
-                notification: {
-                    title,
-                    description,
-                    additionalInformation: error?.additionalInformation,
-                },
-            },
-        });
+            description,
+        );
     }
 
     showMatchingErrorDialog(notifications: Notification[]) {
