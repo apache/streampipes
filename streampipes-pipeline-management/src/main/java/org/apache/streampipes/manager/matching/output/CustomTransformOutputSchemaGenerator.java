@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.matching.output;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
@@ -79,8 +80,14 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   }
 
   private EventSchema makeRequest() {
+    String httpRequestBody;
     try {
-      String httpRequestBody = makeRequestBody();
+      httpRequestBody = makeRequestBody();
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not create the output schema request", e);
+    }
+
+    try {
       var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery).selectService(
           dataProcessorInvocation.getAppId(),
           SpServiceUrlProvider.DATA_PROCESSOR,
@@ -93,9 +100,8 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
       );
       var response = requestManager.request(ExtensionServiceRequests.outputSchema(requestTarget, httpRequestBody));
       return handleResponse(response);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return new EventSchema();
+    } catch (NoServiceEndpointsAvailableException | IOException e) {
+      throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), e);
     }
   }
 
@@ -105,15 +111,33 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
     return JacksonSerializer.getObjectMapper().writeValueAsString(requestInvocation);
   }
 
-  private EventSchema handleResponse(ExtensionServiceOperationResult response) throws JsonSyntaxException, IOException {
-    if (!response.isSuccess()) {
-      throw new IOException("Could not compute output schema, status code: " + response.statusCode());
+  private EventSchema handleResponse(ExtensionServiceOperationResult response) {
+    if (response == null) {
+      throw new IllegalStateException("The extension returned no output schema response");
     }
 
-    String resp = response.responseBody();
+    if (!response.isSuccess()) {
+      var cause = new IOException("Could not compute output schema, status code: " + response.statusCode());
+      if (isUnavailableStatus(response.statusCode())) {
+        throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), cause);
+      }
+      throw new IllegalStateException(cause);
+    }
 
-    return JacksonSerializer
-        .getObjectMapper()
-        .readValue(resp, EventSchema.class);
+    try {
+      var eventSchema = JacksonSerializer
+          .getObjectMapper()
+          .readValue(response.responseBody(), EventSchema.class);
+      if (eventSchema == null) {
+        throw new IllegalStateException("The extension returned no output schema");
+      }
+      return eventSchema;
+    } catch (IOException | JsonSyntaxException e) {
+      throw new IllegalStateException("The extension returned an invalid output schema", e);
+    }
+  }
+
+  private boolean isUnavailableStatus(int statusCode) {
+    return statusCode == 502 || statusCode == 503 || statusCode == 504;
   }
 }

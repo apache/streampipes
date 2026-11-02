@@ -48,8 +48,8 @@ public class DataStreamUpdateManagement {
     boolean schemaChanged = EventSchemaChangeDetector.hasChanged(
         previous == null ? null : previous.getEventSchema(), dataStream.getEventSchema());
     dataStreamResourceManager.update(dataStream);
-    pipelineUpdateCoordinator.updatePipelines(dataStream);
     if (schemaChanged) {
+      pipelineUpdateCoordinator.updatePipelines(dataStream);
       eventPublisher.publishEvent(new DataStreamSchemaUpdatedEvent(dataStream.getElementId(), dataStream.getName()));
     }
   }
