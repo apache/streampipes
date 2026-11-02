@@ -15,29 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.NoDocumentException;
+package org.apache.streampipes.storage.api.exceptions;
 
-import java.util.function.Supplier;
+/**
+ * A write used an id that already exists or a revision that is no longer the current one.
+ */
+public class StorageConflictException extends StorageException {
 
-public class UpdateCommand<T> extends DbCommand<Boolean, T> {
-
-  private T objectToUpdate;
-
-  public UpdateCommand(Supplier<CouchDbClient> couchDbClient, T objectToUpdate, Class<T> clazz) {
-    super(couchDbClient, clazz);
-    this.objectToUpdate = objectToUpdate;
+  public StorageConflictException(String message) {
+    super(message);
   }
 
-  @Override
-  protected Boolean executeCommand(CouchDbClient couchDbClient) {
-    try {
-      couchDbClient.update(objectToUpdate);
-      return true;
-    } catch (NoDocumentException e) {
-      return false;
-    }
+  public StorageConflictException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

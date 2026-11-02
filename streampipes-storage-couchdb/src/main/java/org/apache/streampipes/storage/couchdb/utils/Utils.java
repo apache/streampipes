@@ -20,6 +20,7 @@ package org.apache.streampipes.storage.couchdb.utils;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
 
 import com.google.common.net.UrlEscapers;
@@ -32,9 +33,9 @@ import org.lightcouch.CouchDbProperties;
 
 public class Utils {
 
-  public static final String USER_DB_NAME = "users";
+  public static final String USER_DB_NAME = CouchDbStores.USER_DB_NAME;
   public static final String LEGACY_DATA_LAKE_DB_NAME = "data-lake";
-  public static final String DATA_LAKE_DB_NAME = "dataset";
+  public static final String DATA_LAKE_DB_NAME = CouchDbStores.DATA_LAKE_DB_NAME;
 
   public static CouchDbClient getCouchDbDataProcessorDescriptionClient() {
     return getCouchDbGsonClient("data-processor");

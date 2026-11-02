@@ -19,15 +19,15 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class ExtensionsServiceConfigurationStorageImpl extends DefaultCrudStorage<SpServiceConfiguration>
     implements IExtensionsServiceConfigurationStorage {
 
-  public ExtensionsServiceConfigurationStorageImpl() {
+  public ExtensionsServiceConfigurationStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("extensions-services-configurations"),
+        stores.gson("extensions-services-configurations"),
         SpServiceConfiguration.class
     );
   }

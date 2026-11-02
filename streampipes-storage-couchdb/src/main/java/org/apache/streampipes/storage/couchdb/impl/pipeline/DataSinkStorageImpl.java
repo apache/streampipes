@@ -19,16 +19,16 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
 public class DataSinkStorageImpl extends DefaultCrudStorage<DataSinkDescription> implements IDataSinkStorage {
 
 
-  public DataSinkStorageImpl() {
-    super(Utils::getCouchDbDataSinkDescriptionClient, DataSinkDescription.class);
+  public DataSinkStorageImpl(CouchDbStores stores) {
+    super(stores.gson("data-sink"), DataSinkDescription.class);
   }
 
   @Override

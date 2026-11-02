@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ public class AdapterResourceManagerTest {
   @Test
   void encryptAndCreate_ThrowsAdapterExceptionOnConflict() {
 
-    doThrow(new org.lightcouch.DocumentConflictException("Conflict")).when(storage).persist(any());
+    doThrow(new StorageConflictException("Conflict")).when(storage).persist(any());
 
     assertThrows(AdapterException.class, () -> adapterResourceManager.encryptAndCreate(new AdapterDescription()));
   }

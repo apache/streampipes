@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
 
 import java.util.List;
@@ -37,11 +38,11 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   private final IDataSinkStorage dataSinkStorage;
   private final IAdapterStorage adapterStorage;
 
-  public PipelineElementDescriptionStorageImpl() {
-    this.dataProcessorStorage = new DataProcessorStorageImpl();
-    this.dataStreamStorage = new DataStreamStorageImpl();
-    this.dataSinkStorage = new DataSinkStorageImpl();
-    this.adapterStorage = new AdapterDescriptionStorageImpl();
+  public PipelineElementDescriptionStorageImpl(CouchDbStores stores) {
+    this.dataProcessorStorage = new DataProcessorStorageImpl(stores);
+    this.dataStreamStorage = new DataStreamStorageImpl(stores);
+    this.dataSinkStorage = new DataSinkStorageImpl(stores);
+    this.adapterStorage = new AdapterDescriptionStorageImpl(stores);
   }
 
   public PipelineElementDescriptionStorageImpl(IDataProcessorStorage dataProcessorStorage,

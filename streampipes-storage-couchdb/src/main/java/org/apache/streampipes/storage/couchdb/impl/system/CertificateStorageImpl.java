@@ -19,14 +19,14 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class CertificateStorageImpl extends DefaultCrudStorage<Certificate> implements ICertificateStorage {
 
-  public CertificateStorageImpl() {
+  public CertificateStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("certificates"),
+        stores.gson("certificates"),
         Certificate.class
     );
   }

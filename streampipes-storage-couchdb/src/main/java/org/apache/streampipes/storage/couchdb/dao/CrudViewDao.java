@@ -15,27 +15,22 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
+import org.apache.streampipes.storage.couchdb.CouchDbStore;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class CrudViewDao extends CrudDao {
 
-  public CrudViewDao(Supplier<CouchDbClient> couchDbClientSupplier) {
-    super(couchDbClientSupplier);
+  public CrudViewDao(CouchDbStore store) {
+    super(store);
   }
 
   public <T> List<T> findByKey(String viewName,
                                String key,
                                Class<T> clazz) {
-    return couchDbClientSupplier
-        .get()
-        .view(viewName)
-        .key(key)
-        .includeDocs(true)
-        .query(clazz);
+    return view(viewName, clazz).key(key).docs();
   }
 }

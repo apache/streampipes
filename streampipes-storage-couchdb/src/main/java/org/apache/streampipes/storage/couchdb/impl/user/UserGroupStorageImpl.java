@@ -19,14 +19,14 @@ package org.apache.streampipes.storage.couchdb.impl.user;
 
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class UserGroupStorageImpl extends DefaultViewCrudStorage<Group> implements IUserGroupStorage {
 
-  public UserGroupStorageImpl() {
+  public UserGroupStorageImpl(CouchDbStores stores) {
     super(
-        Utils::getCouchDbUserClient,
+        stores.principal(CouchDbStores.USER_DB_NAME),
         Group.class,
         "users/groups"
     );
