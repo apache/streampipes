@@ -26,9 +26,11 @@ import {
 } from '@angular/core';
 import {
     AssetConstants,
+    AssetManagementService,
     AssetSiteDesc,
     GenericStorageService,
     LocationConfig,
+    SpAsset,
 } from '@streampipes/platform-services';
 import {
     MatCell,
@@ -57,13 +59,6 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 
-interface AssetWithSite {
-    assetSite?: {
-        siteId?: string;
-    };
-    assets?: AssetWithSite[];
-}
-
 @Component({
     selector: 'sp-site-area-configuration',
     templateUrl: './site-area-configuration.component.html',
@@ -89,6 +84,7 @@ interface AssetWithSite {
 })
 export class SiteAreaConfigurationComponent implements OnInit {
     private genericStorageService = inject(GenericStorageService);
+    private assetManagementService = inject(AssetManagementService);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private dialog = inject(MatDialog);
@@ -132,17 +128,15 @@ export class SiteAreaConfigurationComponent implements OnInit {
     }
 
     listSitesInUse(): void {
-        this.genericStorageService
-            .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
-            .subscribe(res => {
-                this.allUsedSiteIds = this.extractSiteIds(res);
-            });
+        this.assetManagementService.getAllAssets().subscribe(assets => {
+            this.allUsedSiteIds = this.extractSiteIds(assets);
+        });
     }
 
-    extractSiteIds(assets: AssetWithSite[]): string[] {
+    extractSiteIds(assets: SpAsset[]): string[] {
         const allSiteIds = new Set<string>();
 
-        const extractSiteFromAsset = (asset: AssetWithSite) => {
+        const extractSiteFromAsset = (asset: SpAsset) => {
             if (asset.assetSite?.siteId) {
                 allSiteIds.add(asset.assetSite.siteId);
             }
@@ -155,17 +149,15 @@ export class SiteAreaConfigurationComponent implements OnInit {
     }
 
     deleteSite(site: AssetSiteDesc): void {
-        this.genericStorageService
-            .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
-            .subscribe(res => {
-                this.allUsedSiteIds = this.extractSiteIds(res);
+        this.assetManagementService.getAllAssets().subscribe(assets => {
+            this.allUsedSiteIds = this.extractSiteIds(assets);
 
-                if (this.allUsedSiteIds.includes(site._id)) {
-                    this.showSiteInUseWarning();
-                } else {
-                    this.showDeleteSiteDialog(site);
-                }
-            });
+            if (this.allUsedSiteIds.includes(site._id)) {
+                this.showSiteInUseWarning();
+            } else {
+                this.showDeleteSiteDialog(site);
+            }
+        });
     }
 
     showSiteInUseWarning(): void {
