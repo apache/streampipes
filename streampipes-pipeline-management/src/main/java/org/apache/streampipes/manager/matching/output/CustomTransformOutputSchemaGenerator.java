@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.matching.output;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
@@ -93,8 +94,12 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
       );
       var response = requestManager.request(ExtensionServiceRequests.outputSchema(requestTarget, httpRequestBody));
       return handleResponse(response);
-    } catch (Exception e) {
+    } catch (OutputSchemaUnavailableException e) {
+      throw e;
+    } catch (NoServiceEndpointsAvailableException | IOException e) {
       throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), e);
+    } catch (Exception e) {
+      return new EventSchema();
     }
   }
 
@@ -104,15 +109,29 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
     return JacksonSerializer.getObjectMapper().writeValueAsString(requestInvocation);
   }
 
-  private EventSchema handleResponse(ExtensionServiceOperationResult response) throws JsonSyntaxException, IOException {
-    if (!response.isSuccess()) {
-      throw new IOException("Could not compute output schema, status code: " + response.statusCode());
+  private EventSchema handleResponse(ExtensionServiceOperationResult response) {
+    if (response == null) {
+      return new EventSchema();
     }
 
-    String resp = response.responseBody();
+    if (!response.isSuccess()) {
+      var cause = new IOException("Could not compute output schema, status code: " + response.statusCode());
+      if (isUnavailableStatus(response.statusCode())) {
+        throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), cause);
+      }
+      return new EventSchema();
+    }
 
-    return JacksonSerializer
-        .getObjectMapper()
-        .readValue(resp, EventSchema.class);
+    try {
+      return JacksonSerializer
+          .getObjectMapper()
+          .readValue(response.responseBody(), EventSchema.class);
+    } catch (IOException | JsonSyntaxException e) {
+      return new EventSchema();
+    }
+  }
+
+  private boolean isUnavailableStatus(int statusCode) {
+    return statusCode == 502 || statusCode == 503 || statusCode == 504;
   }
 }

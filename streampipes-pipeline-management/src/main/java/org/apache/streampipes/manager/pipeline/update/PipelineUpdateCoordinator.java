@@ -46,12 +46,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public class PipelineUpdateCoordinator {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineUpdateCoordinator.class);
   private static final PipelinesStats PIPELINES_STATS = new PipelinesStats();
+  private static final String DEFERRED_VALIDATION_NOTIFICATION_PREFIX = "Validation deferred: ";
 
   private final ExtensionServiceRequestManager requestManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
@@ -93,6 +95,7 @@ public class PipelineUpdateCoordinator {
 
     affectedPipelines.forEach(pipeline -> {
       var shouldRestartPipeline = pipeline.isRunning();
+      var pipelineStopped = new AtomicBoolean();
       var storedPipeline = pipelineManager.getPipeline(pipeline.getPipelineId());
       var updatedPipeline = updatePipeline(
           copyPipeline(storedPipeline), affectedElementId, updatedStreamName, updatedEventSchema);
@@ -103,6 +106,8 @@ public class PipelineUpdateCoordinator {
         var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
         var modifiedPipeline = verificationHandler.makeModifiedPipeline(modificationMessage).pipeline();
         var canAutoMigrate = canAutoMigrate(modificationMessage);
+
+        removeDeferredValidationNotifications(modifiedPipeline);
 
         if (!canAutoMigrate) {
           modifiedPipeline.setHealthStatus(
@@ -121,6 +126,7 @@ public class PipelineUpdateCoordinator {
 
         if (shouldRestartPipeline) {
           new PipelineExecutor(pipeline, requestManager, resourceManager).stopPipeline(true);
+          pipelineStopped.set(true);
           modifiedPipeline.setRunning(false);
           modifiedPipeline.setRev(pipelineManager.getPipeline(pipeline.getPipelineId()).getRev());
         }
@@ -133,9 +139,17 @@ public class PipelineUpdateCoordinator {
           ).startPipeline();
         }
       } catch (OutputSchemaUnavailableException e) {
+        try {
+          deferPipelineUpdate(storedPipeline, notificationType, e);
+        } catch (Exception notificationException) {
+          LOG.warn("Could not record the deferred pipeline update for {}", storedPipeline.getName(), notificationException);
+        }
         LOG.warn("Skipped pipeline update for {} because the output schema for {} is unavailable",
             storedPipeline.getName(), e.getAppId(), e);
       } catch (Exception e) {
+        if (shouldRestartPipeline && !pipelineStopped.get()) {
+          new PipelineExecutor(pipeline, requestManager, resourceManager).stopPipeline(true);
+        }
         LOG.error("Could not update pipeline {}", updatedPipeline.getName(), e);
       }
     });
@@ -203,6 +217,33 @@ public class PipelineUpdateCoordinator {
     updateInfo.setValidationUnavailable(true);
     updateInfo.setMigrationInfo(exception.getMessage());
     return updateInfo;
+  }
+
+  private void deferPipelineUpdate(Pipeline pipeline,
+                                   String notificationType,
+                                   OutputSchemaUnavailableException exception) {
+    var notification = deferredValidationNotification(notificationType, exception.getAppId());
+    var notifications = new ArrayList<>(pipeline.getPipelineNotifications());
+    if (notifications.contains(notification)) {
+      return;
+    }
+
+    notifications.add(notification);
+    pipeline.setPipelineNotifications(notifications);
+    pipelineStorage.updateElement(pipeline);
+  }
+
+  private void removeDeferredValidationNotifications(Pipeline pipeline) {
+    pipeline.setPipelineNotifications(pipeline.getPipelineNotifications().stream()
+        .filter(notification -> !notification.startsWith(DEFERRED_VALIDATION_NOTIFICATION_PREFIX))
+        .toList());
+  }
+
+  private String deferredValidationNotification(String notificationType,
+                                                String appId) {
+    return DEFERRED_VALIDATION_NOTIFICATION_PREFIX
+        + "%s modification could not be validated because pipeline element %s is unavailable".formatted(
+            notificationType, appId);
   }
 
   private Pipeline updatePipeline(Pipeline pipeline,

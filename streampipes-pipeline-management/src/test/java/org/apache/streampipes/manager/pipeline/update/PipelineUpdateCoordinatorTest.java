@@ -58,7 +58,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -193,7 +192,7 @@ class PipelineUpdateCoordinatorTest {
   }
 
   @Test
-  void updatePipelines_ShouldPreservePipelineWhenOutputSchemaIsUnavailable() {
+  void updatePipelines_ShouldDeferPipelineUpdateWhenOutputSchemaIsUnavailable() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
     var resourceManager = mock(SpResourceManager.class);
     var pipelineStorage = mock(IPipelineStorage.class);
@@ -214,10 +213,13 @@ class PipelineUpdateCoordinatorTest {
 
       assertEquals(1, verificationHandlerConstruction.constructed().size());
       assertEquals(0, executorConstruction.constructed().size());
-      verify(pipelineStorage, never()).updateElement(storedPipeline);
+      verify(pipelineStorage).updateElement(storedPipeline);
       assertTrue(storedPipeline.isRunning());
       assertTrue(storedPipeline.isValid());
       assertEquals("Old stream", storedPipeline.getStreams().getFirst().getName());
+      assertEquals(List.of(
+          "Validation deferred: Data stream modification could not be validated because pipeline element math-expression is unavailable"
+      ), storedPipeline.getPipelineNotifications());
     }
   }
 
