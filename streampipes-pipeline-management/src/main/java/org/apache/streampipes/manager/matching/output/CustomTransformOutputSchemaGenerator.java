@@ -80,8 +80,14 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   }
 
   private EventSchema makeRequest() {
+    String httpRequestBody;
     try {
-      String httpRequestBody = makeRequestBody();
+      httpRequestBody = makeRequestBody();
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not create the output schema request", e);
+    }
+
+    try {
       var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery).selectService(
           dataProcessorInvocation.getAppId(),
           SpServiceUrlProvider.DATA_PROCESSOR,
@@ -94,12 +100,8 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
       );
       var response = requestManager.request(ExtensionServiceRequests.outputSchema(requestTarget, httpRequestBody));
       return handleResponse(response);
-    } catch (OutputSchemaUnavailableException e) {
-      throw e;
     } catch (NoServiceEndpointsAvailableException | IOException e) {
       throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), e);
-    } catch (Exception e) {
-      return new EventSchema();
     }
   }
 
@@ -111,7 +113,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
 
   private EventSchema handleResponse(ExtensionServiceOperationResult response) {
     if (response == null) {
-      return new EventSchema();
+      throw new IllegalStateException("The extension returned no output schema response");
     }
 
     if (!response.isSuccess()) {
@@ -119,15 +121,19 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
       if (isUnavailableStatus(response.statusCode())) {
         throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), cause);
       }
-      return new EventSchema();
+      throw new IllegalStateException(cause);
     }
 
     try {
-      return JacksonSerializer
+      var eventSchema = JacksonSerializer
           .getObjectMapper()
           .readValue(response.responseBody(), EventSchema.class);
+      if (eventSchema == null) {
+        throw new IllegalStateException("The extension returned no output schema");
+      }
+      return eventSchema;
     } catch (IOException | JsonSyntaxException e) {
-      return new EventSchema();
+      throw new IllegalStateException("The extension returned an invalid output schema", e);
     }
   }
 
