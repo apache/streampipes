@@ -152,6 +152,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     shouldOpenCustomizeSettings = false;
     private shortcutReg: ShortcutRegistration;
+    private unavailablePipelineElementStatuses = new Map<
+        PipelineElementConfig,
+        PipelineElementConfigurationStatus
+    >();
 
     constructor() {
         this.currentPipelineModel = new Pipeline();
@@ -509,6 +513,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     modifyPipeline(pm: PipelineModificationMessage) {
+        this.restoreUnavailablePipelineElements();
         if (pm.pipelineModifications) {
             pm.pipelineModifications.forEach(modification => {
                 const id = modification.domId;
@@ -578,11 +583,86 @@ export class PipelineComponent implements OnInit, OnDestroy {
         const error = status.error as Notification;
         const title = error?.title ?? 'Pipeline validation failed';
         const description = error?.description ?? status.message;
+        const extensionId = error?.additionalInformation;
+        const unavailableExtensions =
+            this.getUnavailableExtensions(extensionId);
+
+        if (title === 'Extension unavailable' && unavailableExtensions.length) {
+            unavailableExtensions.forEach(pipelineElement => {
+                if (
+                    !this.unavailablePipelineElementStatuses.has(
+                        pipelineElement,
+                    )
+                ) {
+                    this.unavailablePipelineElementStatuses.set(
+                        pipelineElement,
+                        pipelineElement.settings.completed,
+                    );
+                }
+                this.pipelineStyleService.updatePeConfigurationStatus(
+                    pipelineElement,
+                    PipelineElementConfigurationStatus.INCOMPLETE,
+                );
+                this.pipelineStyleService.updateConnectedConnectorStylesAsError(
+                    pipelineElement.payload.dom,
+                );
+            });
+            this.JsplumbBridge.repaintEverything();
+        }
+
         this.pipelineValid = false;
         this.pipelineValidationService.reportRemoteValidationError(
             title,
-            description,
+            this.getUnavailableExtensionDescription(
+                description,
+                extensionId,
+                unavailableExtensions,
+            ),
         );
+    }
+
+    private getUnavailableExtensions(
+        extensionId?: string,
+    ): PipelineElementConfig[] {
+        if (!extensionId) {
+            return [];
+        }
+
+        return this.rawPipelineModel.filter(
+            pipelineElement => pipelineElement.payload.appId === extensionId,
+        );
+    }
+
+    private getUnavailableExtensionDescription(
+        description: string,
+        extensionId: string | undefined,
+        unavailableExtensions: PipelineElementConfig[],
+    ): string {
+        if (!extensionId) {
+            return description;
+        }
+
+        const extensionNames = unavailableExtensions.map(
+            pipelineElement => pipelineElement.payload.name,
+        );
+        const unavailableExtension =
+            extensionNames.length > 0
+                ? `${extensionNames.join(', ')} (${extensionId})`
+                : extensionId;
+
+        return `${description} (${unavailableExtension})`;
+    }
+
+    private restoreUnavailablePipelineElements(): void {
+        this.unavailablePipelineElementStatuses.forEach(
+            (configurationStatus, pipelineElement) => {
+                this.pipelineStyleService.updatePeConfigurationStatus(
+                    pipelineElement,
+                    configurationStatus,
+                );
+            },
+        );
+        this.unavailablePipelineElementStatuses.clear();
     }
 
     showMatchingErrorDialog(notifications: Notification[]) {

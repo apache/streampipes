@@ -17,6 +17,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogService, KeyboardShortcutService } from '@streampipes/shared-ui';
 import { DataProcessorInvocation } from '@streampipes/platform-services';
@@ -30,6 +31,7 @@ import { EditorService } from '../../services/editor.service';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { PipelineElementConfigurationStatus } from '../../model/editor.model';
 
 describe('Pipeline palette drops', () => {
     const create = vi.fn();
@@ -145,5 +147,67 @@ describe('Pipeline palette drops', () => {
             bounds: new DOMRect(200, 200, 70, 70),
         });
         expect(create).not.toHaveBeenCalled();
+    });
+
+    it('marks an unavailable extension and its connections as invalid', () => {
+        const { component } = setup();
+        const unavailableExtension = {
+            type: 'sepa',
+            payload: Object.assign(new DataProcessorInvocation(), {
+                appId: 'org.apache.streampipes.processors.enricher.jvm.processor.expression',
+                dom: 'math-expression',
+                name: 'Math Expression',
+            }),
+            settings: {
+                completed: 1,
+            },
+        } as PipelineComponent['rawPipelineModel'][number];
+        component.rawPipelineModel = [unavailableExtension];
+
+        const pipelineStyleService = component[
+            'pipelineStyleService'
+        ] as unknown as {
+            updatePeConfigurationStatus: ReturnType<typeof vi.fn>;
+            updateConnectedConnectorStylesAsError: ReturnType<typeof vi.fn>;
+        };
+        pipelineStyleService.updatePeConfigurationStatus = vi.fn();
+        pipelineStyleService.updateConnectedConnectorStylesAsError = vi.fn();
+        const validationService = component[
+            'pipelineValidationService'
+        ] as unknown as {
+            reportRemoteValidationError: ReturnType<typeof vi.fn>;
+        };
+        validationService.reportRemoteValidationError = vi.fn();
+
+        component['handlePipelineValidationFailure'](
+            new HttpErrorResponse({
+                error: {
+                    title: 'Extension unavailable',
+                    description:
+                        'Pipeline validation requires an extension that is currently unavailable.',
+                    additionalInformation:
+                        'org.apache.streampipes.processors.enricher.jvm.processor.expression',
+                },
+            }),
+        );
+
+        expect(
+            pipelineStyleService.updatePeConfigurationStatus,
+        ).toHaveBeenCalledWith(
+            unavailableExtension,
+            PipelineElementConfigurationStatus.INCOMPLETE,
+        );
+        expect(
+            pipelineStyleService.updateConnectedConnectorStylesAsError,
+        ).toHaveBeenCalledWith('math-expression');
+        expect(
+            validationService.reportRemoteValidationError,
+        ).toHaveBeenCalledWith(
+            'Extension unavailable',
+            'Pipeline validation requires an extension that is currently unavailable. (Math Expression (org.apache.streampipes.processors.enricher.jvm.processor.expression))',
+        );
+        expect(
+            component.JsplumbBridge.repaintEverything,
+        ).toHaveBeenCalledOnce();
     });
 });
