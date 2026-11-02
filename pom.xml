@@ -920,6 +920,8 @@
         <module>streampipes-commons</module>
         <module>streampipes-connect-management</module>
         <module>streampipes-connect-shared</module>
+        <module>streampipes-couchdb-client</module>
+        <module>streampipes-couchdb-client-httpclient5</module>
         <module>streampipes-extensions-api</module>
         <module>streampipes-extensions-management</module>
         <module>streampipes-data-explorer</module>
