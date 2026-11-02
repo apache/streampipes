@@ -36,8 +36,9 @@ import { Connection } from '@jsplumb/browser-ui';
 export class PipelineValidationService {
     private jsplumbFactoryService = inject(JsplumbFactoryService);
 
-    errorMessages: any = [];
+    errorMessages: UserErrorMessage[] = [];
     pipelineValid = false;
+    private remoteValidationErrors: UserErrorMessage[] = [];
 
     availableErrorMessages: UserErrorMessage[] = [
         new UserErrorMessage(
@@ -71,6 +72,9 @@ export class PipelineValidationService {
         previewConfig: boolean,
         pm?: PipelineModificationMessage,
     ) {
+        if (pm) {
+            this.remoteValidationErrors = [];
+        }
         const jsplumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
         const streamInAssembly = this.isStreamInAssembly(rawPipelineModel);
@@ -112,15 +116,27 @@ export class PipelineValidationService {
             this.errorMessages.push(this.availableErrorMessages[5]);
         }
 
+        this.errorMessages.push(...this.remoteValidationErrors);
+
         this.pipelineValid =
             streamInAssembly &&
             actionInAssembly &&
             allElementsConnected &&
             onlyOnePipelineCreated &&
             allElementsConfigured &&
-            (pm ? pm.pipelineValid : true);
+            (pm ? pm.pipelineValid : true) &&
+            this.remoteValidationErrors.length === 0;
 
         return this.pipelineValid;
+    }
+
+    reportRemoteValidationFailure(title: string, content: string): void {
+        this.remoteValidationErrors = [new UserErrorMessage(title, content)];
+        this.errorMessages = [
+            ...this.errorMessages,
+            ...this.remoteValidationErrors,
+        ];
+        this.pipelineValid = false;
     }
 
     isEmptyPipeline(rawPipelineModel) {

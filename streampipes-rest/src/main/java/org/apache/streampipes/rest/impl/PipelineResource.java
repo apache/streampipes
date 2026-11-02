@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableExcepti
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.matching.output.OutputSchemaUnavailableException;
 import org.apache.streampipes.manager.pipeline.PipelineEditChanges;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
@@ -286,6 +287,13 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
       return ok(new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager).verifyPipeline());
+    } catch (OutputSchemaUnavailableException e) {
+      LOG.warn("Could not validate pipeline because the output schema for {} is unavailable", e.getAppId(), e);
+      return serverError(new Notification(
+          "Extension unavailable",
+          "Pipeline validation requires an extension that is currently unavailable.",
+          e.getAppId()
+      ));
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
     } catch (Exception e) {

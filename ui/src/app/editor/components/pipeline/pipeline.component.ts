@@ -75,6 +75,7 @@ import {
 } from '@jsplumb/browser-ui';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { DroppedPipelineElementComponent } from './dropped-pipeline-element/dropped-pipeline-element.component';
@@ -485,10 +486,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         },
                         status => {
                             pe.settings.loadingStatus = false;
-                            this.showErrorDialog(
-                                status.error.title,
-                                status.error.description,
-                            );
+                            this.handlePipelineValidationFailure(status);
                         },
                     );
             }
@@ -590,6 +588,22 @@ export class PipelineComponent implements OnInit, OnDestroy {
         });
     }
 
+    private handlePipelineValidationFailure(status: HttpErrorResponse): void {
+        const error = status.error as Notification;
+        const title = error?.title ?? 'Pipeline validation failed';
+        const description = error?.description ?? status.message;
+        const summaryDescription = error?.additionalInformation
+            ? `${description} (${error.additionalInformation})`
+            : description;
+
+        this.pipelineValidationService.reportRemoteValidationFailure(
+            title,
+            summaryDescription,
+        );
+        this.pipelineValid = false;
+        this.showErrorDialog(title, description);
+    }
+
     showMatchingErrorDialog(notifications: Notification[]) {
         this.dialogService.open(MatchingErrorComponent, {
             panelType: PanelType.STANDARD_PANEL,
@@ -620,15 +634,20 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 );
                 this.objectProvider
                     .updatePipeline(this.currentPipelineModel)
-                    .subscribe(pm => {
-                        this.modifyPipeline(pm);
-                        this.triggerPipelineCacheUpdateEmitter.emit();
-                        this.announceConfiguredElement(pipelineElementConfig);
-                        if (this.previewModeActive) {
-                            this.deletePreviewEmitter.emit(true);
-                        }
-                        this.validatePipeline(pm);
-                    });
+                    .subscribe(
+                        pm => {
+                            this.modifyPipeline(pm);
+                            this.triggerPipelineCacheUpdateEmitter.emit();
+                            this.announceConfiguredElement(
+                                pipelineElementConfig,
+                            );
+                            if (this.previewModeActive) {
+                                this.deletePreviewEmitter.emit(true);
+                            }
+                            this.validatePipeline(pm);
+                        },
+                        status => this.handlePipelineValidationFailure(status),
+                    );
             } else {
                 this.validatePipeline();
             }
@@ -643,9 +662,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.currentPipelineModel = this.objectProvider.makePipeline(
             this.rawPipelineModel,
         );
-        this.objectProvider
-            .updatePipeline(this.currentPipelineModel)
-            .subscribe(pm => {
+        this.objectProvider.updatePipeline(this.currentPipelineModel).subscribe(
+            pm => {
                 this.modifyPipeline(pm);
                 this.pipelineValid =
                     this.pipelineValidationService.isValidPipeline(
@@ -653,7 +671,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         this.readonly,
                         pm,
                     );
-            });
+            },
+            status => this.handlePipelineValidationFailure(status),
+        );
     }
 
     openTopicsDialog(pipelineElementConfig: PipelineElementConfig) {
