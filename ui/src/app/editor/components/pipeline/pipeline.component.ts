@@ -56,7 +56,6 @@ import {
 import { ObjectProvider } from '../../services/object-provider.service';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import {
-    ConfirmDialogComponent,
     DialogService,
     KeyboardShortcutService,
     PanelType,
@@ -64,7 +63,7 @@ import {
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
-import { MatDialog } from '@angular/material/dialog';
+import { PipelineValidationErrorComponent } from '../../dialog/pipeline-validation-error/pipeline-validation-error.component';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import {
     EVENT_CONNECTION,
@@ -113,7 +112,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private pipelineStyleService = inject(PipelineStyleService);
     private pipelineValidationService = inject(PipelineValidationService);
     private dialogService = inject(DialogService);
-    private dialog = inject(MatDialog);
     private ngZone = inject(NgZone);
     private shortcutService = inject(KeyboardShortcutService);
 
@@ -577,31 +575,22 @@ export class PipelineComponent implements OnInit, OnDestroy {
         return custom;
     }
 
-    showErrorDialog(title: string, description: string) {
-        this.dialog.open(ConfirmDialogComponent, {
-            width: '500px',
-            data: {
-                title: title,
-                subtitle: description,
-                confirmTitle: 'Ok',
-            },
-        });
-    }
-
     private handlePipelineValidationFailure(status: HttpErrorResponse): void {
         const error = status.error as Notification;
         const title = error?.title ?? 'Pipeline validation failed';
         const description = error?.description ?? status.message;
-        const summaryDescription = error?.additionalInformation
-            ? `${description} (${error.additionalInformation})`
-            : description;
-
-        this.pipelineValidationService.reportRemoteValidationFailure(
-            title,
-            summaryDescription,
-        );
         this.pipelineValid = false;
-        this.showErrorDialog(title, description);
+        this.dialogService.open(PipelineValidationErrorComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title,
+            data: {
+                notification: {
+                    title,
+                    description,
+                    additionalInformation: error?.additionalInformation,
+                },
+            },
+        });
     }
 
     showMatchingErrorDialog(notifications: Notification[]) {
