@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/* tslint:disable */
-/* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-11-02 09:03:42.
+// @ts-nocheck
+// Generated using typescript-generator version 3.2.1263 on 2026-09-18 15:38:46.
 
-import { Storable } from '@streampipes/platform-services';
+import { Storable } from './streampipes-model';
 
 export class Group implements Storable {
     alternateIds: string[];
@@ -236,11 +235,6 @@ export class ServiceAccount extends Principal {
         instance.secretEncrypted = data.secretEncrypted;
         return instance;
     }
-}
-
-export interface Storable {
-    elementId: string;
-    rev: string;
 }
 
 export class UserAccount extends Principal {

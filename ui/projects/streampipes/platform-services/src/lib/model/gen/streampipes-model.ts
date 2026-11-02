@@ -16,9 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/* tslint:disable */
-/* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-11-02 09:03:36.
+// @ts-nocheck
+// Generated using typescript-generator version 3.2.1263 on 2026-10-26 15:02:34.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
