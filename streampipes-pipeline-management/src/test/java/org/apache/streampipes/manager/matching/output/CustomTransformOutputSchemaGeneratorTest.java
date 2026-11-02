@@ -36,7 +36,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -92,7 +91,7 @@ class CustomTransformOutputSchemaGeneratorTest {
   }
 
   @Test
-  void returnsAnEmptySchemaWhenTheExtensionReturnsAnErrorResponse() throws IOException {
+  void throwsWhenTheExtensionReturnsAnErrorResponse() throws IOException {
     var invocation = invocation();
     var serviceDiscovery = mock(ISpServiceDiscovery.class);
     var requestManager = mock(ExtensionServiceRequestManager.class);
@@ -105,10 +104,10 @@ class CustomTransformOutputSchemaGeneratorTest {
         requestManager
     );
 
-    var result = generator.buildFromOneStream(null);
+    var exception = assertThrows(IllegalStateException.class,
+        () -> generator.buildFromOneStream(null));
 
-    assertNotNull(result.k);
-    assertTrue(result.k.getEventProperties().isEmpty());
+    assertTrue(exception.getMessage().contains("status code: 500"));
   }
 
   @Test
@@ -132,7 +131,7 @@ class CustomTransformOutputSchemaGeneratorTest {
   }
 
   @Test
-  void returnsAnEmptySchemaWhenTheExtensionReturnsAnInvalidSchema() throws IOException {
+  void throwsWhenTheExtensionReturnsAnInvalidSchema() throws IOException {
     var invocation = invocation();
     var serviceDiscovery = mock(ISpServiceDiscovery.class);
     var requestManager = mock(ExtensionServiceRequestManager.class);
@@ -146,10 +145,10 @@ class CustomTransformOutputSchemaGeneratorTest {
         requestManager
     );
 
-    var result = generator.buildFromOneStream(null);
+    var exception = assertThrows(IllegalStateException.class,
+        () -> generator.buildFromOneStream(null));
 
-    assertNotNull(result.k);
-    assertTrue(result.k.getEventProperties().isEmpty());
+    assertTrue(exception.getMessage().contains("invalid output schema"));
   }
 
   private DataProcessorInvocation invocation() {
