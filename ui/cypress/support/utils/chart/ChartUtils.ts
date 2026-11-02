@@ -650,11 +650,7 @@ export class ChartUtils {
             cy.dataCy('operator-' + escapedOption).should('be.visible');
         });
 
-        // Reselect the current option to close the panel without changing the filter.
-        cy.dataCy('operator-', {}, true)
-            .filter('[aria-selected="true"]')
-            .should('have.length', 1)
-            .click();
+        cy.dataCy('design-panel-data-settings-filter-operator').type('{esc}');
         cy.dataCy('design-panel-data-settings-filter-operator').should(
             'have.attr',
             'aria-expanded',
