@@ -22,13 +22,13 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +76,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public void writeDocument(String document, AssetExportConfiguration config)
-      throws JsonProcessingException, DocumentConflictException {
+      throws JsonProcessingException, StorageConflictException {
     try {
       genericStorage.create(document);
     } catch (IOException e) {
@@ -108,6 +108,5 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   protected ObjectMapper getObjectMapper() {
     return defaultMapper;
   }
-
 
 }

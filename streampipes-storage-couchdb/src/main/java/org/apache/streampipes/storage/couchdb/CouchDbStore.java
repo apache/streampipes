@@ -15,34 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.View;
+package org.apache.streampipes.storage.couchdb;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
+import org.apache.streampipes.couchdb.client.CouchDatabase;
+import org.apache.streampipes.couchdb.client.TypedCollection;
+import org.apache.streampipes.couchdb.client.codec.DocumentCodec;
 
-public class FindAllCommand<T> extends DbCommand<List<T>, T> {
+/**
+ * A database together with the codec one storage reads and writes it with.
+ *
+ * @param database the database
+ * @param codec    the codec
+ */
+public record CouchDbStore(CouchDatabase database, DocumentCodec codec) {
 
-  private String viewName;
-
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
-                        Class<T> clazz,
-                        String viewName) {
-    super(couchDbClient, clazz);
-    this.viewName = viewName;
-  }
-
-  @Override
-  protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    View view = couchDbClient
-        .view(viewName)
-        .includeDocs(true);
-
-    List<T> allResults = view.query(clazz);
-
-    return allResults != null ? allResults : Collections.emptyList();
+  public <T> TypedCollection<T> typed(Class<T> type) {
+    return database.typed(type, codec);
   }
 }

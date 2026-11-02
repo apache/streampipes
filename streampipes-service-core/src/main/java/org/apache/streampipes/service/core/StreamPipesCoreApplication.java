@@ -57,6 +57,7 @@ import org.apache.streampipes.service.core.extensions.ExtensionServiceRequestCon
 import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
+import org.apache.streampipes.service.core.storage.CouchDbConfiguration;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
@@ -65,6 +66,7 @@ import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 
@@ -99,7 +101,7 @@ import java.util.stream.Stream;
 @EnableScheduling
 @Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
     StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class,
-    StorageApiConfiguration.class, ExtensionServiceRequestConfiguration.class, SpPermissionEvaluator.class,
+    CouchDbConfiguration.class, StorageApiConfiguration.class, ExtensionServiceRequestConfiguration.class, SpPermissionEvaluator.class,
     DatasetQueryConfiguration.class, PipelineManagementConfiguration.class,
     AuditConfiguration.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
@@ -138,6 +140,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @Autowired
   private InstallationConfiguration installationConfiguration;
+
+  @Autowired
+  private CouchDbStores couchDbStores;
 
   @Autowired
   @Qualifier("adapterDescriptionStorage")
@@ -188,7 +193,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     this.logCheckExecutor = Executors.newSingleThreadScheduledExecutor();
 
     new StreamPipesEnvChecker(resourceManager.getCoreConfigurationStorage()).updateEnvironmentVariables();
-    new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
+    new CouchDbViewGenerator(couchDbStores.server()).createGenericDatabaseIfNotExists();
     var env = Environments.getEnvironment();
 
     ExtensionsServiceReportExecutor.setServiceReportFetcher(serviceRegistration -> {
@@ -292,7 +297,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   private boolean isConfigured() {
-    return new UserStorage().existsDatabase();
+    return new UserStorage(couchDbStores).existsDatabase();
   }
 
   private void doInitialSetup(int initialSleepBeforeInstallation) {

@@ -18,64 +18,64 @@
 
 package org.apache.streampipes.storage.couchdb.impl.system;
 
+import org.apache.streampipes.couchdb.client.Attachments;
+import org.apache.streampipes.couchdb.client.TypedCollection;
+import org.apache.streampipes.couchdb.client.ViewQuery;
+import org.apache.streampipes.couchdb.client.exception.CouchDbException;
+import org.apache.streampipes.couchdb.client.query.MangoQuery;
 import org.apache.streampipes.model.file.GenericStorageAttachment;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.client.fluent.Content;
-import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Generic documents of the {@code genericstorage} database, read and written as maps.
+ *
+ * <p>Errors are reported as {@link IOException}, as the {@link IGenericStorage} contract requires until it switches to
+ * the unchecked storage exceptions.</p>
+ */
 public class GenericStorageImpl implements IGenericStorage {
 
-  private static final String ID = "id";
-  private static final String SLASH = "/";
-
-  private static final String DOCS_KEY = "docs";
+  private static final String ID = "_id";
+  private static final String REV = "_rev";
+  private static final String APP_DOC_TYPE_VIEW = "appDocType";
+  private static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
   private final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
   };
 
   private final ObjectMapper mapper;
+  private final TypedCollection<Map<String, Object>> documents;
+  private final Attachments attachments;
 
-  public GenericStorageImpl() {
+  public GenericStorageImpl(CouchDbStores stores) {
     this.mapper = JacksonSerializer.getObjectMapper();
     this.mapper
         .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    var database = stores.database(GenericCouchDbConstants.DB_NAME);
+    this.documents = database.raw();
+    this.attachments = database.attachments();
   }
 
   @Override
   public List<String> getAllAppDocTypes() throws IOException {
-    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType";
-    Map<String, Object> queryResult = this.queryDocuments(query);
-
-    List<Map<String, Object>> rows = (List<Map<String, Object>>) queryResult.get("rows");
-
-    return rows.stream()
-        .filter(row -> !String.valueOf(row.get(ID)).startsWith("_design"))
-        .map(row -> row.get("key"))
-        .map(key -> {
-          if (key instanceof List<?> keyList && !keyList.isEmpty()) {
-            return keyList.get(0);
-          }
-
-          return key;
-        })
+    return call(() -> appDocTypeView().rows())
+        .stream()
+        .filter(row -> row.id() == null || !row.id().startsWith("_design"))
+        .map(row -> appDocType(row.key()))
         .filter(Objects::nonNull)
-        .map(Object::toString)
         .filter(appDocType -> !appDocType.isBlank())
         .distinct()
         .sorted()
@@ -84,20 +84,10 @@ public class GenericStorageImpl implements IGenericStorage {
 
   @Override
   public List<Map<String, Object>> findAll(String type) throws IOException {
-    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType?" + Utils
-        .escapePathSegment("startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true");
-    Map<String, Object> queryResult = this.queryDocuments(query);
-
-    List<Map<String, Object>> rows = (List<Map<String, Object>>) queryResult.get("rows");
-    List<Map<String, Object>> result = new ArrayList<>();
-
-    for (Map<String, Object> row : rows) {
-      if (!((String) row.get(ID)).startsWith("_design")) {
-        result.add((Map<String, Object>) row.get("doc"));
-      }
-    }
-
-    return result;
+    return call(() -> appDocTypeView()
+        .startKey(List.of(type))
+        .endKey(List.of(type, Map.of()))
+        .docs());
   }
 
   /**
@@ -107,40 +97,31 @@ public class GenericStorageImpl implements IGenericStorage {
   @Override
   public List<Map<String, Object>> find(String appDocType,
                                         Map<String, Object> query) throws IOException {
-    var request = Utils.postRequest(
-        getDatabaseRoute() + "/_find",
-        mapper.writeValueAsString(query)
-    );
-    Content content = executeAndReturnContent(request);
-    var responseObj = deserialize(content.asString(StandardCharsets.UTF_8));
-    if (responseObj != null & responseObj.containsKey("docs")) {
-      return (List<Map<String, Object>>) responseObj.get(DOCS_KEY);
-    } else {
-      return List.of();
-    }
+    return call(() -> documents.find(MangoQuery.fromMap(query)).docs());
   }
 
   @Override
   public Map<String, Object> findOne(String id) throws IOException {
-    return this.queryDocuments(getDatabaseRoute() + SLASH + id);
+    return call(() -> documents.get(id));
   }
 
   @Override
   public Map<String, Object> findOneWithNullIfEmpty(String id) {
     try {
-      return this.queryDocuments(getDatabaseRoute() + SLASH + id);
+      return findOne(id);
     } catch (IOException e) {
       return null;
     }
   }
 
+  /**
+   * Stores the document with {@code POST}, so that CouchDB assigns the id when the payload has none, as before.
+   */
   @Override
   public Map<String, Object> create(String payload) throws IOException {
-    Request req = Utils.postRequest(getDatabaseRoute(), payload);
-    Content content = executeAndReturnContent(req);
-
-    Map<String, Object> requestResult = deserialize(content.asString());
-    return this.findOne((String) requestResult.get(ID));
+    Map<String, Object> document = deserialize(payload);
+    String id = call(() -> documents.post(document)).id();
+    return this.findOne(id);
   }
 
   @Override
@@ -149,19 +130,26 @@ public class GenericStorageImpl implements IGenericStorage {
     return this.mapper.convertValue(result, targetClass);
   }
 
+  /**
+   * Writes the document under the given id. Without {@code _rev} it is created, or rejected as a conflict if it
+   * exists, which is what CouchDB does for the same {@code PUT}.
+   */
   @Override
   public Map<String, Object> update(String id, String payload) throws IOException {
-    Request req = Utils.putRequest(getDatabaseRoute() + SLASH + id, payload);
-    Content content = executeAndReturnContent(req);
-
-    Map<String, Object> requestResult = deserialize(content.asString());
-    return this.findOne((String) requestResult.get(ID));
+    Map<String, Object> document = deserialize(payload);
+    document.put(ID, id);
+    String storedId = call(() -> document.get(REV) != null
+        ? documents.update(document)
+        : documents.create(document)).id();
+    return this.findOne(storedId);
   }
 
   @Override
   public void delete(String id, String rev) throws IOException {
-    Request req = Utils.deleteRequest(getDatabaseRoute() + SLASH + id + "?rev=" + rev);
-    Content content = executeAndReturnContent(req);
+    if (rev == null) {
+      throw new IOException("Deleting document " + id + " requires its revision");
+    }
+    call(() -> documents.delete(id, rev));
   }
 
   @Override
@@ -170,39 +158,58 @@ public class GenericStorageImpl implements IGenericStorage {
                                String contentType,
                                byte[] payload,
                                String rev) throws IOException {
-    Request req = Utils.putRequest(
-        getDatabaseRoute() + SLASH + docId + SLASH + attachmentName + "?rev=" + rev, payload, contentType
-    );
-    executeAndReturnContent(req);
+    call(() -> attachments.put(docId, rev, attachmentName,
+        contentType != null ? contentType : DEFAULT_CONTENT_TYPE, payload));
   }
 
   @Override
   public GenericStorageAttachment findAttachment(String docId, String attachmentName) throws IOException {
-    Request req = Utils.getRequest(getDatabaseRoute() + SLASH + docId + SLASH + attachmentName);
-    Content content = executeAndReturnContent(req);
-    return new GenericStorageAttachment(content.getType().getMimeType(), content.asBytes());
+    var attachment = call(() -> attachments.get(docId, attachmentName))
+        .orElseThrow(() -> new IOException("No attachment " + attachmentName + " in document " + docId));
+    return new GenericStorageAttachment(mimeType(attachment.contentType()), attachment.data());
   }
 
-
-
-  private Map<String, Object> queryDocuments(String route) throws IOException {
-    Request req = Utils.getRequest(route);
-    Content content = executeAndReturnContent(req);
-
-    return deserialize(content.asString(StandardCharsets.UTF_8));
+  private ViewQuery<Map<String, Object>> appDocTypeView() {
+    return documents.view(GenericCouchDbConstants.DESIGN_DOC_NAME, APP_DOC_TYPE_VIEW);
   }
 
-  private Map<String, Object> deserialize(String payload) throws JsonProcessingException {
-
+  private Map<String, Object> deserialize(String payload) throws IOException {
     return mapper.readValue(payload, typeRef);
   }
 
-  private Content executeAndReturnContent(Request req) throws IOException {
-    return req.execute().returnContent();
+  /**
+   * First element of the {@code [appDocType, _id]} view key.
+   */
+  private static String appDocType(JsonNode key) {
+    JsonNode type = key != null && key.isArray() && !key.isEmpty() ? key.get(0) : key;
+    if (type == null || type.isNull() || type.isMissingNode()) {
+      return null;
+    }
+    return type.isValueNode() ? type.asText() : type.toString();
   }
 
-  private String getDatabaseRoute() {
-    return Utils.getDatabaseRoute(GenericCouchDbConstants.DB_NAME);
+  /**
+   * Media type without parameters such as {@code charset}.
+   */
+  private static String mimeType(String contentType) {
+    if (contentType == null) {
+      return null;
+    }
+    int separator = contentType.indexOf(';');
+    return (separator >= 0 ? contentType.substring(0, separator) : contentType).trim();
+  }
+
+  private static <T> T call(CouchCall<T> call) throws IOException {
+    try {
+      return call.run();
+    } catch (CouchDbException | IllegalArgumentException e) {
+      throw new IOException(e.getMessage(), e);
+    }
+  }
+
+  @FunctionalInterface
+  private interface CouchCall<T> {
+    T run();
   }
 
     @Override

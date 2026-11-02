@@ -19,15 +19,16 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class TransformationScriptTemplateStorageImpl extends DefaultViewCrudStorage<ConnectTransformationScriptTemplate>
     implements ITransformationScriptTemplateStorage {
 
-  public TransformationScriptTemplateStorageImpl() {
+  public TransformationScriptTemplateStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("genericstorage"),
+        stores.gson(GenericCouchDbConstants.DB_NAME),
         ConnectTransformationScriptTemplate.class,
         "transformation-scripts/all-transformations"
     );

@@ -66,6 +66,28 @@ public class TypedCollectionTest {
   }
 
   @Test
+  public void postLetsCouchDbAssignTheId() {
+    var stub = StubTransport.create().respond(201, OK.formatted("server-id", "1-a"));
+    var doc = new LinkedHashMap<String, Object>();
+    doc.put("_id", null);
+    doc.put("name", "x");
+
+    var ref = stub.server().database("db").raw().post(doc);
+
+    assertEquals("POST", stub.request(0).method());
+    assertEquals("/db", stub.request(0).path());
+    assertEquals("{\"name\":\"x\"}", stub.body(0));
+    assertEquals(new DocumentRef("server-id", "1-a"), ref);
+
+    var withId = new LinkedHashMap<String, Object>();
+    withId.put("_id", "given");
+    withId.put("_rev", null);
+    stub.respond(201, OK.formatted("given", "1-b"));
+    stub.server().database("db").raw().post(withId);
+    assertEquals("{\"_id\":\"given\"}", stub.body(1));
+  }
+
+  @Test
   public void createRejectsRevision() {
     var stub = StubTransport.create();
     assertThrows(IllegalArgumentException.class,
@@ -198,6 +220,20 @@ public class TypedCollectionTest {
     assertEquals(2, stub.requests.size(), "no request after the limit is reached");
     assertTrue(stub.body(1).contains("\"limit\":1"), "last page asks only for what is missing");
     assertThrows(IllegalArgumentException.class, () -> stub.server().database("db").raw().findAll(query, 0));
+  }
+
+  @Test
+  public void queryFromMapKeepsOtherOptions() {
+    var body = new LinkedHashMap<String, Object>();
+    body.put("selector", Map.of("appDocType", "t"));
+    body.put("limit", 10);
+    body.put("execution_stats", true);
+    body.put("r", 1);
+
+    var query = MangoQuery.fromMap(body);
+
+    assertEquals(body, query.toMap());
+    assertEquals(body, query.copy().toMap());
   }
 
   @Test
