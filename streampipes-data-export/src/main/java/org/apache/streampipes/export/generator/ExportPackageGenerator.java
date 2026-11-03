@@ -38,6 +38,7 @@ import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -240,7 +241,7 @@ public class ExportPackageGenerator {
               new ExportItem(document.get("_id").toString(), "", true),
               function,
               exportedGenericStorageDocumentIds));
-    } catch (IOException e) {
+    } catch (StorageException e) {
       LOG.warn("Could not load generic storage documents for appDocType {}", appDocType, e);
     }
   }
@@ -263,13 +264,13 @@ public class ExportPackageGenerator {
         asset.remove("_rev");
         builder.addText(String.valueOf(asset.get("_id")), this.defaultMapper.writeValueAsString(asset));
         manifest.addAsset(String.valueOf(asset.get("_id")));
-      } catch (IOException e) {
+      } catch (IOException | StorageException e) {
         LOG.warn("Could not add asset to export package: {}", e.getMessage());
       }
     });
   }
 
-  private Map<String, Object> getAsset(String assetId) throws IOException {
+  private Map<String, Object> getAsset(String assetId) {
     return resourceManager.getGenericStorage().findOne(assetId);
   }
 }

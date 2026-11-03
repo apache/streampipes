@@ -97,7 +97,7 @@ public class CouchDbSink implements IStreamPipesDataSink {
         .connectTimeout(CONNECT_TIMEOUT)
         .build();
     var database = couchServer.database(dbName, DatabaseOptions.createIfMissing());
-    database.create();
+    database.ensureExists();
     // Gson keeps the stored format: fields without a value are left out.
     this.documents = database.typed(Object.class, GsonCodec.of(new Gson()));
   }

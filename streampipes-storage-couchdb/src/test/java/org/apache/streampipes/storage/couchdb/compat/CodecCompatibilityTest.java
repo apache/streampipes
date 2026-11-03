@@ -44,8 +44,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Checks that the new client with {@link GsonCodec} writes and reads every stored model exactly as LightCouch
- * does: same JSON on write, same objects (compared by their JSON) on read through {@code find}, {@code _all_docs}
- * and views. Gate for every phase that moves a storage off LightCouch (docs/couchdb-client-concept.md, 6.4).
+ * did: same JSON on write, same objects (compared by their JSON) on read through {@code find}, {@code _all_docs}
+ * and views. Guards documents already stored and rollback to a previous version (docs/couchdb-client-concept.md, 6.4).
  */
 public class CodecCompatibilityTest {
 

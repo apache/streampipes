@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.couchdb.client;
 
+import org.apache.streampipes.couchdb.client.exception.CouchDbException;
 import org.apache.streampipes.couchdb.client.exception.CouchDbTransportException;
 import org.apache.streampipes.couchdb.client.exception.DocumentMappingException;
 import org.apache.streampipes.couchdb.client.exception.PreconditionFailedException;
@@ -139,12 +140,26 @@ public final class CouchServer implements AutoCloseable {
     if (knownDatabases.contains(name)) {
       return;
     }
-    try {
-      execute(new CouchRequest("PUT", CouchPaths.database(name), CouchRequest.JSON, null, null), response -> null);
-    } catch (PreconditionFailedException e) {
-      // 412: the database exists already.
+    // Checked first because creating needs admin rights that using an existing database does not.
+    if (!databaseExists(name)) {
+      try {
+        execute(new CouchRequest("PUT", CouchPaths.database(name), CouchRequest.JSON, null, null), response -> null);
+      } catch (PreconditionFailedException e) {
+        // 412: created by someone else since the check.
+      }
     }
     knownDatabases.add(name);
+  }
+
+  boolean databaseExists(String name) {
+    try {
+      return execute(CouchRequest.head(CouchPaths.database(name)), response -> true);
+    } catch (CouchDbException e) {
+      if (e.getStatus() == 404) {
+        return false;
+      }
+      throw e;
+    }
   }
 
   void forgetDatabase(String name) {

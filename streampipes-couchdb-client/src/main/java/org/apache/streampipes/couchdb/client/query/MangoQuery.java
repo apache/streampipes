@@ -62,11 +62,14 @@ public final class MangoQuery {
    *
    * @param query request body
    * @return the query
+   * @throws IllegalArgumentException if the selector is missing or not an object, which CouchDB rejects as well
    */
   @SuppressWarnings("unchecked")
   public static MangoQuery fromMap(Map<String, Object> query) {
-    var selector = query.get("selector");
-    var result = new MangoQuery(selector instanceof Map<?, ?> map ? (Map<String, Object>) map : Map.of());
+    if (!(query.get("selector") instanceof Map<?, ?> selector)) {
+      throw new IllegalArgumentException("A Mango query needs a selector object");
+    }
+    var result = new MangoQuery((Map<String, Object>) selector);
     if (query.get("fields") instanceof List<?> list) {
       result.fields = list.stream().map(String::valueOf).toList();
     }

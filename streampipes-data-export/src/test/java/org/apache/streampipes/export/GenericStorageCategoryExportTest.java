@@ -29,6 +29,8 @@ import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.exceptions.StorageNotFoundException;
+import org.apache.streampipes.storage.api.exceptions.StorageUnavailableException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -149,8 +151,8 @@ class GenericStorageCategoryExportTest {
   }
 
   @Test
-  void shouldFallBackToBulkSelectionWhenDocumentEnumerationFails() throws IOException {
-    when(storage.findAll(TYPE)).thenThrow(new IOException("unavailable"));
+  void shouldFallBackToBulkSelectionWhenDocumentEnumerationFails() {
+    when(storage.findAll(TYPE)).thenThrow(new StorageUnavailableException("unavailable"));
 
     var preview = preview();
 
@@ -292,12 +294,12 @@ class GenericStorageCategoryExportTest {
   }
 
   @Test
-  void shouldSkipMissingLinksWithoutOfferingBulkFallback() throws IOException {
+  void shouldSkipMissingLinksWithoutOfferingBulkFallback() {
     when(storage.findOne("asset-1")).thenReturn(Map.of(
         "assetName", "Test asset",
         "assetLinks", List.of(Map.of("resourceId", "missing", "queryHint", "ai-pipeline"),
             Map.of("resourceId", "pipeline-1", "queryHint", "ai-pipeline"))));
-    when(storage.findOne("missing")).thenThrow(new IOException("not found"));
+    when(storage.findOne("missing")).thenThrow(new StorageNotFoundException("not found"));
 
     var config = ExportManager.getExportPreview(List.of("asset-1"), null, resources, null);
     assertEquals(List.of("pipeline-1"), config.getAssetExportConfiguration().getFirst()
