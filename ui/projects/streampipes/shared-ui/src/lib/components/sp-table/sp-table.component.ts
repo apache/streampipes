@@ -672,23 +672,6 @@ export class SpTableComponent<T>
         this.dataSource.filter = this.nameSearchTerm.trim().toLocaleLowerCase();
     }
 
-<<<<<<< HEAD
-=======
-    private getCurrentPageRows(): T[] {
-        let rows = this.dataSource?.filteredData ?? this.dataSource?.data ?? [];
-        if (this.dataSource?.sort) {
-            rows = this.dataSource.sortData([...rows], this.dataSource.sort);
-        }
-        if (!this.paginator) {
-            return rows;
-        }
-
-        const pageSize = this.paginator.pageSize || this.pageSize();
-        const startIndex = this.paginator.pageIndex * pageSize;
-        return rows.slice(startIndex, startIndex + pageSize);
-    }
-
->>>>>>> dd5d4c6b20 (rebase to newer dev branch and favorite sorting priority)
     private updateRenderedState(rows: T[], reconcileSelection = true) {
         this.visiblePageRows = rows;
         this.rebuildGroupedSections(rows);
