@@ -30,10 +30,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,8 +41,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * Reads the documents of an existing StreamPipes installation with LightCouch and with the new client and compares
- * the results. Read-only: databases are opened without creating them and nothing is written.
+ * Reads the documents of an existing StreamPipes installation the way LightCouch did ({@link LegacyCouchDbHttp}) and
+ * with the new client and compares the results. Read-only: only {@code GET} and {@code HEAD}, nothing is created or
+ * written.
  *
  * <p>Run against a local stack with
  * {@code -Dstreampipes.couchdb.compat.url=http://localhost:5984 -Dstreampipes.couchdb.compat.user=...
@@ -56,17 +54,17 @@ public class LiveCouchDbCompatibilityTest {
 
   private static final int MAX_FIND_COMPARISONS = 50;
 
-  private static URI url;
+  private static String url;
   private static String user;
   private static String password;
   private static CouchServer server;
 
   @BeforeAll
   public static void connect() {
-    url = URI.create(System.getProperty("streampipes.couchdb.compat.url"));
+    url = System.getProperty("streampipes.couchdb.compat.url");
     user = System.getProperty("streampipes.couchdb.compat.user", "admin");
     password = System.getProperty("streampipes.couchdb.compat.password", "admin");
-    server = CouchServer.builder().url(url.toString()).credentials(user, password).build();
+    server = CouchServer.builder().url(url).credentials(user, password).build();
   }
 
   @AfterAll
@@ -81,18 +79,15 @@ public class LiveCouchDbCompatibilityTest {
     return StoredModels.ALL.stream().map(model -> DynamicTest.dynamicTest(model.name(), () -> check(model)));
   }
 
-  private static void check(StoredModel model) {
+  private static void check(StoredModel model) throws Exception {
     Assumptions.assumeTrue(server.database(model.database()).exists(), "no database " + model.database());
     Gson legacyGson = LegacyCouchDbPath.gson(model.gsonBuilder().get());
     GsonCodec codec = model.newCodec();
     TypedCollection<Object> collection = server.database(model.database()).typed(rawClass(model.readType()), codec);
-    var legacy = new CouchDbClient(new CouchDbProperties(model.database(), false, url.getScheme(), url.getHost(),
-        url.getPort(), user, password));
-    legacy.setGsonBuilder(model.gsonBuilder().get());
-    try {
-      List<?> legacyDocs = legacy.view(model.view() == null ? "_all_docs" : model.view())
-          .includeDocs(true)
-          .query(model.readType());
+    try (var legacy = new LegacyCouchDbHttp(url, user, password, legacyGson)) {
+      List<?> legacyDocs = model.view() == null
+          ? legacy.allDocs(model.database(), model.readType())
+          : legacy.view(model.database(), model.designDocument(), model.viewName(), model.readType());
       List<Object> newDocs = model.view() == null
           ? collection.findAll()
           : collection.view(model.designDocument(), model.viewName()).docs();
@@ -107,16 +102,16 @@ public class LiveCouchDbCompatibilityTest {
         collect(failures, model + " encode", JsonTrees.parse(LegacyCouchDbPath.encode(legacyGson, document)),
             JsonTrees.parse(codec.encode(document)));
       }
-      expected.keySet().stream().filter(id -> !id.startsWith("#")).limit(MAX_FIND_COMPARISONS).forEach(id ->
-          collect(failures, model + " " + id + " find",
-              reencode(legacyGson, legacy.find(model.readType(), id)),
-              reencode(legacyGson, collection.get(id))));
+      for (String id : expected.keySet().stream().filter(id -> !id.startsWith("#")).limit(MAX_FIND_COMPARISONS)
+          .toList()) {
+        collect(failures, model + " " + id + " find",
+            reencode(legacyGson, legacy.find(model.database(), id, model.readType())),
+            reencode(legacyGson, collection.get(id)));
+      }
       if (!failures.isEmpty()) {
         fail(String.join("\n", failures));
       }
       System.out.printf("%s: %d documents compared%n", model, expected.size());
-    } finally {
-      legacy.shutdown();
     }
   }
 

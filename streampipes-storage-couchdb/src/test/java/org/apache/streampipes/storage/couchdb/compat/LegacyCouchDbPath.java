@@ -33,9 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The serialization steps of LightCouch 0.2.0, reproduced without its HTTP client, which cannot be constructed
- * without a server. Each method names the LightCouch code it mirrors; the integration test checks the same
- * fixtures against the real {@code CouchDbClient}.
+ * The serialization steps of LightCouch 0.2.0, kept as the reference for the stored format now that LightCouch is
+ * gone: existing documents were written this way, and a previous version reads documents this way. Each method names
+ * the LightCouch code it mirrors. These steps matched the real {@code CouchDbClient} against CouchDB 3.3.1 for every
+ * fixture until the dependency was removed.
  */
 final class LegacyCouchDbPath {
 

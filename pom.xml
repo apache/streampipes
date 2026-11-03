@@ -67,7 +67,6 @@
         <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <jjwt.version>0.11.2</jjwt.version>
-        <lightcouch.version>0.2.0</lightcouch.version>
         <eclipse.milo.version>1.1.1</eclipse.milo.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
@@ -789,11 +788,6 @@
                 <groupId>org.jgrapht</groupId>
                 <artifactId>jgrapht-core</artifactId>
                 <version>${jgrapht.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.lightcouch</groupId>
-                <artifactId>lightcouch</artifactId>
-                <version>${lightcouch.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.locationtech.jts</groupId>
