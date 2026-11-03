@@ -46,6 +46,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -122,6 +123,40 @@ public class LightCouchCompatibilityIntegrationTest {
     var stored = db.typed(JsonNode.class, EXACT);
     assertSame("generic payload", JsonTrees.without(stored.get("verbatim"), "_id", "_rev"),
         JsonTrees.without(stored.get("via-map"), "_id", "_rev"));
+  }
+
+  /**
+   * {@code CouchDbSink} writes event maps with LightCouch's default Gson; it now uses a plain Gson through
+   * {@link GsonCodec}.
+   */
+  @Test
+  public void eventMapStoredLikeLightCouch() {
+    var event = new LinkedHashMap<String, Object>();
+    event.put("_id", "event");
+    event.put("text", "Ünï <&> \u2028 😀");
+    event.put("integer", 3);
+    event.put("long", 9007199254740993L);
+    event.put("double", 1.10);
+    event.put("whole", 3.0);
+    event.put("tiny", 1.0e-7);
+    event.put("flag", true);
+    event.put("none", null);
+    event.put("nested", Map.of("list", List.of(1, "a", Map.of("k", List.of()))));
+
+    var legacy = new CouchDbClient(new CouchDbProperties("compat-sink-legacy", true, "http", couchDb.getHost(),
+        couchDb.getMappedPort(5984), USER, PASSWORD));
+    try {
+      legacy.save(event);
+    } finally {
+      legacy.shutdown();
+    }
+    var db = server.database("compat-sink-new");
+    db.create();
+    db.typed(Object.class, GsonCodec.of(new Gson())).create(event);
+
+    assertSame("event map",
+        JsonTrees.without(server.database("compat-sink-legacy").typed(JsonNode.class, EXACT).get("event"), "_rev"),
+        JsonTrees.without(db.typed(JsonNode.class, EXACT).get("event"), "_rev"));
   }
 
   private static void check(StoredModel model, String databasePrefix) {

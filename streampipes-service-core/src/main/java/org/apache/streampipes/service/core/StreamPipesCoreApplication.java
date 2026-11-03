@@ -289,7 +289,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   protected List<Migration> getMigrations() {
-    return new AvailableMigrations(resourceManager, certificateStorage, pipelineTemplateStorage).getAvailableMigrations();
+    return new AvailableMigrations(couchDbStores, resourceManager, certificateStorage, pipelineTemplateStorage)
+        .getAvailableMigrations();
   }
 
   protected List<HealthCheck> getRegisteredExtensionHealthChecks() {

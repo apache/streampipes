@@ -18,16 +18,17 @@
 
 package org.apache.streampipes.manager.setup.tasks;
 
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.DesignDocument;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
+import org.apache.streampipes.couchdb.client.design.DesignDocument;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 
 public abstract class AbstractAddGenericStorageViewTask implements InstallationTask {
+
+  private final CouchDbStores stores;
+
+  protected AbstractAddGenericStorageViewTask(CouchDbStores stores) {
+    this.stores = stores;
+  }
 
   public abstract String getDesignDocument();
 
@@ -36,14 +37,7 @@ public abstract class AbstractAddGenericStorageViewTask implements InstallationT
   public abstract String getMapFunction();
 
   public void execute() {
-    DesignDocument doc = prepareDocument(getDesignDocument());
-    Map<String, DesignDocument.MapReduce> views = new HashMap<>();
-
-    DesignDocument.MapReduce byNameFn = new DesignDocument.MapReduce();
-    byNameFn.setMap(getMapFunction());
-
-    views.put(getViewName(), byNameFn);
-    doc.setViews(views);
-    Utils.getCouchDbClient("genericstorage", true).design().synchronizeWithDb(doc);
+    stores.database(GenericCouchDbConstants.DB_NAME).design()
+        .sync(DesignDocument.named(getDesignDocument()).withView(getViewName(), getMapFunction()));
   }
 }

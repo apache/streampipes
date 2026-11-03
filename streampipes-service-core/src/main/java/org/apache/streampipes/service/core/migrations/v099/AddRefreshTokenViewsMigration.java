@@ -17,14 +17,11 @@
  */
 package org.apache.streampipes.service.core.migrations.v099;
 
+import org.apache.streampipes.couchdb.client.design.DesignDocument;
+import org.apache.streampipes.couchdb.client.design.ViewDefinition;
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.DesignDocument;
-import org.lightcouch.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 import java.io.IOException;
 import java.util.Map;
@@ -32,12 +29,18 @@ import java.util.Map;
 public class AddRefreshTokenViewsMigration implements Migration {
 
   private static final String DOC_NAME = "_design/users";
-  private static final Logger LOG = LoggerFactory.getLogger(AddRefreshTokenViewsMigration.class);
+
+  private final CouchDbStores stores;
+
+  public AddRefreshTokenViewsMigration(CouchDbStores stores) {
+    this.stores = stores;
+  }
 
   @Override
   public boolean shouldExecute() {
-    var designDoc = Utils.getCouchDbUserClient().design().getFromDb(DOC_NAME);
-    var views = designDoc.getViews();
+    var views = stores.database(CouchDbStores.USER_DB_NAME).design().get(DOC_NAME)
+        .map(DesignDocument::views)
+        .orElse(Map.of());
 
     return !containsView(
         views,
@@ -52,12 +55,7 @@ public class AddRefreshTokenViewsMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    var userDocument = new UserDesignDocument().make();
-    Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
-
-    if (resp.getError() != null) {
-      LOG.warn("Could not update user design document with reason {}", resp.getReason());
-    }
+    stores.database(CouchDbStores.USER_DB_NAME).design().sync(new UserDesignDocument().make());
   }
 
   @Override
@@ -65,9 +63,9 @@ public class AddRefreshTokenViewsMigration implements Migration {
     return "Add refresh token views to user database";
   }
 
-  private boolean containsView(Map<String, DesignDocument.MapReduce> views,
+  private boolean containsView(Map<String, ViewDefinition> views,
                                String viewKey,
                                String mapFunction) {
-    return views.containsKey(viewKey) && mapFunction.equals(views.get(viewKey).getMap());
+    return views.containsKey(viewKey) && mapFunction.equals(views.get(viewKey).map());
   }
 }
