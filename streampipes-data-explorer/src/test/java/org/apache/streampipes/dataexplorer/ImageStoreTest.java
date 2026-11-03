@@ -51,13 +51,19 @@ class ImageStoreTest {
   private final CouchServer server = CouchServer.builder().transport(config -> transport).build();
 
   @Test
-  void createsTheDatabaseWhenStartedAndAcceptsAnExistingOne() {
-    transport.databaseCreateStatus = 412;
+  void createsAMissingDatabaseWhenStarted() {
+    transport.databaseExists = false;
 
     new ImageStore(measure(), server);
 
-    assertEquals("PUT", transport.requests.get(0).method());
-    assertEquals("/images", transport.requests.get(0).path());
+    assertEquals(List.of("HEAD /images", "PUT /images"), transport.requestLines());
+  }
+
+  @Test
+  void doesNotCreateAnExistingDatabase() {
+    new ImageStore(measure(), server);
+
+    assertEquals(List.of("HEAD /images"), transport.requestLines());
   }
 
   @Test
@@ -113,22 +119,24 @@ class ImageStoreTest {
   private static class RecordingTransport implements CouchTransport {
 
     private final List<CouchRequest> requests = new ArrayList<>();
-    private int databaseCreateStatus = 201;
+    private boolean databaseExists = true;
     private boolean closed;
 
     @Override
     public CouchResponse send(CouchRequest request, Map<String, String> headers) {
       requests.add(request);
-      int status = "/images".equals(request.path()) ? databaseCreateStatus : 201;
-      String body = status == 201
-          ? "{\"ok\":true,\"id\":\"id\",\"rev\":\"1-a\"}"
-          : "{\"error\":\"file_exists\",\"reason\":\"exists\"}";
+      int status = "HEAD".equals(request.method()) ? (databaseExists ? 200 : 404) : 201;
+      String body = "{\"ok\":true,\"id\":\"id\",\"rev\":\"1-a\"}";
       return new CouchResponse(status, Map.of(), new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
     }
 
     @Override
     public void close() {
       closed = true;
+    }
+
+    private List<String> requestLines() {
+      return requests.stream().map(r -> r.method() + " " + r.path()).toList();
     }
   }
 }
