@@ -20,6 +20,7 @@ package org.apache.streampipes.storage.couchdb;
 
 import org.apache.streampipes.couchdb.client.CouchServer;
 import org.apache.streampipes.couchdb.client.design.DesignDocument;
+import org.apache.streampipes.couchdb.client.query.MangoIndex;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionEntry;
@@ -31,6 +32,9 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.exceptions.StorageException;
+import org.apache.streampipes.storage.api.exceptions.StorageNotFoundException;
+import org.apache.streampipes.storage.api.exceptions.StorageQueryException;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DatasetMetadataStorage;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
@@ -242,12 +246,27 @@ public class CouchDbStoragesIntegrationTest {
     assertEquals(2, found.size());
     assertEquals(Set.of("_id", "n"), found.get(0).keySet());
 
+    for (int i = 0; i < 30; i++) {
+      storage.create("{\"appDocType\":\"bulk\",\"owner\":\"o1\"}");
+    }
+    assertTrue(stores.database(GenericCouchDbConstants.DB_NAME).indexes()
+        .ensure(MangoIndex.on("appDocType", "owner").named("bulk-by-owner")));
+    var bulkQuery = Map.<String, Object>of("selector", Map.of("appDocType", "bulk", "owner", "o1"));
+    assertEquals(25, storage.find("bulk", bulkQuery).size(), "find returns one page");
+    assertEquals(30, storage.findAll("bulk", bulkQuery).size(), "findAll with a query returns every match");
+    assertEquals(27, storage.findAll("bulk", Map.of("selector", bulkQuery.get("selector"), "limit", 27)).size());
+
     var first = storage.findOne(ids.get(0));
     first.put("n", 42);
     var updated = storage.update(ids.get(0), new ObjectMapper().writeValueAsString(first));
     assertEquals(42, updated.get("n"));
-    assertThrows(IOException.class, () -> storage.update(ids.get(0), "{\"appDocType\":\"note\"}"),
+    assertThrows(StorageConflictException.class, () -> storage.update(ids.get(0), "{\"appDocType\":\"note\"}"),
         "an update without revision of an existing document conflicts");
+    assertThrows(StorageConflictException.class, () -> storage.update(ids.get(0), new ObjectMapper()
+        .writeValueAsString(first)), "an update with a stale revision conflicts");
+    assertEquals("note",
+        storage.update("never-stored", "{\"_rev\":\"1-a\",\"appDocType\":\"note\"}").get("appDocType"),
+        "CouchDB stores a missing document even if a revision is given");
     assertEquals("note", storage.update("new-id", "{\"appDocType\":\"note\"}").get("appDocType"),
         "an update without revision creates a missing document");
 
@@ -256,12 +275,15 @@ public class CouchDbStoragesIntegrationTest {
     var attachment = storage.findAttachment(ids.get(1), "report.json");
     assertEquals("application/json", attachment.getContentType());
     assertArrayEquals("{}".getBytes(StandardCharsets.UTF_8), attachment.getAttachment());
-    assertThrows(IOException.class, () -> storage.findAttachment(ids.get(1), "missing"));
+    assertThrows(StorageNotFoundException.class, () -> storage.findAttachment(ids.get(1), "missing"));
 
     storage.delete(ids.get(2), (String) storage.findOne(ids.get(2)).get("_rev"));
     assertNull(storage.findOneWithNullIfEmpty(ids.get(2)));
-    assertThrows(IOException.class, () -> storage.findOne(ids.get(2)));
-    assertThrows(IOException.class, () -> storage.delete(ids.get(3), null));
+    assertThrows(StorageNotFoundException.class, () -> storage.findOne(ids.get(2)));
+    assertThrows(StorageNotFoundException.class, () -> storage.delete(ids.get(2), "1-a"));
+    assertThrows(StorageQueryException.class, () -> storage.delete(ids.get(3), null));
+    assertThrows(StorageQueryException.class, () -> storage.find("note", Map.of("selector", "not-an-object")));
+    assertThrows(StorageQueryException.class, () -> storage.create("not json"));
   }
 
   @Test

@@ -260,6 +260,12 @@ public class TypedCollectionTest {
   }
 
   @Test
+  public void rejectsAQueryWithoutASelectorObject() {
+    assertThrows(IllegalArgumentException.class, () -> MangoQuery.fromMap(Map.of("limit", 1)));
+    assertThrows(IllegalArgumentException.class, () -> MangoQuery.fromMap(Map.of("selector", "not-an-object")));
+  }
+
+  @Test
   public void selectorMergesConditionsOnSameField() {
     var selector = Selector.of("ts", "$gte", 1).and("ts", "$lt", 2).toMap();
     assertEquals(Map.of("ts", Map.of("$gte", 1, "$lt", 2)), selector);

@@ -19,6 +19,8 @@
 
 package org.apache.streampipes.service.core.migrations;
 
+import org.apache.streampipes.storage.api.exceptions.StorageException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,7 @@ public class MigrationsHandler {
         LOG.info("Performing migration: {}", migration.getDescription());
         try {
           migration.executeMigration();
-        } catch (IOException e) {
+        } catch (IOException | StorageException e) {
           LOG.error("An error has occurred while executing migration '{}'", migration.getDescription(), e);
         }
       }

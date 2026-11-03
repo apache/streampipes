@@ -21,11 +21,11 @@ package org.apache.streampipes.export;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
 import org.apache.streampipes.export.resolver.GenericStorageResolverProvider;
+import org.apache.streampipes.storage.api.exceptions.StorageNotFoundException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,9 +86,9 @@ class GenericStorageResourceRegistryTest {
   }
 
   @Test
-  void shouldReportMissingDocuments() throws IOException {
+  void shouldReportMissingDocuments() {
     var storage = mock(IGenericStorage.class);
-    when(storage.findOne("missing")).thenThrow(new IOException("not found"));
+    when(storage.findOne("missing")).thenThrow(new StorageNotFoundException("not found"));
     var provider = new GenericStorageResolverProvider(storage, new GenericStorageResourceRegistry());
 
     assertThrows(ElementNotFoundException.class, () -> provider.getSerializedDocument("missing"));
