@@ -160,7 +160,7 @@
             <dependency>
                 <groupId>org.apache.pulsar</groupId>
                 <artifactId>pulsar-bom</artifactId>
-                <version>4.2.4</version>
+                <version>5.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
