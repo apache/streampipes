@@ -17,40 +17,28 @@
  */
 package org.apache.streampipes.manager.assets;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
-import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
 
 public class AssetFetcher {
 
-  private final ISpServiceDiscovery serviceDiscovery;
   private final SpServiceUrlProvider spServiceUrlProvider;
   private final String appId;
   private final ExtensionServiceRequestManager requestManager;
 
-  public AssetFetcher(ISpServiceDiscovery serviceDiscovery,
-                      SpServiceUrlProvider spServiceUrlProvider,
+  public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
                       String appId,
                       ExtensionServiceRequestManager requestManager) {
-    this.serviceDiscovery = serviceDiscovery;
     this.spServiceUrlProvider = spServiceUrlProvider;
     this.appId = appId;
     this.requestManager = requestManager;
-  }
-
-  public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
-    var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery).selectService(appId, spServiceUrlProvider, Set.of());
-    return fetchPipelineElementAssets(service);
   }
 
   public InputStream fetchPipelineElementAssets(SpServiceRegistration service) throws IOException {
