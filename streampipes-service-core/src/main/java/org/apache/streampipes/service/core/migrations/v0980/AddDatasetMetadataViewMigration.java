@@ -20,38 +20,30 @@ package org.apache.streampipes.service.core.migrations.v0980;
 
 import org.apache.streampipes.manager.setup.tasks.AddDatasetMetadataViewTask;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.NoDocumentException;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 import java.io.IOException;
 
 public class AddDatasetMetadataViewMigration implements Migration {
 
+  private final CouchDbStores stores;
+
+  public AddDatasetMetadataViewMigration(CouchDbStores stores) {
+    this.stores = stores;
+  }
+
   @Override
   public boolean shouldExecute() {
-    try {
-      var designDoc = Utils
-          .getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME)
-          .design()
-          .getFromDb(AddDatasetMetadataViewTask.MEASUREMENT_BY_NAME_VIEW);
-      var viewKey = AddDatasetMetadataViewTask.VIEW_NAME;
-      var viewMapFunction = AddDatasetMetadataViewTask.MAP_FUNCTION;
-      var views = designDoc.getViews();
-
-      if (views.containsKey(viewKey)) {
-        return !(views.get(viewKey).getMap().equals(viewMapFunction));
-      } else {
-        return true;
-      }
-    } catch (NoDocumentException e) {
-      return true;
-    }
+    return stores.database(CouchDbStores.DATA_LAKE_DB_NAME).design()
+        .get(AddDatasetMetadataViewTask.MEASUREMENT_BY_NAME_VIEW)
+        .map(designDoc -> designDoc.views().get(AddDatasetMetadataViewTask.VIEW_NAME))
+        .map(view -> !AddDatasetMetadataViewTask.MAP_FUNCTION.equals(view.map()))
+        .orElse(true);
   }
 
   @Override
   public void executeMigration() throws IOException {
-    new AddDatasetMetadataViewTask().execute();
+    new AddDatasetMetadataViewTask(stores).execute();
   }
 
   @Override

@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpTimeoutException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -40,6 +41,10 @@ import java.util.concurrent.Executors;
  * <p>Uses HTTP/1.1 explicitly: CouchDB does not speak HTTP/2, and the client's default would attempt an h2c
  * upgrade on every new cleartext connection. Pool size and keep-alive are JVM-wide settings of the JDK client
  * ({@code jdk.httpclient.connectionPoolSize}, {@code jdk.httpclient.keepalive.timeout}).</p>
+ *
+ * <p>The JDK client sends a request over a pooled connection without checking it first and repeats only {@code GET}
+ * and {@code HEAD} by itself when that connection turns out to be closed. A {@code PUT} is repeated once here. That
+ * cannot write twice: if the first attempt reached CouchDB, the second one fails with a conflict.</p>
  */
 public class JdkHttpTransport implements CouchTransport {
 
@@ -74,13 +79,26 @@ public class JdkHttpTransport implements CouchTransport {
     }
 
     try {
-      HttpResponse<InputStream> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofInputStream());
+      HttpResponse<InputStream> response = sendWithRetry(builder.build());
       return new CouchResponse(response.statusCode(), toHeaderMap(response), response.body());
     } catch (IOException e) {
       throw new CouchDbTransportException(request.method() + " " + pathOnly(request) + " failed", e);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new CouchDbTransportException(request.method() + " " + pathOnly(request) + " interrupted", e);
+    }
+  }
+
+  private HttpResponse<InputStream> sendWithRetry(HttpRequest request) throws IOException, InterruptedException {
+    try {
+      return client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+    } catch (HttpTimeoutException e) {
+      throw e;
+    } catch (IOException e) {
+      if (!"PUT".equals(request.method())) {
+        throw e;
+      }
+      return client.send(request, HttpResponse.BodyHandlers.ofInputStream());
     }
   }
 

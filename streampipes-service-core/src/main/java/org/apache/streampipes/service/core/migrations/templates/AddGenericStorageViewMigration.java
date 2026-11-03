@@ -19,22 +19,22 @@
 package org.apache.streampipes.service.core.migrations.templates;
 
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.NoDocumentException;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 
 public abstract class AddGenericStorageViewMigration implements Migration {
 
+  protected final CouchDbStores stores;
+
+  protected AddGenericStorageViewMigration(CouchDbStores stores) {
+    this.stores = stores;
+  }
+
   @Override
   public boolean shouldExecute() {
-    var client = Utils.getCouchDbClient("genericstorage", true);
-    try {
-      var designDoc = client.design().getFromDb(getDesignDocumentName());
-
-      return designDoc == null || !designDoc.getViews().containsKey(getViewName());
-    } catch (NoDocumentException e) {
-      return true;
-    }
+    return stores.database(GenericCouchDbConstants.DB_NAME).design().get(getDesignDocumentName())
+        .map(designDoc -> !designDoc.views().containsKey(getViewName()))
+        .orElse(true);
   }
 
   @Override
