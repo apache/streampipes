@@ -22,6 +22,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -49,6 +50,10 @@ public class AssetFetcher {
 
   public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
     var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery).selectService(appId, spServiceUrlProvider, Set.of());
+    return fetchPipelineElementAssets(service);
+  }
+
+  public InputStream fetchPipelineElementAssets(SpServiceRegistration service) throws IOException {
     var requestTarget = ExtensionServiceRequestTargets.pipelineElementAssets(service, spServiceUrlProvider, appId);
     var response = requestManager.request(ExtensionServiceRequests.pipelineElementAssets(requestTarget));
 

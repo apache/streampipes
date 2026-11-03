@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
@@ -96,7 +97,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     if (state == StorageState.STORED) {
       createAndStorePermission(principalSid, publicElement);
       try {
-        storeAssets();
+        storeAssets(null);
       } catch (IOException | NoServiceEndpointsAvailableException e) {
         LOG.error("Could not store assets for app id '{}'", elementDescription.getAppId(), e);
       }
@@ -108,6 +109,10 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   public Message verifyAndUpdate() {
+    return verifyAndUpdate(null);
+  }
+
+  public Message verifyAndUpdate(SpServiceRegistration service) {
     var transformError = transformEntity();
     if (transformError != null) {
       return transformError;
@@ -115,7 +120,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
     update();
     try {
-      updateAssets();
+      updateAssets(service);
     } catch (IOException | NoServiceEndpointsAvailableException e) {
       LOG.error("Could not update assets for app id '{}'", elementDescription.getAppId(), e);
     }
@@ -123,12 +128,13 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   }
 
-  protected abstract void storeAssets() throws IOException, NoServiceEndpointsAvailableException;
+  protected abstract void storeAssets(SpServiceRegistration service)
+      throws IOException, NoServiceEndpointsAvailableException;
 
-  protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
+  protected void updateAssets(SpServiceRegistration service) throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
       assetManager.deleteAsset(elementDescription.getAppId());
-      storeAssets();
+      storeAssets(service);
     }
   }
 

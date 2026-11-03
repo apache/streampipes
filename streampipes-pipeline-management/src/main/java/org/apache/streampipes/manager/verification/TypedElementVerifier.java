@@ -21,6 +21,7 @@ package org.apache.streampipes.manager.verification;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
@@ -93,9 +94,9 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
   }
 
   @Override
-  protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
+  protected void storeAssets(SpServiceRegistration service) throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
-      assetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId(), requestManager, serviceDiscovery);
+      assetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId(), requestManager, serviceDiscovery, service);
     }
   }
 }
