@@ -100,6 +100,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
         storeAssets(service);
       } catch (IOException | NoServiceEndpointsAvailableException e) {
         LOG.error("Could not store assets for app id '{}'", elementDescription.getAppId(), e);
+        return assetErrorMessage();
       }
       return successMessage();
     } else {
@@ -119,6 +120,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
       updateAssets(service);
     } catch (IOException | NoServiceEndpointsAvailableException e) {
       LOG.error("Could not update assets for app id '{}'", elementDescription.getAppId(), e);
+      return assetErrorMessage();
     }
     return successMessage();
 
@@ -129,9 +131,15 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   protected void updateAssets(SpServiceRegistration service) throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
-      assetManager.deleteAsset(elementDescription.getAppId());
       storeAssets(service);
     }
+  }
+
+  private Message assetErrorMessage() {
+    return new ErrorMessage(elementDescription.getName(), List.of(
+        NotificationType.STORAGE_SUCCESS.uiNotification(),
+        new Notification("Asset update failed", "The element description was stored, but its assets could not be updated. "
+            + "Please retry the update.")));
   }
 
   private Message successMessage() {

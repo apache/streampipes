@@ -36,11 +36,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 public class TypeExtractorTest {
@@ -107,6 +110,28 @@ public class TypeExtractorTest {
 
     assertEquals(1, message.getNotifications().size());
     assertEquals(NotificationType.STORAGE_SUCCESS.title(), message.getNotifications().get(0).getTitle());
+  }
+
+  @Test
+  public void updateWithoutAssetsDoesNotRequireAService() throws SepaParseException {
+    var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager, resourceManager)
+        .getTypeVerifier().verifyAndUpdate(null);
+
+    assertTrue(message.isSuccess());
+    verifyNoInteractions(requestManager);
+    verify(resourceManager, never()).getServiceDiscovery();
+  }
+
+  @Test
+  public void updateWithAssetsReportsMissingServiceWithoutDiscovery() throws SepaParseException {
+    var description = payload(DataSinkDescription.class).replace("\"elementId\"", "\"includesAssets\":true,\"elementId\"");
+    var message = new TypeExtractor(description, storageApi, requestManager, resourceManager)
+        .getTypeVerifier().verifyAndUpdate(null);
+
+    assertFalse(message.isSuccess());
+    assertTrue(message.getNotifications().stream().anyMatch(n -> n.getTitle().equals("Asset update failed")));
+    verifyNoInteractions(requestManager);
+    verify(resourceManager, never()).getServiceDiscovery();
   }
 
   @Test
