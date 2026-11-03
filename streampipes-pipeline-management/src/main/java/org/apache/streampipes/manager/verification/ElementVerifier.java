@@ -87,7 +87,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   protected abstract void update();
 
-  public Message verifyAndAdd(String principalSid, boolean publicElement) {
+  public Message verifyAndAdd(String principalSid, boolean publicElement, SpServiceRegistration service) {
     var transformError = transformEntity();
     if (transformError != null) {
       return transformError;
@@ -97,7 +97,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     if (state == StorageState.STORED) {
       createAndStorePermission(principalSid, publicElement);
       try {
-        storeAssets(null);
+        storeAssets(service);
       } catch (IOException | NoServiceEndpointsAvailableException e) {
         LOG.error("Could not store assets for app id '{}'", elementDescription.getAppId(), e);
       }
@@ -106,10 +106,6 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
       return addedToUserSuccessMessage();
     }
 
-  }
-
-  public Message verifyAndUpdate() {
-    return verifyAndUpdate(null);
   }
 
   public Message verifyAndUpdate(SpServiceRegistration service) {

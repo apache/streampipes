@@ -279,6 +279,7 @@ public class AdapterMasterManagement {
         requestManager,
         resourceManager
     );
-    return verifier.verifyAndAdd(principalSid, false).isSuccess();
+    // Adapter-created streams are local descriptions without a selected extension service.
+    return verifier.verifyAndAdd(principalSid, false, null).isSuccess();
   }
 }
