@@ -28,15 +28,18 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import org.apache.avro.generic.GenericRecord;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.parquet.avro.AvroParquetReader;
 import org.apache.parquet.hadoop.ParquetReader;
-import org.apache.parquet.io.LocalInputFile;
+import org.apache.parquet.hadoop.util.HadoopInputFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -50,17 +53,61 @@ import static org.mockito.Mockito.when;
 class ParquetSinkTest {
 
   private static final String FILE_NAME = "events";
+  private static final String FILE_NAME_WITH_SUFFIX = FILE_NAME + ".parquet";
 
   @TempDir
-  Path tempDir;
+  java.nio.file.Path tempDir;
 
   @Test
-  void onEvent_directoryIsMissing_writesReadableParquetFile() throws IOException {
-    Path directory = tempDir.resolve("missing").resolve("directory");
+  void onEvent_localDirectoryIsMissing_writesReadableParquetFile() throws IOException {
+    java.nio.file.Path directory = tempDir.resolve("missing").resolve("directory");
+
+    writeEvent(directory.toString());
+
+    assertFileContainsEvent(directory.resolve(FILE_NAME_WITH_SUFFIX).toString());
+  }
+
+  @Test
+  void onEvent_fileUri_writesReadableParquetFile() throws IOException {
+    String directory = tempDir.resolve("uri").toUri().toString();
 
     writeEvent(directory);
 
-    try (ParquetReader<GenericRecord> reader = openReader(directory.resolve(FILE_NAME + ".parquet"))) {
+    assertFileContainsEvent(directory + "/" + FILE_NAME_WITH_SUFFIX);
+  }
+
+  @Test
+  void hdfsScheme_resolvesToDistributedFileSystem() throws IOException {
+    assertEquals(DistributedFileSystem.class, FileSystem.getFileSystemClass("hdfs", new Configuration()));
+  }
+
+  @Test
+  void onPipelineStarted_localFileExists_keepsExistingFile() throws IOException {
+    java.nio.file.Path existingFile = tempDir.resolve(FILE_NAME_WITH_SUFFIX);
+    byte[] existingContent = {1, 2, 3};
+    Files.write(existingFile, existingContent);
+
+    writeEvent(tempDir.toString());
+
+    assertArrayEquals(existingContent, Files.readAllBytes(existingFile));
+    try (var files = Files.list(tempDir)) {
+      assertEquals(2, files.filter(file -> file.toString().endsWith(".parquet")).count());
+    }
+  }
+
+  private void writeEvent(String directory) {
+    ParquetSink sink = new ParquetSink();
+    sink.onPipelineStarted(makeParameters(directory), null);
+    sink.onEvent(makeEvent());
+    sink.onPipelineStopped();
+  }
+
+  private void assertFileContainsEvent(String file) throws IOException {
+    Configuration conf = new Configuration();
+    HadoopInputFile inputFile = HadoopInputFile.fromPath(new Path(file), conf);
+    try (ParquetReader<GenericRecord> reader = AvroParquetReader.<GenericRecord>builder(inputFile)
+        .withConf(conf)
+        .build()) {
       GenericRecord record = reader.read();
       assertEquals(1L, record.get("timestamp"));
       assertEquals("value", record.get("name").toString());
@@ -68,38 +115,12 @@ class ParquetSinkTest {
     }
   }
 
-  @Test
-  void onPipelineStarted_fileExists_keepsExistingFile() throws IOException {
-    Path existingFile = tempDir.resolve(FILE_NAME + ".parquet");
-    byte[] existingContent = {1, 2, 3};
-    Files.write(existingFile, existingContent);
-
-    writeEvent(tempDir);
-
-    assertArrayEquals(existingContent, Files.readAllBytes(existingFile));
-    try (var files = Files.list(tempDir)) {
-      assertEquals(2, files.count());
-    }
-  }
-
-  private void writeEvent(Path directory) {
-    ParquetSink sink = new ParquetSink();
-    sink.onPipelineStarted(makeParameters(directory), null);
-    sink.onEvent(makeEvent());
-    sink.onPipelineStopped();
-  }
-
-  private ParquetReader<GenericRecord> openReader(Path file) throws IOException {
-    return AvroParquetReader.<GenericRecord>builder(new LocalInputFile(file)).build();
-  }
-
-  private IDataSinkParameters makeParameters(Path directory) {
+  private IDataSinkParameters makeParameters(String directory) {
     IDataSinkParameterExtractor extractor = mock(IDataSinkParameterExtractor.class);
     when(extractor.singleValueParameter("schema_name", String.class)).thenReturn("record");
     when(extractor.singleValueParameter("schema_namespace", String.class)).thenReturn("org.apache.streampipes");
     when(extractor.singleValueParameter("parquet_file_name", String.class)).thenReturn(FILE_NAME);
-    when(extractor.singleValueParameter("parquet_generation_directory", String.class))
-        .thenReturn(directory.toString());
+    when(extractor.singleValueParameter("parquet_generation_directory", String.class)).thenReturn(directory);
     when(extractor.singleValueParameter("row_group_size", Integer.class)).thenReturn(134217728);
     when(extractor.singleValueParameter("page_size", Integer.class)).thenReturn(1048576);
     when(extractor.selectedSingleValue("compression_codec_name", String.class)).thenReturn("GZIP");

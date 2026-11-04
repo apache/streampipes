@@ -43,17 +43,18 @@ import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.parquet.avro.AvroParquetWriter;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
-import org.apache.parquet.io.LocalOutputFile;
+import org.apache.parquet.hadoop.util.HadoopOutputFile;
 import org.apache.parquet.io.OutputFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -265,12 +266,13 @@ public class ParquetSink implements IStreamPipesDataSink {
   }
 
   private Path createNewParquetFilePath(String sourceDir, String parquetFileName) throws IOException {
-    Path newParquetFilePath = Path.of(sourceDir, parquetFileName + suffix);
+    Path newParquetFilePath = new Path(sourceDir, parquetFileName + suffix);
+    FileSystem fileSystem = newParquetFilePath.getFileSystem(new Configuration());
     int counter = 1;
-    while (Files.exists(newParquetFilePath)) {
+    while (fileSystem.exists(newParquetFilePath)) {
       long index = setIndex();
       String filename = parquetFileName + "_" + index;
-      newParquetFilePath = Path.of(sourceDir, filename + suffix);
+      newParquetFilePath = new Path(sourceDir, filename + suffix);
       counter++;
       if (counter > 5) {
         throw new SpRuntimeException("Failed to create new parquetFilePath after 5 attempts");
@@ -284,7 +286,7 @@ public class ParquetSink implements IStreamPipesDataSink {
     if (writer != null) {
       writer.close();
       log.info("Success to close parquetWriter, file path is {}, parquetFileSize is {}",
-          newParquetFilePath.getFileName(), parquetFileSize);
+          newParquetFilePath.getName(), parquetFileSize);
     }
     parquetFileSize = 0;
     newParquetFilePath = createNewParquetFilePath(parquetGenerationDirectory, parquetFileName);
@@ -299,8 +301,8 @@ public class ParquetSink implements IStreamPipesDataSink {
     if (writer != null) {
       writer.close();
     }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    OutputFile outputFile = new LocalOutputFile(path);
+    Configuration conf = new Configuration();
+    OutputFile outputFile = HadoopOutputFile.fromPath(path, conf);
     return AvroParquetWriter.<GenericRecord>builder(outputFile)
         .withSchema(parquetSchema)
         .withCompressionCodec(compressionCodecName)

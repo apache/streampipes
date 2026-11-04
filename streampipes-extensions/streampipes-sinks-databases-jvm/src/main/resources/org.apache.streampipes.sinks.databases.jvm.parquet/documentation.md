@@ -47,7 +47,7 @@ The namespace of the schema to be used for the Parquet file.
 The name of the Parquet file to be created.
 
 ### ParquetGenerationDirectory
-The directory where the Parquet file will be generated.
+The directory where the Parquet file will be generated. This can be a local path or a `file://` or `hdfs://` URI, for example `hdfs://namenode:8020/data/parquet`.
 
 ### RowGroupSize
 The size of the row group in bytes. The default value is 134217728, which means that the row group size will be determined by the Parquet library.

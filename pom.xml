@@ -63,8 +63,8 @@
         <graalvm.js.version>25.0.2</graalvm.js.version>
         <grpc.version>1.85.1</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
-        <hadoop.version>3.4.1</hadoop.version>
-        <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
+        <hadoop.version>3.4.3</hadoop.version>
+        <hadoop-mapreduce-client-core.version>3.4.3</hadoop-mapreduce-client-core.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <jjwt.version>0.11.2</jjwt.version>
         <lightcouch.version>0.2.0</lightcouch.version>
@@ -569,6 +569,11 @@
                         <artifactId>zstd-jni</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-hdfs-client</artifactId>
+                <version>${hadoop.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
