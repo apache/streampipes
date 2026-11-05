@@ -31,7 +31,7 @@ are in `PRODUCT.md`.
 ### Design Tokens
 
 - Color tokens: \_theme-colors.scss (can be overridden by users for individual theming)
-- Custom variables: \_custom-variables.scss (can be overriden by users for individual theming)
+- Custom variables: \_custom-variables.scss (can be overridden by users for individual theming)
 - General variables: \_variables.scss
 - Typography: \_typography.scss
 - Spacing: \_spacing.scss
