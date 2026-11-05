@@ -38,8 +38,18 @@ import org.apache.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class AbstractClientApi {
+
+  protected static final Set<Integer> NOT_FOUND = Set.of(HttpStatus.SC_NOT_FOUND);
+
+  /**
+   * Lookups by name are authorized against the name, so a name that does not exist (or is not
+   * visible to the caller) is answered with 403 instead of 404.
+   */
+  protected static final Set<Integer> NOT_FOUND_OR_FORBIDDEN =
+      Set.of(HttpStatus.SC_NOT_FOUND, HttpStatus.SC_FORBIDDEN);
 
   protected StreamPipesClientConfig clientConfig;
 
@@ -116,11 +126,21 @@ public class AbstractClientApi {
 
   protected <T> Optional<T> getSingleOpt(StreamPipesApiPath apiPath,
                                          Class<T> targetClass) throws SpRuntimeException {
+    return getSingleOpt(apiPath, targetClass, NOT_FOUND);
+  }
+
+  /**
+   * Returns {@link Optional#empty()} if the backend answers with one of the given status codes
+   * and rethrows every other error status.
+   */
+  protected <T> Optional<T> getSingleOpt(StreamPipesApiPath apiPath,
+                                         Class<T> targetClass,
+                                         Set<Integer> emptyOnStatusCodes) throws SpRuntimeException {
     try {
       ObjectSerializer<Void, T> serializer = new ObjectSerializer<>();
       return Optional.of(new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest());
     } catch (SpHttpErrorStatusCode e) {
-      if (e.getHttpStatusCode() == HttpStatus.SC_NOT_FOUND) {
+      if (emptyOnStatusCodes.contains(e.getHttpStatusCode())) {
         return Optional.empty();
       } else {
         throw e;

@@ -48,7 +48,8 @@ public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
   @Override
   @ExposedToScripts
   public Optional<DataLakeMeasure> getByDatasetName(String datasetName) {
-    return getSingleOpt(getBaseResourcePath().addToPath("byName").addToPath(datasetName), DatasetMetadata.class)
+    return getSingleOpt(getBaseResourcePath().addToPath("byName").addToPath(datasetName), DatasetMetadata.class,
+        NOT_FOUND_OR_FORBIDDEN)
         .map(DataLakeMeasure::new);
   }
 
