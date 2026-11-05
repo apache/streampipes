@@ -25,12 +25,8 @@
     data-cy="pipeline-overview-card"
 >
     @if (icon(); as moduleIcon) {
-        <mat-icon cardLeading aria-hidden="true">{{ moduleIcon }}</mat-icon>
+        <mat-icon cardIcon aria-hidden="true">{{ moduleIcon }}</mat-icon>
     }
-    <ng-content
-        select="[cardHeaderActions]"
-        ngProjectAs="[cardHeaderActions]"
-    ></ng-content>
 
     <sp-overview-card-facts>
         <div spOverviewCardFact [label]="'Status' | translate">
@@ -79,6 +75,7 @@
             }}</span>
         </p>
     }
+    <ng-content select="[cardSelect]" ngProjectAs="[cardSelect]"></ng-content>
     <ng-content
         select="[cardAssetContext]"
         ngProjectAs="[cardAssetContext]"
@@ -128,4 +125,8 @@
             <span>{{ 'Edit' | translate }}</span>
         </button>
     }
+    <ng-content
+        select="[cardFooterActions]"
+        ngProjectAs="[cardFooterActions]"
+    ></ng-content>
 </sp-overview-card>

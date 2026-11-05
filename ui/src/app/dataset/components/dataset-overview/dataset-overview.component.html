@@ -54,6 +54,7 @@
         <div fxLayout="column" class="w-100" fxLayoutGap="10px">
             <sp-table
                 featureCardId="dataset"
+                [rememberViewMode]="true"
                 [dataSource]="dataSource"
                 [columns]="displayedColumns"
                 resourceIdKey="elementId"
@@ -214,6 +215,52 @@
                         </div>
                     </td>
                 </ng-container>
+
+                <ng-template
+                    spTableCard
+                    let-dataset
+                    let-actions="actions"
+                    let-assetContext="assetContext"
+                    let-select="selection"
+                >
+                    <sp-dataset-overview-card
+                        [dataset]="dataset"
+                        [lastEvent]="dataset.lastEvent"
+                        [lastEventLoading]="dataset.lastEventLoading"
+                        [currentTime]="currentTime"
+                        [icon]="pageHeaderAssetLinkType?.linkIcon ?? 'dataset'"
+                        [accentColor]="pageHeaderAssetLinkType?.linkColor"
+                        [canConfigureRetention]="isAdmin"
+                        (showDetails)="openDatasetDetails(dataset.elementId)"
+                        (download)="openDownloadDialog(dataset.name)"
+                        (configureRetention)="
+                            openRetentionDialog(dataset.elementId)
+                        "
+                        (showRetentionLog)="openRetentionLog(dataset.elementId)"
+                    >
+                        <ng-container
+                            cardFooterActions
+                            *ngTemplateOutlet="
+                                actions;
+                                context: { $implicit: dataset }
+                            "
+                        ></ng-container>
+                        <ng-container
+                            cardSelect
+                            *ngTemplateOutlet="
+                                select;
+                                context: { $implicit: dataset }
+                            "
+                        ></ng-container>
+                        <ng-container
+                            cardAssetContext
+                            *ngTemplateOutlet="
+                                assetContext;
+                                context: { $implicit: dataset }
+                            "
+                        ></ng-container>
+                    </sp-dataset-overview-card>
+                </ng-template>
 
                 <ng-template spTableActions let-element>
                     <button

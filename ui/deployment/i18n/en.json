@@ -1069,6 +1069,7 @@
   "Select the urgency of the message, which also sets its color": null,
   "Select transformation template": null,
   "Select visible": null,
+  "Select {{name}}": "Select {{name}}",
   "Selected Nodes": null,
   "Selected Privileges": null,
   "Selecting a document type will export all documents of this type": null,

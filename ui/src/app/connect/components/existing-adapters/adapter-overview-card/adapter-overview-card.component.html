@@ -25,17 +25,13 @@
     data-cy="adapter-overview-card"
 >
     @if (iconUrl(); as icon) {
-        <img cardLeading class="adapter-icon" [src]="icon" alt="" />
+        <img cardIcon class="adapter-icon" [src]="icon" alt="" />
     }
-    <ng-content
-        select="[cardHeaderActions]"
-        ngProjectAs="[cardHeaderActions]"
-    ></ng-content>
 
     <sp-overview-card-facts>
         <div spOverviewCardFact [label]="'Status' | translate">
             <sp-status-label
-                [tone]="adapter().running ? 'success' : 'neutral'"
+                [tone]="statusTone()"
                 [label]="
                     (adapter().running ? 'Running' : 'Stopped') | translate
                 "
@@ -57,6 +53,7 @@
             >
         </div>
     </sp-overview-card-facts>
+    <ng-content select="[cardSelect]" ngProjectAs="[cardSelect]"></ng-content>
     <ng-content
         select="[cardAssetContext]"
         ngProjectAs="[cardAssetContext]"
@@ -106,4 +103,8 @@
         <mat-icon aria-hidden="true">edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
+    <ng-content
+        select="[cardFooterActions]"
+        ngProjectAs="[cardFooterActions]"
+    ></ng-content>
 </sp-overview-card>

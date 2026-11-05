@@ -33,6 +33,50 @@
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-md);
     color: var(--mat-sys-on-surface);
+    transition: border-color var(--motion-duration-fast)
+        var(--motion-easing-standard);
+}
+
+/* Hover and keyboard focus lift the card with the theme colour instead of a
+   shadow, so it stays on the flat working plane. The title takes the primary
+   colour because it is the part that opens the resource. Focus uses
+   :focus-visible, so a card does not stay highlighted after a mouse click. */
+.card:hover,
+.card:has(:focus-visible) {
+    border-color: color-mix(
+        in srgb,
+        var(--color-primary) 40%,
+        var(--color-border-subtle)
+    );
+}
+
+.card:hover .card-title-link,
+.card:has(:focus-visible) .card-title-link {
+    color: var(--mat-sys-primary);
+}
+
+.card:hover .card-icon,
+.card:has(:focus-visible) .card-icon {
+    background: color-mix(
+        in srgb,
+        var(--card-accent, var(--color-primary)) 20%,
+        transparent
+    );
+}
+
+/* A checked checkbox in the select slot marks the card as selected, like a
+   selected table row. It is stronger than the hover state. */
+.card:has(.card-select input:checked) {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 4%, var(--color-bg-0));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .card-icon,
+    .card-title-link {
+        transition: none;
+    }
 }
 
 /* Reserves the title and two description lines, so that the sections of
@@ -50,10 +94,14 @@
             var(--font-size-sm) * var(--card-description-line-height) * 2 +
             var(--space-md) * 2
     );
-    padding: var(--space-md) var(--space-sm) var(--space-md) var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
 }
 
-.card-leading {
+.card-header--compact {
+    min-height: 0;
+}
+
+.card-icon {
     display: flex;
     flex-shrink: 0;
     align-items: center;
@@ -67,6 +115,17 @@
         transparent
     );
     color: var(--card-accent, var(--color-primary));
+    transition: background-color var(--motion-duration-fast)
+        var(--motion-easing-standard);
+}
+
+/* Pulls the checkbox's touch target into the header padding, so that the
+   box itself lines up with the card content and the title line. */
+.card-select {
+    display: flex;
+    flex-shrink: 0;
+    margin: calc(0.25rem - var(--space-sm)) calc(var(--space-xs) * -1) 0
+        calc(var(--space-sm) * -1);
 }
 
 .card-identity {
@@ -96,6 +155,7 @@
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transition: color var(--motion-duration-fast) var(--motion-easing-standard);
 }
 
 .card-title-link:hover {
@@ -120,13 +180,6 @@
     -webkit-line-clamp: 2;
 }
 
-.card-header-actions {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    gap: var(--space-2xs);
-}
-
 .card-body {
     display: flex;
     flex: 1;
@@ -136,23 +189,41 @@
     padding: 0 var(--space-lg) var(--space-md);
 }
 
-/* The side padding lines up the icon of a btn-tertiary with the card content. */
 .card-context {
     min-width: 0;
     padding: 0 var(--space-lg) var(--space-md);
 }
 
+/* The start padding lines up the icon of a btn-tertiary with the card content,
+   the end padding the glyph of an icon button with the card icon. */
 .card-footer {
     display: flex;
+    align-items: center;
     gap: var(--space-2xs);
-    padding: var(--space-xs) calc(var(--space-lg) - 0.75rem - 1px);
+    padding: var(--space-xs) calc(var(--space-lg) - 0.25rem) var(--space-xs)
+        calc(var(--space-lg) - 0.75rem - 1px);
     border-top: 1px solid var(--color-border-subtle);
 }
 
+.card-footer-start,
+.card-footer-end {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-width: 0;
+}
+
+.card-footer-end {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+}
+
+.card-footer:not(:has(> :not(:empty))),
+.card-select:empty,
 .card-body:empty,
 .card-context:empty,
-.card-footer:empty,
-.card-leading:empty,
-.card-header-actions:empty {
+.card-footer-start:empty,
+.card-footer-end:empty,
+.card-icon:empty {
     display: none;
 }

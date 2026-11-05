@@ -27,11 +27,12 @@ import { SpOverviewCardComponent } from './overview-card.component';
     template: `
         <sp-overview-card-grid>
             <sp-overview-card id="full" title="Pump" description="Main hall">
-                <img cardLeading alt="" />
-                <button cardHeaderActions>Settings</button>
+                <input cardSelect type="checkbox" />
+                <img cardIcon alt="" />
                 <p id="content">Content</p>
                 <span id="assets" cardAssetContext>Assets</span>
                 <a cardFooter href="#">Details</a>
+                <button cardFooterActions>Settings</button>
             </sp-overview-card>
             <sp-overview-card id="minimal" title="Valve" />
         </sp-overview-card-grid>
@@ -61,14 +62,35 @@ describe('SpOverviewCardComponent', () => {
     it('projects content into the header, body and footer slots', () => {
         const card = render().querySelector('#full');
 
-        expect(card.querySelector('.card-leading img')).not.toBeNull();
         expect(
-            card.querySelector('.card-header-actions button').textContent,
-        ).toBe('Settings');
+            card.querySelector('.card-header .card-icon img'),
+        ).not.toBeNull();
+        expect(
+            card.querySelector('.card-header .card-select input'),
+        ).not.toBeNull();
         expect(card.querySelector('.card-body #content')).not.toBeNull();
         expect(card.querySelector('.card-context #assets')).not.toBeNull();
-        expect(card.querySelector('.card-footer a').textContent).toBe(
+        expect(card.querySelector('.card-footer-start a').textContent).toBe(
             'Details',
+        );
+        expect(card.querySelector('.card-footer-end button').textContent).toBe(
+            'Settings',
+        );
+    });
+
+    it('places the selection before the title', () => {
+        const header = render().querySelector('#full .card-header');
+
+        expect(header.firstElementChild.classList.contains('card-select')).toBe(
+            true,
+        );
+    });
+
+    it('places the icon after the title', () => {
+        const header = render().querySelector('#full .card-header');
+
+        expect(header.lastElementChild.classList.contains('card-icon')).toBe(
+            true,
         );
     });
 
@@ -91,6 +113,22 @@ describe('SpOverviewCardComponent', () => {
         expect(clicks).toBe(1);
     });
 
+    it('reserves the description lines unless turned off', () => {
+        const fixture = TestBed.createComponent(SpOverviewCardComponent);
+        fixture.componentRef.setInput('title', 'Pump');
+        fixture.detectChanges();
+        const header = (fixture.nativeElement as HTMLElement).querySelector(
+            '.card-header',
+        );
+
+        expect(header.classList.contains('card-header--compact')).toBe(false);
+
+        fixture.componentRef.setInput('reserveDescription', false);
+        fixture.detectChanges();
+
+        expect(header.classList.contains('card-header--compact')).toBe(true);
+    });
+
     it('applies the accent colour', () => {
         const fixture = TestBed.createComponent(SpOverviewCardComponent);
         fixture.componentRef.setInput('title', 'Pump');
@@ -110,11 +148,12 @@ describe('SpOverviewCardComponent', () => {
 
         expect(card.querySelector('.card-description')).toBeNull();
         [
-            '.card-leading',
-            '.card-header-actions',
+            '.card-icon',
+            '.card-select',
             '.card-body',
             '.card-context',
-            '.card-footer',
+            '.card-footer-start',
+            '.card-footer-end',
         ].forEach(slot =>
             expect(card.querySelector(slot).matches(':empty'), slot).toBe(true),
         );

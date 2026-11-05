@@ -38,6 +38,7 @@ import {
     SpOverviewCardFactsComponent,
     SpSpinnerComponent,
     SpStatusLabelComponent,
+    SpStatusTone,
 } from '@streampipes/shared-ui';
 import { LastUpdatedFormatterService } from '../../../../core-services/time-formatting/last-updated-formatter.service';
 
@@ -77,6 +78,10 @@ export class AdapterOverviewCardComponent {
     private get locale(): string {
         return this.translate.getCurrentLang() || 'en';
     }
+
+    readonly statusTone = computed<SpStatusTone>(() =>
+        this.adapter().running ? 'success' : 'neutral',
+    );
 
     private readonly lastTimestamp = computed(
         () => this.metrics()?.lastTimestamp,

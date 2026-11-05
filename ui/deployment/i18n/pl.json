@@ -1069,6 +1069,7 @@
   "Select the urgency of the message, which also sets its color": "Wybierz pilność komunikatu, od której zależy również jego kolor",
   "Select transformation template": "Wybierz szablon transformacji",
   "Select visible": "Wybierz widoczne",
+  "Select {{name}}": "Zaznacz {{name}}",
   "Selected Nodes": "Wybrane węzły",
   "Selected Privileges": "Wybrane uprawnienia",
   "Selecting a document type will export all documents of this type": "Wybranie typu dokumentu spowoduje wyeksportowanie wszystkich dokumentów tego typu",

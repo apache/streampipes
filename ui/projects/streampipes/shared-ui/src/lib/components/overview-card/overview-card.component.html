@@ -21,9 +21,12 @@
     [style.--card-accent]="accentColor()"
     [attr.aria-label]="title()"
 >
-    <header class="card-header">
-        <div class="card-leading">
-            <ng-content select="[cardLeading]" />
+    <header
+        class="card-header"
+        [class.card-header--compact]="!reserveDescription()"
+    >
+        <div class="card-select">
+            <ng-content select="[cardSelect]" />
         </div>
         <div class="card-identity">
             <div
@@ -50,8 +53,8 @@
                 </p>
             }
         </div>
-        <div class="card-header-actions">
-            <ng-content select="[cardHeaderActions]" />
+        <div class="card-icon">
+            <ng-content select="[cardIcon]" />
         </div>
     </header>
     <div class="card-body">
@@ -61,6 +64,11 @@
         <ng-content select="[cardAssetContext]" />
     </div>
     <footer class="card-footer">
-        <ng-content select="[cardFooter]" />
+        <div class="card-footer-start">
+            <ng-content select="[cardFooter]" />
+        </div>
+        <div class="card-footer-end">
+            <ng-content select="[cardFooterActions]" />
+        </div>
     </footer>
 </article>

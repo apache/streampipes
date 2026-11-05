@@ -26,7 +26,7 @@ import {
     MatHeaderCellDef,
     MatTableDataSource,
 } from '@angular/material/table';
-import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SpTableComponent } from './sp-table.component';
@@ -54,6 +54,7 @@ interface TestRow {
             [columns]="columns"
             [assetContextConfig]="assetContextConfig"
             resourceIdKey="_id"
+            [rememberViewMode]="true"
         >
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -118,6 +119,7 @@ describe('SpTableComponent grouped view', () => {
             removeEventListener: () => {},
             dispatchEvent: () => false,
         });
+        localStorage.clear();
         assetData$ = new BehaviorSubject<AssetBrowserData | undefined>(
             assetData,
         );
@@ -273,6 +275,7 @@ describe('SpTableComponent grouped view', () => {
             [showSelectionCheckboxes]="true"
             featureCardId="adapter"
             resourceIdKey="_id"
+            [rememberViewMode]="true"
         >
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -283,8 +286,12 @@ describe('SpTableComponent grouped view', () => {
                 let-row
                 let-actions="actions"
                 let-assetContext="assetContext"
+                let-select="selection"
             >
                 <article class="test-card">
+                    <ng-container
+                        *ngTemplateOutlet="select; context: { $implicit: row }"
+                    ></ng-container>
                     <span class="test-card-name">{{ row.name }}</span>
                     <ng-container
                         *ngTemplateOutlet="actions; context: { $implicit: row }"
@@ -319,7 +326,16 @@ class SpTableCardHostComponent {
 describe('SpTableComponent card view', () => {
     const openFeatureCard = vi.fn();
 
-    async function setup<T>(component: new () => T) {
+    const VIEW_MODE_STORAGE_KEY = 'sp-table-view-mode';
+
+    async function setup<T>(component: new () => T, storedViewMode?: object) {
+        localStorage.clear();
+        if (storedViewMode) {
+            localStorage.setItem(
+                VIEW_MODE_STORAGE_KEY,
+                JSON.stringify(storedViewMode),
+            );
+        }
         window.matchMedia ??= query => ({
             matches: false,
             media: query,
@@ -406,6 +422,55 @@ describe('SpTableComponent card view', () => {
         expect(query(fixture, 'tr[mat-row]').length).toBe(2);
     });
 
+    it('remembers the chosen view mode and grouping', async () => {
+        const fixture = await setupInCardMode();
+        const stored = () =>
+            JSON.parse(localStorage.getItem(VIEW_MODE_STORAGE_KEY));
+
+        expect(stored()).toEqual({ viewMode: 'cards', groupBy: 'asset' });
+
+        fixture.componentInstance.table().setViewMode('grouped');
+        fixture.componentInstance.table().setGrouping('site');
+
+        expect(stored()).toEqual({ viewMode: 'grouped', groupBy: 'site' });
+    });
+
+    it('restores the stored view mode on load', async () => {
+        const fixture = await setup(SpTableCardHostComponent, {
+            viewMode: 'cards',
+            groupBy: 'label',
+        });
+        // The page rows arrive after the first render, as in list mode.
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.table().groupBy).toBe('label');
+        expect(query(fixture, '.test-card').length).toBe(2);
+        expect(query(fixture, 'tr[mat-row]').length).toBe(0);
+    });
+
+    it('falls back to the list when the stored mode is not offered', async () => {
+        const withoutTemplate = await setup(SpTableHostComponent, {
+            viewMode: 'cards',
+            groupBy: 'asset',
+        });
+
+        expect(withoutTemplate.componentInstance.table().viewMode).toBe('list');
+        expect(query(withoutTemplate, 'tr[mat-row]').length).toBe(3);
+        expect(
+            JSON.parse(localStorage.getItem(VIEW_MODE_STORAGE_KEY)).viewMode,
+            'other overview pages still open in cards',
+        ).toBe('cards');
+        TestBed.resetTestingModule();
+
+        const invalid = await setup(SpTableCardHostComponent, {
+            viewMode: 'tiles',
+            groupBy: 'owner',
+        });
+
+        expect(invalid.componentInstance.table().viewMode).toBe('list');
+        expect(invalid.componentInstance.table().groupBy).toBe('asset');
+    });
+
     it('opens the feature card of the row from the card actions', async () => {
         const fixture = await setupInCardMode();
 
@@ -456,14 +521,56 @@ describe('SpTableComponent card view', () => {
         ).toBe('Critical, Demo');
     });
 
-    it('replaces the selection toolbar but keeps search and view controls', async () => {
+    it('keeps the selection toolbar with search and view controls', async () => {
         const fixture = await setupInCardMode();
 
         expect(
             query(fixture, '[data-cy="sp-table-selection-toolbar"]').length,
-        ).toBe(0);
+        ).toBe(1);
         expect(query(fixture, '.table-search-field').length).toBe(1);
         expect(query(fixture, '.view-mode-toggle').length).toBe(1);
+    });
+
+    it('selects cards with their checkboxes, named after the row', async () => {
+        const fixture = await setupInCardMode();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            'Select {{name}}': 'Select {{name}}',
+        });
+        translate.use('en');
+        fixture.detectChanges();
+        const table = fixture.componentInstance.table();
+        const checkboxes = query(fixture, '[data-cy="sp-table-card-checkbox"]');
+
+        expect(checkboxes.length).toBe(2);
+        expect(
+            checkboxes[0].querySelector('input').getAttribute('aria-label'),
+        ).toBe('Select Alpha');
+
+        checkboxes[1].querySelector('input').click();
+        fixture.detectChanges();
+
+        expect(table.selectedRows.map(row => row.name)).toEqual(['Beta']);
+    });
+
+    it('shares the selection between the card and list views', async () => {
+        const fixture = await setupInCardMode();
+        const table = fixture.componentInstance.table();
+
+        query(fixture, '[data-cy="sp-table-select-visible"]')[0].click();
+        fixture.detectChanges();
+        const checked = (checkbox: string) =>
+            query(fixture, `[data-cy="${checkbox}"] input`).filter(
+                input => (input as HTMLInputElement).checked,
+            ).length;
+
+        expect(table.selectedRows.length).toBe(2);
+        expect(checked('sp-table-card-checkbox')).toBe(2);
+
+        table.setViewMode('list');
+        fixture.detectChanges();
+
+        expect(checked('sp-table-row-checkbox')).toBe(2);
     });
 
     it('shows the empty message when there are no rows', async () => {

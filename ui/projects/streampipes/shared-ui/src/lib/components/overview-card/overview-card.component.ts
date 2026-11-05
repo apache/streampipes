@@ -40,7 +40,12 @@ export class SpOverviewCardComponent {
     readonly description = input<string>();
     /** Renders the title as a button that opens the resource. */
     readonly titleClickable = input(false);
-    /** Colour of the leading icon, usually the colour of the module. */
+    /**
+     * Reserves two description lines so that the sections of neighbouring
+     * cards align. Turn it off for resources that never have a description.
+     */
+    readonly reserveDescription = input(true);
+    /** Colour of the icon, usually the colour of the module. */
     readonly accentColor = input<string>();
 
     readonly titleClick = output<void>();

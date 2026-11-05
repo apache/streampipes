@@ -53,6 +53,7 @@
             <sp-table
                 fxFlex="100"
                 featureCardId="adapter"
+                [rememberViewMode]="true"
                 resourceIdKey="elementId"
                 [columns]="displayedColumns"
                 [dataSource]="dataSource"
@@ -236,6 +237,7 @@
                     let-adapter
                     let-actions="actions"
                     let-assetContext="assetContext"
+                    let-select="selection"
                 >
                     <sp-adapter-overview-card
                         [adapter]="adapter"
@@ -252,9 +254,16 @@
                         (editAdapter)="editAdapter(adapter)"
                     >
                         <ng-container
-                            cardHeaderActions
+                            cardFooterActions
                             *ngTemplateOutlet="
                                 actions;
+                                context: { $implicit: adapter }
+                            "
+                        ></ng-container>
+                        <ng-container
+                            cardSelect
+                            *ngTemplateOutlet="
+                                select;
                                 context: { $implicit: adapter }
                             "
                         ></ng-container>

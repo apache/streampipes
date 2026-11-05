@@ -38,7 +38,7 @@ import { PipelineOverviewCardComponent } from './pipeline-overview-card.componen
             (editPipeline)="editPipeline()"
             (showNotifications)="showNotifications()"
         >
-            <button id="preview" cardHeaderActions>Preview</button>
+            <button id="preview" cardFooterActions>Preview</button>
             <span id="asset" cardAssetContext>Hall 3</span>
         </sp-pipeline-overview-card>
     `,
@@ -101,14 +101,14 @@ describe('PipelineOverviewCardComponent', () => {
     });
 
     it('shows the module icon', () => {
-        expect(card().querySelector('.card-leading mat-icon').textContent).toBe(
+        expect(card().querySelector('.card-icon mat-icon').textContent).toBe(
             'play_arrow',
         );
     });
 
     it('projects the table actions and asset context', () => {
         expect(
-            card().querySelector('.card-header-actions #preview'),
+            card().querySelector('.card-footer-end #preview'),
         ).not.toBeNull();
         expect(card().querySelector('.card-context #asset')).not.toBeNull();
     });

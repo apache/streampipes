@@ -181,17 +181,19 @@ counts, and for tags such as asset labels, which have no state.
 #### Overview cards
 
 Use `sp-overview-card` for card views of overview pages. The shell provides the
-title, description and surface; feature cards project their own icon, header
-actions, content and footer actions. Unused slots collapse. Use `titleClickable` and
-`titleClick` when the title opens the resource, like a table row does. Pass the module colour as
-`accentColor`.
+title, description and surface; feature cards project their own icon, content and
+actions. Unused slots collapse. The icon sits beside the title on the right. All
+actions live in the footer: labelled `cardFooter` actions on the left, icon-only
+`cardFooterActions` such as the preview and the action menu on the right. Use
+`titleClickable` and `titleClick` when the title opens the resource, like a table
+row does. Pass the module colour as `accentColor`. On hover and keyboard focus,
+the card tints its border and icon and colours the title, without a shadow. A
+checkbox in the `cardSelect` slot sits before the title; while it is checked, the
+card shows a primary border and tint like a selected table row.
 
 ```html
 <sp-overview-card [title]="A" [description]="B">
-  <img cardLeading alt="" />
-  <button cardHeaderActions mat-icon-button>
-    <mat-icon>more_vert</mat-icon>
-  </button>
+  <img cardIcon alt="" />
   <sp-overview-card-facts>
     <div spOverviewCardFact [label]="E">
       <sp-status-label tone="success" [label]="C"></sp-status-label>
@@ -202,14 +204,23 @@ actions, content and footer actions. Unused slots collapse. Use `titleClickable`
     <mat-icon aria-hidden="true">edit</mat-icon>
     <span>D</span>
   </button>
+  <button cardFooterActions mat-icon-button>
+    <mat-icon>more_vert</mat-icon>
+  </button>
 </sp-overview-card>
 ```
 
 To add a card view to an `sp-table`, declare a `spTableCard` template. It adds the
 cards toggle and renders the current page in an `sp-overview-card-grid`. Its
-`actions` and `assetContext` context values are the table's cell templates, so the
-feature card link and the action menu stay the same in every view. On cards, the
-asset context stays on one line and summarizes further entries as `+N`.
+`actions`, `assetContext` and `selection` context values are the table's cell
+templates, so the feature card link, the action menu and multi-select stay the
+same in every view. The selection checkbox only renders with
+`showSelectionCheckboxes`; the selection and its toolbar are shared by all view
+modes. On cards, the
+asset context stays on one line and summarizes further entries as `+N`. Set
+`rememberViewMode` on overview pages to keep the chosen view mode and grouping in
+local storage. The setting is shared, so cards chosen on one overview page also
+open the others in cards; a table that lacks the mode shows its list.
 
 ```html
 <ng-template
@@ -217,13 +228,19 @@ asset context stays on one line and summarizes further entries as `+N`.
   let-row
   let-actions="actions"
   let-assetContext="assetContext"
+  let-select="selection"
 >
   <sp-overview-card [title]="row.name">
     <ng-container
-      cardHeaderActions
+      cardSelect
+      *ngTemplateOutlet="select; context: { $implicit: row }"
+    ></ng-container>
+    <ng-container
+      cardFooterActions
       *ngTemplateOutlet="actions; context: { $implicit: row }"
     ></ng-container>
     <ng-container
+      cardAssetContext
       *ngTemplateOutlet="assetContext; context: { $implicit: row }"
     ></ng-container>
   </sp-overview-card>

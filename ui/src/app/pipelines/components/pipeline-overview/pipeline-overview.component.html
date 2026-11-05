@@ -31,6 +31,7 @@
         searchKey: ['name', 'description'],
     }"
     featureCardId="pipeline"
+    [rememberViewMode]="true"
     resourceIdKey="elementId"
     [assetContextConfig]="assetContextConfig"
     [showActionsMenu]="true"
@@ -187,6 +188,7 @@
         let-pipeline
         let-actions="actions"
         let-assetContext="assetContext"
+        let-select="selection"
     >
         <sp-pipeline-overview-card
             [pipeline]="pipeline"
@@ -219,8 +221,12 @@
             (showNotifications)="openPipelineNotificationsDialog(pipeline)"
         >
             <ng-container
-                cardHeaderActions
+                cardFooterActions
                 *ngTemplateOutlet="actions; context: { $implicit: pipeline }"
+            ></ng-container>
+            <ng-container
+                cardSelect
+                *ngTemplateOutlet="select; context: { $implicit: pipeline }"
             ></ng-container>
             <ng-container
                 cardAssetContext

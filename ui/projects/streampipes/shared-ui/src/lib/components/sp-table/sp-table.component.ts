@@ -105,6 +105,15 @@ import { SpTableAssetContextService } from './sp-asset-context/sp-table-asset-co
 type SpTableViewMode = 'list' | 'grouped' | 'cards';
 type SpTableGroupingMode = 'label' | 'site' | 'asset';
 
+const VIEW_MODES: SpTableViewMode[] = ['list', 'grouped', 'cards'];
+const VIEW_MODE_STORAGE_KEY = 'table-view-mode';
+const GROUPING_MODES: SpTableGroupingMode[] = ['label', 'site', 'asset'];
+
+interface SpTableStoredViewMode {
+    viewMode: SpTableViewMode;
+    groupBy: SpTableGroupingMode;
+}
+
 interface SpTableGroupedSection<T> {
     id: string;
     title: string;
@@ -210,6 +219,12 @@ export class SpTableComponent<T>
     @Input() resourceIdKey = 'elementId';
     @Input() assetContextConfig?: SpTableAssetContextConfig;
     @Input() nameSearchConfig?: SpTableNameSearchConfig<T>;
+    /**
+     * Remembers the view mode and grouping in local storage. All tables that
+     * remember it share one setting, so a mode chosen on one overview page
+     * also applies to the others and survives a reload.
+     */
+    @Input() rememberViewMode = false;
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -310,6 +325,7 @@ export class SpTableComponent<T>
     }
 
     ngAfterContentInit() {
+        this.restoreViewMode();
         this.syncColumnDefs();
         this.columnDefsSubscription = this.columnDefs.changes.subscribe(() => {
             this.syncColumnDefs();
@@ -408,7 +424,7 @@ export class SpTableComponent<T>
     }
 
     get showSelectionToolbar(): boolean {
-        return this.showSelectionCheckboxes && !this.showCardView;
+        return this.showSelectionCheckboxes;
     }
 
     get shouldShowNameSearch(): boolean {
@@ -514,6 +530,14 @@ export class SpTableComponent<T>
         );
     }
 
+    /** Name of the row for accessible labels, read from the name search keys. */
+    getRowName(row: T): string {
+        const value = this.nameSearchKeys
+            .map(key => row?.[key as keyof T])
+            .find(name => name !== undefined && name !== null && name !== '');
+        return value === undefined ? '' : String(value);
+    }
+
     isRowSelected(row: T): boolean {
         return this.selection.isSelected(row);
     }
@@ -580,11 +604,13 @@ export class SpTableComponent<T>
         }
 
         if (this.viewMode === mode) {
+            this.storeViewMode();
             this.refreshRenderedRows();
             return;
         }
 
         this.viewMode = mode;
+        this.storeViewMode();
         this.refreshRenderedRows();
     }
 
@@ -594,7 +620,54 @@ export class SpTableComponent<T>
         }
 
         this.groupBy = mode;
+        this.storeViewMode();
         this.refreshRenderedRows();
+    }
+
+    /**
+     * Restores the stored view mode once the card template is known. A mode
+     * that this table does not offer, such as cards without a card template,
+     * falls back to the list without changing the stored setting.
+     */
+    private restoreViewMode(): void {
+        if (!this.rememberViewMode) {
+            return;
+        }
+
+        const stored = this.localStorageService.get<
+            Partial<SpTableStoredViewMode> | undefined
+        >(VIEW_MODE_STORAGE_KEY, undefined);
+        if (GROUPING_MODES.includes(stored?.groupBy)) {
+            this.groupBy = stored.groupBy;
+        }
+        if (this.isViewModeAvailable(stored?.viewMode)) {
+            this.viewMode = stored.viewMode;
+        }
+    }
+
+    private storeViewMode(): void {
+        if (this.rememberViewMode) {
+            this.localStorageService.set<SpTableStoredViewMode>(
+                VIEW_MODE_STORAGE_KEY,
+                {
+                    viewMode: this.viewMode,
+                    groupBy: this.groupBy,
+                },
+            );
+        }
+    }
+
+    private isViewModeAvailable(mode?: SpTableViewMode): boolean {
+        if (!VIEW_MODES.includes(mode)) {
+            return false;
+        }
+        if (mode === 'cards') {
+            return !!this.cardTemplate;
+        }
+        if (mode === 'grouped') {
+            return this.shouldShowGroupingControls;
+        }
+        return true;
     }
 
     onNameSearchInput(value: string) {

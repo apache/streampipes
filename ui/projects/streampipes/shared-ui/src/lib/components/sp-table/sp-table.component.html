@@ -260,6 +260,7 @@
                                 $implicit: row,
                                 actions: actionsCell,
                                 assetContext: cardAssetContext,
+                                selection: cardSelectionCell,
                             }
                         "
                     >
@@ -442,6 +443,20 @@
         </div>
     }
 </div>
+
+<ng-template #cardSelectionCell let-row>
+    @if (showSelectionCheckboxes) {
+        <mat-checkbox
+            class="sp-table-card-checkbox"
+            data-cy="sp-table-card-checkbox"
+            [checked]="isRowSelected(row)"
+            [aria-label]="
+                'Select {{name}}' | translate: { name: getRowName(row) }
+            "
+            (change)="toggleRowSelection(row, $event.checked)"
+        ></mat-checkbox>
+    }
+</ng-template>
 
 <ng-template #actionsCell let-element>
     <div fxLayoutAlign="end center">

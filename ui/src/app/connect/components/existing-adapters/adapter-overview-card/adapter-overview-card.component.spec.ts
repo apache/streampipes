@@ -42,7 +42,7 @@ const LAST_MESSAGE = new Date(2026, 10, 4, 20, 14).getTime();
             (showDetails)="showDetails()"
             (editAdapter)="editAdapter()"
         >
-            <button id="preview" cardHeaderActions>Preview</button>
+            <button id="preview" cardFooterActions>Preview</button>
             <span id="asset" cardAssetContext>Hall 3</span>
         </sp-adapter-overview-card>
     `,
@@ -101,7 +101,7 @@ describe('AdapterOverviewCardComponent', () => {
         expect(card.querySelector('[role="heading"]').textContent).toContain(
             'Hall 3 OPC UA',
         );
-        expect(card.querySelector('.card-leading img')).not.toBeNull();
+        expect(card.querySelector('.card-icon img')).not.toBeNull();
         expect(text('adapter-card-status')).toBe('Running');
         expect(text('adapter-card-messages')).toBe('12,480');
         expect(text('adapter-card-last-message')).toBe('2 minutes ago');
@@ -133,17 +133,13 @@ describe('AdapterOverviewCardComponent', () => {
 
         expect(text('adapter-card-messages')).toBe('0');
         expect(text('adapter-card-last-message')).toBe('n/a');
-        expect(card.querySelector('.card-leading').matches(':empty')).toBe(
-            true,
-        );
+        expect(card.querySelector('.card-icon').matches(':empty')).toBe(true);
     });
 
     it('projects the table actions and asset context', () => {
         const card = fixture.nativeElement as HTMLElement;
 
-        expect(
-            card.querySelector('.card-header-actions #preview'),
-        ).not.toBeNull();
+        expect(card.querySelector('.card-footer-end #preview')).not.toBeNull();
         expect(card.querySelector('.card-context #asset')).not.toBeNull();
     });
 
