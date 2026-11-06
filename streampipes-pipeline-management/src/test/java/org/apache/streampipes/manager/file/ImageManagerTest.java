@@ -17,11 +17,10 @@
  */
 package org.apache.streampipes.manager.file;
 
-import org.apache.streampipes.model.Tuple2;
+import org.apache.streampipes.model.assets.SpAsset;
+import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
-import org.apache.streampipes.storage.api.system.IImageMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,21 +28,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -53,9 +51,9 @@ class ImageManagerTest {
   Path directory;
 
   private ImageManager manager;
-  private IImageMetadataStorage storage;
   private IAssetStorage assets;
-  private final Map<String, FileMetadata> metadata = new HashMap<>();
+  private SpAssetModel root;
+  private SpAsset child;
 
   @BeforeEach
   void setUp() {
@@ -63,68 +61,101 @@ class ImageManagerTest {
     configuration.setFilesDir(directory.toString());
     var configurationStorage = mock(ISpCoreConfigurationStorage.class);
     when(configurationStorage.get()).thenReturn(configuration);
-    storage = mock(IImageMetadataStorage.class);
     assets = mock(IAssetStorage.class);
-    when(storage.getElementById(anyString())).thenAnswer(call -> metadata.get(call.getArgument(0)));
-    when(storage.persist(any())).thenAnswer(call -> {
-      FileMetadata image = call.getArgument(0);
-      image.setRev("1-image");
-      metadata.put(image.getFileId(), image);
-      return new Tuple2<>(true, image.getFileId());
-    });
-    manager = new ImageManager(configurationStorage, storage, assets);
+    root = new SpAssetModel();
+    root.setAssetId("root");
+    child = new SpAsset();
+    child.setAssetId("child");
+    root.getAssets().add(child);
+    when(assets.getElementById("document")).thenReturn(root);
+    manager = new ImageManager(configurationStorage, assets);
   }
 
   @Test
-  void keepsSameNamedImagesIndependentAndSeparateFromGenericFiles() throws Exception {
+  void storesGeneratedIdsAndTypesOnTheSelectedAssetOnly() throws Exception {
     Files.writeString(directory.resolve("factory.PNG"), "generic file");
-    var first = manager.storeImage("user", "factory.PNG", content("first image"));
-    var second = manager.storeImage("user", "factory.PNG", content("second image"));
+    manager.storeImage("document", "root", "factory.PNG", content("root image"));
+    manager.storeImage("document", "child", "factory.PNG", content("child image"));
 
-    assertNotEquals(first.getFileId(), second.getFileId());
-    assertEquals("png", first.getFiletype());
-    assertEquals("1-image", first.getRev());
-    assertEquals("first image", Files.readString(manager.getImage(first.getFileId()).toPath()));
-    assertEquals("second image", Files.readString(manager.getImage(second.getFileId()).toPath()));
+    UUID.fromString(root.getImageId());
+    UUID.fromString(child.getImageId());
+    assertNotEquals(root.getImageId(), child.getImageId());
+    assertEquals("png", child.getFiletype());
+    assertEquals("root image", Files.readString(manager.getImage("document", "root", root.getImageId()).toPath()));
+    assertEquals("child image", Files.readString(manager.getImage("document", "child", child.getImageId()).toPath()));
     assertEquals("generic file", Files.readString(directory.resolve("factory.PNG")));
   }
 
   @Test
+  void rejectsUnrelatedImagesAndAssetsForBothReadingAndDeleting() throws Exception {
+    manager.storeImage("document", "child", "factory.jpg", content("image"));
+    var imageId = child.getImageId();
+    assertThrows(FileNotFoundException.class, () -> manager.getImage("document", "root", imageId));
+    assertThrows(FileNotFoundException.class, () -> manager.deleteImage("document", "root", imageId));
+    assertThrows(FileNotFoundException.class, () -> manager.getImage("other", "child", imageId));
+    assertThrows(FileNotFoundException.class, () -> manager.deleteImage("document", "missing", imageId));
+    assertTrue(manager.getImage("document", "child", imageId).isFile());
+  }
+
+  @Test
   void rejectsNonImageExtensionsBeforeWriting() {
-    assertThrows(IllegalArgumentException.class, () -> manager.storeImage("user", "data.csv", content("data")));
-    assertThrows(IllegalArgumentException.class, () -> manager.storeImage("user", null, content("data")));
-    assertTrue(metadata.isEmpty());
+    assertThrows(IllegalArgumentException.class,
+        () -> manager.storeImage("document", "child", "data.csv", content("data")));
+    assertThrows(IllegalArgumentException.class,
+        () -> manager.storeImage("document", "child", null, content("data")));
+    assertNull(child.getImageId());
     assertFalse(Files.exists(directory.resolve("images")));
   }
 
   @Test
-  void removesUploadedContentWhenMetadataPersistenceFails() throws Exception {
-    doReturn(new Tuple2<>(false, "failed")).when(storage).persist(any());
-    assertThrows(IllegalStateException.class, () -> manager.storeImage("user", "factory.png", content("image")));
+  void removesUploadedContentWhenAssetPersistenceFails() throws Exception {
+    doThrow(new IllegalStateException("Conflict")).when(assets).updateElement(any());
+    assertThrows(IllegalStateException.class,
+        () -> manager.storeImage("document", "child", "factory.png", content("image")));
     try (var files = Files.list(directory.resolve("images"))) {
       assertEquals(0, files.count());
     }
   }
 
   @Test
-  void usesTheReferenceIndexAndRetainsLinkedImagesUntilUnlinked() throws Exception {
-    var image = manager.storeImage("user", "factory.jpg", content("image"));
-    when(assets.isImageReferenced(image.getFileId())).thenReturn(true, false);
-
-    assertFalse(manager.deleteImageIfUnused(image.getFileId()));
-    assertTrue(manager.getImage(image.getFileId()).isFile());
-    assertTrue(manager.deleteImageIfUnused(image.getFileId()));
-    assertFalse(Files.exists(directory.resolve("images").resolve(image.getFileId())));
-    verify(assets, never()).findAll();
+  void explicitlyDeletesTheImageAndReferenceBeforeReplacement() throws Exception {
+    manager.storeImage("document", "child", "factory.jpg", content("old"));
+    var previousId = child.getImageId();
+    manager.deleteImage("document", "child", previousId);
+    assertNull(child.getImageId());
+    assertNull(child.getFiletype());
+    assertFalse(Files.exists(directory.resolve("images").resolve(previousId)));
+    manager.storeImage("document", "child", "factory.png", content("new"));
+    assertNotEquals(previousId, child.getImageId());
   }
 
   @Test
-  void leavesImagesUntouchedIfTheIndexLookupFails() throws Exception {
-    var image = manager.storeImage("user", "factory.jpg", content("image"));
-    when(assets.isImageReferenced(image.getFileId())).thenThrow(new IllegalStateException("Index unavailable"));
-    assertThrows(IllegalStateException.class, () -> manager.deleteImageIfUnused(image.getFileId()));
-    assertTrue(manager.getImage(image.getFileId()).isFile());
-    verify(storage, never()).deleteElementById(anyString());
+  void canRemoveAReferenceWhenItsPhysicalFileIsMissing() throws Exception {
+    child.setImageId(UUID.randomUUID().toString());
+    child.setFiletype("png");
+    manager.deleteImage("document", "child", child.getImageId());
+    assertNull(child.getImageId());
+    verify(assets).updateElement(root);
+  }
+
+  @Test
+  void deletesImagesThroughoutTheDeletedAssetHierarchy() throws Exception {
+    manager.storeImage("document", "root", "root.png", content("root"));
+    manager.storeImage("document", "child", "child.png", content("child"));
+    manager.deleteAssetImages(root);
+    assertFalse(Files.exists(directory.resolve("images").resolve(root.getImageId())));
+    assertFalse(Files.exists(directory.resolve("images").resolve(child.getImageId())));
+  }
+
+  @Test
+  void movingAnAssetKeepsItsImageAvailableInTheDestinationDocument() throws Exception {
+    manager.storeImage("document", "child", "child.png", content("child"));
+    var destination = new SpAssetModel();
+    destination.getAssets().add(child);
+    root.getAssets().clear();
+    when(assets.getElementById("destination")).thenReturn(destination);
+    assertThrows(FileNotFoundException.class, () -> manager.getImage("document", "child", child.getImageId()));
+    assertTrue(manager.getImage("destination", "child", child.getImageId()).isFile());
   }
 
   private ByteArrayInputStream content(String value) {

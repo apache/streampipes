@@ -48,7 +48,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import {
-    ImagesService,
     PermissionsService,
     SpAsset,
     SpAssetModel,
@@ -73,8 +72,6 @@ import {
     removeAssetFromParent,
 } from '../../../utils/move-asset';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
-import { collectAssetImageFileIds } from '../../../utils/asset-images';
-import { HttpErrorResponse } from '@angular/common/http';
 
 type ManageableAsset = SpAssetModel & {
     name: string;
@@ -112,15 +109,14 @@ export class SpAssetDetailsComponent
     private translateService = inject(TranslateService);
     private permissionsService = inject(PermissionsService);
     private idGeneratorService = inject(IdGeneratorService);
-    private imagesService = inject(ImagesService);
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
     private originalAsset: SpAssetModel;
     private initialGeneratedAssetId?: string;
     private initialGeneratedElementId?: string;
     private pendingConfirmLeaveDialog?: Observable<boolean>;
-    private uploadedImageFileIds = new Set<string>();
-    private replacedImageFileIds = new Set<string>();
+    pendingImages = new Map<SpAsset, File | null>();
+    private removedAssets: SpAsset[] = [];
     @ViewChild(SpAssetSelectionPanelComponent)
     assetSelectionPanel: SpAssetSelectionPanelComponent;
 
@@ -196,50 +192,59 @@ export class SpAssetDetailsComponent
 
             dialogRef
                 .afterClosed()
-                .subscribe((result: MoveAssetDialogResult | undefined) => {
-                    if (!result) {
-                        return;
-                    }
+                .subscribe(
+                    async (result: MoveAssetDialogResult | undefined) => {
+                        if (!result) {
+                            return;
+                        }
 
-                    if (result.destination === 'top-level') {
-                        this.promoteSubAsset(assetToMove);
-                        return;
-                    }
+                        await this.saveAssetChanges();
 
-                    const assetWasMoved = moveAssetToParent(
-                        result.targetAsset,
-                        result.targetParentAssetId,
-                        assetToMove,
-                        result.removeMovedAssetSite,
-                    );
-                    if (
-                        !assetWasMoved ||
-                        !removeAssetFromParent(this.asset, assetToMove.assetId)
-                    ) {
-                        return;
-                    }
+                        if (result.destination === 'top-level') {
+                            this.promoteSubAsset(assetToMove);
+                            return;
+                        }
 
-                    this.applySelectedAsset({
-                        asset: this.asset,
-                        rootNode: true,
-                    });
-                    this.assetSelectionPanel.rerenderTree();
-                    this.assetService
-                        .updateAsset(result.targetAsset)
-                        .pipe(
-                            concatMap(() =>
-                                this.assetService.updateAsset(this.asset),
-                            ),
-                        )
-                        .subscribe(() => {
-                            this.originalAsset =
-                                this.normalizeAssetForComparison(this.asset);
-                            this.assetBrowserService.refreshBrowserAssetData();
-                            this.router.navigate(['assets'], {
-                                state: { omitConfirm: true },
-                            });
+                        const assetWasMoved = moveAssetToParent(
+                            result.targetAsset,
+                            result.targetParentAssetId,
+                            assetToMove,
+                            result.removeMovedAssetSite,
+                        );
+                        if (
+                            !assetWasMoved ||
+                            !removeAssetFromParent(
+                                this.asset,
+                                assetToMove.assetId,
+                            )
+                        ) {
+                            return;
+                        }
+
+                        this.applySelectedAsset({
+                            asset: this.asset,
+                            rootNode: true,
                         });
-                });
+                        this.assetSelectionPanel.rerenderTree();
+                        this.assetService
+                            .updateAsset(result.targetAsset)
+                            .pipe(
+                                concatMap(() =>
+                                    this.assetService.updateAsset(this.asset),
+                                ),
+                            )
+                            .subscribe(() => {
+                                this.originalAsset =
+                                    this.normalizeAssetForComparison(
+                                        this.asset,
+                                    );
+                                this.assetBrowserService.refreshBrowserAssetData();
+                                this.router.navigate(['assets'], {
+                                    state: { omitConfirm: true },
+                                });
+                            });
+                    },
+                );
         });
     }
 
@@ -401,9 +406,7 @@ export class SpAssetDetailsComponent
                 }
 
                 if (dialogResult === 'cancel') {
-                    return from(this.deleteDiscardedImageUploads()).pipe(
-                        map(() => true),
-                    );
+                    return of(true);
                 }
 
                 return of(false);
@@ -418,7 +421,7 @@ export class SpAssetDetailsComponent
         return (
             this.pendingManageAssetResult !== undefined ||
             this.hasAssetChanged() ||
-            this.uploadedImageFileIds.size > 0
+            this.pendingImages.size > 0
         );
     }
 
@@ -449,62 +452,86 @@ export class SpAssetDetailsComponent
 
     private async saveAssetChanges(): Promise<void> {
         this.cleanupEmpty();
-        if (this.isNewAsset) {
-            await firstValueFrom(this.assetService.createAsset(this.asset));
-            this.isNewAsset = false;
-        } else {
-            const savedAsset = await this.updateExistingAsset();
-            this.asset.rev = savedAsset.rev;
+        for (const removed of this.removedAssets) {
+            await this.deleteRemovedAssetImages(removed);
         }
-        await this.cleanupUnusedImageUploadsAfterSave();
+        this.removedAssets = [];
+        const saved = await firstValueFrom(
+            this.isNewAsset
+                ? this.assetService.createAsset(this.asset)
+                : this.assetService.updateAsset(this.asset),
+        );
+        this.isNewAsset = false;
+        this.asset.rev = saved.rev;
+
+        for (const [asset, file] of this.pendingImages) {
+            if (!this.containsAsset(this.asset, asset)) {
+                this.pendingImages.delete(asset);
+                continue;
+            }
+            if (asset.imageId) {
+                const updated = await firstValueFrom(
+                    this.assetService.deleteAssetImage(
+                        this.asset.elementId,
+                        asset.imageId,
+                        asset.assetId,
+                    ),
+                );
+                this.asset.rev = updated.rev;
+                asset.imageId = undefined;
+                asset.filetype = undefined;
+            }
+            if (file) {
+                const updated = await firstValueFrom(
+                    this.assetService.uploadAssetImage(
+                        this.asset.elementId,
+                        asset.assetId,
+                        file,
+                    ),
+                );
+                const savedAsset = this.findAssetById(updated, asset.assetId);
+                asset.imageId = savedAsset.imageId;
+                asset.filetype = savedAsset.filetype;
+                this.asset.rev = updated.rev;
+            }
+            this.pendingImages.delete(asset);
+        }
         await this.savePendingManageAssetChanges();
         this.originalAsset = this.normalizeAssetForComparison(this.asset);
     }
 
-    private async updateExistingAsset(): Promise<SpAssetModel> {
-        try {
-            return await firstValueFrom(
-                this.assetService.updateAsset(this.asset),
-            );
-        } catch (error) {
-            if (
-                !(error instanceof HttpErrorResponse) ||
-                ![409, 500].includes(error.status)
-            ) {
-                throw error;
-            }
-
-            const latest = await firstValueFrom(
-                this.assetService.getAsset(this.asset.elementId),
-            );
-            if (!latest?.rev || latest.rev === this.asset.rev) {
-                throw error;
-            }
-
-            if (this.hasSameAssetContent(latest, this.asset)) {
-                return latest;
-            }
-            if (!this.hasSameAssetContent(latest, this.originalAsset)) {
-                throw error;
-            }
-
-            this.asset.rev = latest.rev;
-            return firstValueFrom(this.assetService.updateAsset(this.asset));
-        }
+    private containsAsset(root: SpAsset, asset: SpAsset): boolean {
+        return (
+            root === asset ||
+            (root.assets ?? []).some(child => this.containsAsset(child, asset))
+        );
     }
 
-    private hasSameAssetContent(
-        first: SpAssetModel,
-        second: SpAssetModel,
-    ): boolean {
-        if (!first || !second) {
-            return false;
+    private findAssetById(root: SpAsset, assetId: string): SpAsset | undefined {
+        if (root.assetId === assetId) return root;
+        for (const child of root.assets ?? []) {
+            const found = this.findAssetById(child, assetId);
+            if (found) return found;
         }
-        const firstContent = this.normalizeAssetForComparison(first);
-        const secondContent = this.normalizeAssetForComparison(second);
-        firstContent.rev = undefined;
-        secondContent.rev = undefined;
-        return JSON.stringify(firstContent) === JSON.stringify(secondContent);
+        return undefined;
+    }
+
+    private async deleteRemovedAssetImages(asset: SpAsset): Promise<void> {
+        if (asset.imageId) {
+            const updated = await firstValueFrom(
+                this.assetService.deleteAssetImage(
+                    this.asset.elementId,
+                    asset.imageId,
+                    asset.assetId,
+                ),
+            );
+            this.asset.rev = updated.rev;
+            asset.imageId = undefined;
+            asset.filetype = undefined;
+        }
+        for (const child of asset.assets ?? [])
+            await this.deleteRemovedAssetImages(child);
+        this.pendingImages.delete(asset);
     }
 
     private async savePendingManageAssetChanges(): Promise<void> {
@@ -579,65 +606,15 @@ export class SpAssetDetailsComponent
         asset.assets?.forEach(child => this.cleanupEmptyCustomFields(child));
     }
 
-    async handleImageFileDeletionRequested({
-        assetId,
-        fileId,
-    }: {
-        assetId: string;
-        fileId: string;
-    }): Promise<void> {
-        if (this.isNewAsset || this.uploadedImageFileIds.has(fileId)) {
-            await firstValueFrom(this.imagesService.deleteImage(fileId));
-
-            this.uploadedImageFileIds.delete(fileId);
-
-            return;
+    handleImageChanged(change: { asset: SpAsset; file: File | null }): void {
+        if (change.file === null && !change.asset.imageId) {
+            this.pendingImages.delete(change.asset);
+        } else {
+            this.pendingImages.set(change.asset, change.file);
         }
-
-        const persistedAsset = await firstValueFrom(
-            this.assetService.deleteAssetImage(
-                this.assetModelId,
-                fileId,
-                assetId,
-            ),
-        );
-
-        this.uploadedImageFileIds.delete(fileId);
-
-        this.asset.rev = persistedAsset.rev;
-
-        this.originalAsset = this.normalizeAssetForComparison(persistedAsset);
-
-        this.assetBrowserService.refreshBrowserAssetData();
     }
 
-    trackUploadedImage(fileId: string, replacedFileIds: string[] = []): void {
-        this.uploadedImageFileIds.add(fileId);
-        replacedFileIds.forEach(id => this.replacedImageFileIds.add(id));
-    }
-
-    private async deleteDiscardedImageUploads(): Promise<void> {
-        const fileIds = [...this.uploadedImageFileIds];
-
-        await Promise.all(
-            fileIds.map(async fileId => {
-                await firstValueFrom(this.imagesService.deleteImage(fileId));
-                this.uploadedImageFileIds.delete(fileId);
-                this.replacedImageFileIds.delete(fileId);
-            }),
-        );
-    }
-
-    private async cleanupUnusedImageUploadsAfterSave(): Promise<void> {
-        const currentAssetImageFileIds = collectAssetImageFileIds(this.asset);
-
-        currentAssetImageFileIds.forEach(fileId =>
-            this.uploadedImageFileIds.delete(fileId),
-        );
-        await this.deleteDiscardedImageUploads();
-        for (const fileId of this.replacedImageFileIds) {
-            await firstValueFrom(this.imagesService.deleteImage(fileId));
-            this.replacedImageFileIds.delete(fileId);
-        }
+    handleAssetRemoved(asset: SpAsset): void {
+        this.removedAssets.push(asset);
     }
 }

@@ -69,10 +69,11 @@
                 </div>
             }
             <div class="asset-overview__item">
-                <dt>{{ 'Images' | translate }}</dt>
+                <dt>{{ 'Image' | translate }}</dt>
                 <dd>
                     <sp-view-asset-images
-                        [imageFiles]="assetImages"
+                        [asset]="assetModel"
+                        [assetModelId]="assetModelId"
                     ></sp-view-asset-images>
                 </dd>
             </div>

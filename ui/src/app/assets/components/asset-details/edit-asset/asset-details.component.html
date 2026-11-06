@@ -24,6 +24,7 @@
         [selectedAsset]="selectedAsset"
         (selectedAssetEmitter)="applySelectedAsset($event)"
         (moveAssetRequested)="moveSubAsset($event)"
+        (assetRemoved)="handleAssetRemoved($event)"
     >
         <sp-basic-view [hideNavbar]="true" [padding]="true">
             <sp-page-header
@@ -95,15 +96,8 @@
                 <div fxLayout="column">
                     <sp-asset-details-basics
                         (reloadSites)="reloadSites()"
-                        (imageFileDeletionRequested)="
-                            handleImageFileDeletionRequested($event)
-                        "
-                        (imageUploaded)="
-                            trackUploadedImage(
-                                $event.fileId,
-                                $event.replacedFileIds
-                            )
-                        "
+                        [pendingImage]="pendingImages.get(selectedAsset)"
+                        (imageChanged)="handleImageChanged($event)"
                         [asset]="selectedAsset"
                         [assetModel]="asset"
                         [sites]="sites"

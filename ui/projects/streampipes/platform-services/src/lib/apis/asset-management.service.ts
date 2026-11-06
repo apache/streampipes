@@ -63,6 +63,31 @@ export class AssetManagementService {
         return this.platformServicesCommons.apiBasePath + '/assets';
     }
 
+    uploadAssetImage(
+        elementId: string,
+        selectedAssetId: string,
+        file: File,
+    ): Observable<SpAssetModel> {
+        const data = new FormData();
+        data.append('image_upload', file, file.name);
+        return this.http.post<SpAssetModel>(
+            `${this.assetBasePath}/${elementId}/images`,
+            data,
+            { params: { assetId: selectedAssetId } },
+        );
+    }
+
+    getAssetImage(
+        elementId: string,
+        imageId: string,
+        selectedAssetId: string,
+    ): Observable<Blob> {
+        return this.http.get(
+            `${this.assetBasePath}/${elementId}/images/${imageId}`,
+            { params: { assetId: selectedAssetId }, responseType: 'blob' },
+        );
+    }
+
     deleteAssetImage(
         assetId: string,
         imageId: string,

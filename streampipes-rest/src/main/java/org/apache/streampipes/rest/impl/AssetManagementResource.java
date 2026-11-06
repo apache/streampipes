@@ -29,9 +29,9 @@ import org.apache.streampipes.resource.management.AssetResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.system.IImageMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +46,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 
 @RestController
@@ -63,13 +68,12 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   public AssetManagementResource(
       SpResourceManager resourceManager,
-      ISpCoreConfigurationStorage coreConfigurationStorage,
-      IImageMetadataStorage imageMetadataStorage
+      ISpCoreConfigurationStorage coreConfigurationStorage
   ) {
     this.resourceManager = resourceManager;
     this.assetResourceManager = resourceManager.manageAssets();
     this.assetAudit = new AssetAuditRecorder(resourceManager.getAuditService());
-    this.imageManager = new ImageManager(coreConfigurationStorage, imageMetadataStorage, assetResourceManager.getDb());
+    this.imageManager = new ImageManager(coreConfigurationStorage, assetResourceManager.getDb());
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,9 +92,9 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<?> create(@RequestBody SpAssetModel asset) {
-    assetResourceManager.create(asset, getAuthenticatedUserSid());
+    var created = assetResourceManager.create(asset, getAuthenticatedUserSid());
     assetAudit.created(getAuthenticatedUserSid(), asset.getElementId(), AuditOutcome.SUCCEEDED);
-    return ok();
+    return ok(created);
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -117,43 +121,55 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  @DeleteMapping(
-      path = "/{id}/images/{imageId}",
-      produces = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(path = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Upload an image for an asset.", tags = {"Core", "Assets"})
+  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
+  public ResponseEntity<SpAssetModel> uploadImage(
+      @PathVariable("id") String elementId,
+      @RequestParam("assetId") String assetId,
+      @RequestPart("image_upload") MultipartFile image
+  ) throws IOException {
+    try (var content = image.getInputStream()) {
+      return ok(imageManager.storeImage(elementId, assetId, image.getOriginalFilename(), content));
+    }
+  }
+
+  @GetMapping(path = "/{id}/images/{imageId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @Operation(summary = "Read an image referenced by this asset.", tags = {"Core", "Assets"})
+  @PreAuthorize(AuthConstants.IS_AUTHENTICATED + " and hasPermission(#elementId, 'READ')")
+  public ResponseEntity<byte[]> getImage(
+      @PathVariable("id") String elementId,
+      @PathVariable("imageId") String imageId,
+      @RequestParam("assetId") String assetId
+  ) throws IOException {
+    return ok(Files.readAllBytes(imageManager.getImage(elementId, assetId, imageId).toPath()));
+  }
+
+  @DeleteMapping(path = "/{id}/images/{imageId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Delete an asset image and its reference.", tags = {"Core", "Assets"})
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<SpAssetModel> deleteLinkedImage(
       @PathVariable("id") String elementId,
       @PathVariable("imageId") String imageId,
       @RequestParam("assetId") String assetId
   ) throws IOException {
-    var asset = assetResourceManager.find(elementId);
-
-    if (asset == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
-
-    if (!assetResourceManager.removeAssetImage(asset, assetId, imageId)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
-
-    imageManager.deleteImageIfUnused(imageId);
-
-    var updatedAsset = assetResourceManager.find(elementId);
-
-    if (updatedAsset == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
-
-    return ok(updatedAsset);
+    return ok(imageManager.deleteImage(elementId, assetId, imageId));
   }
 
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
-  public ResponseEntity<Void> delete(@PathVariable("id") String elementId) {
+  public ResponseEntity<Void> delete(@PathVariable("id") String elementId) throws IOException {
+    var asset = assetResourceManager.find(elementId);
     assetResourceManager.delete(elementId);
+    imageManager.deleteAssetImages(asset);
     assetAudit.deleted(getAuthenticatedUserSid(), elementId, AuditOutcome.SUCCEEDED);
     return ok();
+  }
+
+  @ExceptionHandler({FileNotFoundException.class, NoSuchFileException.class})
+  public ResponseEntity<Void> imageNotFound(IOException exception) {
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage(), exception);
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

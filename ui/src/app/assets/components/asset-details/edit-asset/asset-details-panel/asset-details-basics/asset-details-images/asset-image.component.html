@@ -31,10 +31,10 @@
             [disabled]="!editMode"
         >
             <mat-icon>cloud_upload</mat-icon>
-            {{ (imageFile ? 'Replace image' : 'Upload image') | translate }}
+            {{ (hasImage ? 'Replace image' : 'Upload image') | translate }}
         </button>
 
-        @if (imageFile) {
+        @if (hasImage) {
             <div class="asset-image-thumbnail-wrapper">
                 @if (imageUrl) {
                     <img
@@ -52,7 +52,7 @@
                         type="button"
                         class="asset-image-remove"
                         [attr.aria-label]="'Remove image' | translate"
-                        (click)="openImageRemovalDialog($event, imageFile)"
+                        (click)="openImageRemovalDialog($event)"
                     >
                         <mat-icon>close</mat-icon>
                     </button>

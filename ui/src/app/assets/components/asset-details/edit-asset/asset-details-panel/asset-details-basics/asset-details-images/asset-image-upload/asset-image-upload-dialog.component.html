@@ -18,162 +18,62 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15" fxLayout="column">
-        @if (uploadError) {
+        @if (uploadErrorMessage) {
             <sp-alert-banner
                 type="error"
                 [title]="'Could not upload image' | translate"
                 [description]="uploadErrorMessage"
+            ></sp-alert-banner>
+        }
+        <div class="m-5">
+            <mat-form-field
+                color="accent"
+                class="w-100"
+                (click)="fileInput.click()"
             >
-            </sp-alert-banner>
-        }
-        <sp-alert-banner
-            type="info"
-            [title]="'Asset image access' | translate"
-            [description]="
-                'Other registered users may be able to access uploaded images.'
-                    | translate
-            "
-        >
-        </sp-alert-banner>
-        @if (!duplicateFilename) {
-            <div fxFlex="100">
-                <div fxFlex="100" style="margin: 5px; width: 100%">
-                    <mat-form-field
-                        style="width: 95%"
-                        (click)="fileInput.click()"
-                        color="accent"
-                    >
-                        <input
-                            matInput
-                            [placeholder]="'Image' | translate"
-                            disabled
-                            [value]="selectedUploadFile?.name ?? ''"
-                        />
-
-                        <input
-                            #fileInput
-                            type="file"
-                            accept="image/jpeg,image/png"
-                            style="display: none"
-                            (change)="handleFileInput($event.target.files)"
-                        />
-
-                        <div>
-                            @if (uploadStatus > 0) {
-                                <mat-progress-bar
-                                    mode="determinate"
-                                    value="{{ uploadStatus }}"
-                                    color="accent"
-                                ></mat-progress-bar>
-                            }
-                        </div>
-
-                        <button
-                            color="accent"
-                            matSuffix
-                            mat-button
-                            style="min-width: 0"
-                        >
-                            @if (uploadStatus < 99) {
-                                <mat-icon>image</mat-icon>
-                            }
-
-                            @if (uploadStatus === 100) {
-                                <mat-icon class="green-icon">
-                                    check_circle
-                                </mat-icon>
-                            }
-                        </button>
-
-                        @if (!hasInput) {
-                            <mat-error>
-                                {{ errorMessage }}
-                            </mat-error>
-                        }
-                    </mat-form-field>
-
-                    <button
-                        mat-button
-                        mat-flat-button
-                        class="mat-basic mt-10"
-                        (click)="clearSelectedFile()"
-                    >
-                        {{ 'Clear' | translate }}
-                    </button>
-                </div>
-            </div>
-        }
-
-        @if (duplicateFilename) {
-            <div fxLayout="column" style="width: 100%">
-                <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
-                    <b>
-                        <h4>
-                            {{
-                                'The following image already exists. Please rename it.'
-                                    | translate
-                            }}
-                        </h4>
-                    </b>
-
-                    <div>
-                        <div class="input-group">
-                            <span style="margin-right: 10px">
-                                {{ duplicateFilename }}:
-                            </span>
-
-                            <mat-form-field>
-                                <input
-                                    matInput
-                                    placeholder="e.g. {{
-                                        '_' + duplicateFilename
-                                    }}"
-                                    [(ngModel)]="renamedFilename"
-                                />
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+                <input matInput [placeholder]="'Image' | translate" disabled />
+                <input
+                    #fileInput
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    hidden
+                    (change)="handleFileInput($event.target.files)"
+                />
+                @if (selectedUploadFile) {
+                    <div>{{ selectedUploadFile.name }}</div>
+                }
+                <button
+                    mat-button
+                    matSuffix
+                    type="button"
+                    color="accent"
+                    class="button-icon"
+                    [attr.aria-label]="'Upload image' | translate"
+                >
+                    <mat-icon>image</mat-icon>
+                </button>
+            </mat-form-field>
+            <button
+                mat-button
+                mat-flat-button
+                class="mat-basic mt-10"
+                (click)="fileInput.value = ''; clearSelectedFile()"
+            >
+                {{ 'Clear' | translate }}
+            </button>
+        </div>
     </div>
-
     <mat-divider></mat-divider>
-
     <div class="sp-dialog-actions">
-        @if (!duplicateFilename) {
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                (click)="store()"
-                [disabled]="!hasInput"
-                style="margin-right: 10px"
-            >
-                {{ 'Import image' | translate }}
-            </button>
-        }
-
-        @if (duplicateFilename) {
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                (click)="renameDuplicateFile()"
-                [disabled]="!renamedFilename.trim()"
-                style="margin-right: 10px"
-            >
-                {{ 'Rename image' | translate }}
-            </button>
-        }
-
         <button
-            mat-button
             mat-flat-button
-            class="mat-basic"
-            (click)="cancel()"
-            style="margin-right: 10px"
+            color="accent"
+            (click)="store()"
+            [disabled]="!selectedUploadFile"
         >
+            {{ 'Import image' | translate }}
+        </button>
+        <button mat-flat-button class="mat-basic" (click)="cancel()">
             {{ 'Cancel' | translate }}
         </button>
     </div>

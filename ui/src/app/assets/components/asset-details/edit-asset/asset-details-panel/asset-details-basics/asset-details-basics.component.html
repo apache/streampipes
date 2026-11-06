@@ -112,11 +112,9 @@
             #assetImage
             [asset]="asset"
             [editMode]="editMode"
-            (imageUploaded)="handleImageUploaded($event)"
-            (imageLinkRemoval)="handleImageLinkRemoval($event)"
-            (imageFileDeletionRequested)="
-                handleImageFileDeletionRequested($event)
-            "
+            [assetModelId]="assetModel.elementId"
+            [pendingImage]="pendingImage"
+            (imageChanged)="imageChanged.emit($event)"
         >
         </sp-asset-image>
     </sp-split-section>

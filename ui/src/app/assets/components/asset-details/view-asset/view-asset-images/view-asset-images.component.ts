@@ -24,7 +24,10 @@ import {
     OnChanges,
     OnDestroy,
 } from '@angular/core';
-import { FileMetadata, ImagesService } from '@streampipes/platform-services';
+import {
+    AssetManagementService,
+    SpAsset,
+} from '@streampipes/platform-services';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -38,10 +41,13 @@ import { catchError, map } from 'rxjs/operators';
     imports: [MatIcon, TranslatePipe],
 })
 export class ViewAssetImagesComponent implements OnChanges, OnDestroy {
-    private imagesService = inject(ImagesService);
+    private assetService = inject(AssetManagementService);
 
     @Input()
-    imageFiles: FileMetadata[] = [];
+    asset: SpAsset;
+
+    @Input()
+    assetModelId: string;
 
     imageUrl: string | undefined;
     viewerOpen = false;
@@ -63,13 +69,16 @@ export class ViewAssetImagesComponent implements OnChanges, OnDestroy {
         this.viewerOpen = false;
         this.clearImageUrl();
 
-        const imageFile = this.imageFiles?.[0];
-        if (!imageFile) {
+        if (!this.asset?.imageId) {
             return;
         }
 
-        this.imagesService
-            .getImage(imageFile.fileId)
+        this.assetService
+            .getAssetImage(
+                this.assetModelId,
+                this.asset.imageId,
+                this.asset.assetId,
+            )
             .pipe(
                 map(blob => URL.createObjectURL(blob)),
                 catchError(() => of(undefined)),

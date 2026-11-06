@@ -18,14 +18,12 @@
 
 package org.apache.streampipes.model.assets;
 
-import org.apache.streampipes.model.file.FileMetadata;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class SpAssetImagesTest {
 
@@ -36,60 +34,27 @@ class SpAssetImagesTest {
     var grandchild = new SpAsset();
     root.getAssets().add(child);
     child.getAssets().add(grandchild);
-    root.getAssetImages().add(image("root"));
-    child.getAssetImages().add(image("child"));
-    grandchild.getAssetImages().add(image("grandchild"));
+    root.setImageId("root-image");
+    root.setFiletype("png");
+    child.setImageId("child-image");
+    child.setFiletype("jpeg");
+    grandchild.setImageId("grandchild-image");
+    grandchild.setFiletype("jpg");
 
     var mapper = new ObjectMapper();
     var fromRest = mapper.readValue(mapper.writeValueAsString(root), SpAssetModel.class);
     var gson = new Gson();
     var fromStorage = gson.fromJson(gson.toJson(fromRest), SpAssetModel.class);
 
-    assertEquals("root", fromStorage.getAssetImages().getFirst().getFileId());
-    assertEquals("child", fromStorage.getAssets().getFirst().getAssetImages().getFirst().getFileId());
-    var restoredGrandchild = fromStorage.getAssets().getFirst().getAssets().getFirst();
-    assertEquals("grandchild", restoredGrandchild.getAssetImages().getFirst().getFileId());
-    restoredGrandchild.getAssetImages().clear();
-    assertEquals(1, fromStorage.getAssetImages().size());
-    assertEquals(1, fromStorage.getAssets().getFirst().getAssetImages().size());
-  }
-
-  @Test
-  void keepsLegacyRootImagesOnRootAndDefaultsChildrenToEmpty() throws Exception {
-    var mapper = new ObjectMapper();
-    var root = mapper.readValue("""
-        {"assetImages": [{"fileId": "legacy"}], "assets": [{"assetId": "child"}]}
-        """, SpAssetModel.class);
-    assertEquals("legacy", root.getAssetImages().getFirst().getFileId());
-    assertTrue(root.getAssets().getFirst().getAssetImages().isEmpty());
-    assertTrue(new SpAsset().getAssetImages().isEmpty());
-  }
-
-  private FileMetadata image(String fileId) {
-    var image = new FileMetadata();
-    image.setFileId(fileId);
-    return image;
-  }
-
-  @Test
-  void readsLegacyImageMetadataAndPreservesGenericFileSerialization() throws Exception {
-    var gson = new Gson();
-    var image = gson.fromJson("""
-        {"_id":"legacy","_rev":"1-old","filename":"factory.jpeg","filetype":"jpeg","createdAt":123}
-        """, FileMetadata.class);
-    assertEquals("legacy", image.getFileId());
-    assertEquals("jpeg", image.getFiletype());
-    var mapper = new ObjectMapper();
-    var restored = mapper.readValue(mapper.writeValueAsString(image), FileMetadata.class);
-    assertEquals("legacy", restored.getFileId());
-    assertEquals(123, restored.getCreatedAt());
-
-    var file = new FileMetadata();
-    file.setFileId("file");
-    file.setFiletype("csv");
-    assertEquals("file", gson.fromJson(gson.toJson(file),
-        FileMetadata.class).getFileId());
-    assertTrue(gson.toJson(file).contains("\"_id\":\"file\""));
-    assertTrue(mapper.writeValueAsString(file).contains("\"fileId\":\"file\""));
+    assertEquals("root-image", fromStorage.getImageId());
+    assertEquals("png", fromStorage.getFiletype());
+    var restoredChild = fromStorage.getAssets().getFirst();
+    assertEquals("child-image", restoredChild.getImageId());
+    assertEquals("jpeg", restoredChild.getFiletype());
+    assertEquals("grandchild-image", restoredChild.getAssets().getFirst().getImageId());
+    assertEquals("jpg", restoredChild.getAssets().getFirst().getFiletype());
+    restoredChild.setImageId(null);
+    assertEquals("root-image", fromStorage.getImageId());
+    assertNull(new SpAsset().getImageId());
   }
 }

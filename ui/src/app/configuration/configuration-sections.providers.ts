@@ -77,15 +77,6 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
         order: 500,
     },
     {
-        itemId: 'images',
-        itemTitle: 'Images',
-        itemIcon: 'image',
-        roles: ['PRIVILEGE_WRITE_ASSETS'],
-        loadComponent: () =>
-            import('./images/images.component').then(m => m.ImagesComponent),
-        order: 550,
-    },
-    {
         itemId: 'labels',
         itemTitle: 'Labels',
         itemIcon: 'label',

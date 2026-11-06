@@ -103,17 +103,11 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     @ViewChild(AssetDetailsLinksComponent)
     assetDetailsLinks: AssetDetailsLinksComponent;
 
-    @Output()
-    imageUploaded = new EventEmitter<{
-        fileId: string;
-        replacedFileIds: string[];
-    }>();
+    @Input()
+    pendingImage: File | null | undefined;
 
     @Output()
-    imageFileDeletionRequested = new EventEmitter<{
-        assetId: string;
-        fileId: string;
-    }>();
+    imageChanged = new EventEmitter<AssetImageChange>();
 
     isa95Types: Isa95TypeDesc[] = [];
 
@@ -131,27 +125,5 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
                 isa95AssetType: 'OTHER',
             };
         }
-    }
-
-    handleImageUploaded({ asset, file }: AssetImageChange): void {
-        const replacedFileIds = (asset.assetImages ?? []).map(
-            image => image.fileId,
-        );
-        asset.assetImages = [file];
-        this.imageUploaded.emit({ fileId: file.fileId, replacedFileIds });
-    }
-
-    handleImageLinkRemoval({ asset, file }: AssetImageChange): void {
-        asset.assetImages = (asset.assetImages ?? []).filter(
-            image => image.fileId !== file.fileId,
-        );
-    }
-
-    handleImageFileDeletionRequested(change: AssetImageChange): void {
-        this.handleImageLinkRemoval(change);
-        this.imageFileDeletionRequested.emit({
-            assetId: change.asset.assetId,
-            fileId: change.file.fileId,
-        });
     }
 }

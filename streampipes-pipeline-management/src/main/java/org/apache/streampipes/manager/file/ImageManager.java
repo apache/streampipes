@@ -17,91 +17,123 @@
  */
 package org.apache.streampipes.manager.file;
 
-import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.model.assets.SpAsset;
+import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
-import org.apache.streampipes.storage.api.system.IImageMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 public class ImageManager {
 
-  private final IImageMetadataStorage imageStorage;
   private final IAssetStorage assetStorage;
   private final FileHandler imageHandler;
 
-  public ImageManager(ISpCoreConfigurationStorage configurationStorage,
-                      IImageMetadataStorage imageStorage,
-                      IAssetStorage assetStorage) {
-    this.imageStorage = imageStorage;
+  public ImageManager(ISpCoreConfigurationStorage configurationStorage, IAssetStorage assetStorage) {
     this.assetStorage = assetStorage;
     this.imageHandler = new FileHandler(configurationStorage, "images");
   }
 
-  public List<FileMetadata> getAllImages() {
-    return imageStorage.findAll();
-  }
-
-  public FileMetadata storeImage(String user, String filename, InputStream content) throws IOException {
+  public SpAssetModel storeImage(String elementId, String assetId, String filename, InputStream content)
+      throws IOException {
     var extension = filename == null ? "" : filename.substring(filename.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
     if (Stream.of(Filetypes.JPG, Filetypes.PNG)
         .noneMatch(type -> type.getFileExtensions().contains(extension))) {
       throw new IllegalArgumentException("Only JPEG, JPG and PNG images are supported");
     }
-
-    var metadata = new FileMetadata();
-    metadata.setFileId(UUID.randomUUID().toString());
-    metadata.setFilename(filename.replaceAll("[^a-zA-Z0-9.\\-]", "_"));
-    metadata.setFiletype(extension);
-    metadata.setCreatedAt(System.currentTimeMillis());
-    metadata.setCreatedByUser(user);
-
-    imageHandler.storeFile(metadata.getFileId(), content);
+    var model = requireModel(elementId);
+    var asset = requireAsset(model, assetId);
+    if (asset.getImageId() != null) {
+      throw new IllegalArgumentException("Delete the current asset image before uploading its replacement");
+    }
+    var imageId = UUID.randomUUID().toString();
+    imageHandler.storeFile(imageId, content);
+    asset.setImageId(imageId);
+    asset.setFiletype(extension);
     try {
-      persist(metadata);
-      return imageStorage.getElementById(metadata.getFileId());
+      assetStorage.updateElement(model);
     } catch (RuntimeException e) {
-      Files.deleteIfExists(imageHandler.getFile(metadata.getFileId()).toPath());
+      Files.deleteIfExists(imageHandler.getFile(imageId).toPath());
       throw e;
     }
+    return requireModel(elementId);
   }
 
-  public File getImage(String imageId) throws IOException {
-    var metadata = imageStorage.getElementById(imageId);
-    if (metadata == null) {
-      throw new java.io.FileNotFoundException("Image not found");
-    }
-    return imageHandler.getFile(metadata.getFileId());
+  public File getImage(String elementId, String assetId, String imageId) throws IOException {
+    requireImage(requireModel(elementId), assetId, imageId);
+    return imageHandler.getFile(imageId);
   }
 
-  public boolean deleteImageIfUnused(String imageId) throws IOException {
-    if (isImageInUse(imageId)) {
-      return false;
-    }
-    var metadata = imageStorage.getElementById(imageId);
-    if (metadata != null) {
-      Files.deleteIfExists(imageHandler.getFile(metadata.getFileId()).toPath());
-      imageStorage.deleteElementById(imageId);
-    }
-    return true;
+  public SpAssetModel deleteImage(String elementId, String assetId, String imageId) throws IOException {
+    var model = requireModel(elementId);
+    var asset = requireImage(model, assetId, imageId);
+    asset.setImageId(null);
+    asset.setFiletype(null);
+    assetStorage.updateElement(model);
+    Files.deleteIfExists(imageHandler.getFile(imageId).toPath());
+    return requireModel(elementId);
   }
 
-  public boolean isImageInUse(String imageId) {
-    return assetStorage.isImageReferenced(imageId);
+  public void deleteAssetImages(SpAsset asset) throws IOException {
+    if (asset == null) {
+      return;
+    }
+    if (asset.getImageId() != null) {
+      UUID.fromString(asset.getImageId());
+      Files.deleteIfExists(imageHandler.getFile(asset.getImageId()).toPath());
+    }
+    if (asset.getAssets() != null) {
+      for (var child : asset.getAssets()) {
+        deleteAssetImages(child);
+      }
+    }
   }
 
-  private void persist(FileMetadata metadata) {
-    var result = imageStorage.persist(metadata);
-    if (!result.k) {
-      throw new IllegalStateException("Could not store image metadata");
+  private SpAssetModel requireModel(String elementId) throws FileNotFoundException {
+    var model = assetStorage.getElementById(elementId);
+    if (model == null) {
+      throw new FileNotFoundException("Asset not found");
     }
+    return model;
+  }
+
+  private SpAsset requireAsset(SpAsset model, String assetId) throws FileNotFoundException {
+    var asset = findAsset(model, assetId);
+    if (asset == null) {
+      throw new FileNotFoundException("Asset not found");
+    }
+    return asset;
+  }
+
+  private SpAsset findAsset(SpAsset asset, String assetId) {
+    if (assetId != null && assetId.equals(asset.getAssetId())) {
+      return asset;
+    }
+    if (asset.getAssets() != null) {
+      for (var child : asset.getAssets()) {
+        var match = findAsset(child, assetId);
+        if (match != null) {
+          return match;
+        }
+      }
+    }
+    return null;
+  }
+
+  private SpAsset requireImage(SpAssetModel model, String assetId, String imageId) throws FileNotFoundException {
+    var asset = requireAsset(model, assetId);
+    if (imageId == null || !imageId.equals(asset.getImageId())) {
+      throw new FileNotFoundException("Image not found");
+    }
+    UUID.fromString(imageId);
+    return asset;
   }
 }

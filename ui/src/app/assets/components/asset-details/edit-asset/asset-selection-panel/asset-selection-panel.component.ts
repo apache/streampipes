@@ -114,6 +114,9 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     @Output()
     moveAssetRequested = new EventEmitter<SpAsset>();
 
+    @Output()
+    assetRemoved = new EventEmitter<SpAsset>();
+
     treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
     dataSource = new MatTreeNestedDataSource<SpAsset>();
 
@@ -302,6 +305,7 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     removeAssetWithId(assets: SpAsset[], id: string) {
         for (let i = 0; i < assets.length; i++) {
             if (assets[i].assetId === id) {
+                this.assetRemoved.emit(assets[i]);
                 assets.splice(i, 1);
                 return;
             }
@@ -317,7 +321,8 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
             assetName: 'New Asset',
             assetDescription: '',
             assetLinks: [],
-            assetImages: [],
+            imageId: undefined,
+            filetype: undefined,
             assetType: undefined,
             assets: [],
             assetSite: undefined,

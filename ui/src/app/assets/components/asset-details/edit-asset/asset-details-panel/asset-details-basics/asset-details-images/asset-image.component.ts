@@ -29,8 +29,7 @@ import {
     inject,
 } from '@angular/core';
 import {
-    FileMetadata,
-    ImagesService,
+    AssetManagementService,
     SpAsset,
 } from '@streampipes/platform-services';
 import { FormFieldComponent } from '@streampipes/shared-ui';
@@ -50,7 +49,7 @@ import { catchError, map } from 'rxjs/operators';
 
 export interface AssetImageChange {
     asset: SpAsset;
-    file: FileMetadata;
+    file: File | null;
 }
 
 @Component({
@@ -61,7 +60,7 @@ export interface AssetImageChange {
     imports: [FormFieldComponent, MatButton, MatIcon, TranslatePipe],
 })
 export class AssetImageComponent implements OnChanges, OnDestroy {
-    private imagesService = inject(ImagesService);
+    private assetService = inject(AssetManagementService);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private dialog = inject(MatDialog);
@@ -72,16 +71,21 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
     @Input()
     editMode: boolean;
 
-    @Output()
-    imageUploaded = new EventEmitter<AssetImageChange>();
+    @Input()
+    assetModelId: string;
+
+    @Input()
+    pendingImage: File | null | undefined;
 
     @Output()
-    imageLinkRemoval = new EventEmitter<AssetImageChange>();
+    imageChanged = new EventEmitter<AssetImageChange>();
 
-    @Output()
-    imageFileDeletionRequested = new EventEmitter<AssetImageChange>();
+    get hasImage(): boolean {
+        return this.pendingImage !== undefined
+            ? this.pendingImage !== null
+            : !!this.asset.imageId;
+    }
 
-    imageFile: FileMetadata | undefined;
     imageUrl: string | undefined;
 
     @ViewChild('imageViewer')
@@ -102,15 +106,23 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
     refreshImage(): void {
         const generation = ++this.loadGeneration;
         this.closeImageViewer();
-        this.imageFile = this.asset.assetImages?.[0];
         this.clearImageUrl();
 
-        if (!this.imageFile) {
+        if (!this.hasImage) {
             return;
         }
 
-        this.imagesService
-            .getImage(this.imageFile.fileId)
+        if (this.pendingImage) {
+            this.imageUrl = URL.createObjectURL(this.pendingImage);
+            return;
+        }
+
+        this.assetService
+            .getAssetImage(
+                this.assetModelId,
+                this.asset.imageId,
+                this.asset.assetId,
+            )
             .pipe(
                 map(blob => URL.createObjectURL(blob)),
                 catchError(() => of(undefined)),
@@ -126,7 +138,7 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
 
     openImageUploadDialog(): void {
         const asset = this.asset;
-        if (asset.assetImages?.length) {
+        if (this.hasImage) {
             this.dialog
                 .open(ConfirmDialogComponent, {
                     width: '500px',
@@ -161,12 +173,12 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
             },
         );
 
-        dialogRef.afterClosed().subscribe((uploadedFile: FileMetadata) => {
+        dialogRef.afterClosed().subscribe((uploadedFile: File) => {
             if (!uploadedFile) {
                 return;
             }
 
-            this.imageUploaded.emit({ asset, file: uploadedFile });
+            this.imageChanged.emit({ asset, file: uploadedFile });
             this.refreshImage();
         });
     }
@@ -181,33 +193,27 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
         if (viewer?.matches(':popover-open')) viewer.hidePopover();
     }
 
-    openImageRemovalDialog(event: MouseEvent, file: FileMetadata): void {
+    openImageRemovalDialog(event: MouseEvent): void {
         event.stopPropagation();
         const asset = this.asset;
-
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            width: '500px',
-            data: {
-                title: this.translateService.instant('Remove image?'),
-                subtitle: this.translateService.instant(
-                    'Remove this image from the asset, or permanently delete the image file.',
-                ),
-                neutralTitle:
-                    this.translateService.instant('Remove from asset'),
-                cancelTitle: this.translateService.instant('Cancel'),
-                confirmTitle: this.translateService.instant('Delete file'),
-            },
-        });
-
-        dialogRef
+        this.dialog
+            .open(ConfirmDialogComponent, {
+                width: '500px',
+                data: {
+                    title: this.translateService.instant(
+                        'Do you want to remove the image?',
+                    ),
+                    subtitle: this.translateService.instant(
+                        'This action cannot be reversed!',
+                    ),
+                    cancelTitle: this.translateService.instant('Cancel'),
+                    confirmTitle: this.translateService.instant('Delete image'),
+                },
+            })
             .afterClosed()
             .subscribe((action: ConfirmDialogAction | undefined) => {
-                if (action === 'neutral') {
-                    this.imageLinkRemoval.emit({ asset, file });
-                    this.refreshImage();
-                } else if (action === 'confirm') {
-                    this.imageFileDeletionRequested.emit({ asset, file });
-                    this.refreshImage();
+                if (action === 'confirm') {
+                    this.imageChanged.emit({ asset, file: null });
                 }
             });
     }

@@ -24,7 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import {
-    FileMetadata,
     Isa95TypeService,
     LocationConfig,
     SpAsset,
@@ -57,7 +56,7 @@ export class SpAssetTopBannerComponent implements OnChanges {
     assetModel: SpAsset;
 
     @Input()
-    assetImages: FileMetadata[] = [];
+    assetModelId: string;
 
     @Input()
     locationConfig: LocationConfig;
