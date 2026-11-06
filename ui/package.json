@@ -76,7 +76,7 @@
     "monaco-editor": "^0.56.0",
     "ngx-color-picker": "^20.1.1",
     "ngx-echarts": "^22.0.0",
-    "ngx-markdown": "^22.0.2",
+    "ngx-markdown": "^22.1.1",
     "ngx-monaco-editor-v2": "^22.0.5",
     "ngx-quill": "^31.0.1",
     "quill": "^2.0.3",
