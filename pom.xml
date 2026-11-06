@@ -145,7 +145,7 @@
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
 
         <minimalMavenBuildVersion>3.8</minimalMavenBuildVersion>
-        <typescript-generator-maven-plugin.version>3.2.1263</typescript-generator-maven-plugin.version>
+        <typescript-generator-maven-plugin.version>4.2.1</typescript-generator-maven-plugin.version>
         <spotless.version>3.10.1</spotless.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
