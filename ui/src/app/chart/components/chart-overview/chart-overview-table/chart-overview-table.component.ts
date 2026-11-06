@@ -86,11 +86,15 @@ type ChartOverviewRow = ChartSummaryDto & {
     deleteDataCyId: string;
 };
 
+import { FavoriteToggleComponent } from '../../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../../favorites/favorites.store';
+
 @Component({
     selector: 'sp-data-explorer-overview-table',
     templateUrl: './chart-overview-table.component.html',
     styleUrls: ['../chart-overview.component.scss'],
     imports: [
+        FavoriteToggleComponent,
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
@@ -125,6 +129,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
 
     dataSource = new MatTableDataSource<ChartOverviewRow>();
     displayedColumns: string[] = [
+        'favorite',
         'name',
         'chartType',
         'assetContext',
@@ -161,6 +166,10 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         string,
         { icon: string; label: string }
     >();
+
+    constructor() {
+        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'CHART');
+    }
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('chart');

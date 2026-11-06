@@ -77,6 +77,9 @@ import {
     MoveAssetDialogResult,
 } from '../../dialog/move-asset-dialog.component';
 
+import { FavoriteToggleComponent } from '../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../favorites/favorites.store';
+
 type ManageableAsset = SpAssetModel & {
     name: string;
     description: string;
@@ -88,6 +91,7 @@ type ManageableAsset = SpAssetModel & {
     styleUrls: ['./asset-overview.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        FavoriteToggleComponent,
         SpBasicViewComponent,
         FlexDirective,
         LayoutAlignDirective,
@@ -125,7 +129,12 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
     filteredAssets: AssetSummaryDto[] = [];
     sitesById: Record<string, AssetSiteDesc> = {};
 
-    displayedColumns: string[] = ['assetName', 'location', 'actions'];
+    displayedColumns: string[] = [
+        'favorite',
+        'assetName',
+        'location',
+        'actions',
+    ];
 
     @ViewChild(MatSort)
     sort: MatSort;
@@ -140,6 +149,10 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
     currentFilterIds?: Set<string>;
 
     private assetFilterService = inject(SpAssetBrowserService);
+
+    constructor() {
+        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'ASSET');
+    }
 
     ngOnInit(): void {
         this.hasWritePrivilege = this.currentUserService.hasRole(

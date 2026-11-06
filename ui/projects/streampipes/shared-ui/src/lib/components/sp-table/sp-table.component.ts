@@ -197,6 +197,8 @@ export class SpTableComponent<T>
     @Input() resourceIdKey = 'elementId';
     @Input() assetContextConfig?: SpTableAssetContextConfig;
     @Input() nameSearchConfig?: SpTableNameSearchConfig<T>;
+    @Input() groupLabel?: string;
+    @Input() groupForRow?: (row: T) => { id: string; title: string };
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -339,6 +341,9 @@ export class SpTableComponent<T>
         if (changes['nameSearchConfig'] && !changes['dataSource']) {
             this.configureNameSearch();
         }
+        if (changes['groupForRow']) {
+            this.refreshRenderedRows();
+        }
     }
 
     ngOnDestroy() {
@@ -384,7 +389,7 @@ export class SpTableComponent<T>
     }
 
     get shouldShowGroupingControls(): boolean {
-        return !!this.assetContextConfig;
+        return !!this.assetContextConfig || !!this.groupForRow;
     }
 
     get shouldShowNameSearch(): boolean {
@@ -811,7 +816,7 @@ export class SpTableComponent<T>
     }
 
     private rebuildGroupedSections(rows: T[]) {
-        if (!this.assetContextConfig || this.viewMode !== 'grouped') {
+        if (!this.shouldShowGroupingControls || this.viewMode !== 'grouped') {
             this.groupedSections = [];
             this.renderedGroupedRows = [];
             return;
@@ -876,6 +881,9 @@ export class SpTableComponent<T>
     private resolveGroups(
         row: T,
     ): { id: string; title: string; color?: string }[] {
+        if (this.groupForRow) {
+            return [this.groupForRow(row)];
+        }
         const assetContext = this.getAssetContext(row);
 
         if (this.groupBy === 'label') {

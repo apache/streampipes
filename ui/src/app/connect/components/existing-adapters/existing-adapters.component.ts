@@ -82,12 +82,16 @@ import { AdapterStatusLightComponent } from './adapter-status-light/adapter-stat
 import { MatMenuItem } from '@angular/material/menu';
 import { AsyncPipe, DatePipe } from '@angular/common';
 
+import { FavoriteToggleComponent } from '../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../favorites/favorites.store';
+
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
     styleUrls: ['./existing-adapters.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        FavoriteToggleComponent,
         SpBasicViewComponent,
         FlexDirective,
         LayoutAlignDirective,
@@ -124,6 +128,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     sort: MatSort;
 
     displayedColumns: string[] = [
+        'favorite',
         'status',
         'start',
         'name',
@@ -169,6 +174,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.assetFilterService.getAssetLinkType$('adapter');
 
     constructor() {
+        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'ADAPTER');
         this.dataSource.sortingDataAccessor = (adapter, column) => {
             if (column === 'status') {
                 return Number(adapter.running);

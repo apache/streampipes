@@ -41,6 +41,7 @@ import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
+import org.apache.streampipes.storage.api.user.IFavoriteStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
@@ -72,6 +73,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImp
 import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.FavoriteStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
@@ -135,6 +137,11 @@ public class StorageApiConfiguration {
   @Bean
   public IFunctionStateStorage functionStateStorage() {
     return new FunctionStateStorageImpl();
+  }
+
+  @Bean
+  public IFavoriteStorage favoriteStorage() {
+    return new FavoriteStorageImpl();
   }
 
   @Bean
