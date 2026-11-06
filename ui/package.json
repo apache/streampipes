@@ -65,7 +65,7 @@
     "echarts": "^6.0.0",
     "echarts-simple-transform": "^1.0.0",
     "file-saver": "2.0.5",
-    "gridstack": "^12.6.0",
+    "gridstack": "^14.0.0",
     "katex": "^0.16.47",
     "leaflet": "1.9.3",
     "lodash.clonedeep": "^4.5.0",
