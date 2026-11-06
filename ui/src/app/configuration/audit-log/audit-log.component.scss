@@ -34,6 +34,14 @@ mat-form-field {
     width: 100%;
 }
 
+.audit-retention-configured {
+    color: var(--color-success);
+}
+
+.audit-retention-unconfigured {
+    color: var(--color-neutral);
+}
+
 .audit-filters {
     margin-bottom: var(--space-lg);
 }

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.matching.output;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
@@ -35,11 +36,15 @@ import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Set;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CustomTransformOutputSchemaGenerator.class);
 
   private final ISpServiceDiscovery serviceDiscovery;
   private final DataProcessorInvocation dataProcessorInvocation;
@@ -79,8 +84,14 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   }
 
   private EventSchema makeRequest() {
+    String httpRequestBody;
     try {
-      String httpRequestBody = makeRequestBody();
+      httpRequestBody = makeRequestBody();
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not create the output schema request", e);
+    }
+
+    try {
       var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery).selectService(
           dataProcessorInvocation.getAppId(),
           SpServiceUrlProvider.DATA_PROCESSOR,
@@ -93,9 +104,8 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
       );
       var response = requestManager.request(ExtensionServiceRequests.outputSchema(requestTarget, httpRequestBody));
       return handleResponse(response);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return new EventSchema();
+    } catch (NoServiceEndpointsAvailableException | IOException e) {
+      throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), e);
     }
   }
 
@@ -105,15 +115,35 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
     return JacksonSerializer.getObjectMapper().writeValueAsString(requestInvocation);
   }
 
-  private EventSchema handleResponse(ExtensionServiceOperationResult response) throws JsonSyntaxException, IOException {
-    if (!response.isSuccess()) {
-      throw new IOException("Could not compute output schema, status code: " + response.statusCode());
+  private EventSchema handleResponse(ExtensionServiceOperationResult response) {
+    if (response == null) {
+      throw new IllegalStateException("The extension returned no output schema response");
     }
 
-    String resp = response.responseBody();
+    if (!response.isSuccess()) {
+      if (isUnavailableStatus(response.statusCode())) {
+        var cause = new IOException("Could not compute output schema, status code: " + response.statusCode());
+        throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), cause);
+      }
+      // The extension is reachable but cannot compute a schema yet, e.g. while the element is not
+      // fully configured in the pipeline editor. Keep the pipeline editable with an empty schema.
+      LOG.warn("Could not compute output schema for {}, status code: {}",
+          dataProcessorInvocation.getAppId(), response.statusCode());
+      return new EventSchema();
+    }
 
-    return JacksonSerializer
-        .getObjectMapper()
-        .readValue(resp, EventSchema.class);
+    try {
+      var eventSchema = JacksonSerializer
+          .getObjectMapper()
+          .readValue(response.responseBody(), EventSchema.class);
+      return eventSchema != null ? eventSchema : new EventSchema();
+    } catch (IOException | JsonSyntaxException e) {
+      LOG.warn("The extension {} returned an invalid output schema", dataProcessorInvocation.getAppId(), e);
+      return new EventSchema();
+    }
+  }
+
+  private boolean isUnavailableStatus(int statusCode) {
+    return statusCode == 502 || statusCode == 503 || statusCode == 504;
   }
 }

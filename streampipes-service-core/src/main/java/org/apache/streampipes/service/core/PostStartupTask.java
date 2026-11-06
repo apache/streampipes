@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
@@ -28,6 +29,7 @@ import org.apache.streampipes.health.monitoring.HealthCheck;
 import org.apache.streampipes.health.monitoring.PostStartupRecovery;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
+import org.apache.streampipes.health.monitoring.ShutdownSignal;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -108,10 +110,40 @@ public class PostStartupTask implements Runnable {
 
   @Override
   public void run() {
-    new ServiceHealthCheck(extensionsServiceStorage, extensionServiceRequestManager, resourceManager).run();
+    if (isShuttingDown()) {
+      return;
+    }
+    probeRegisteredServices();
     performAdapterAssetUpdate();
     startAllPreviouslyStoppedPipelines();
     runHealthCheckOnce();
+  }
+
+  /**
+   * Probes the registered services as often as the service health check needs consecutive
+   * failures before it declares a service unhealthy. Registrations left behind by a crashed
+   * run are therefore unhealthy when the health check below runs, and the pipeline elements
+   * that ran there are restored right away instead of after several scheduled ticks. Live
+   * services answer every probe, so for them this is cheap.
+   */
+  private void probeRegisteredServices() {
+    var serviceHealthCheck = new ServiceHealthCheck(
+        extensionsServiceStorage, extensionServiceRequestManager, resourceManager);
+    int probes = Math.max(1, Environments.getEnvironment().getServiceHealthFailureThreshold().getValueOrDefault());
+    for (int i = 0; i < probes; i++) {
+      if (isShuttingDown()) {
+        return;
+      }
+      serviceHealthCheck.run();
+      if (i < probes - 1) {
+        try {
+          TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          return;
+        }
+      }
+    }
   }
 
   private void performAdapterAssetUpdate() {
@@ -129,20 +161,20 @@ public class PostStartupTask implements Runnable {
     postStartupRecovery.checkAndRestore(0);
   }
 
+  /**
+   * Pipelines that are marked as running are deliberately not started here. They usually
+   * still run on the extension services, which the core did not stop when it shut down. A
+   * fresh start would allocate endpoints again and, with several services offering the same
+   * element, could start a second instance next to the running one. The health check that
+   * follows asks every service which instances it runs and restores only the missing ones.
+   *
+   * <p>Pipelines flagged with {@code restartOnSystemReboot} were stopped by an older core
+   * during its shutdown and are not running anywhere, so starting them is safe.
+   */
   private void startAllPreviouslyStoppedPipelines() {
     var allPipelines = pipelineStorage.findAll();
-    LOG.info("Checking for orphaned pipelines...");
-    List<Pipeline> orphanedPipelines = allPipelines
-        .stream()
-        .filter(Pipeline::isRunning)
-        .toList();
-
-    LOG.info("Found {} orphaned pipelines", orphanedPipelines.size());
-
-    orphanedPipelines.forEach(pipeline -> {
-      LOG.info("Restoring orphaned pipeline {}", pipeline.getName());
-      startPipeline(pipeline, false);
-    });
+    LOG.info("Found {} running pipelines which will be reconciled by the health check",
+        allPipelines.stream().filter(Pipeline::isRunning).count());
 
     List<Pipeline> pipelinesToRestart = allPipelines
         .stream()
@@ -160,6 +192,10 @@ public class PostStartupTask implements Runnable {
   }
 
   private void startPipeline(Pipeline pipeline, boolean restartOnReboot) {
+    if (isShuttingDown()) {
+      LOG.info("Shutdown in progress, not restoring pipeline {}", pipeline.getName());
+      return;
+    }
     PipelineOperationStatus status = new PipelineExecutor(pipeline, extensionServiceRequestManager, resourceManager)
         .startPipeline();
     if (status.isSuccess()) {
@@ -203,6 +239,10 @@ public class PostStartupTask implements Runnable {
       int failedAttempts = failedPipelines.get(pipelineId) + 1;
       failedPipelines.put(pipelineId, failedAttempts);
     }
+  }
+
+  private boolean isShuttingDown() {
+    return ShutdownSignal.INSTANCE.isShutdownRequested();
   }
 
   private IPipelineStorage getPipelineStorage() {

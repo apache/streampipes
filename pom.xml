@@ -42,15 +42,16 @@
         <spring-boot.version>4.0.2</spring-boot.version>
         <plc4x.version>0.13.1</plc4x.version>
 
+        <apache-poi.version>5.5.1</apache-poi.version>
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
         <bcprov-jdk18on.version>1.86</bcprov-jdk18on.version>
         <boofcv.version>1.5.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
-        <camel.version>4.22.0</camel.version>
+        <camel.version>4.23.0</camel.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commoms-collection4.version>4.4</commoms-collection4.version>
-        <commons-compress.version>1.27.1</commons-compress.version>
+        <commons-compress.version>1.28.0</commons-compress.version>
         <commons-configuration2.version>2.15.1</commons-configuration2.version>
         <commons-csv.version>1.14.1</commons-csv.version>
         <commons-io.version>2.22.0</commons-io.version>
@@ -60,7 +61,7 @@
         <error-prone.version>2.10.0</error-prone.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
-        <grpc.version>1.84.0</grpc.version>
+        <grpc.version>1.85.1</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
         <hadoop.version>3.4.1</hadoop.version>
         <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
@@ -104,9 +105,9 @@
         <!-- streampipes-maven-plugin -->
         <file-management.version>3.1.0</file-management.version>
         <maven.version>3.8.7</maven.version>
-        <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
+        <maven-plugin-annotations.version>3.16.0</maven-plugin-annotations.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
-        <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
+        <plexus-interactivity-api.version>1.6.0</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.3</plexus-utils.version>
 
 
@@ -136,7 +137,8 @@
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.16.1</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-        <checkstyle.version>14.1.0</checkstyle.version>
+        <cyclonedx-maven-plugin.version>2.9.3</cyclonedx-maven-plugin.version>
+        <checkstyle.version>14.3.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
@@ -148,6 +150,9 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+
+        <!-- Set to true to skip the per-module CycloneDX SBOM (target/bom.json) -->
+        <sbom.skip>false</sbom.skip>
     </properties>
 
     <dependencyManagement>
@@ -1050,6 +1055,24 @@
                     <version>${typescript-generator-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.cyclonedx</groupId>
+                    <artifactId>cyclonedx-maven-plugin</artifactId>
+                    <version>${cyclonedx-maven-plugin.version}</version>
+                    <configuration>
+                        <skip>${sbom.skip}</skip>
+                        <!-- Describe what ends up in the built jar: provided dependencies are not shipped -->
+                        <includeProvidedScope>false</includeProvidedScope>
+                        <includeTestScope>false</includeTestScope>
+                        <!-- Service modules set maven.deploy.skip; still generate their SBOM -->
+                        <skipNotDeployed>false</skipNotDeployed>
+                        <!-- The SBOM is published through the UI, not as a Maven artifact -->
+                        <skipAttach>true</skipAttach>
+                        <outputFormat>json</outputFormat>
+                        <outputName>bom</outputName>
+                        <schemaVersion>1.6</schemaVersion>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>net.revelc.code.formatter</groupId>
                     <artifactId>formatter-maven-plugin</artifactId>
                     <version>${formatter-maven-plugin.version}</version>
@@ -1137,6 +1160,23 @@
 
 
         <plugins>
+            <!--
+              Software bill of materials: every module writes target/bom.json (CycloneDX JSON).
+              ui/scripts/write-sbom-index.cjs picks selected modules up and publishes them with the UI.
+            -->
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sbom</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

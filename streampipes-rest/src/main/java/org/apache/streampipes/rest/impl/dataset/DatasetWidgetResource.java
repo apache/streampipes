@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dataset;
 
+import org.apache.streampipes.audit.events.chart.ChartAuditReporter;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dataset.ChartSummaryDto;
 import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
@@ -47,9 +48,11 @@ import java.util.List;
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
 public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
 
+  private final ChartAuditReporter chartAudit;
   private final ChartResourceManager resourceManager;
 
   public DatasetWidgetResource(SpResourceManager resourceManager) {
+    this.chartAudit = new ChartAuditReporter(resourceManager.getAuditService());
     this.resourceManager = resourceManager.manageCharts();
   }
 
@@ -85,6 +88,7 @@ public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<DataExplorerWidgetModel> modifyChart(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     resourceManager.update(dataExplorerWidgetModel);
+    chartAudit.edited(getAuthenticatedUserSid(), dataExplorerWidgetModel.getElementId());
     return ok(resourceManager.find(dataExplorerWidgetModel.getElementId()));
   }
 
@@ -92,6 +96,7 @@ public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Void> deleteChart(@PathVariable("chartId") String elementId) {
     resourceManager.delete(elementId);
+    chartAudit.deleted(getAuthenticatedUserSid(), elementId);
     return ok();
   }
 
@@ -102,7 +107,9 @@ public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<DataExplorerWidgetModel> createChart(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
-    return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));
+    var chart = resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid());
+    chartAudit.created(getAuthenticatedUserSid(), chart.getElementId());
+    return ok(chart);
   }
 
   /**

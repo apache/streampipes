@@ -22,6 +22,8 @@ export interface DataExplorerFieldCharacteristics {
     dimension: boolean;
     numeric: boolean;
     binary: boolean;
+    /** Integer or long runtime type; absent in configurations saved by older releases. */
+    integer?: boolean;
     semanticTypes: string[];
 }
 

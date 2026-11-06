@@ -34,12 +34,17 @@ services:
       context: ./streampipes-service-core
       dockerfile: Dockerfile
     image: streampipes_backend:release-validation
+    stop_grace_period: 60s
     environment:
       - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
       - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
       - SP_PRIORITIZED_PROTOCOL=nats
       - SP_SETUP_PROMETHEUS_ENDPOINT=true
       - SP_RESET_ENDPOINT_ENABLED=true
+      - SP_AUDIT_ENABLED=${SP_AUDIT_ENABLED:-false}
+      - SP_AUDIT_INFLUX_URL=${SP_AUDIT_INFLUX_URL:-}
+      - SP_AUDIT_INFLUX_DATABASE=${SP_AUDIT_INFLUX_DATABASE:-}
+      - SP_AUDIT_INFLUX_TOKEN=${SP_AUDIT_INFLUX_TOKEN:-}
     depends_on:
       - couchdb
     volumes:
@@ -71,6 +76,7 @@ services:
       context: ./streampipes-extensions/streampipes-extensions-all-iiot
       dockerfile: Dockerfile
     image: streampipes_pipeline-elements-all-iiot:release-validation
+    stop_grace_period: 60s
     environment:
       - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
     logging: *default-logging

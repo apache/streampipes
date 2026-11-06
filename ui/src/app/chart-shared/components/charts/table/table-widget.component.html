@@ -88,7 +88,10 @@
                                         >
                                             <span>
                                                 @if (column === 'time') {
-                                                    {{ 'Time' | translate }}
+                                                    {{
+                                                        timeHeaderLabel ??
+                                                            ('Time' | translate)
+                                                    }}
                                                 } @else {
                                                     <span
                                                         [attr.data-cy]="
@@ -193,9 +196,7 @@
                                         >
                                             @if (column === 'time') {
                                                 {{
-                                                    asTimestamp(row[column])
-                                                        | date
-                                                            : 'yyyy-MM-dd HH:mm:ss.SSS'
+                                                    formatTimestamp(row[column])
                                                 }}
                                             } @else {
                                                 {{

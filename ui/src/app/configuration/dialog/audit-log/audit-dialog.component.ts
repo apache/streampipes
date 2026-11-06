@@ -47,7 +47,7 @@ import {
     SpLabelComponent,
 } from '@streampipes/shared-ui';
 
-import { auditOutcomeTone } from './audit-outcome';
+import { auditOutcomeTone } from '../../audit-log/audit-outcome';
 
 @Component({
     selector: 'sp-audit-dialog',

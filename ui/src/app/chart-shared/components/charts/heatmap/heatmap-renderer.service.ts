@@ -36,9 +36,8 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         widgetConfig: HeatmapWidgetModel,
     ): void {
         this.basicOptions(options, widgetConfig);
-        const decimals = this.getDecimals(widgetConfig);
-
         const field = widgetConfig.visualizationConfig.selectedHeatProperty;
+        const numberFormat = this.getNumberFormat(widgetConfig, field);
         const sourceIndex = field.sourceIndex;
 
         const rawDataset = this.datasetUtilsService.findPreparedDataset(
@@ -60,17 +59,36 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         const transformedDataset = (
             rawDataset.rawDataset.source as OptionSourceDataArrayRows
         ).map((row, index) => {
+            // keep the numeric value: the visual map needs it, labels format it
             return [
                 index,
                 this.makeTag(rawDataset.rawDataset.dimensions, tags, row),
-                this.formatNumber(row[heatIndex], decimals),
+                row[heatIndex],
             ];
         });
+        const formatCellValue = (params: { value?: unknown }) =>
+            this.formatNumber(
+                Array.isArray(params.value) ? params.value[2] : params.value,
+                numberFormat,
+            );
 
         options.dataset = { source: transformedDataset };
-        (options.xAxis as any).data = rawDatasetSource.map(s => {
-            return new Date(s[0]).toLocaleString();
-        });
+        (options.xAxis as any).data = this.timeFormatService.formatTimestamps(
+            rawDatasetSource.map(s => s[0] as number | string),
+        );
+        options.tooltip = {
+            ...(!Array.isArray(options.tooltip) && options.tooltip
+                ? options.tooltip
+                : {}),
+            formatter: params => {
+                const param = Array.isArray(params) ? params[0] : params;
+                const value = formatCellValue(param);
+                const label = Array.isArray(param.value)
+                    ? `${param.name ?? ''}${param.value[1] ? ` · ${param.value[1]}` : ''}`
+                    : (param.name ?? '');
+                return `${param.marker ?? ''}${label}<br/><b>${value}</b>`;
+            },
+        };
         options.series = [
             {
                 name: '',
@@ -82,6 +100,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
                 },
                 label: {
                     show: widgetConfig.visualizationConfig.showLabelsProperty,
+                    formatter: formatCellValue,
                 },
                 emphasis: {
                     itemStyle: {

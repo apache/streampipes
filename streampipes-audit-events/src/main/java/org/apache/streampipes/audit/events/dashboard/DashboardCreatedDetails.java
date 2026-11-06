@@ -16,9 +16,10 @@
  *
  */
 
-package org.apache.streampipes.manager.pipeline.update;
+package org.apache.streampipes.audit.events.dashboard;
 
-import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.audit.api.AuditDetails;
 
-public record DataStreamUpdatedEvent(SpDataStream dataStream) {
+/** The dashboard ID is stored in the audit event envelope; no dashboard data is retained. */
+public record DashboardCreatedDetails() implements AuditDetails {
 }

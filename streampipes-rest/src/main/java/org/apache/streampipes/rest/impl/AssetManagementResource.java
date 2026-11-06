@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.audit.api.AuditOutcome;
+import org.apache.streampipes.audit.events.asset.AssetAuditRecorder;
 import org.apache.streampipes.model.assets.AssetSummaryDto;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
@@ -49,11 +51,13 @@ import java.util.List;
 public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   private final AssetResourceManager assetResourceManager;
+  private final AssetAuditRecorder assetAudit;
   private final SpResourceManager resourceManager;
 
   public AssetManagementResource(SpResourceManager resourceManager) {
     this.resourceManager = resourceManager;
     this.assetResourceManager = resourceManager.manageAssets();
+    this.assetAudit = new AssetAuditRecorder(resourceManager.getAuditService());
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,6 +77,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<?> create(@RequestBody SpAssetModel asset) {
     assetResourceManager.create(asset, getAuthenticatedUserSid());
+    assetAudit.created(getAuthenticatedUserSid(), asset.getElementId(), AuditOutcome.SUCCEEDED);
     return ok();
   }
 
@@ -93,6 +98,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
       @RequestBody SpAssetModel asset) {
     if (elementId.equals(asset.getElementId())) {
       assetResourceManager.update(asset);
+      assetAudit.edited(getAuthenticatedUserSid(), elementId, AuditOutcome.SUCCEEDED);
       return ok(assetResourceManager.find(elementId));
     } else {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -103,6 +109,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Void> delete(@PathVariable("id") String elementId) {
     assetResourceManager.delete(elementId);
+    assetAudit.deleted(getAuthenticatedUserSid(), elementId, AuditOutcome.SUCCEEDED);
     return ok();
   }
 
@@ -112,4 +119,5 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE);
   }
+
 }

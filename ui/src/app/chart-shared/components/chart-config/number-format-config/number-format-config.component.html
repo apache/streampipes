@@ -20,7 +20,7 @@
     [level]="3"
     [label]="'Decimals' | translate"
     [description]="
-        'Optional override for decimal places. Leave empty to show original values.'
+        'Optional fixed number of decimal places. Leave empty for automatic formatting.'
             | translate
     "
 >
@@ -29,11 +29,15 @@
             matInput
             type="number"
             [ngModel]="decimals"
+            [disabled]="rawValues"
             min="0"
             max="10"
             step="1"
-            [placeholder]="'Original' | translate"
+            [placeholder]="'Automatic' | translate"
             (ngModelChange)="updateDecimals($event)"
         />
     </mat-form-field>
 </sp-form-field>
+<mat-checkbox [ngModel]="rawValues" (ngModelChange)="updateRawValues($event)"
+    >{{ 'Show original values without formatting' | translate }}
+</mat-checkbox>

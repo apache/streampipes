@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dataset;
 
+import org.apache.streampipes.audit.events.dataset.DatasetAuditReporter;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
@@ -106,6 +107,7 @@ public class DatasetResource extends AbstractDatasetResource {
   private final DatasetExportService exportService;
   private final IDatasetMetadataStorage datasetStorage;
   private final ConfiguredOutputWriterFactory outputWriterFactory;
+  private final DatasetAuditReporter datasetAudit;
 
   public DatasetResource(IChartStorage chartStorage,
                           SpResourceManager resourceManager, DatasetServices services) {
@@ -117,6 +119,7 @@ public class DatasetResource extends AbstractDatasetResource {
     this.outputWriterFactory = new ConfiguredOutputWriterFactory(
         resourceManager.getFileMetadataStorage(),
         resourceManager.getCoreConfigurationStorage());
+    this.datasetAudit = new DatasetAuditReporter(resourceManager.getAuditService());
     this.datasetExportManager = new DatasetExportManager(
         this.datasetMetadataManagement,
         services,
@@ -135,7 +138,15 @@ public class DatasetResource extends AbstractDatasetResource {
       @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(value = "startDate", required = false) Long startDate,
       @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = "endDate", required = false) Long endDate) {
 
+    var datasetId = this.datasetMetadataManagement.getExistingMeasureByName(measurementName)
+        .map(DatasetMetadata::getElementId)
+        .orElse(measurementName);
     if (this.administrationService.deleteData(measurementName, startDate, endDate)) {
+      if (startDate == null && endDate == null) {
+        datasetAudit.dataTruncated(getAuthenticatedUserSid(), datasetId);
+      } else {
+        datasetAudit.dataDeleted(getAuthenticatedUserSid(), datasetId, startDate, endDate);
+      }
       return ok(Notifications
           .success("Successfully deleted measure " + measurementName + " between " + startDate + " and " + endDate));
     } else {
@@ -155,11 +166,15 @@ public class DatasetResource extends AbstractDatasetResource {
   public ResponseEntity<?> dropMeasurementSeries(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID) {
 
+    var datasetId = this.datasetMetadataManagement.getExistingMeasureByName(measurementID)
+        .map(DatasetMetadata::getElementId)
+        .orElse(measurementID);
     boolean isSuccessDataLake = this.administrationService.deleteData(measurementID);
 
     if (isSuccessDataLake) {
       boolean isSuccessEventProperty = this.datasetMetadataManagement.deleteMeasurementByName(measurementID);
       if (isSuccessEventProperty) {
+        datasetAudit.dropped(getAuthenticatedUserSid(), datasetId);
         return ok();
       } else {
         return ResponseEntity
@@ -368,6 +383,9 @@ public class DatasetResource extends AbstractDatasetResource {
       @ApiResponse(responseCode = "200", description = "All measurement series successfully removed") })
   public ResponseEntity<?> removeAll() {
     boolean isSuccess = this.administrationService.deleteAllData();
+    if (isSuccess) {
+      datasetAudit.allDataCleared(getAuthenticatedUserSid());
+    }
     return ResponseEntity.ok(isSuccess);
   }
 
@@ -393,6 +411,7 @@ public class DatasetResource extends AbstractDatasetResource {
     measure.setRetentionTime(retention);
     try {
       this.datasetMetadataManagement.updateMeasurement(measure);
+      datasetAudit.retentionConfigured(getAuthenticatedUserSid(), elementId);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -407,6 +426,7 @@ public class DatasetResource extends AbstractDatasetResource {
     measure.deleteRetentionTime();
     try {
       this.datasetMetadataManagement.updateMeasurement(measure);
+      datasetAudit.retentionRemoved(getAuthenticatedUserSid(), elementId);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -423,6 +443,7 @@ public class DatasetResource extends AbstractDatasetResource {
     try {
       var measure = this.datasetMetadataManagement.getById(elementId);
       datasetExportManager.cleanupSingleMeasurement(measure);
+      datasetAudit.retentionRun(getAuthenticatedUserSid(), elementId);
       return ok();
 
     } catch (Exception e) {

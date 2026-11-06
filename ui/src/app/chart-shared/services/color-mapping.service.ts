@@ -16,53 +16,64 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { ChartPaletteService } from './chart-palette.service';
+
+export interface ColorMapping {
+    value: string;
+    label: string;
+    color: string;
+}
 
 @Injectable({
     providedIn: 'root',
 })
 export class ColorMappingService {
-    constructor() {}
+    private paletteService = inject(ChartPaletteService);
 
-    addMapping(
-        colorMappings: { value: string; label: string; color: string }[],
-    ): void {
+    addMapping(colorMappings: ColorMapping[]): void {
         colorMappings.push({
             value: '',
             label: '',
-            color: this.getDefaultColor(Math.random() * 1000),
+            color: this.getPaletteColor(colorMappings.length),
         });
     }
 
     removeMapping(
-        colorMappings: { value: string; label: string; color: string }[],
+        colorMappings: ColorMapping[],
         index: number,
-    ): { value: string; label: string; color: string }[] {
+    ): ColorMapping[] {
         return colorMappings.filter((_, i) => i !== index);
     }
 
     updateColor(
-        currentMappings: { value: string; label: string; color: string }[],
+        currentMappings: ColorMapping[],
         index: number,
         newColor: string,
     ): void {
         currentMappings[index].color = newColor;
     }
 
-    getDefaultColor(value: string | number): string {
-        let hash = 0x811c9dc5;
-        const input = String(value);
+    /** The palette colour for the n-th series or category of a chart. */
+    getPaletteColor(index: number): string {
+        return this.paletteService.color(index);
+    }
 
+    /**
+     * A palette colour chosen by the value itself, so the same value gets the
+     * same colour wherever no explicit mapping or position is known.
+     */
+    getDefaultColor(value: string | number): string {
+        return this.paletteService.color(this.hash(String(value)));
+    }
+
+    private hash(input: string): number {
+        let hash = 0x811c9dc5;
         for (let i = 0; i < input.length; i++) {
             hash ^= input.charCodeAt(i);
             hash = (hash * 0x5bd1e995) & 0xffffffff;
             hash ^= hash >> 15;
         }
-
-        const hue = Math.abs(hash) % 360;
-        const saturation = 50 + (Math.abs(hash >> 8) % 20);
-        const lightness = 45 + (Math.abs(hash >> 16) % 20);
-
-        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        return Math.abs(hash);
     }
 }

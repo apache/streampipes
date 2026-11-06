@@ -86,7 +86,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
     try {
       genericStorage.create(document);
     } catch (IOException e) {
-      LOG.warn("Could not write document");
+      LOG.warn("Could not write document", e);
     }
   }
 

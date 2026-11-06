@@ -19,7 +19,6 @@
 import { NgStyle } from '@angular/common';
 import {
     Component,
-    LOCALE_ID,
     OnInit,
     inject,
     ChangeDetectionStrategy,
@@ -41,9 +40,9 @@ import {
 } from './model/progress-bar-widget.model';
 import {
     clampValue,
-    formatWidgetNumber,
     scaleResponsiveValue,
 } from '../../../services/widget-render.utils';
+import { ChartNumberFormatService } from '../../../services/formatting';
 
 interface ProgressBarViewModel {
     ratio: number;
@@ -75,8 +74,8 @@ export class ProgressBarWidgetComponent
 
     private hasReceivedData = false;
     private latestData: SpQueryResult[] = [];
-    private readonly locale = inject(LOCALE_ID);
     private readonly chartRegistry = inject(ChartRegistry);
+    private readonly numberFormatService = inject(ChartNumberFormatService);
 
     ngOnInit(): void {
         super.ngOnInit();
@@ -288,22 +287,30 @@ export class ProgressBarWidgetComponent
             ? clampValue(unclampedRatio, 0, 1)
             : unclampedRatio;
 
+        const config = this.dataExplorerWidget.visualizationConfig;
+        const currentFormat = this.numberFormatService.resolveOptions(
+            this.appearanceConfig,
+            this.resolveField(config.currentValueField),
+        );
+        const targetFormat = this.numberFormatService.resolveOptions(
+            this.appearanceConfig,
+            this.resolveField(
+                config.targetSource === 'field'
+                    ? config.targetField
+                    : config.currentValueField,
+            ),
+        );
+
         this.progressView = {
             ratio,
-            percentLabel: `${formatWidgetNumber(
-                ratio * 100,
-                this.locale,
-                this.appearanceConfig.numberFormat?.decimals,
-            )}%`,
-            valueLabel: `${formatWidgetNumber(
+            percentLabel: this.numberFormatService.formatPercent(
+                ratio,
+                currentFormat,
+            ),
+            valueLabel: `${this.numberFormatService.format(
                 currentValue,
-                this.locale,
-                this.appearanceConfig.numberFormat?.decimals,
-            )} / ${formatWidgetNumber(
-                targetValue,
-                this.locale,
-                this.appearanceConfig.numberFormat?.decimals,
-            )}`,
+                currentFormat,
+            )} / ${this.numberFormatService.format(targetValue, targetFormat)}`,
             statusLabel: inverted ? 'Remaining' : 'Completed',
         };
 

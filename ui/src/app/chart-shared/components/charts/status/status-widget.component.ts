@@ -16,8 +16,14 @@
  *
  */
 
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ChangeDetectionStrategy,
+    inject,
+} from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
+import { ChartTimeFormatService } from '../../../services/formatting';
 import { StatusWidgetModel } from './model/status-widget.model';
 import {
     DataExplorerField,
@@ -28,7 +34,7 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { DatePipe, NgClass, NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -47,7 +53,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         NoDataInDateRangeComponent,
         NgClass,
         ClassDirective,
-        DatePipe,
         TranslatePipe,
     ],
 })
@@ -76,6 +81,12 @@ export class StatusWidgetComponent
 
     lastTimestamp = 0;
     active: boolean;
+
+    private readonly timeFormatService = inject(ChartTimeFormatService);
+
+    get lastSeenLabel(): string {
+        return this.timeFormatService.formatTimestamp(this.lastTimestamp);
+    }
 
     ngOnInit(): void {
         super.ngOnInit();

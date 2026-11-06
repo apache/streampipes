@@ -45,6 +45,13 @@ public class HealthCheckUtils {
         + "' is not available. The next automatic recovery attempt is pending.");
   }
 
+  public static void addUnreachableServiceNotification(List<String> pipelineNotifications,
+                                                       InvocableStreamPipesEntity pipelineElement) {
+    pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + pipelineElement.getName()
+        + "' runs on extension service '" + pipelineElement.getSelectedServiceId()
+        + "' which is currently unreachable. Recovery waits until the service answers again or is considered gone.");
+  }
+
   private static String getCurrentDatetime() {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();

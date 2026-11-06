@@ -56,7 +56,6 @@ import {
 import { ObjectProvider } from '../../services/object-provider.service';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import {
-    ConfirmDialogComponent,
     DialogService,
     KeyboardShortcutService,
     PanelType,
@@ -64,7 +63,6 @@ import {
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
-import { MatDialog } from '@angular/material/dialog';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import {
     EVENT_CONNECTION,
@@ -75,6 +73,7 @@ import {
 } from '@jsplumb/browser-ui';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { DroppedPipelineElementComponent } from './dropped-pipeline-element/dropped-pipeline-element.component';
@@ -112,7 +111,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private pipelineStyleService = inject(PipelineStyleService);
     private pipelineValidationService = inject(PipelineValidationService);
     private dialogService = inject(DialogService);
-    private dialog = inject(MatDialog);
     private ngZone = inject(NgZone);
     private shortcutService = inject(KeyboardShortcutService);
 
@@ -154,6 +152,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     shouldOpenCustomizeSettings = false;
     private shortcutReg: ShortcutRegistration;
+    private unavailablePipelineElementStatuses = new Map<
+        PipelineElementConfig,
+        PipelineElementConfigurationStatus
+    >();
 
     constructor() {
         this.currentPipelineModel = new Pipeline();
@@ -485,10 +487,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         },
                         status => {
                             pe.settings.loadingStatus = false;
-                            this.showErrorDialog(
-                                status.error.title,
-                                status.error.description,
-                            );
+                            this.handlePipelineValidationFailure(status);
                         },
                     );
             }
@@ -514,6 +513,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     modifyPipeline(pm: PipelineModificationMessage) {
+        this.restoreUnavailablePipelineElements();
         if (pm.pipelineModifications) {
             pm.pipelineModifications.forEach(modification => {
                 const id = modification.domId;
@@ -579,15 +579,90 @@ export class PipelineComponent implements OnInit, OnDestroy {
         return custom;
     }
 
-    showErrorDialog(title: string, description: string) {
-        this.dialog.open(ConfirmDialogComponent, {
-            width: '500px',
-            data: {
-                title: title,
-                subtitle: description,
-                confirmTitle: 'Ok',
+    private handlePipelineValidationFailure(status: HttpErrorResponse): void {
+        const error = status.error as Notification;
+        const title = error?.title ?? 'Pipeline validation failed';
+        const description = error?.description ?? status.message;
+        const extensionId = error?.additionalInformation;
+        const unavailableExtensions =
+            this.getUnavailableExtensions(extensionId);
+
+        if (title === 'Extension unavailable' && unavailableExtensions.length) {
+            unavailableExtensions.forEach(pipelineElement => {
+                if (
+                    !this.unavailablePipelineElementStatuses.has(
+                        pipelineElement,
+                    )
+                ) {
+                    this.unavailablePipelineElementStatuses.set(
+                        pipelineElement,
+                        pipelineElement.settings.completed,
+                    );
+                }
+                this.pipelineStyleService.updatePeConfigurationStatus(
+                    pipelineElement,
+                    PipelineElementConfigurationStatus.INCOMPLETE,
+                );
+                this.pipelineStyleService.updateConnectedConnectorStylesAsError(
+                    pipelineElement.payload.dom,
+                );
+            });
+            this.JsplumbBridge.repaintEverything();
+        }
+
+        this.pipelineValid = false;
+        this.pipelineValidationService.reportRemoteValidationError(
+            title,
+            this.getUnavailableExtensionDescription(
+                description,
+                extensionId,
+                unavailableExtensions,
+            ),
+        );
+    }
+
+    private getUnavailableExtensions(
+        extensionId?: string,
+    ): PipelineElementConfig[] {
+        if (!extensionId) {
+            return [];
+        }
+
+        return this.rawPipelineModel.filter(
+            pipelineElement => pipelineElement.payload.appId === extensionId,
+        );
+    }
+
+    private getUnavailableExtensionDescription(
+        description: string,
+        extensionId: string | undefined,
+        unavailableExtensions: PipelineElementConfig[],
+    ): string {
+        if (!extensionId) {
+            return description;
+        }
+
+        const extensionNames = unavailableExtensions.map(
+            pipelineElement => pipelineElement.payload.name,
+        );
+        const unavailableExtension =
+            extensionNames.length > 0
+                ? `${extensionNames.join(', ')} (${extensionId})`
+                : extensionId;
+
+        return `${description} (${unavailableExtension})`;
+    }
+
+    private restoreUnavailablePipelineElements(): void {
+        this.unavailablePipelineElementStatuses.forEach(
+            (configurationStatus, pipelineElement) => {
+                this.pipelineStyleService.updatePeConfigurationStatus(
+                    pipelineElement,
+                    configurationStatus,
+                );
             },
-        });
+        );
+        this.unavailablePipelineElementStatuses.clear();
     }
 
     showMatchingErrorDialog(notifications: Notification[]) {
@@ -620,15 +695,20 @@ export class PipelineComponent implements OnInit, OnDestroy {
                 );
                 this.objectProvider
                     .updatePipeline(this.currentPipelineModel)
-                    .subscribe(pm => {
-                        this.modifyPipeline(pm);
-                        this.triggerPipelineCacheUpdateEmitter.emit();
-                        this.announceConfiguredElement(pipelineElementConfig);
-                        if (this.previewModeActive) {
-                            this.deletePreviewEmitter.emit(true);
-                        }
-                        this.validatePipeline(pm);
-                    });
+                    .subscribe(
+                        pm => {
+                            this.modifyPipeline(pm);
+                            this.triggerPipelineCacheUpdateEmitter.emit();
+                            this.announceConfiguredElement(
+                                pipelineElementConfig,
+                            );
+                            if (this.previewModeActive) {
+                                this.deletePreviewEmitter.emit(true);
+                            }
+                            this.validatePipeline(pm);
+                        },
+                        status => this.handlePipelineValidationFailure(status),
+                    );
             } else {
                 this.validatePipeline();
             }
@@ -643,9 +723,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.currentPipelineModel = this.objectProvider.makePipeline(
             this.rawPipelineModel,
         );
-        this.objectProvider
-            .updatePipeline(this.currentPipelineModel)
-            .subscribe(pm => {
+        this.objectProvider.updatePipeline(this.currentPipelineModel).subscribe(
+            pm => {
                 this.modifyPipeline(pm);
                 this.pipelineValid =
                     this.pipelineValidationService.isValidPipeline(
@@ -653,7 +732,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
                         this.readonly,
                         pm,
                     );
-            });
+            },
+            status => this.handlePipelineValidationFailure(status),
+        );
     }
 
     openTopicsDialog(pipelineElementConfig: PipelineElementConfig) {

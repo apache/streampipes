@@ -33,11 +33,6 @@ import {
     MatColumnDef,
     MatHeaderCell,
     MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatTable,
     MatTableDataSource,
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
@@ -45,8 +40,6 @@ import {
     DatasetMetadata,
     DatalakeRestService,
     DatasetSummaryDto,
-    ExportProviderService,
-    ExportProviderSettings,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -62,7 +55,6 @@ import {
     SpAssetBrowserService,
     SpBasicViewComponent,
     SpBreadcrumbService,
-    SplitSectionComponent,
     SpPageHeaderComponent,
     SpSpinnerComponent,
     SpTableActionsDirective,
@@ -74,10 +66,7 @@ import {
 import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
 import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog/data-retention-dialog.component';
-import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
-import { DeleteExportProviderComponent } from '../../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { UserRole } from '../../../core/auth/user-role.enum';
@@ -125,11 +114,6 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         StyleDirective,
         MatMenuItem,
         MatButton,
-        MatTable,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatRowDef,
-        MatRow,
         TranslatePipe,
         SpTableComponent,
         SpBasicViewComponent,
@@ -137,7 +121,6 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         SpTableActionsDirective,
         DatasetLastEventLabelComponent,
         AsyncPipe,
-        SplitSectionComponent,
     ],
 })
 export class DatasetOverviewComponent
@@ -151,7 +134,6 @@ export class DatasetOverviewComponent
     private datasetRestService = inject(DatalakeRestService);
     private dialogService = inject(DialogService);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
@@ -163,14 +145,10 @@ export class DatasetOverviewComponent
         new MatTableDataSource([]);
     availableDatasets: DatasetOverviewEntry[] = [];
     filteredDatasets: DatasetOverviewEntry[] = [];
-    availableExportProvider: ExportProviderSettings[] = [];
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'dataset',
         resourceIdKey: 'elementId',
     };
-
-    dataSourceExport: MatTableDataSource<ExportProviderSettings> =
-        new MatTableDataSource([]);
 
     readonly bulkDatasetActionOptions: SpTableMultiActionOption[] = [
         {
@@ -234,15 +212,6 @@ export class DatasetOverviewComponent
         'actions',
     ];
 
-    displayedColumnsExport: string[] = [
-        'providertype',
-        'endpoint',
-        'bucket',
-        'editExportProvider',
-        'delete',
-        'test',
-    ];
-
     private localStorageService = inject(LocalStorageService);
 
     pageSize = this.localStorageService.get('paginator-page-size', 10);
@@ -277,7 +246,6 @@ export class DatasetOverviewComponent
             { label: 'Datasets' },
         ]);
         this.loadAvailableDatasets();
-        this.loadAvailableExportProvider();
         const currentUser = this.currentUserService.getCurrentUser();
         this.isAdmin = currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
         this.writeAccess =
@@ -298,16 +266,6 @@ export class DatasetOverviewComponent
 
     ngOnDestroy(): void {
         this.assetFilter$?.unsubscribe();
-    }
-
-    loadAvailableExportProvider(): void {
-        this.availableExportProvider = [];
-        this.exportProviderRestService
-            .getAllExportProviders()
-            .subscribe(allExportProviders => {
-                this.availableExportProvider = allExportProviders;
-                this.dataSourceExport.data = this.availableExportProvider;
-            });
     }
 
     loadAvailableDatasets(): void {
@@ -363,22 +321,6 @@ export class DatasetOverviewComponent
         }
     }
 
-    createExportProvider(provider: ExportProviderSettings | null): void {
-        const dialogRef: DialogRef<ExportProviderComponent> =
-            this.dialogService.open(ExportProviderComponent, {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translateService.instant('New Export Provider'),
-                width: '50vw',
-                data: {
-                    provider: provider,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(() => {
-            this.loadAvailableExportProvider();
-        });
-    }
-
     truncateDataset(datasetName: string): void {
         const dialogRef: DialogRef<DeleteDatasetDialogComponent> =
             this.dialogService.open(DeleteDatasetDialogComponent, {
@@ -413,43 +355,6 @@ export class DatasetOverviewComponent
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 this.loadAvailableDatasets();
-            }
-        });
-    }
-
-    deleteExportProvider(providerId: string): void {
-        const dialogRef: DialogRef<DeleteExportProviderComponent> =
-            this.dialogService.open(DeleteExportProviderComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: this.translateService.instant('Delete Export Provider'),
-                width: '70vw',
-                data: {
-                    providerId: providerId,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.loadAvailableExportProvider();
-            }
-        });
-    }
-    testExportProvider(providerId: string): void {
-        const dialogRef: DialogRef<ExportProviderConnectionTestComponent> =
-            this.dialogService.open(ExportProviderConnectionTestComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: this.translateService.instant(
-                    'Test Export Provider Connection',
-                ),
-                width: '70vw',
-                data: {
-                    providerId: providerId,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.loadAvailableExportProvider();
             }
         });
     }
