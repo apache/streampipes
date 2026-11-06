@@ -16,6 +16,7 @@
 ~
 -->
 
+@let dashboardLinkType = dashboardLinkType$ | async;
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
         <sp-table
@@ -27,6 +28,7 @@
                 searchKey: ['name', 'description'],
             }"
             featureCardId="dashboard"
+            [rememberViewMode]="true"
             [showActionsMenu]="true"
             [rowsClickable]="true"
             [dataSource]="dataSource"
@@ -86,6 +88,45 @@
                     }
                 </td>
             </ng-container>
+
+            <ng-template
+                spTableCard
+                let-dashboard
+                let-actions="actions"
+                let-assetContext="assetContext"
+                let-select="selection"
+            >
+                <sp-dashboard-overview-card
+                    [dashboard]="dashboard"
+                    [icon]="dashboardLinkType?.linkIcon ?? 'dashboard'"
+                    [accentColor]="dashboardLinkType?.linkColor"
+                    [canEdit]="hasDashboardWritePrivileges"
+                    (showDashboard)="showDashboard(dashboard)"
+                    (editDashboard)="editDashboard(dashboard)"
+                >
+                    <ng-container
+                        cardFooterActions
+                        *ngTemplateOutlet="
+                            actions;
+                            context: { $implicit: dashboard }
+                        "
+                    ></ng-container>
+                    <ng-container
+                        cardSelect
+                        *ngTemplateOutlet="
+                            select;
+                            context: { $implicit: dashboard }
+                        "
+                    ></ng-container>
+                    <ng-container
+                        cardAssetContext
+                        *ngTemplateOutlet="
+                            assetContext;
+                            context: { $implicit: dashboard }
+                        "
+                    ></ng-container>
+                </sp-dashboard-overview-card>
+            </ng-template>
 
             <ng-template spTableActions let-element>
                 <button

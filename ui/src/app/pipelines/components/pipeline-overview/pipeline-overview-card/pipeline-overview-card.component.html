@@ -1,0 +1,132 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-overview-card
+    [title]="pipeline().name"
+    [description]="pipeline().description"
+    [titleClickable]="true"
+    [accentColor]="accentColor()"
+    (titleClick)="showDetails.emit()"
+    data-cy="pipeline-overview-card"
+>
+    @if (icon(); as moduleIcon) {
+        <mat-icon cardIcon aria-hidden="true">{{ moduleIcon }}</mat-icon>
+    }
+
+    <sp-overview-card-facts>
+        <div spOverviewCardFact [label]="'Status' | translate">
+            <sp-status-label
+                [tone]="status().tone"
+                [label]="status().label | translate"
+                data-cy="pipeline-card-status"
+            ></sp-status-label>
+        </div>
+        <div spOverviewCardFact [label]="'Notifications' | translate">
+            @if (notificationCount()) {
+                <button
+                    type="button"
+                    class="notifications-link"
+                    [disabled]="!hasWritePrivileges()"
+                    [attr.aria-label]="
+                        notificationCount() +
+                        ' ' +
+                        ('Notifications' | translate)
+                    "
+                    data-cy="pipeline-card-notifications"
+                    (click)="showNotifications.emit()"
+                >
+                    <mat-icon aria-hidden="true">warning</mat-icon>
+                    <span>{{ notificationCount() }}</span>
+                </button>
+            } @else {
+                <span data-cy="pipeline-card-no-notifications">{{
+                    'None' | translate
+                }}</span>
+            }
+        </div>
+        <div spOverviewCardFact [label]="'Created' | translate">
+            <span
+                [matTooltip]="pipeline().createdAt | date: 'dd.MM.yyyy HH:mm'"
+                data-cy="pipeline-card-created"
+                >{{ pipeline().createdAt | date: 'dd.MM.yyyy' }}</span
+            >
+        </div>
+    </sp-overview-card-facts>
+    @if (!pipeline().valid) {
+        <p class="invalid-message" data-cy="pipeline-card-invalid">
+            <mat-icon aria-hidden="true">sync_problem</mat-icon>
+            <span>{{
+                'Invalid pipeline: Modify to fix problems' | translate
+            }}</span>
+        </p>
+    }
+    <ng-content select="[cardSelect]" ngProjectAs="[cardSelect]"></ng-content>
+    <ng-content
+        select="[cardAssetContext]"
+        ngProjectAs="[cardAssetContext]"
+    ></ng-content>
+
+    @if (pipeline().running) {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            [disabled]="!hasWritePrivileges() || operationInProgress()"
+            data-cy="pipeline-card-stop"
+            (click)="stopPipeline.emit()"
+        >
+            <mat-icon aria-hidden="true">stop</mat-icon>
+            <span>{{ 'Stop' | translate }}</span>
+        </button>
+    } @else {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            [disabled]="
+                !hasWritePrivileges() ||
+                operationInProgress() ||
+                !pipeline().valid
+            "
+            data-cy="pipeline-card-start"
+            (click)="startPipeline.emit()"
+        >
+            <mat-icon aria-hidden="true">play_arrow</mat-icon>
+            <span>{{ 'Start' | translate }}</span>
+        </button>
+    }
+    @if (hasWritePrivileges()) {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            data-cy="pipeline-card-edit"
+            (click)="editPipeline.emit()"
+        >
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+    }
+    <ng-content
+        select="[cardFooterActions]"
+        ngProjectAs="[cardFooterActions]"
+    ></ng-content>
+</sp-overview-card>

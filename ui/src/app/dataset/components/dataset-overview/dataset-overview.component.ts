@@ -59,6 +59,7 @@ import {
     SpSpinnerComponent,
     SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableCardDirective,
     SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
@@ -81,11 +82,12 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
 import { DatasetLastEventLabelComponent } from './dataset-last-event-label/dataset-last-event-label.component';
+import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-overview-card.component';
 
 @Component({
     selector: 'sp-dataset-overview',
@@ -119,8 +121,11 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         SpBasicViewComponent,
         SpPageHeaderComponent,
         SpTableActionsDirective,
+        SpTableCardDirective,
         DatasetLastEventLabelComponent,
+        DatasetOverviewCardComponent,
         AsyncPipe,
+        NgTemplateOutlet,
     ],
 })
 export class DatasetOverviewComponent
