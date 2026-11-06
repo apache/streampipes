@@ -69,7 +69,7 @@
     "katex": "^0.16.47",
     "leaflet": "1.9.3",
     "lodash.clonedeep": "^4.5.0",
-    "maplibre-gl": "^6.8.0",
+    "maplibre-gl": "^6.16.0",
     "marked": "^18.1.1",
     "marked-katex-extension": "^5.1.12",
     "material-icons": "^1.13.14",
