@@ -89,10 +89,17 @@ public class MetadataOptionGenerator {
 
   public StaticProperty[] getOptions(List<Option> options) {
     return options.stream().map(option -> {
+      var label = Labels.from(option.getKey(), option.getKey(), option.getDescription());
+      if (option.isSecret()) {
+        var secret = StaticProperties.secretValue(label);
+        secret.setOptional(!option.isRequired());
+        return secret;
+      }
       var sp = StaticProperties.freeTextProperty(
-          Labels.from(option.getKey(), option.getKey(), option.getDescription()),
+          label,
           getDatatype(option.getType())
       );
+      option.getDefaultValue().ifPresent(value -> sp.setValue(value.toString()));
       sp.setOptional(!option.isRequired());
       return sp;
     }).toArray(StaticProperty[]::new);
@@ -108,6 +115,9 @@ public class MetadataOptionGenerator {
       }
       case FLOAT -> {
         return Datatypes.Float;
+      }
+      case DOUBLE -> {
+        return Datatypes.Double;
       }
       case BOOLEAN -> {
         return Datatypes.Boolean;

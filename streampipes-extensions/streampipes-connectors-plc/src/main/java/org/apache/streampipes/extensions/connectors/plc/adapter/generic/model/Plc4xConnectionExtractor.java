@@ -21,16 +21,21 @@ package org.apache.streampipes.extensions.connectors.plc.adapter.generic.model;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.config.ConfigurationParser;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.BROWSE_RESULTS;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.BROWSE_TAGS;
 import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.PLC_CODE_BLOCK;
+import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels.TAG_INPUT;
 
 public class Plc4xConnectionExtractor {
 
@@ -44,26 +49,30 @@ public class Plc4xConnectionExtractor {
   }
 
   public Plc4xConnectionSettings makeSettings() {
-    var modifiedProtocolCode = checkAndOverrideProtocolCode();
+    return new Plc4xConnectionSettings(makeConnectionString(),
+        extractor.singleValueParameter(Plc4xLabels.PLC_POLLING_INTERVAL, Integer.class), extractNodes());
+  }
+
+  public String makeConnectionString() {
+    return makeConnectionString(false);
+  }
+
+  public String makeBrowseConnectionString() {
+    return makeConnectionString(true);
+  }
+
+  private String makeConnectionString(boolean browsing) {
     var host = extractHost();
     var transportCode = extractTransportCode();
     var transportConfigs = extractTransportMetadata(transportCode);
-    var protocolConfigs = extractProtocolMetadata();
+    var protocolConfigs = new HashMap<>(extractProtocolMetadata());
+    if (browsing && "opcua".equals(protocolCode)) {
+      // OPC UA otherwise recursively traverses the entire address space for every expansion.
+      protocolConfigs.put("browse-max-depth", 1);
+    }
     var configParameters = makeConfigParameters(transportConfigs, protocolConfigs);
 
-    return new Plc4xConnectionSettings(
-        getConnectionString(host, transportCode, modifiedProtocolCode, configParameters),
-        extractor.singleValueParameter(Plc4xLabels.PLC_POLLING_INTERVAL, Integer.class),
-        extractNodes()
-    );
-  }
-
-  private String checkAndOverrideProtocolCode() {
-    if (protocolCode.equals("s7")) {
-      return "s7-light";
-    } else {
-      return protocolCode;
-    }
+    return getConnectionString(host, transportCode, protocolCode, configParameters);
   }
 
   private String getConnectionString(String host,
@@ -71,7 +80,7 @@ public class Plc4xConnectionExtractor {
                                      String protocolCode,
                                      String parameters) {
     if (!parameters.isEmpty()) {
-      parameters = "?" + parameters;
+      parameters = (host.contains("?") ? "&" : "?") + parameters;
     }
     return String.format("%s:%s://%s%s", protocolCode, transportCode, host, parameters);
   }
@@ -122,6 +131,9 @@ public class Plc4xConnectionExtractor {
                                                          String labelId,
                                                          String requiredGroupLabelId,
                                                          String advancedGroupLabelId) {
+    if (extractor.getStaticPropertyByName(labelId) == null) {
+      return Map.of();
+    }
     var selectedAlternative = extractor.selectedAlternativeInternalId(labelId);
 
     if (selectedAlternative.equals(Plc4xLabels.REQUIRED_OPTIONS)) {
@@ -137,20 +149,38 @@ public class Plc4xConnectionExtractor {
                                                  List<StaticProperty> staticProperties) {
     var map = new HashMap<String, Object>();
 
-    staticProperties
-        .stream()
-        .filter(sp -> sp instanceof FreeTextStaticProperty)
-        .map(sp -> (FreeTextStaticProperty) sp)
-        .forEach(sp -> {
-          if (sp.getValue() != null && !sp.getValue().isEmpty()) {
-            map.put(String.format("%s%s", prefix, sp.getInternalName()), sp.getValue());
-          }
-        });
+    for (var property : staticProperties) {
+      String value = null;
+      if (property instanceof FreeTextStaticProperty text) {
+        value = text.getValue();
+      } else if (property instanceof SecretStaticProperty secret) {
+        value = secret.getValue();
+      }
+      if (value != null && !value.isEmpty()) {
+        var name = property.getInternalName();
+        map.put(name.contains(".") ? name : prefix + name, value);
+      }
+    }
 
     return map;
   }
 
   private Map<String, String> extractNodes() {
+    if (extractor.getStaticPropertyByName(TAG_INPUT) != null
+        && BROWSE_TAGS.equals(extractor.selectedAlternativeInternalId(TAG_INPUT))) {
+      var nodes = new LinkedHashMap<String, String>();
+      for (var address : extractor.selectedTreeNodesInternalNames(BROWSE_RESULTS, String.class)) {
+        var name = "tag_" + address.replaceAll("[^a-zA-Z0-9_]", "_");
+        var previous = nodes.putIfAbsent(name, address);
+        if (previous != null && !previous.equals(address)) {
+          throw new IllegalArgumentException("Selected tags have conflicting field names. Use manual tag entry.");
+        }
+      }
+      if (nodes.isEmpty()) {
+        throw new IllegalArgumentException("Select at least one readable PLC tag.");
+      }
+      return nodes;
+    }
     var codePropertyInput = extractor.codeblockValue(PLC_CODE_BLOCK);
     return new ConfigurationParser().getNodeInformationFromCodeProperty(codePropertyInput);
   }

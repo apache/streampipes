@@ -30,6 +30,13 @@ public class Plc4xLabels {
 
   public static final String PROTOCOL_METADATA = "protocol_metadata";
 
+  public static final String TAG_INPUT = "tag_input";
+  public static final String MANUAL_TAGS = "manual_tags";
+  public static final String BROWSE_TAGS = "browse_tags";
+  public static final String BROWSE_GROUP = "browse_group";
+  public static final String BROWSE_QUERY = "browse_query";
+  public static final String BROWSE_RESULTS = "browse_results";
+
   public static final String PLC_CODE_BLOCK = "plc_code_block";
 
   public static final String REQUIRED_OPTIONS = "required_options";

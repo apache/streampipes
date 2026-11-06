@@ -330,12 +330,14 @@
 
             <ng-template
                 #groupStaticPropertyTpl
+                let-completed="completedConfigurations"
                 let-onCompleted="onCompleted"
                 let-child="child"
                 let-i="index"
             >
                 <sp-app-static-property
                     [adapterId]="adapterId"
+                    [completedConfigurations]="completed"
                     [deploymentConfiguration]="deploymentConfiguration"
                     [parentForm]="parentForm"
                     [staticProperties]="staticProperties"

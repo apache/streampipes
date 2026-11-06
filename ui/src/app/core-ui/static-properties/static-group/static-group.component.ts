@@ -20,6 +20,8 @@ import {
     Component,
     Input,
     OnInit,
+    OnChanges,
+    SimpleChanges,
     TemplateRef,
     ChangeDetectionStrategy,
 } from '@angular/core';
@@ -36,6 +38,7 @@ import { NgTemplateOutlet } from '@angular/common';
 export type GroupRenderCtx = {
     child: StaticPropertyUnion;
     index: number;
+    completedConfigurations: ConfigurationInfo[];
     onCompleted: (event: ConfigurationInfo) => void;
 };
 
@@ -48,7 +51,7 @@ export type GroupRenderCtx = {
 })
 export class StaticGroupComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyGroup>
-    implements OnInit
+    implements OnInit, OnChanges
 {
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
@@ -56,38 +59,54 @@ export class StaticGroupComponent
     @Input({ required: true })
     renderStaticProperty!: TemplateRef<GroupRenderCtx>;
 
-    dependentStaticProperties: Map<string, boolean> = new Map<
-        string,
-        boolean
-    >();
+    completedGroupConfigurations: ConfigurationInfo[] = [];
+    childCompletedConfigurations: ConfigurationInfo[] = [];
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['completedConfigurations']) {
+            this.updateChildConfigurations();
+        }
+    }
+
+    private updateChildConfigurations(): void {
+        this.childCompletedConfigurations =
+            this.staticPropertyUtils.mergeCompletedConfigurations(
+                this.completedConfigurations,
+                this.completedGroupConfigurations,
+            );
+    }
 
     ctxFor(groupElement: StaticPropertyUnion, index: number): GroupRenderCtx {
         return {
             child: groupElement!,
             index,
+            completedConfigurations: this.childCompletedConfigurations,
             onCompleted: ev => this.handleConfigurationUpdate(ev),
         };
     }
 
     handleConfigurationUpdate(event: ConfigurationInfo): void {
-        this.dependentStaticProperties.set(
-            event.staticPropertyInternalName,
-            event.configured,
+        this.staticPropertyUtils.updateCompletedConfiguration(
+            event,
+            this.completedGroupConfigurations,
         );
-        if (
-            Array.from(this.dependentStaticProperties.values()).every(
-                v => v === true,
-            )
-        ) {
-            this.applyCompletedConfiguration(true);
-        } else {
-            this.applyCompletedConfiguration(false);
-        }
+        this.updateChildConfigurations();
+        this.applyCompletedConfiguration(
+            this.completedGroupConfigurations.every(
+                config => config.configured,
+            ),
+        );
     }
 
     ngOnInit(): void {
-        this.staticProperty.staticProperties.forEach(sp => {
-            this.dependentStaticProperties.set(sp.internalName, false);
-        });
+        this.completedGroupConfigurations =
+            this.staticProperty.staticProperties.map(sp => ({
+                staticPropertyInternalName: sp.internalName,
+                configured: false,
+            }));
+        this.updateChildConfigurations();
+        this.applyCompletedConfiguration(
+            this.completedGroupConfigurations.length === 0,
+        );
     }
 }
