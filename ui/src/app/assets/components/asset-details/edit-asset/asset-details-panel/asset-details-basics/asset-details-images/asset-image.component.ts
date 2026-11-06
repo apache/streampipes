@@ -179,7 +179,6 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
             }
 
             this.imageChanged.emit({ asset, file: uploadedFile });
-            this.refreshImage();
         });
     }
 

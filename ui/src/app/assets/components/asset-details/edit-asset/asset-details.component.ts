@@ -325,8 +325,8 @@ export class SpAssetDetailsComponent
                                   tap(savedAsset => {
                                       Object.assign(
                                           this.asset,
-                                          savedAsset ??
-                                              this.makeAssetResource(resource),
+                                          this.makeAssetResource(resource),
+                                          savedAsset,
                                       );
                                       this.isNewAsset = false;
                                   }),
@@ -462,6 +462,7 @@ export class SpAssetDetailsComponent
                 : this.assetService.updateAsset(this.asset),
         );
         this.isNewAsset = false;
+        this.asset.elementId = saved.elementId;
         this.asset.rev = saved.rev;
 
         for (const [asset, file] of this.pendingImages) {

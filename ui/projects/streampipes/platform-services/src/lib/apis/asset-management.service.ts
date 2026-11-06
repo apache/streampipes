@@ -33,8 +33,13 @@ export class AssetManagementService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    createAsset(asset: SpAssetModel): Observable<any> {
-        return this.http.post(this.assetBasePath, asset);
+    createAsset(
+        asset: SpAssetModel,
+    ): Observable<Pick<SpAssetModel, 'elementId' | 'rev'>> {
+        return this.http.post<Pick<SpAssetModel, 'elementId' | 'rev'>>(
+            this.assetBasePath,
+            asset,
+        );
     }
 
     getAllAssets(): Observable<SpAssetModel[]> {

@@ -91,10 +91,10 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
-  public ResponseEntity<?> create(@RequestBody SpAssetModel asset) {
+  public ResponseEntity<AssetCreationResponse> create(@RequestBody SpAssetModel asset) {
     var created = assetResourceManager.create(asset, getAuthenticatedUserSid());
     assetAudit.created(getAuthenticatedUserSid(), asset.getElementId(), AuditOutcome.SUCCEEDED);
-    return ok(created);
+    return ok(new AssetCreationResponse(created.getElementId(), created.getRev()));
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -182,6 +182,9 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
    */
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE);
+  }
+
+  public record AssetCreationResponse(String elementId, String rev) {
   }
 
 }
