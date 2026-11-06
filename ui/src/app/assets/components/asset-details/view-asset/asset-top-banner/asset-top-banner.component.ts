@@ -35,6 +35,7 @@ import {
 import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels.component';
 import { SingleMarkerMapComponent } from '../../../../../core-ui/single-marker-map/single-marker-map.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ViewAssetImagesComponent } from '../view-asset-images/view-asset-images.component';
 
 @Component({
     selector: 'sp-asset-top-banner',
@@ -46,12 +47,16 @@ import { TranslatePipe } from '@ngx-translate/core';
         SpLabelComponent,
         ViewAssetLabelsComponent,
         SingleMarkerMapComponent,
+        ViewAssetImagesComponent,
         TranslatePipe,
     ],
 })
 export class SpAssetTopBannerComponent implements OnChanges {
     @Input()
     assetModel: SpAsset;
+
+    @Input()
+    assetModelId: string;
 
     @Input()
     locationConfig: LocationConfig;

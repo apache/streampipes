@@ -17,7 +17,7 @@
  * under the License.
  */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-10-26 15:02:34.
+// Generated using typescript-generator version 3.2.1263 on 2026-11-05 11:28:46.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -3964,6 +3964,8 @@ export class SpAsset {
     assetSite: AssetSite;
     assetType: AssetType;
     assets: SpAsset[];
+    filetype: string;
+    imageId: string;
     labelIds: string[];
 
     static fromData(data: SpAsset, target?: SpAsset): SpAsset {
@@ -3983,6 +3985,8 @@ export class SpAsset {
         instance.assetSite = AssetSite.fromData(data.assetSite);
         instance.assetType = AssetType.fromData(data.assetType);
         instance.assets = __getCopyArrayFn(SpAsset.fromData)(data.assets);
+        instance.filetype = data.filetype;
+        instance.imageId = data.imageId;
         instance.labelIds = __getCopyArrayFn(__identity<string>())(
             data.labelIds,
         );
