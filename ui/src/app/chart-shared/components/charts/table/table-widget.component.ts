@@ -945,6 +945,8 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         this.dataExplorerWidget.visualizationConfig.highlightedColumns ??= [];
         this.dataExplorerWidget.visualizationConfig.highlightedColumnColors ??=
             {};
+        this.dataExplorerWidget.visualizationConfig.highlightedColumnRanges ??=
+            {};
         this.dataExplorerWidget.visualizationConfig.pageSize ??=
             TableWidgetComponent.DEFAULT_PAGE_SIZE;
         this.dataExplorerWidget.visualizationConfig.stickyHeaders ??= true;
@@ -1220,6 +1222,29 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         );
     }
 
+    private getCustomHighlightRange(
+        column: string,
+    ): NumericColumnStats | undefined {
+        const config = this.dataExplorerWidget.visualizationConfig;
+        const field = (config.highlightedColumns ?? []).find(
+            highlightedField => highlightedField.fullDbName === column,
+        );
+        if (!field) return undefined;
+        const range =
+            config.highlightedColumnRanges?.[
+                `${field.fullDbName}:${field.sourceIndex}`
+            ];
+        if (
+            !range ||
+            typeof range.min !== 'number' ||
+            typeof range.max !== 'number' ||
+            range.min >= range.max
+        ) {
+            return undefined;
+        }
+        return { min: range.min, max: range.max };
+    }
+
     private getHighlightColor(column: string): string {
         const field = (
             this.dataExplorerWidget.visualizationConfig.highlightedColumns ?? []
@@ -1239,11 +1264,16 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         const bool = this.toBoolean(value);
         if (bool !== undefined) return bool ? 1 : 0;
         const n = this.toNumber(value);
-        const stats = this.numericColumnStats[column];
+        const stats =
+            this.getCustomHighlightRange(column) ??
+            this.numericColumnStats[column];
         if (n === undefined || !stats) return undefined;
         return stats.max === stats.min
             ? 0.5
-            : (n - stats.min) / (stats.max - stats.min);
+            : Math.min(
+                  1,
+                  Math.max(0, (n - stats.min) / (stats.max - stats.min)),
+              );
     }
 
     private getFieldByColumnName(
