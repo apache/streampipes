@@ -50,12 +50,6 @@
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- External dependencies -->
-        <dependency>
-            <groupId>com.github.drapostolos</groupId>
-            <artifactId>type-parser</artifactId>
-        </dependency>
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
