@@ -133,6 +133,25 @@ public final class TypedCollection<T> {
   }
 
   /**
+   * Writes a document with {@code POST /{db}}. Unlike {@link #create(Object)}, CouchDB assigns the id if the
+   * document has none; with the default {@code sequential} algorithm those ids sort in creation order. A document
+   * with {@code _id} and {@code _rev} updates that revision, as CouchDB does for this endpoint.
+   *
+   * @param document document
+   * @return id and revision
+   * @throws DocumentConflictException if a document with the id exists or the revision is not the current one
+   */
+  public DocumentRef post(T document) {
+    byte[] json = codec.encode(document);
+    CouchJson.DocumentMeta meta = CouchJson.scan(json);
+    if (meta.hasNullMetadata()) {
+      // the body carries the id here, so only the null fields are removed
+      json = CouchJson.withoutFields(json, meta.id() == null ? METADATA_FIELDS : REV_FIELD);
+    }
+    return write(document, CouchRequest.post(database.path(""), json));
+  }
+
+  /**
    * Updates a document.
    *
    * @param document document with {@code _id} and the current {@code _rev}

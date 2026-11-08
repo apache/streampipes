@@ -15,30 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.NoDocumentException;
+package org.apache.streampipes.storage.api.exceptions;
 
-import java.util.function.Supplier;
+/**
+ * A query or document was rejected as invalid, for example a wrong Mango selector or malformed JSON.
+ */
+public class StorageQueryException extends StorageException {
 
-public class DeleteCommand<T> extends DbCommand<Boolean, T> {
-
-  private String key;
-
-  public DeleteCommand(Supplier<CouchDbClient> couchDbClient, String key, Class<T> clazz) {
-    super(couchDbClient, clazz);
-    this.key = key;
+  public StorageQueryException(String message) {
+    super(message);
   }
 
-  @Override
-  protected Boolean executeCommand(CouchDbClient couchDbClient) {
-    try {
-      T result = couchDbClient.find(clazz, key);
-      couchDbClient.remove(result);
-      return true;
-    } catch (NoDocumentException e) {
-      return false;
-    }
+  public StorageQueryException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

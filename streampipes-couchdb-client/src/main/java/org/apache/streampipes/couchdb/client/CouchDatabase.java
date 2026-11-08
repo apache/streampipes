@@ -20,7 +20,6 @@ package org.apache.streampipes.couchdb.client;
 
 import org.apache.streampipes.couchdb.client.codec.DocumentCodec;
 import org.apache.streampipes.couchdb.client.codec.JacksonCodec;
-import org.apache.streampipes.couchdb.client.exception.CouchDbException;
 import org.apache.streampipes.couchdb.client.exception.DatabaseNotFoundException;
 import org.apache.streampipes.couchdb.client.exception.PreconditionFailedException;
 import org.apache.streampipes.couchdb.client.transport.CouchRequest;
@@ -59,14 +58,7 @@ public final class CouchDatabase {
   }
 
   public boolean exists() {
-    try {
-      return server.execute(CouchRequest.head(path), response -> true);
-    } catch (CouchDbException e) {
-      if (e.getStatus() == 404) {
-        return false;
-      }
-      throw e;
-    }
+    return server.databaseExists(name);
   }
 
   /**
@@ -81,6 +73,14 @@ public final class CouchDatabase {
     } catch (PreconditionFailedException e) {
       return false;
     }
+  }
+
+  /**
+   * Creates the database unless it exists. A user who may use an existing database but not create databases can call
+   * this, unlike {@link #create()}.
+   */
+  public void ensureExists() {
+    server.ensureDatabase(name);
   }
 
   public void delete() {

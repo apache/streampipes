@@ -18,37 +18,47 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
+import org.apache.streampipes.couchdb.client.TypedCollection;
+import org.apache.streampipes.couchdb.client.exception.CouchDbException;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-import org.apache.http.HttpStatus;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 public class MigrateDataLakeDatabaseToDatasetMigration implements Migration {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrateDataLakeDatabaseToDatasetMigration.class);
 
+  static final String LEGACY_DATA_LAKE_DB_NAME = "data-lake";
   static final int PAGE_SIZE = 100;
+
+  private final CouchDbStores stores;
+  private final LegacyDatabase legacyDatabase;
+
+  public MigrateDataLakeDatabaseToDatasetMigration(CouchDbStores stores) {
+    this.stores = stores;
+    this.legacyDatabase = new LegacyDatabase(stores.server().database(LEGACY_DATA_LAKE_DB_NAME));
+  }
 
   @Override
   public boolean shouldExecute() {
-    return databaseExists(Utils.LEGACY_DATA_LAKE_DB_NAME);
+    return legacyDatabase.exists();
   }
 
   @Override
   public void executeMigration() throws IOException {
-    copyDocuments(Utils.LEGACY_DATA_LAKE_DB_NAME, Utils.DATA_LAKE_DB_NAME);
-    removeDatabase(Utils.LEGACY_DATA_LAKE_DB_NAME);
+    try {
+      copyDocuments();
+    } catch (CouchDbException e) {
+      throw new IOException("Could not copy database '" + LEGACY_DATA_LAKE_DB_NAME + "' to '"
+          + CouchDbStores.DATA_LAKE_DB_NAME + "'", e);
+    }
+    legacyDatabase.remove();
   }
 
   @Override
@@ -56,108 +66,37 @@ public class MigrateDataLakeDatabaseToDatasetMigration implements Migration {
     return "Migrate legacy data lake database to dataset database";
   }
 
-  protected boolean databaseExists(String databaseName) {
-    try {
-      var response = Utils.getRequest(Utils.getDatabaseRoute(databaseName))
-          .execute()
-          .returnResponse();
-      int statusCode = response.getStatusLine().getStatusCode();
-      EntityUtils.consume(response.getEntity());
-      return statusCode == HttpStatus.SC_OK;
-    } catch (IOException e) {
-      LOG.warn("Could not determine whether CouchDB database '{}' exists", databaseName, e);
-      return false;
-    }
-  }
-
-  protected void copyDocuments(String sourceDatabaseName,
-                               String targetDatabaseName) throws IOException {
-    Utils.getCouchDbClient(targetDatabaseName, true).shutdown();
+  private void copyDocuments() {
+    var targetDatabase = stores.database(CouchDbStores.DATA_LAKE_DB_NAME);
+    targetDatabase.create();
+    var source = legacyDatabase.database().raw();
+    var target = targetDatabase.raw();
 
     String startId = null;
     long copiedDocuments = 0;
     do {
-      JsonArray rows = getDocumentPage(sourceDatabaseName, startId);
-      int documentsToCopy = Math.min(rows.size(), PAGE_SIZE);
+      List<Map<String, Object>> page = documentPage(source, startId);
+      int documentsToCopy = Math.min(page.size(), PAGE_SIZE);
       for (int i = 0; i < documentsToCopy; i++) {
-        upsertDocument(targetDatabaseName, rows.get(i).getAsJsonObject().getAsJsonObject("doc"));
+        target.upsert(page.get(i));
         copiedDocuments++;
       }
       // The extra row is the inclusive start of the next page, avoiding offset-based scans.
-      startId = rows.size() > PAGE_SIZE
-          ? rows.get(PAGE_SIZE).getAsJsonObject().get("id").getAsString()
-          : null;
+      startId = page.size() > PAGE_SIZE ? (String) page.get(PAGE_SIZE).get("_id") : null;
     } while (startId != null);
 
     LOG.info("Copied {} documents from '{}' to '{}'",
         copiedDocuments,
-        sourceDatabaseName,
-        targetDatabaseName);
+        LEGACY_DATA_LAKE_DB_NAME,
+        CouchDbStores.DATA_LAKE_DB_NAME);
   }
 
-  protected JsonArray getDocumentPage(String databaseName, String startId) throws IOException {
-    String route = Utils.getDatabaseRoute(databaseName) + "/_all_docs?include_docs=true&limit=" + (PAGE_SIZE + 1);
+  private List<Map<String, Object>> documentPage(TypedCollection<Map<String, Object>> source, String startId) {
+    // Design documents are part of the copy; the page must also stay complete for the paging above.
+    var query = source.allDocs().includeDesignDocuments().limit(PAGE_SIZE + 1);
     if (startId != null) {
-      route += "&startkey=" + URLEncoder.encode(new JsonPrimitive(startId).toString(), StandardCharsets.UTF_8);
+      query.startKey(startId);
     }
-    var response = Utils.getRequest(route).execute().returnContent().asString();
-    return JsonParser.parseString(response).getAsJsonObject().getAsJsonArray("rows");
-  }
-
-  protected void upsertDocument(String databaseName,
-                                JsonObject document) throws IOException {
-    String documentId = document.get("_id").getAsString();
-
-    JsonObject documentToStore = document.deepCopy();
-    documentToStore.remove("_rev");
-
-    String targetRoute = Utils.getDatabaseRoute(databaseName) + "/" + Utils.escapePathSegment(documentId);
-    String currentRev = getDocumentRev(targetRoute);
-    if (currentRev != null) {
-      documentToStore.addProperty("_rev", currentRev);
-    }
-
-    var response = Utils.putRequest(targetRoute, documentToStore.toString())
-        .execute()
-        .returnResponse();
-
-    int statusCode = response.getStatusLine().getStatusCode();
-    EntityUtils.consume(response.getEntity());
-    if (!(statusCode == HttpStatus.SC_CREATED || statusCode == HttpStatus.SC_ACCEPTED
-        || statusCode == HttpStatus.SC_OK)) {
-      throw new IOException("Unexpected response while copying document '" + documentId + "': " + statusCode);
-    }
-  }
-
-  protected void removeDatabase(String databaseName) throws IOException {
-    var response = Utils.deleteRequest(Utils.getDatabaseRoute(databaseName))
-        .execute()
-        .returnResponse();
-    int statusCode = response.getStatusLine().getStatusCode();
-    EntityUtils.consume(response.getEntity());
-
-    if (!(statusCode == HttpStatus.SC_OK
-        || statusCode == HttpStatus.SC_ACCEPTED
-        || statusCode == HttpStatus.SC_NOT_FOUND)) {
-      throw new IOException("Unexpected response while deleting legacy database '" + databaseName + "': "
-          + statusCode);
-    }
-  }
-
-  protected String getDocumentRev(String documentRoute) throws IOException {
-    var response = Utils.getRequest(documentRoute).execute().returnResponse();
-    try {
-      int statusCode = response.getStatusLine().getStatusCode();
-      if (statusCode == HttpStatus.SC_OK) {
-        var document = JsonParser.parseString(EntityUtils.toString(response.getEntity())).getAsJsonObject();
-        return document.get("_rev").getAsString();
-      }
-      if (statusCode == HttpStatus.SC_NOT_FOUND) {
-        return null;
-      }
-      throw new IOException("Unexpected response while reading document revision: " + statusCode);
-    } finally {
-      EntityUtils.consume(response.getEntity());
-    }
+    return query.docs();
   }
 }

@@ -66,6 +66,28 @@ public class TypedCollectionTest {
   }
 
   @Test
+  public void postLetsCouchDbAssignTheId() {
+    var stub = StubTransport.create().respond(201, OK.formatted("server-id", "1-a"));
+    var doc = new LinkedHashMap<String, Object>();
+    doc.put("_id", null);
+    doc.put("name", "x");
+
+    var ref = stub.server().database("db").raw().post(doc);
+
+    assertEquals("POST", stub.request(0).method());
+    assertEquals("/db", stub.request(0).path());
+    assertEquals("{\"name\":\"x\"}", stub.body(0));
+    assertEquals(new DocumentRef("server-id", "1-a"), ref);
+
+    var withId = new LinkedHashMap<String, Object>();
+    withId.put("_id", "given");
+    withId.put("_rev", null);
+    stub.respond(201, OK.formatted("given", "1-b"));
+    stub.server().database("db").raw().post(withId);
+    assertEquals("{\"_id\":\"given\"}", stub.body(1));
+  }
+
+  @Test
   public void createRejectsRevision() {
     var stub = StubTransport.create();
     assertThrows(IllegalArgumentException.class,
@@ -129,26 +151,49 @@ public class TypedCollectionTest {
   @Test
   public void createsDatabaseOncePerServer() {
     var stub = StubTransport.create()
-        .respond(412, "{\"error\":\"file_exists\"}")
+        .respond(404, "")
+        .respond(201, "{\"ok\":true}")
         .respond(200, "{\"_id\":\"a\"}")
         .respond(200, "{\"_id\":\"b\"}");
     var server = stub.server();
     server.database("db", DatabaseOptions.createIfMissing()).raw().get("a");
     server.database("db", DatabaseOptions.createIfMissing()).raw().get("b");
-    assertEquals(List.of("PUT /db", "GET /db/a", "GET /db/b"),
+    assertEquals(List.of("HEAD /db", "PUT /db", "GET /db/a", "GET /db/b"),
+        stub.requests.stream().map(r -> r.method() + " " + r.path()).toList());
+  }
+
+  @Test
+  public void doesNotCreateAnExistingDatabase() {
+    var stub = StubTransport.create()
+        .respond(200, "")
+        .respond(200, "{\"_id\":\"a\"}");
+    stub.server().database("db", DatabaseOptions.createIfMissing()).raw().get("a");
+    assertEquals(List.of("HEAD /db", "GET /db/a"),
+        stub.requests.stream().map(r -> r.method() + " " + r.path()).toList());
+  }
+
+  @Test
+  public void acceptsDatabaseCreatedByAnotherClientAfterTheCheck() {
+    var stub = StubTransport.create()
+        .respond(404, "")
+        .respond(412, "{\"error\":\"file_exists\"}")
+        .respond(200, "{\"_id\":\"a\"}");
+    stub.server().database("db", DatabaseOptions.createIfMissing()).raw().get("a");
+    assertEquals(List.of("HEAD /db", "PUT /db", "GET /db/a"),
         stub.requests.stream().map(r -> r.method() + " " + r.path()).toList());
   }
 
   @Test
   public void recreatesDeletedDatabaseAndRetries() {
     var stub = StubTransport.create()
-        .respond(201, "{\"ok\":true}")
+        .respond(200, "")
         .respond(404, "{\"error\":\"not_found\",\"reason\":\"Database does not exist.\"}")
+        .respond(404, "")
         .respond(201, "{\"ok\":true}")
         .respond(201, OK.formatted("a", "1-a"));
     var ref = stub.server().database("db", DatabaseOptions.createIfMissing()).raw().create(Map.of("_id", "a"));
     assertEquals("1-a", ref.rev());
-    assertEquals(4, stub.requests.size());
+    assertEquals(5, stub.requests.size());
   }
 
   @Test
@@ -198,6 +243,26 @@ public class TypedCollectionTest {
     assertEquals(2, stub.requests.size(), "no request after the limit is reached");
     assertTrue(stub.body(1).contains("\"limit\":1"), "last page asks only for what is missing");
     assertThrows(IllegalArgumentException.class, () -> stub.server().database("db").raw().findAll(query, 0));
+  }
+
+  @Test
+  public void queryFromMapKeepsOtherOptions() {
+    var body = new LinkedHashMap<String, Object>();
+    body.put("selector", Map.of("appDocType", "t"));
+    body.put("limit", 10);
+    body.put("execution_stats", true);
+    body.put("r", 1);
+
+    var query = MangoQuery.fromMap(body);
+
+    assertEquals(body, query.toMap());
+    assertEquals(body, query.copy().toMap());
+  }
+
+  @Test
+  public void rejectsAQueryWithoutASelectorObject() {
+    assertThrows(IllegalArgumentException.class, () -> MangoQuery.fromMap(Map.of("limit", 1)));
+    assertThrows(IllegalArgumentException.class, () -> MangoQuery.fromMap(Map.of("selector", "not-an-object")));
   }
 
   @Test

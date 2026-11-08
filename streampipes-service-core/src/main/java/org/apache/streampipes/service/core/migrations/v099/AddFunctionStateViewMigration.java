@@ -20,10 +20,15 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.manager.setup.tasks.AddFunctionStateViewTask;
 import org.apache.streampipes.service.core.migrations.templates.AddGenericStorageViewMigration;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 import java.io.IOException;
 
 public class AddFunctionStateViewMigration extends AddGenericStorageViewMigration {
+
+  public AddFunctionStateViewMigration(CouchDbStores stores) {
+    super(stores);
+  }
 
   @Override
   public String getDesignDocumentName() {
@@ -37,6 +42,6 @@ public class AddFunctionStateViewMigration extends AddGenericStorageViewMigratio
 
   @Override
   public void executeMigration() throws IOException {
-    new AddFunctionStateViewTask().execute();
+    new AddFunctionStateViewTask(stores).execute();
   }
 }

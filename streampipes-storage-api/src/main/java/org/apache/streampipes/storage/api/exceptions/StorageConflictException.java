@@ -15,29 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
 
-import org.apache.streampipes.model.Tuple2;
+package org.apache.streampipes.storage.api.exceptions;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.Response;
+/**
+ * A write used an id that already exists or a revision that is no longer the current one.
+ */
+public class StorageConflictException extends StorageException {
 
-import java.util.function.Supplier;
-
-public class PersistCommand<T> extends DbCommand<Tuple2<Boolean, String>, T> {
-
-  private T objectToPersist;
-
-  public PersistCommand(Supplier<CouchDbClient> couchDbClient, T objectToPersist, Class<T> clazz) {
-    super(couchDbClient, clazz);
-    this.objectToPersist = objectToPersist;
+  public StorageConflictException(String message) {
+    super(message);
   }
 
-  @Override
-  protected Tuple2<Boolean, String> executeCommand(CouchDbClient couchDbClient) {
-    Response response = couchDbClient.save(objectToPersist);
-
-    return new Tuple2<>(response.getError() == null, response.getId());
-
+  public StorageConflictException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

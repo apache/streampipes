@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.service.core.migrations.Migration;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,7 +62,7 @@ public class RenameAssetLinkTypesMigration implements Migration {
       return genericStorage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
           .stream()
           .anyMatch(this::isLegacyLinkType);
-    } catch (IOException e) {
+    } catch (StorageException e) {
       return false;
     }
   }

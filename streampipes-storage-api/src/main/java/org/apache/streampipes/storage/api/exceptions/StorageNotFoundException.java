@@ -15,29 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.NoDocumentException;
+package org.apache.streampipes.storage.api.exceptions;
 
-import java.util.function.Supplier;
+/**
+ * The requested document or attachment does not exist.
+ */
+public class StorageNotFoundException extends StorageException {
 
-public class UpdateCommand<T> extends DbCommand<Boolean, T> {
-
-  private T objectToUpdate;
-
-  public UpdateCommand(Supplier<CouchDbClient> couchDbClient, T objectToUpdate, Class<T> clazz) {
-    super(couchDbClient, clazz);
-    this.objectToUpdate = objectToUpdate;
+  public StorageNotFoundException(String message) {
+    super(message);
   }
 
-  @Override
-  protected Boolean executeCommand(CouchDbClient couchDbClient) {
-    try {
-      couchDbClient.update(objectToUpdate);
-      return true;
-    } catch (NoDocumentException e) {
-      return false;
-    }
+  public StorageNotFoundException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

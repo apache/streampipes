@@ -24,9 +24,9 @@ import org.apache.streampipes.manager.pipeline.PipelineElementUserCleaner;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
-import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +76,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
     pipelinesStats.updatePipelineHealthState(pipeline.getElementId(),pipeline.getName(), pipeline.getHealthStatus().toString());
     try {
       pipelineStorage.updateElement(pipeline);
-    } catch (DocumentConflictException dce) {
+    } catch (StorageConflictException dce) {
       LOG.error("Could not update pipeline {}", pipeline.getPipelineId(), dce);
     }
   }

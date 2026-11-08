@@ -15,30 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.NoDocumentException;
+package org.apache.streampipes.storage.api.exceptions;
 
-import java.util.Optional;
-import java.util.function.Supplier;
+/**
+ * Base class of the unchecked errors a storage implementation raises, independent of the database behind it.
+ */
+public class StorageException extends RuntimeException {
 
-public class FindCommand<T> extends DbCommand<Optional<T>, T> {
-
-  private String id;
-
-  public FindCommand(Supplier<CouchDbClient> couchDbClient, String id, Class<T> clazz) {
-    super(couchDbClient, clazz);
-    this.id = id;
+  public StorageException(String message) {
+    super(message);
   }
 
-  @Override
-  protected Optional<T> executeCommand(CouchDbClient couchDbClient) {
-    try {
-      T result = couchDbClient.find(clazz, id);
-      return Optional.of(result);
-    } catch (NoDocumentException e) {
-      return Optional.empty();
-    }
+  public StorageException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

@@ -16,16 +16,18 @@
  *
  */
 
-package org.apache.streampipes.manager.setup.design;
+package org.apache.streampipes.storage.api.exceptions;
 
-import org.lightcouch.DesignDocument;
+/**
+ * The storage could not serve the request: connection errors, timeouts, rejected credentials or a server error.
+ */
+public class StorageUnavailableException extends StorageException {
 
-public class DesignDocumentUtils {
+  public StorageUnavailableException(String message) {
+    super(message);
+  }
 
-  public static DesignDocument prepareDocument(String id) {
-    DesignDocument doc = new DesignDocument();
-    doc.setLanguage("javascript");
-    doc.setId(id);
-    return doc;
+  public StorageUnavailableException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

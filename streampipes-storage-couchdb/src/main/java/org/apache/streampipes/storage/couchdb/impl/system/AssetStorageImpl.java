@@ -19,14 +19,15 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class AssetStorageImpl extends DefaultViewCrudStorage<SpAssetModel> implements IAssetStorage {
 
-  public AssetStorageImpl() {
+  public AssetStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("genericstorage"),
+        stores.gson(GenericCouchDbConstants.DB_NAME),
         SpAssetModel.class,
         "assets/all-assets"
     );

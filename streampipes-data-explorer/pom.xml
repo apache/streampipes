@@ -43,8 +43,9 @@
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.lightcouch</groupId>
-            <artifactId>lightcouch</artifactId>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-couchdb-client</artifactId>
+            <version>0.99.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Test dependencies -->

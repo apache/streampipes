@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A Mango query for {@code POST /{db}/_find}.
@@ -31,6 +32,9 @@ import java.util.Map;
  */
 public final class MangoQuery {
 
+  private static final Set<String> KNOWN_KEYS =
+      Set.of("selector", "fields", "sort", "limit", "skip", "bookmark", "use_index");
+
   private Map<String, Object> selector;
   private List<String> fields;
   private final List<Map<String, String>> sort = new ArrayList<>();
@@ -38,6 +42,7 @@ public final class MangoQuery {
   private Integer skip;
   private String bookmark;
   private Object useIndex;
+  private final Map<String, Object> otherOptions = new LinkedHashMap<>();
 
   private MangoQuery(Map<String, Object> selector) {
     this.selector = selector;
@@ -53,15 +58,18 @@ public final class MangoQuery {
 
   /**
    * Query from a full request body in Mango syntax ({@code selector}, {@code fields}, {@code limit}, ...), as built
-   * by existing code. Unknown keys are ignored.
+   * by existing code. Other options ({@code execution_stats}, {@code r}, ...) are sent unchanged.
    *
    * @param query request body
    * @return the query
+   * @throws IllegalArgumentException if the selector is missing or not an object, which CouchDB rejects as well
    */
   @SuppressWarnings("unchecked")
   public static MangoQuery fromMap(Map<String, Object> query) {
-    var selector = query.get("selector");
-    var result = new MangoQuery(selector instanceof Map<?, ?> map ? (Map<String, Object>) map : Map.of());
+    if (!(query.get("selector") instanceof Map<?, ?> selector)) {
+      throw new IllegalArgumentException("A Mango query needs a selector object");
+    }
+    var result = new MangoQuery((Map<String, Object>) selector);
     if (query.get("fields") instanceof List<?> list) {
       result.fields = list.stream().map(String::valueOf).toList();
     }
@@ -84,6 +92,11 @@ public final class MangoQuery {
       result.bookmark = value;
     }
     result.useIndex = query.get("use_index");
+    query.forEach((key, value) -> {
+      if (!KNOWN_KEYS.contains(key)) {
+        result.otherOptions.put(key, value);
+      }
+    });
     return result;
   }
 
@@ -152,6 +165,7 @@ public final class MangoQuery {
     copy.skip = skip;
     copy.bookmark = bookmark;
     copy.useIndex = useIndex;
+    copy.otherOptions.putAll(otherOptions);
     return copy;
   }
 
@@ -196,6 +210,7 @@ public final class MangoQuery {
     if (useIndex != null) {
       body.put("use_index", useIndex);
     }
+    body.putAll(otherOptions);
     return body;
   }
 }

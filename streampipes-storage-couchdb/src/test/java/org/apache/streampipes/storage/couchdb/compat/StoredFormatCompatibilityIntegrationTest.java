@@ -28,40 +28,33 @@ import org.apache.streampipes.storage.couchdb.compat.ModelFixtures.Variant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * Writes every stored model with the real LightCouch client and with the new client into CouchDB 3.3.1, then
- * compares what CouchDB stored and reads each document back with both clients. Unlike
+ * Writes every stored model the way LightCouch did ({@link LegacyCouchDbHttp}) and with the new client into CouchDB
+ * 3.3.1, then compares what CouchDB stored and reads each document back both ways. Unlike
  * {@link CodecCompatibilityTest} this covers CouchDB's own re-serialization of documents. Enable with
  * {@code -Dstreampipes.couchdb.integration=true}.
  */
 @EnabledIfSystemProperty(named = "streampipes.couchdb.integration", matches = "true")
-public class LightCouchCompatibilityIntegrationTest {
+public class StoredFormatCompatibilityIntegrationTest {
 
   private static final String USER = "admin";
   private static final String PASSWORD = "admin";
@@ -113,7 +106,9 @@ public class LightCouchCompatibilityIntegrationTest {
     var db = server.database("compat-generic");
     db.create();
 
-    putVerbatim("compat-generic", "verbatim", payload);
+    try (var legacy = legacy(new Gson())) {
+      legacy.put("compat-generic", "verbatim", payload);
+    }
     Map<String, Object> parsed = JacksonSerializer.getObjectMapper().readValue(payload, new TypeReference<>() {
     });
     parsed.put("_id", "via-map");
@@ -124,14 +119,45 @@ public class LightCouchCompatibilityIntegrationTest {
         JsonTrees.without(stored.get("via-map"), "_id", "_rev"));
   }
 
-  private static void check(StoredModel model, String databasePrefix) {
+  /**
+   * {@code CouchDbSink} writes event maps with LightCouch's default Gson; it now uses a plain Gson through
+   * {@link GsonCodec}.
+   */
+  @Test
+  public void eventMapStoredLikeLightCouch() throws Exception {
+    var event = new LinkedHashMap<String, Object>();
+    event.put("_id", "event");
+    event.put("text", "Ünï <&> \u2028 😀");
+    event.put("integer", 3);
+    event.put("long", 9007199254740993L);
+    event.put("double", 1.10);
+    event.put("whole", 3.0);
+    event.put("tiny", 1.0e-7);
+    event.put("flag", true);
+    event.put("none", null);
+    event.put("nested", Map.of("list", List.of(1, "a", Map.of("k", List.of()))));
+
+    server.database("compat-sink-legacy").create();
+    try (var legacy = legacy(LegacyCouchDbPath.gson(new GsonBuilder()))) {
+      legacy.save("compat-sink-legacy", "event", event);
+    }
+    var db = server.database("compat-sink-new");
+    db.create();
+    db.typed(Object.class, GsonCodec.of(new Gson())).create(event);
+
+    assertSame("event map",
+        JsonTrees.without(server.database("compat-sink-legacy").typed(JsonNode.class, EXACT).get("event"), "_rev"),
+        JsonTrees.without(db.typed(JsonNode.class, EXACT).get("event"), "_rev"));
+  }
+
+  private static void check(StoredModel model, String databasePrefix) throws Exception {
     String legacyDb = databasePrefix + "-legacy";
     String newDb = databasePrefix + "-new";
+    server.database(legacyDb).create();
+    server.database(newDb).create();
     Gson legacyGson = LegacyCouchDbPath.gson(model.gsonBuilder().get());
     GsonCodec codec = model.newCodec();
-    CouchDbClient legacyOnLegacy = lightCouch(legacyDb, model);
-    CouchDbClient legacyOnNew = lightCouch(newDb, model);
-    try {
+    try (var legacy = legacy(legacyGson)) {
       TypedCollection<Object> newOnLegacy = server.database(legacyDb).typed(rawClass(model.readType()), codec);
       TypedCollection<Object> newOnNew = server.database(newDb).typed(rawClass(model.readType()), codec);
       for (Variant variant : Variant.values()) {
@@ -139,45 +165,27 @@ public class LightCouchCompatibilityIntegrationTest {
         Object fixture = ModelFixtures.create(model.fixtureType(), variant, id, codec.gson());
         String step = model + " " + variant;
 
-        legacyOnLegacy.save(fixture);
+        legacy.save(legacyDb, id, fixture);
         newOnNew.create(fixture);
         assertSame(step + ", stored document",
             JsonTrees.without(server.database(legacyDb).typed(JsonNode.class, EXACT).get(id), "_rev"),
             JsonTrees.without(server.database(newDb).typed(JsonNode.class, EXACT).get(id), "_rev"));
 
-        JsonNode expected = reencode(legacyGson, legacyOnLegacy.find(model.readType(), id));
+        JsonNode expected = reencode(legacyGson, legacy.find(legacyDb, id, model.readType()));
         assertSame(step + ", LightCouch reads new client's document", expected,
-            reencode(legacyGson, legacyOnNew.find(model.readType(), id)));
+            reencode(legacyGson, legacy.find(newDb, id, model.readType())));
         assertSame(step + ", new client reads LightCouch's document", expected,
             reencode(legacyGson, newOnLegacy.get(id)));
         assertSame(step + ", new client reads its own document", expected, reencode(legacyGson, newOnNew.get(id)));
         assertSame(step + ", LightCouch _all_docs", expected,
-            byId(legacyGson, legacyOnNew.view("_all_docs").includeDocs(true).query(model.readType()), id));
+            byId(legacyGson, legacy.allDocs(newDb, model.readType()), id));
         assertSame(step + ", new client findAll", expected, byId(legacyGson, newOnLegacy.findAll(), id));
       }
-    } finally {
-      legacyOnLegacy.shutdown();
-      legacyOnNew.shutdown();
     }
   }
 
-  private static CouchDbClient lightCouch(String database, StoredModel model) {
-    var client = new CouchDbClient(new CouchDbProperties(database, true, "http", couchDb.getHost(),
-        couchDb.getMappedPort(5984), USER, PASSWORD));
-    client.setGsonBuilder(model.gsonBuilder().get());
-    return client;
-  }
-
-  private static void putVerbatim(String database, String id, String payload) throws Exception {
-    String auth = Base64.getEncoder().encodeToString((USER + ":" + PASSWORD).getBytes(StandardCharsets.UTF_8));
-    try (var http = HttpClient.newHttpClient()) {
-      var response = http.send(HttpRequest.newBuilder(URI.create(server.config().baseUrl() + "/" + database + "/" + id))
-          .header("Authorization", "Basic " + auth)
-          .header("Content-Type", "application/json")
-          .PUT(HttpRequest.BodyPublishers.ofString(payload))
-          .build(), HttpResponse.BodyHandlers.ofString());
-      assertEquals(201, response.statusCode(), response.body());
-    }
+  private static LegacyCouchDbHttp legacy(Gson gson) {
+    return new LegacyCouchDbHttp(server.config().baseUrl(), USER, PASSWORD, gson);
   }
 
   private static JsonNode byId(Gson legacyGson, List<?> documents, String id) {
