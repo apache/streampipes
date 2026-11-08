@@ -20,13 +20,14 @@ package org.apache.streampipes.extensions.connectors.mqtt.security;
 import org.apache.streampipes.commons.environment.Environments;
 
 import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.TrustManagerFactorySpi;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
 
 
 import java.io.ByteArrayInputStream;
@@ -54,7 +55,7 @@ import java.util.regex.Pattern;
 public class SecurityUtils {
 
     public static final TrustManager[] ACCEPT_ALL = new TrustManager[]{
-        new X509TrustManager() {
+        new X509ExtendedTrustManager() {
             @Override
             public X509Certificate[] getAcceptedIssuers() {
                 return new X509Certificate[0];
@@ -65,6 +66,18 @@ public class SecurityUtils {
 
             @Override
             public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType, Socket socket) { }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType, Socket socket) { }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType, SSLEngine engine) { }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType, SSLEngine engine) { }
         }
     };
 
