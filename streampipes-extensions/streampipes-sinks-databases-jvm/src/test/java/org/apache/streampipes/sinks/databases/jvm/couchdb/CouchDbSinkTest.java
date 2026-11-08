@@ -48,7 +48,7 @@ class CouchDbSinkTest {
   private final List<Request> requests = new CopyOnWriteArrayList<>();
   private final CouchDbSink sink = new CouchDbSink();
   private HttpServer server;
-  private int databaseCreateStatus = 201;
+  private int databaseExistsStatus = 404;
 
   @BeforeEach
   void startServer() throws IOException {
@@ -67,19 +67,18 @@ class CouchDbSinkTest {
     sink.onPipelineStarted(parameters(), null);
     sink.onPipelineStopped();
 
-    assertEquals(1, requests.size());
-    assertEquals("PUT /events", requests.get(0).line());
-    assertNull(requests.get(0).authorization());
+    assertEquals(List.of("HEAD /events", "PUT /events"), requests.stream().map(Request::line).toList());
+    assertNull(requests.get(1).authorization());
   }
 
   @Test
-  void acceptsAnExistingDatabase() {
-    databaseCreateStatus = 412;
+  void doesNotCreateAnExistingDatabase() {
+    databaseExistsStatus = 200;
 
     sink.onPipelineStarted(parameters(), null);
     sink.onPipelineStopped();
 
-    assertEquals("PUT /events", requests.get(0).line());
+    assertEquals(List.of("HEAD /events"), requests.stream().map(Request::line).toList());
   }
 
   @Test
@@ -116,7 +115,12 @@ class CouchDbSinkTest {
     String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
     String line = exchange.getRequestMethod() + " " + exchange.getRequestURI().getRawPath();
     requests.add(new Request(line, exchange.getRequestHeaders().getFirst("Authorization"), body));
-    int status = "PUT /events".equals(line) ? databaseCreateStatus : 201;
+    if ("HEAD /events".equals(line)) {
+      exchange.sendResponseHeaders(databaseExistsStatus, -1);
+      exchange.close();
+      return;
+    }
+    int status = 201;
     byte[] response = (status == 201 ? "{\"ok\":true,\"id\":\"id\",\"rev\":\"1-a\"}" : "{\"error\":\"file_exists\"}")
         .getBytes(StandardCharsets.UTF_8);
     exchange.sendResponseHeaders(status, response.length);

@@ -45,8 +45,13 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +143,35 @@ public class CouchDbClientIntegrationTest {
     }
     db.raw().create(Map.of("_id", "c"));
     assertEquals(2, db.raw().findAll().size());
+  }
+
+  @Test
+  public void usesExistingDatabaseWithoutTheRightToCreateDatabases() throws Exception {
+    String name = newName();
+    server.database(name).create();
+    openToAnonymousUsers(name);
+
+    try (var anonymous = CouchServer.builder().url(server.config().baseUrl()).build()) {
+      var db = anonymous.database(name, DatabaseOptions.createIfMissing());
+      db.ensureExists();
+      assertEquals("a", db.raw().create(Map.of("_id", "a")).id());
+
+      var missing = anonymous.database(newName(), DatabaseOptions.createIfMissing());
+      assertThrows(CouchDbAuthenticationException.class, missing::ensureExists);
+    }
+  }
+
+  private static void openToAnonymousUsers(String database) throws Exception {
+    String auth = Base64.getEncoder().encodeToString((USER + ":" + PASSWORD).getBytes(StandardCharsets.UTF_8));
+    try (var http = HttpClient.newHttpClient()) {
+      var uri = URI.create(server.config().baseUrl() + "/" + database + "/_security");
+      var response = http.send(HttpRequest.newBuilder(uri)
+          .header("Authorization", "Basic " + auth)
+          .header("Content-Type", "application/json")
+          .PUT(HttpRequest.BodyPublishers.ofString("{\"members\":{\"names\":[],\"roles\":[]}}"))
+          .build(), HttpResponse.BodyHandlers.ofString());
+      assertEquals(200, response.statusCode(), response.body());
+    }
   }
 
   @Test

@@ -49,7 +49,7 @@ public class ImageStore {
              CouchServer couchServer) {
     this.couchServer = couchServer;
     var database = couchServer.database(DB_NAME, DatabaseOptions.createIfMissing());
-    database.create();
+    database.ensureExists();
     this.attachments = database.attachments();
     this.imageProperties = ImageStoreUtils.getImageProperties(measure);
   }
