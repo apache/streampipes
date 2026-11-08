@@ -33,6 +33,7 @@
                     ) !== undefined
                 "
                 [readonly]="true"
+                (previewStateChange)="previewStateChange.emit($event)"
             ></sp-pipeline-assembly-drawing-area>
         }
     </div>

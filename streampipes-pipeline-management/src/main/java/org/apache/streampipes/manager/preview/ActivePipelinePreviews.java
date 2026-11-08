@@ -19,9 +19,10 @@ package org.apache.streampipes.manager.preview;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum ActivePipelinePreviews {
 
@@ -30,7 +31,7 @@ public enum ActivePipelinePreviews {
   private final Map<String, List<NamedStreamPipesEntity>> activePreviews;
 
   ActivePipelinePreviews() {
-    this.activePreviews = new HashMap<>();
+    this.activePreviews = new ConcurrentHashMap<>();
   }
 
   public void addActivePreview(String previewId,
@@ -38,11 +39,20 @@ public enum ActivePipelinePreviews {
     this.activePreviews.put(previewId, activePreviews);
   }
 
-  public void removePreview(String previewId) {
-    this.activePreviews.remove(previewId);
+  /**
+   * Removes the preview atomically, so that concurrent stop requests detach its graphs only once.
+   *
+   * @return the graphs of the removed preview, or empty if the preview was not (or no longer) active
+   */
+  public Optional<List<NamedStreamPipesEntity>> removePreview(String previewId) {
+    return Optional.ofNullable(this.activePreviews.remove(previewId));
   }
 
-  public List<NamedStreamPipesEntity> getInvocationGraphs(String previewId) {
-    return this.activePreviews.get(previewId);
+  public Optional<List<NamedStreamPipesEntity>> getInvocationGraphs(String previewId) {
+    return Optional.ofNullable(this.activePreviews.get(previewId));
+  }
+
+  public boolean isActive(String previewId) {
+    return this.activePreviews.containsKey(previewId);
   }
 }

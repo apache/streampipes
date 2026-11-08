@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,6 +61,7 @@ public class PipelinePreview {
                                               ExtensionServiceRequestManager requestManager) {
     String previewId = generatePreviewId();
     var elementIdMappings = new HashMap<String, String>();
+    var elementErrors = new HashMap<String, String>();
     pipeline.setActions(new ArrayList<>());
     List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
         new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager)
@@ -68,20 +70,31 @@ public class PipelinePreview {
     );
 
     rewriteElementIds(pipelineElements, elementIdMappings);
-    invokeGraphs(filter(pipelineElements), requestManager);
+    var failedInvocations = invokeGraphs(filter(pipelineElements), requestManager);
+    reportFailures(failedInvocations, elementIdMappings, elementErrors);
+    // failed elements are neither consumed by the preview stream nor detached when the preview stops
+    pipelineElements.removeIf(pe -> failedInvocations.containsKey(pe.getElementId()));
     storeGraphs(previewId, pipelineElements);
 
-    LOG.info("Preview pipeline {} started", previewId);
+    LOG.info("Preview pipeline {} started ({} element(s) failed)", previewId, failedInvocations.size());
 
-    return makePreviewModel(previewId, elementIdMappings);
+    return makePreviewModel(previewId, elementIdMappings, elementErrors);
   }
 
+  /**
+   * Stops a preview and detaches its temporary pipeline elements. Safe to call more than once:
+   * an explicit stop request and the end of the preview stream may both trigger it.
+   */
   public void deletePreview(String previewId,
                             ExtensionServiceRequestManager requestManager) {
-    List<NamedStreamPipesEntity> graphs = ActivePipelinePreviews.INSTANCE.getInvocationGraphs(previewId);
-    detachGraphs(filter(graphs), requestManager);
-    deleteGraphs(previewId);
-    LOG.info("Preview pipeline {} stopped", previewId);
+    ActivePipelinePreviews.INSTANCE.removePreview(previewId).ifPresent(graphs -> {
+      detachGraphs(filter(graphs), requestManager);
+      LOG.info("Preview pipeline {} stopped", previewId);
+    });
+  }
+
+  public boolean isActive(String previewId) {
+    return ActivePipelinePreviews.INSTANCE.isActive(previewId);
   }
 
   public Map<String, SpDataStream> getPipelineElementPreviewStreams(String previewId) throws IllegalArgumentException {
@@ -89,6 +102,7 @@ public class PipelinePreview {
     return ActivePipelinePreviews
         .INSTANCE
         .getInvocationGraphs(previewId)
+        .orElseThrow(() -> new IllegalArgumentException("No active preview with id " + previewId))
         .stream()
         .filter(this::isProcessorOrStream)
         .collect(Collectors.toMap(
@@ -146,16 +160,38 @@ public class PipelinePreview {
         );
   }
 
-  private void invokeGraphs(List<InvocableStreamPipesEntity> graphs,
-                            ExtensionServiceRequestManager requestManager) {
+  /**
+   * Invokes the given elements.
+   *
+   * @return failure messages keyed by the (preview) element id of each element that could not be started
+   */
+  private Map<String, String> invokeGraphs(List<InvocableStreamPipesEntity> graphs,
+                                           ExtensionServiceRequestManager requestManager) {
+    var failures = new HashMap<String, String>();
     graphs.forEach(g -> {
       try {
         var service = findSelectedService(g);
         g.setSelectedEndpointUrl(service.getServiceUrl());
         g.setSelectedServiceId(service.getSvcId());
-        new InvokeExtensionRequest(requestManager, resourceManager).execute(g, null);
+        var status = new InvokeExtensionRequest(requestManager, resourceManager).execute(g, null);
+        if (!status.isSuccess()) {
+          failures.put(g.getElementId(), Objects.requireNonNullElse(
+              status.getOptionalMessage(), "The extensions service rejected the invocation"));
+        }
       } catch (NoServiceEndpointsAvailableException e) {
         LOG.warn("No endpoint found for pipeline element {}", g.getAppId());
+        failures.put(g.getElementId(), "No extensions service providing " + g.getAppId() + " is available");
+      }
+    });
+    return failures;
+  }
+
+  private void reportFailures(Map<String, String> failedInvocations,
+                              Map<String, String> elementIdMappings,
+                              Map<String, String> elementErrors) {
+    elementIdMappings.forEach((originalElementId, previewElementId) -> {
+      if (failedInvocations.containsKey(previewElementId)) {
+        elementErrors.put(originalElementId, failedInvocations.get(previewElementId));
       }
     });
   }
@@ -165,10 +201,6 @@ public class PipelinePreview {
     graphs.forEach(g -> {
       new DetachExtensionRequest(requestManager, resourceManager).execute(g, null);
     });
-  }
-
-  private void deleteGraphs(String previewId) {
-    ActivePipelinePreviews.INSTANCE.removePreview(previewId);
   }
 
   private void storeGraphs(
@@ -185,11 +217,13 @@ public class PipelinePreview {
 
   private PipelinePreviewModel makePreviewModel(
       String previewId,
-      Map<String, String> elementIdMappings
+      Map<String, String> elementIdMappings,
+      Map<String, String> elementErrors
   ) {
     PipelinePreviewModel previewModel = new PipelinePreviewModel();
     previewModel.setPreviewId(previewId);
     previewModel.setElementIdMappings(elementIdMappings);
+    previewModel.setElementErrors(elementErrors);
 
     return previewModel;
   }

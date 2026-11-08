@@ -29,8 +29,15 @@ public class PipelinePreviewModel {
 
   private Map<String, String> elementIdMappings;
 
+  /**
+   * Error messages for pipeline elements that could not be started for the preview,
+   * keyed by the element id used in the editor.
+   */
+  private Map<String, String> elementErrors;
+
   public PipelinePreviewModel() {
     this.elementIdMappings = new HashMap<>();
+    this.elementErrors = new HashMap<>();
   }
 
   public String getPreviewId() {
@@ -47,5 +54,13 @@ public class PipelinePreviewModel {
 
   public void setElementIdMappings(Map<String, String> elementIdMappings) {
     this.elementIdMappings = elementIdMappings;
+  }
+
+  public Map<String, String> getElementErrors() {
+    return elementErrors;
+  }
+
+  public void setElementErrors(Map<String, String> elementErrors) {
+    this.elementErrors = elementErrors;
   }
 }

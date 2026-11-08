@@ -37,3 +37,22 @@
 .preview-table {
     background: var(--color-bg-dialog);
 }
+
+.preview-message {
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.preview-error {
+    text-align: left;
+    color: var(--color-error);
+}
+
+.preview-message-icon {
+    font-size: 1rem;
+}
+
+.preview-message-detail {
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-sm);
+}

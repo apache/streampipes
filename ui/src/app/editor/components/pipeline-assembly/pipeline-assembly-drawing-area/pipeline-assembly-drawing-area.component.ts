@@ -32,6 +32,7 @@ import {
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelineComponent } from '../../pipeline/pipeline.component';
 import {
+    LivePreviewState,
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../../model/editor.model';
@@ -49,6 +50,8 @@ import { HttpDownloadProgressEvent } from '@angular/common/http';
 import { ObjectProvider } from '../../../services/object-provider.service';
 import { Subscription } from 'rxjs';
 import { ErrorHintComponent } from '../../../../core-ui/error-hint/error-hint.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-assembly-drawing-area',
@@ -68,6 +71,8 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     private pipelinePositioningService = inject(PipelinePositioningService);
     private livePreviewService = inject(LivePreviewService);
     private objectProvider = inject(ObjectProvider);
+    private snackBar = inject(MatSnackBar);
+    private translateService = inject(TranslateService);
 
     @Input()
     jsplumbBridge: JsplumbBridge;
@@ -85,9 +90,6 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     pipelineCanvasMetadataAvailable: boolean;
 
     @Input()
-    previewModeActive: boolean;
-
-    @Input()
     readonly: boolean;
 
     @Input()
@@ -96,9 +98,17 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     @Output()
     triggerPipelineCacheUpdateEmitter: EventEmitter<void> = new EventEmitter();
 
+    @Output()
+    previewStateChange: EventEmitter<LivePreviewState> = new EventEmitter();
+
     pipelineValid = false;
+    previewState: LivePreviewState = 'off';
     pipelinePreview: PipelinePreviewModel;
     pipelinePreviewSub: Subscription;
+
+    private restartPreviewPending = false;
+    private restartPreviewTimer: ReturnType<typeof setTimeout>;
+    private destroyed = false;
 
     @ViewChild('pipelineComponent')
     pipelineComponent: PipelineComponent;
@@ -117,7 +127,9 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.pipelinePreviewSub?.unsubscribe();
+        this.destroyed = true;
+        clearTimeout(this.restartPreviewTimer);
+        this.stopPreview();
     }
 
     isPipelineAssemblyEmpty() {
@@ -156,40 +168,131 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
         });
     }
 
-    togglePipelineElementLivePreview() {
-        if (!this.previewModeActive) {
-            const pipeline = this.objectProvider.makePipeline(
-                this.rawPipelineModel,
-            );
-            this.editorService
-                .initiatePipelinePreview(pipeline)
-                .subscribe(pipelinePreviewModel => {
-                    this.pipelinePreview = pipelinePreviewModel;
-                    this.previewModeActive = true;
-                    this.subscribeToPreview(pipelinePreviewModel.previewId);
-                });
-        } else {
-            this.deletePipelineElementPreview();
+    togglePipelineElementLivePreview(): void {
+        if (this.previewState === 'off') {
+            this.startPreview();
+        } else if (this.previewState === 'active') {
+            this.stopPreview();
         }
     }
 
-    private subscribeToPreview(previewId: string) {
+    /**
+     * Called when the pipeline changed in a way that makes the running preview outdated,
+     * e.g. an element was configured, added or removed. Changes in quick succession
+     * result in a single restart.
+     */
+    restartPreviewIfActive(): void {
+        if (this.previewState === 'off') {
+            return;
+        }
+        clearTimeout(this.restartPreviewTimer);
+        this.restartPreviewTimer = setTimeout(() => {
+            if (this.previewState === 'starting') {
+                this.restartPreviewPending = true;
+            } else if (this.previewState === 'active') {
+                this.stopPreview();
+                this.startPreview();
+            }
+        }, 300);
+    }
+
+    private startPreview(): void {
+        this.restartPreviewPending = false;
+        this.setPreviewState('starting');
+        const pipeline = this.objectProvider.makePipeline(
+            this.rawPipelineModel,
+        );
+        this.editorService.initiatePipelinePreview(pipeline).subscribe({
+            next: pipelinePreviewModel => {
+                if (this.destroyed || this.previewState !== 'starting') {
+                    // the editor was left while the preview was starting
+                    this.releasePreview(pipelinePreviewModel.previewId);
+                    return;
+                }
+                this.pipelinePreview = pipelinePreviewModel;
+                this.setPreviewState('active');
+                this.subscribeToPreview(pipelinePreviewModel.previewId);
+                if (this.restartPreviewPending) {
+                    this.restartPreviewIfActive();
+                }
+            },
+            error: () => {
+                this.setPreviewState('off');
+                this.notify(
+                    this.translateService.instant(
+                        "The live preview couldn't be started.",
+                    ),
+                );
+            },
+        });
+    }
+
+    private subscribeToPreview(previewId: string): void {
         this.pipelinePreviewSub = this.editorService
             .getPipelinePreviewResult(previewId)
-            .subscribe(res => {
-                const data = this.livePreviewService.convert(
-                    res as HttpDownloadProgressEvent,
-                );
-                if (data) {
-                    this.livePreviewService.eventSub.next(data);
-                }
+            .subscribe({
+                next: res => {
+                    const data = this.livePreviewService.convert(
+                        res as HttpDownloadProgressEvent,
+                    );
+                    if (data) {
+                        this.livePreviewService.eventSub.next(data);
+                    }
+                },
+                error: () =>
+                    this.endPreview(
+                        this.translateService.instant(
+                            'The connection to the live preview was lost.',
+                        ),
+                    ),
+                // the backend ends the preview stream after its time limit
+                complete: () =>
+                    this.endPreview(
+                        this.translateService.instant(
+                            'The live preview has stopped. Turn it on again to keep watching live data.',
+                        ),
+                    ),
             });
     }
 
-    deletePipelineElementPreview() {
-        if (this.previewModeActive) {
-            this.pipelinePreviewSub?.unsubscribe();
-            this.previewModeActive = false;
+    private stopPreview(): void {
+        this.pipelinePreviewSub?.unsubscribe();
+        this.pipelinePreviewSub = undefined;
+        if (this.pipelinePreview) {
+            this.releasePreview(this.pipelinePreview.previewId);
+            this.pipelinePreview = undefined;
+        }
+        if (this.previewState === 'active') {
+            this.setPreviewState('off');
+        }
+    }
+
+    private endPreview(message: string): void {
+        this.stopPreview();
+        this.notify(message);
+    }
+
+    private releasePreview(previewId: string): void {
+        // the backend also releases the preview when the stream ends; this makes it immediate
+        this.editorService.deletePipelinePreview(previewId).subscribe({
+            error: () => undefined,
+        });
+    }
+
+    private setPreviewState(state: LivePreviewState): void {
+        this.previewState = state;
+        if (!this.destroyed) {
+            this.previewStateChange.emit(state);
+        }
+    }
+
+    private notify(translatedMessage: string): void {
+        if (!this.destroyed) {
+            this.snackBar.open(
+                translatedMessage,
+                this.translateService.instant('Close'),
+                { duration: 6000 },
+            );
         }
     }
 

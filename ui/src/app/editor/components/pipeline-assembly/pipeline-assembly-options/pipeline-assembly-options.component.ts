@@ -31,11 +31,13 @@ import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../../services/editor.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PipelineElementDiscoveryComponent } from '../../../dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 import {
+    LivePreviewState,
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../../model/editor.model';
@@ -71,6 +73,7 @@ export interface PipelineAssemblySaveOptions {
         MatTooltip,
         MatIconButton,
         PipelineAssemblyOptionsPipelineCacheComponent,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
 })
@@ -93,7 +96,7 @@ export class PipelineAssemblyOptionsComponent {
     allElements: PipelineElementUnion[];
 
     @Input()
-    previewModeActive: boolean;
+    previewState: LivePreviewState = 'off';
 
     @Output()
     clearAssemblyEmitter: EventEmitter<void> = new EventEmitter<void>();

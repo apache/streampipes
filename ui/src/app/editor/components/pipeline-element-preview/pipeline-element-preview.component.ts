@@ -34,9 +34,12 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
+
+const NO_DATA_HINT_DELAY_MS = 10000;
 
 @Component({
     selector: 'sp-pipeline-element-preview',
@@ -47,6 +50,7 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         SpSpinnerComponent,
         KeyValuePipe,
         TranslatePipe,
@@ -62,11 +66,22 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     elementId: string;
 
     runtimeData: Record<string, any>;
-    runtimeDataError = false;
+    errorMessage: string;
+    noDataHintVisible = false;
     previewSub: Subscription;
 
+    private noDataHintTimer: ReturnType<typeof setTimeout>;
+
     ngOnInit(): void {
-        this.getLatestRuntimeInfo();
+        this.errorMessage =
+            this.pipelinePreview.elementErrors?.[this.elementId];
+        if (!this.errorMessage) {
+            this.noDataHintTimer = setTimeout(
+                () => (this.noDataHintVisible = true),
+                NO_DATA_HINT_DELAY_MS,
+            );
+            this.getLatestRuntimeInfo();
+        }
     }
 
     keyValueCompareFn = (
@@ -78,18 +93,17 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
 
     getLatestRuntimeInfo() {
         this.previewSub = this.livePreviewService.eventSub.subscribe(event => {
-            if (event) {
-                this.runtimeData =
-                    event[
-                        this.pipelinePreview.elementIdMappings[this.elementId]
-                    ];
-            } else {
-                this.runtimeDataError = true;
+            const data =
+                event?.[this.pipelinePreview.elementIdMappings[this.elementId]];
+            if (data) {
+                this.runtimeData = data;
+                clearTimeout(this.noDataHintTimer);
             }
         });
     }
 
     ngOnDestroy() {
+        clearTimeout(this.noDataHintTimer);
         this.previewSub?.unsubscribe();
     }
 }

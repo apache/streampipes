@@ -21,14 +21,18 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.preview.PipelinePreview;
 import org.apache.streampipes.manager.runtime.DataStreamRuntimeInfoProvider;
 import org.apache.streampipes.manager.runtime.RateLimitedRuntimeInfoProvider;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,12 +79,33 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
       var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(
           runtimeInfoFetcher,
-          () -> new PipelinePreview(resourceManager).deletePreview(previewId, requestManager)
+          () -> new PipelinePreview(resourceManager).deletePreview(previewId, requestManager),
+          () -> new PipelinePreview(resourceManager).isActive(previewId)
       );
       return outputStream -> runtimeInfoProvider.streamOutput(outputStream, response::flushBuffer);
     } catch (IllegalArgumentException e) {
       throw new BadRequestException("Could not generate preview", e);
     }
+  }
+
+  @DeleteMapping(path = "{previewId}")
+  @Operation(summary = "Stop a pipeline preview and release its temporary pipeline elements",
+      tags = {"Pipeline Preview"})
+  @PreAuthorize("this.hasPipelineAuthority()")
+  public ResponseEntity<Void> deletePipelinePreview(@PathVariable("previewId") String previewId) {
+    new PipelinePreview(resourceManager).deletePreview(previewId, requestManager);
+    return ok();
+  }
+
+  /**
+   * required by Spring expression. Previews are started from the editor (write) and from the
+   * pipeline details view (read), so either privilege may stop one.
+   */
+  public boolean hasPipelineAuthority() {
+    return isAdminOrHasAnyAuthority(
+        DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE,
+        DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE
+    );
   }
 
 }

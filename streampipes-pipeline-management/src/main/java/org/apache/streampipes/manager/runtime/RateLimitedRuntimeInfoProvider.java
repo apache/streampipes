@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 public class RateLimitedRuntimeInfoProvider {
 
@@ -39,19 +40,39 @@ public class RateLimitedRuntimeInfoProvider {
   private final DataStreamRuntimeInfoProvider runtimeInfoProvider;
   private final ObjectMapper objectMapper;
   private final ClientDisconnectCallback callback;
+  private final BooleanSupplier active;
   private final int previewCycles;
   private final long intervalMillis;
 
 
   public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                         ClientDisconnectCallback callback) {
-    this(runtimeInfoProvider, callback, MAX_PREVIEW_TIME_CYCLES, MAX_FREQUENCY);
+    this(runtimeInfoProvider, callback, () -> true);
+  }
+
+  /**
+   * @param active checked before each cycle; streaming ends as soon as it returns false,
+   *               e.g. after the preview was stopped explicitly
+   */
+  public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                        ClientDisconnectCallback callback,
+                                        BooleanSupplier active) {
+    this(runtimeInfoProvider, callback, active, MAX_PREVIEW_TIME_CYCLES, MAX_FREQUENCY);
   }
 
   RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                 ClientDisconnectCallback callback,
                                 int previewCycles,
                                 long intervalMillis) {
+    this(runtimeInfoProvider, callback, () -> true, previewCycles, intervalMillis);
+  }
+
+  RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                ClientDisconnectCallback callback,
+                                BooleanSupplier active,
+                                int previewCycles,
+                                long intervalMillis) {
+    this.active = active;
     this.previewCycles = previewCycles;
     this.intervalMillis = intervalMillis;
     this.runtimeInfoProvider = runtimeInfoProvider;
@@ -69,7 +90,7 @@ public class RateLimitedRuntimeInfoProvider {
   public void streamOutput(OutputStream outputStream, Flushable responseFlusher) {
     try {
       runtimeInfoProvider.startConsuming();
-      for (int i = 0; i < previewCycles; i++) {
+      for (int i = 0; i < previewCycles && active.getAsBoolean(); i++) {
         var messages = runtimeInfoProvider.getLatestEvents();
         if (!messages.isEmpty()) {
           try {

@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Flushable;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -107,5 +108,19 @@ class RateLimitedRuntimeInfoProviderTest {
     } finally {
       Thread.interrupted();
     }
+  }
+
+  @Test
+  void stopsStreamingOnceThePreviewIsNoLongerActive() {
+    when(fetcher.getLatestEvents()).thenReturn(Map.of("adapter", Map.of("value", 42)));
+    var activeChecks = new AtomicInteger();
+    var stoppingProvider = new RateLimitedRuntimeInfoProvider(
+        fetcher, cleanup, () -> activeChecks.incrementAndGet() <= 1, 3, 0);
+
+    stoppingProvider.streamOutput(new ByteArrayOutputStream());
+
+    verify(fetcher, times(1)).getLatestEvents();
+    verify(fetcher).close();
+    verify(cleanup).onClientDisconnect();
   }
 }

@@ -132,8 +132,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
     @Input()
     metricsInfo: Record<string, SpMetricsEntry>;
 
+    /**
+     * Emits when a change makes a running live preview outdated
+     * (an element was configured, a stream was added or an element was removed).
+     */
     @Output()
-    deletePreviewEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    previewInvalidatedEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     @Output()
     triggerPipelineCacheUpdateEmitter: EventEmitter<void> = new EventEmitter();
@@ -211,7 +215,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.shortcutReg?.unregister();
-        this.deletePreviewEmitter.emit(false);
         this.jsplumbFactoryService.destroy();
     }
 
@@ -299,6 +302,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
                 if (pipelineElementConfig.type === 'stream') {
                     this.checkTopicModel(pipelineElementConfig);
+                    this.previewInvalidatedEmitter.emit();
                 } else if (pipelineElementConfig.type === 'sepa') {
                     setTimeout(() => {
                         this.jsplumbService.dataProcessorDropped(
@@ -356,6 +360,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.JsplumbBridge.repaintEverything();
         this.validatePipeline();
         this.triggerPipelineCacheUpdateEmitter.emit();
+        this.previewInvalidatedEmitter.emit();
     }
 
     initPlumb() {
@@ -469,6 +474,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                                         );
                                         this.announceConfiguredElement(pe);
                                         this.triggerPipelineCacheUpdateEmitter.emit();
+                                        this.previewInvalidatedEmitter.emit();
                                     }
                                 }
                             } else {
@@ -702,9 +708,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                             this.announceConfiguredElement(
                                 pipelineElementConfig,
                             );
-                            if (this.previewModeActive) {
-                                this.deletePreviewEmitter.emit(true);
-                            }
+                            this.previewInvalidatedEmitter.emit();
                             this.validatePipeline(pm);
                         },
                         status => this.handlePipelineValidationFailure(status),

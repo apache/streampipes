@@ -30,16 +30,23 @@
             type="button"
             mat-flat-button
             class="btn-secondary"
-            [attr.aria-pressed]="previewModeActive"
+            [attr.aria-pressed]="previewState === 'active'"
+            [attr.aria-busy]="previewState === 'starting'"
+            [disabled]="previewState === 'starting'"
             (click)="togglePreviewEmitter.emit()"
         >
             <mat-icon>visibility</mat-icon>
-            {{
-                (previewModeActive
-                    ? 'Disable live preview'
-                    : 'Enable live preview'
-                ) | translate
-            }}
+            @switch (previewState) {
+                @case ('starting') {
+                    {{ 'Starting live preview' | translate }}...
+                }
+                @case ('active') {
+                    {{ 'Disable live preview' | translate }}
+                }
+                @default {
+                    {{ 'Enable live preview' | translate }}
+                }
+            }
         </button>
         @if (hasPipelineWritePrivileges) {
             <button

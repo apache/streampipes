@@ -16,21 +16,49 @@
 ~
 -->
 
-<div class="data-preview">
-    @if (!runtimeData) {
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+<div class="data-preview" data-cy="sp-pipeline-element-preview">
+    @if (errorMessage) {
+        <div
+            class="preview-message preview-error"
+            fxLayout="column"
+            fxLayoutGap="0.25rem"
+            role="alert"
+        >
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="0.25rem"
+            >
+                <i class="material-icons preview-message-icon">error_outline</i>
+                <b>{{ "This element couldn't be started" | translate }}</b>
+            </div>
+            <span class="preview-message-detail">{{ errorMessage }}</span>
+        </div>
+    } @else if (!runtimeData) {
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            fxLayoutGap="0.5rem"
+            class="preview-message"
+        >
             <sp-spinner
                 [diameter]="20"
                 [text]="('Waiting for live data' | translate) + '...'"
             ></sp-spinner>
+            @if (noDataHintVisible) {
+                <span class="preview-message-detail">{{
+                    'No events yet. This element has not emitted any events since the preview started.'
+                        | translate
+                }}</span>
+            }
         </div>
-    }
-    @if (runtimeData) {
+    } @else {
         <table class="row-border hover preview-table text-sm">
             <tbody id="preview-data-rows-id">
                 @for (
                     item of runtimeData | keyvalue: keyValueCompareFn;
-                    track item
+                    track item.key
                 ) {
                     <tr class="preview-row">
                         <td>

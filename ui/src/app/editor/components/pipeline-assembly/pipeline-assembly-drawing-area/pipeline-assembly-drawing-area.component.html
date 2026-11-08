@@ -44,8 +44,9 @@
         [allElements]="allElements"
         [readonly]="readonly"
         [metricsInfo]="metricsInfo"
-        [previewModeActive]="previewModeActive"
+        [previewModeActive]="previewState === 'active'"
         [pipelinePreview]="pipelinePreview"
+        (previewInvalidatedEmitter)="restartPreviewIfActive()"
         (triggerPipelineCacheUpdateEmitter)="
             triggerPipelineCacheUpdateEmitter.emit()
         "

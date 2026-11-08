@@ -209,6 +209,15 @@ export class EditorService {
         });
     }
 
+    deletePipelinePreview(previewId: string): Observable<void> {
+        return this.http.delete<void>(
+            `${this.pipelinePreviewBasePath}/${previewId}`,
+            {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            },
+        );
+    }
+
     get pipelinePreviewBasePath() {
         return this.apiBasePath + '/pipeline-preview';
     }
