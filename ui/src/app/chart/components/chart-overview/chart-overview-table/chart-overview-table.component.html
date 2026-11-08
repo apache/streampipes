@@ -16,6 +16,7 @@
 ~
 -->
 
+@let chartLinkType = chartLinkType$ | async;
 <div fxFlex="100" fxLayout="column">
     @if (isLoading && !hasLoadedCharts) {
         <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
@@ -44,6 +45,7 @@
                 [nameSearchConfig]="nameSearchConfig"
                 [assetContextConfig]="assetContextConfig"
                 featureCardId="chart"
+                [rememberViewMode]="true"
                 [showActionsMenu]="true"
                 [rowsClickable]="true"
                 (rowClicked)="openChart($event, true)"
@@ -126,6 +128,45 @@
                         <div>{{ element.createdAtLabel }}</div>
                     </td>
                 </ng-container>
+
+                <ng-template
+                    spTableCard
+                    let-chart
+                    let-actions="actions"
+                    let-assetContext="assetContext"
+                    let-select="selection"
+                >
+                    <sp-chart-overview-card
+                        [chart]="chart"
+                        [accentColor]="chartLinkType?.linkColor"
+                        [canEdit]="hasDataExplorerWritePrivileges"
+                        (openChart)="openChart(chart, true)"
+                        (showChart)="openChart(chart, false)"
+                        (editChart)="openChart(chart, true)"
+                    >
+                        <ng-container
+                            cardFooterActions
+                            *ngTemplateOutlet="
+                                actions;
+                                context: { $implicit: chart }
+                            "
+                        ></ng-container>
+                        <ng-container
+                            cardSelect
+                            *ngTemplateOutlet="
+                                select;
+                                context: { $implicit: chart }
+                            "
+                        ></ng-container>
+                        <ng-container
+                            cardAssetContext
+                            *ngTemplateOutlet="
+                                assetContext;
+                                context: { $implicit: chart }
+                            "
+                        ></ng-container>
+                    </sp-chart-overview-card>
+                </ng-template>
 
                 <ng-template spTableActions let-element>
                     <button

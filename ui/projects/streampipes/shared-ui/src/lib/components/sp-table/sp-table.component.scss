@@ -259,3 +259,40 @@
     font-weight: var(--font-weight-semibold);
     color: var(--mat-sys-on-surface);
 }
+
+.sp-table--hidden {
+    display: none;
+}
+
+.sp-table-cards {
+    padding: var(--space-md) 0;
+}
+
+.sp-table-cards__empty {
+    margin: 0;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--font-size-sm);
+}
+
+.card-asset-context {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-width: 0;
+}
+
+.card-asset-context sp-label {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.card-asset-context sp-label ::ng-deep .sp-label {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-asset-context .card-asset-context__more {
+    flex: none;
+}

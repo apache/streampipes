@@ -16,6 +16,7 @@
 ~
 -->
 
+@let pipelineLinkType = pipelineLinkType$ | async;
 <sp-table
     [dataSource]="dataSource"
     [noToolbarBorderTop]="true"
@@ -30,6 +31,7 @@
         searchKey: ['name', 'description'],
     }"
     featureCardId="pipeline"
+    [rememberViewMode]="true"
     resourceIdKey="elementId"
     [assetContextConfig]="assetContextConfig"
     [showActionsMenu]="true"
@@ -48,31 +50,17 @@
         <td mat-cell *matCellDef="let pipeline">
             <div>
                 <div fxLayout="row" fxLayoutAlign="start center" fxFlex="150px">
-                    @if (pipeline.running && pipeline.healthStatus === 'OK') {
-                        <div
-                            data-cy="status-pipeline-green"
-                            class="light light-green"
-                        ></div>
-                    }
-                    @if (
-                        pipeline.running &&
-                        (pipeline.healthStatus === 'REQUIRES_ATTENTION' ||
-                            pipeline.healthStatus ===
-                                'HANDLE_MEASUREMENT_UPDATE')
-                    ) {
-                        <div class="light light-yellow"></div>
-                    }
-                    @if (
-                        pipeline.running && pipeline.healthStatus === 'FAILURE'
-                    ) {
-                        <div class="light light-red"></div>
-                    }
-                    @if (!pipeline.running) {
-                        <div
-                            class="light light-neutral"
-                            [matTooltip]="'Stopped' | translate"
-                        ></div>
-                    }
+                    @let status = getStatus(pipeline);
+                    <sp-status-label
+                        [tone]="status.tone"
+                        [label]="status.label | translate"
+                        [showLabel]="false"
+                        [attr.data-cy]="
+                            pipeline.running && pipeline.healthStatus === 'OK'
+                                ? 'status-pipeline-green'
+                                : null
+                        "
+                    ></sp-status-label>
                     <div class="notification-icon">
                         @if (pipeline.pipelineNotifications.length > 0) {
                             <button
@@ -172,14 +160,14 @@
         <th mat-header-cell mat-sort-header *matHeaderCellDef>
             {{ 'Name' | translate }}
         </th>
-        <td mat-cell *matCellDef="let pipeline" class="truncate">
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-                <div fxLayout="column" fxLayoutAlign="start start">
-                    <span class="text-sm" data-cy="pipeline-name-cell">{{
-                        pipeline.name
-                    }}</span>
-                    <small> {{ pipeline.description }}</small>
-                </div>
+        <td mat-cell class="pipeline-name-cell" *matCellDef="let pipeline">
+            <div fxLayout="column" fxLayoutAlign="start start">
+                <span class="text-sm" data-cy="pipeline-name-cell">{{
+                    pipeline.name
+                }}</span>
+                <small class="truncate" [matTooltip]="pipeline.description">{{
+                    pipeline.description
+                }}</small>
             </div>
         </td>
     </ng-container>
@@ -195,6 +183,60 @@
         </td>
     </ng-container>
 
+    <ng-template
+        spTableCard
+        let-pipeline
+        let-actions="actions"
+        let-assetContext="assetContext"
+        let-select="selection"
+    >
+        <sp-pipeline-overview-card
+            [pipeline]="pipeline"
+            [icon]="pipelineLinkType?.linkIcon"
+            [accentColor]="pipelineLinkType?.linkColor"
+            [hasWritePrivileges]="hasPipelineWritePrivileges"
+            [operationInProgress]="starting || stopping"
+            (startPipeline)="
+                pipelineOperationsService.startPipeline(
+                    pipeline.elementId,
+                    refreshPipelinesEmitter,
+                    toggleRunningOperation
+                )
+            "
+            (stopPipeline)="
+                pipelineOperationsService.stopPipeline(
+                    pipeline.elementId,
+                    refreshPipelinesEmitter,
+                    toggleRunningOperation
+                )
+            "
+            (showDetails)="
+                pipelineOperationsService.showPipelineDetails(
+                    pipeline.elementId
+                )
+            "
+            (editPipeline)="
+                pipelineOperationsService.modifyPipeline(pipeline.elementId)
+            "
+            (showNotifications)="openPipelineNotificationsDialog(pipeline)"
+        >
+            <ng-container
+                cardFooterActions
+                *ngTemplateOutlet="actions; context: { $implicit: pipeline }"
+            ></ng-container>
+            <ng-container
+                cardSelect
+                *ngTemplateOutlet="select; context: { $implicit: pipeline }"
+            ></ng-container>
+            <ng-container
+                cardAssetContext
+                *ngTemplateOutlet="
+                    assetContext;
+                    context: { $implicit: pipeline }
+                "
+            ></ng-container>
+        </sp-pipeline-overview-card>
+    </ng-template>
     <ng-template spTableActions let-element>
         <button
             mat-menu-item
