@@ -21,9 +21,9 @@ package org.apache.streampipes.manager.setup.tasks;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.model.assets.AssetLinkType;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -72,7 +72,7 @@ public class CreateAssetLinkTypeTask implements InstallationTask {
       try {
         link.setId(UUIDGenerator.generateUuid());
         genericStorage.create(link, AssetLinkType.class);
-      } catch (IOException e) {
+      } catch (StorageException e) {
         e.printStackTrace();
         throw new SpRuntimeException("Could not create asset link document");
       }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.couchdb.client.design.DesignDocument;
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDatasetMetadataViewTask;
@@ -27,26 +28,21 @@ import org.apache.streampipes.manager.setup.tasks.AddScriptTemplateViewTask;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.DesignDocument;
-import org.lightcouch.DesignDocument.MapReduce;
-import org.lightcouch.Response;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 public class CouchDbInstallationStep extends InstallationStep {
 
   private static final String PREPARING_USERS_TEXT = "Preparing database 'users'...";
+  private static final String PIPELINE_DB_NAME = "pipeline";
 
+  private final CouchDbStores stores;
   private final IGenericStorage genericStorage;
   private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
 
-  public CouchDbInstallationStep(IGenericStorage genericStorage,
+  public CouchDbInstallationStep(CouchDbStores stores,
+                                  IGenericStorage genericStorage,
                                   ICompactPipelineTemplateStorage pipelineTemplateStorage) {
+    this.stores = stores;
     this.genericStorage = genericStorage;
     this.pipelineTemplateStorage = pipelineTemplateStorage;
   }
@@ -69,8 +65,8 @@ public class CouchDbInstallationStep extends InstallationStep {
   private void createDatabases() {
     try {
       // Set up streampipes internal databases
-      Utils.getCouchDbUserClient();
-      Utils.getCouchDbPipelineClient();
+      stores.database(CouchDbStores.USER_DB_NAME).create();
+      stores.database(PIPELINE_DB_NAME).create();
 
       logSuccess(getTitle());
     } catch (Exception e) {
@@ -81,52 +77,33 @@ public class CouchDbInstallationStep extends InstallationStep {
   private void createViews() {
     addUserView();
     addPipelineView();
-    new AddDatasetMetadataViewTask().execute();
-    new AddAssetManagementViewTask().execute();
-    new AddScriptTemplateViewTask().execute();
-    new AddFunctionStateViewTask().execute();
+    new AddDatasetMetadataViewTask(stores).execute();
+    new AddAssetManagementViewTask(stores).execute();
+    new AddScriptTemplateViewTask(stores).execute();
+    new AddFunctionStateViewTask(stores).execute();
   }
 
   private void addPipelineView() {
-    DesignDocument pipelineDocument = prepareDocument("_design/adapters");
-    DesignDocument allPipelinesDocument = prepareDocument("_design/pipelines");
-    Map<String, MapReduce> adapterViews = new HashMap<>();
-    Map<String, MapReduce> pipelineViews = new HashMap<>();
-
-    MapReduce adapterFunction = new MapReduce();
-    adapterFunction.setMap("function (doc) {\n"
-        + "  for(var i = 0; i < doc.streams.length; i++) {\n"
-        + "    var stream = doc.streams[i];\n"
-        + "    if (stream.correspondingAdapterId) {\n"
-        + "      emit(stream.correspondingAdapterId, doc._id);\n"
-        + "    }\n"
-        + "  }\n"
-        + "}");
-
-    adapterViews.put("used-adapters", adapterFunction);
-    pipelineDocument.setViews(adapterViews);
-    Utils.getCouchDbPipelineClient().design().synchronizeWithDb(pipelineDocument);
-
-
-    MapReduce allPipelinesFunction = new MapReduce();
-    allPipelinesFunction.setMap("function (doc) {\n"
-        + "  emit(doc._id, doc);\n"
-        + "}");
-    pipelineViews.put("all", allPipelinesFunction);
-    allPipelinesDocument.setViews(pipelineViews);
-    Utils.getCouchDbPipelineClient().design().synchronizeWithDb(allPipelinesDocument);
+    var designDocuments = stores.database(PIPELINE_DB_NAME).design();
+    designDocuments.sync(DesignDocument.named("_design/adapters").withView("used-adapters",
+        "function (doc) {\n"
+            + "  for(var i = 0; i < doc.streams.length; i++) {\n"
+            + "    var stream = doc.streams[i];\n"
+            + "    if (stream.correspondingAdapterId) {\n"
+            + "      emit(stream.correspondingAdapterId, doc._id);\n"
+            + "    }\n"
+            + "  }\n"
+            + "}"));
+    designDocuments.sync(DesignDocument.named("_design/pipelines").withView("all",
+        "function (doc) {\n"
+            + "  emit(doc._id, doc);\n"
+            + "}"));
   }
 
   private void addUserView() {
     try {
-      var userDocument = new UserDesignDocument().make();
-      Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
-
-      if (resp.getError() != null) {
-        logFailure(PREPARING_USERS_TEXT);
-      } else {
-        logSuccess(PREPARING_USERS_TEXT);
-      }
+      stores.database(CouchDbStores.USER_DB_NAME).design().sync(new UserDesignDocument().make());
+      logSuccess(PREPARING_USERS_TEXT);
     } catch (Exception e) {
       logFailure(PREPARING_USERS_TEXT, e);
     }

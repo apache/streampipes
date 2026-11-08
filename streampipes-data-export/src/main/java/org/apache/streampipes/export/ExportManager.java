@@ -26,6 +26,7 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import java.io.IOException;
@@ -82,14 +83,14 @@ public class ExportManager {
               items.add(resolvers.toExportItem(document, false));
             }
             config.getGenericStorageDocuments().addAll(items);
-          } catch (IOException e) {
+          } catch (IOException | StorageException e) {
             config.addGenericStorageAppDocType(new ExportItem(appDocType, appDocType, false));
           }
         } else {
           config.addGenericStorageAppDocType(new ExportItem(appDocType, appDocType, false));
         }
       }
-    } catch (IOException e) {
+    } catch (StorageException e) {
       // Preserve the asset preview if generic storage is unavailable.
     }
   }

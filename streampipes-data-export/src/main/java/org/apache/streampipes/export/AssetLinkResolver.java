@@ -34,6 +34,7 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -105,8 +105,8 @@ public class AssetLinkResolver {
           new GenericStorageResolverProvider(resourceManager.getGenericStorage()).resolve(assetLinks));
 
       return exportConfig;
-    } catch (IOException e) {
-      LOG.error("IO Exception when writing export configuration", e);
+    } catch (StorageException e) {
+      LOG.error("Storage error when writing export configuration", e);
       return new AssetExportConfiguration();
     }
   }
@@ -119,7 +119,7 @@ public class AssetLinkResolver {
         .collect(Collectors.toSet());
   }
 
-  private SpAssetModel getAsset() throws IOException {
+  private SpAssetModel getAsset() {
     return deserialize(resourceManager.getGenericStorage().findOne(this.assetId));
   }
 

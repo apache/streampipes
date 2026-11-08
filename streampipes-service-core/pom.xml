@@ -186,6 +186,12 @@
 
     
       <!-- Test dependencies -->
+        <!-- Setup and migrations against CouchDB (CouchDbSetupAndMigrationsIntegrationTest) -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

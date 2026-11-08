@@ -16,16 +16,18 @@
  *
  */
 
-package org.apache.streampipes.manager.setup.design;
+package org.apache.streampipes.storage.api.exceptions;
 
-import org.lightcouch.DesignDocument;
+/**
+ * The requested document or attachment does not exist.
+ */
+public class StorageNotFoundException extends StorageException {
 
-public class DesignDocumentUtils {
+  public StorageNotFoundException(String message) {
+    super(message);
+  }
 
-  public static DesignDocument prepareDocument(String id) {
-    DesignDocument doc = new DesignDocument();
-    doc.setLanguage("javascript");
-    doc.setId(id);
-    return doc;
+  public StorageNotFoundException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

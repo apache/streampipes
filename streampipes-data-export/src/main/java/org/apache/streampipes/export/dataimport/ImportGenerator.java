@@ -23,6 +23,7 @@ import org.apache.streampipes.export.constants.ExportConstants;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -61,7 +62,7 @@ public abstract class ImportGenerator<T> {
     for (String assetId : manifest.getAssets()) {
       try {
         handleAsset(previewFiles, assetId);
-      } catch (StorageConflictException | IOException e) {
+      } catch (StorageException | IOException e) {
         LOG.warn("Skipping import of asset model {} (already present with the same id)", assetId);
       }
     }
