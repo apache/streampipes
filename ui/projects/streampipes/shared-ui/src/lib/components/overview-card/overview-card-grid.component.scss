@@ -16,19 +16,10 @@
  *
  */
 
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-
-@Component({
-    selector: 'sp-adapter-status-light',
-    templateUrl: './adapter-status-light.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, LayoutAlignDirective],
-})
-export class AdapterStatusLightComponent {
-    @Input()
-    adapterRunning: boolean;
+:host {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 23.75rem), 1fr));
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+    gap: var(--space-lg);
 }
