@@ -49,11 +49,13 @@ jobs:
 
       # Step 2: Run only integration tests (selfsigned)
       - name: Run Integration Tests (selfsigned)
+        timeout-minutes: 30
         run: |
           mvn -B test -P selfsigned -pl streampipes-integration-tests -Dtest='**/*Test'
 
       # Step 3: Run only integration tests (keystore)
       - name: Run Integration Tests (keystore)
+        timeout-minutes: 30
         run: |
           mvn -B test -P keystore -pl streampipes-integration-tests -Dtest='**/*Test'
  
