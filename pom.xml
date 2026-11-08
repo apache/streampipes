@@ -50,7 +50,7 @@
         <classindex.version>3.9</classindex.version>
         <camel.version>4.23.0</camel.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <commoms-collection4.version>4.4</commoms-collection4.version>
+        <commoms-collection4.version>4.6.0</commoms-collection4.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <commons-configuration2.version>2.15.1</commons-configuration2.version>
         <commons-csv.version>1.14.1</commons-csv.version>
@@ -63,8 +63,8 @@
         <graalvm.js.version>25.0.2</graalvm.js.version>
         <grpc.version>1.85.1</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
-        <hadoop.version>3.4.1</hadoop.version>
-        <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
+        <hadoop.version>3.4.3</hadoop.version>
+        <hadoop-mapreduce-client-core.version>3.4.3</hadoop-mapreduce-client-core.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <jjwt.version>0.11.2</jjwt.version>
         <lightcouch.version>0.2.0</lightcouch.version>
@@ -105,7 +105,7 @@
         <xz.version>1.12</xz.version>
 
         <!-- streampipes-maven-plugin -->
-        <file-management.version>3.1.0</file-management.version>
+        <file-management.version>3.2.0</file-management.version>
         <maven.version>3.8.7</maven.version>
         <maven-plugin-annotations.version>3.16.0</maven-plugin-annotations.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
@@ -142,7 +142,7 @@
         <cyclonedx-maven-plugin.version>2.9.3</cyclonedx-maven-plugin.version>
         <checkstyle.version>14.3.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
-        <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
+        <formatter-maven-plugin.version>2.29.0</formatter-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
 
@@ -548,6 +548,10 @@
                         <artifactId>reload4j</artifactId>
                     </exclusion>
                     <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-reload4j</artifactId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>io.netty</groupId>
                         <artifactId>netty-transport-native-epoll</artifactId>
                     </exclusion>
@@ -576,6 +580,11 @@
                         <artifactId>zstd-jni</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-hdfs-client</artifactId>
+                <version>${hadoop.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
@@ -609,6 +618,14 @@
                     <exclusion>
                         <groupId>com.google.inject</groupId>
                         <artifactId>guice</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.reload4j</groupId>
+                        <artifactId>reload4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-reload4j</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

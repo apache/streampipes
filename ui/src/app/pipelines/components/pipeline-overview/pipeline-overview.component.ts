@@ -46,8 +46,11 @@ import {
     DialogRef,
     DialogService,
     PanelType,
+    SpAssetBrowserService,
+    SpStatusLabelComponent,
     SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableCardDirective,
     SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
@@ -57,14 +60,15 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuItem } from '@angular/material/menu';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PipelineOverviewCardComponent } from './pipeline-overview-card/pipeline-overview-card.component';
+import { getPipelineStatus, PipelineStatus } from './pipeline-status';
 
 @Component({
     selector: 'sp-pipeline-overview',
@@ -86,8 +90,12 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatTooltip,
         MatIconButton,
         MatIcon,
-        LayoutGapDirective,
+        AsyncPipe,
+        NgTemplateOutlet,
+        PipelineOverviewCardComponent,
+        SpStatusLabelComponent,
         SpTableActionsDirective,
+        SpTableCardDirective,
         MatMenuItem,
         DatePipe,
         TranslatePipe,
@@ -132,6 +140,10 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private dialogService = inject(DialogService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+
+    readonly pipelineLinkType$ =
+        this.assetBrowserService.getAssetLinkType$('pipeline');
 
     ngOnInit() {
         this.userSub = this.currentUserService.user$.subscribe(() => {
@@ -148,6 +160,10 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         } else {
             this.stopping = !this.stopping;
         }
+    }
+
+    getStatus(pipeline: PipelineSummaryDto): PipelineStatus {
+        return getPipelineStatus(pipeline);
     }
 
     openPipelineNotificationsDialog(pipeline: PipelineSummaryDto) {
