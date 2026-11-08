@@ -19,9 +19,9 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.units.UnitProvider;
+import org.apache.streampipes.units.catalog.UnitCatalog;
+import org.apache.streampipes.units.model.MeasurementUnit;
 
-import com.github.jqudt.Unit;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,20 +35,26 @@ import java.util.List;
 @RequestMapping("/api/v2/measurement-units")
 public class MeasurementUnitResource extends AbstractRestResource {
 
+  private final UnitCatalog catalog = UnitCatalog.builtIn();
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<Unit>> getAllMeasurementUnits() {
-    return ok(UnitProvider.INSTANCE.getAvailableUnits());
+  public ResponseEntity<List<MeasurementUnit>> getAllMeasurementUnits() {
+    return ok(catalog.getUnits());
   }
 
   /**
    * Returns the measurement unit information for a given unit identifier.
    * @param unitIdentifier The identifier of the measurement unit to retrieve,
    *                       consisting of the unit's ID without the QUDT URI prefix.
-   * @return ResponseEntity containing the Unit object if found, or an error response if not found.
+   * @return the unit, or 404 if the catalog does not contain it.
    */
   @GetMapping(path = "/{unitIdentifier}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Unit> getMeasurementUnitInfo(
+  public ResponseEntity<?> getMeasurementUnitInfo(
       @PathVariable("unitIdentifier") String unitIdentifier) {
-    return ok(UnitProvider.INSTANCE.getUnitByIdentifier(unitIdentifier));
+    var unit = catalog.find(unitIdentifier);
+    if (unit.isPresent()) {
+      return ok(unit.get());
+    }
+    return notFound();
   }
 }

@@ -38,12 +38,11 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.units.StandardUnits;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
-
-import java.net.URI;
 
 public class SpeedCalculatorProcessor implements IStreamPipesDataProcessor {
   private static final String TIMESTAMP_KEY = "timestamp-key";
@@ -86,7 +85,7 @@ public class SpeedCalculatorProcessor implements IStreamPipesDataProcessor {
                 OutputStrategies.append(PrimitivePropertyBuilder
                                             .create(Datatypes.Float, SPEED_RUNTIME_NAME)
                                             .semanticType(SO.NUMBER)
-                                            .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour"))
+                                            .measurementUnit(StandardUnits.KILOMETER_PER_HOUR)
                                             .build())
             )
             .build()

@@ -23,6 +23,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.units.model.MeasurementUnit;
 
 import java.net.URI;
 import java.util.List;
@@ -70,6 +71,16 @@ public class PrimitivePropertyBuilder {
   public PrimitivePropertyBuilder measurementUnit(URI measurementUnit) {
     this.eventProperty.setMeasurementUnit(measurementUnit);
     return this;
+  }
+
+  /**
+   * Assigns a measurement unit to the property, e.g. {@code StandardUnits.DEGREE_CELSIUS}.
+   *
+   * @param measurementUnit A unit from the StreamPipes unit catalog.
+   * @return this
+   */
+  public PrimitivePropertyBuilder measurementUnit(MeasurementUnit measurementUnit) {
+    return measurementUnit(measurementUnit.resource());
   }
 
   /**
