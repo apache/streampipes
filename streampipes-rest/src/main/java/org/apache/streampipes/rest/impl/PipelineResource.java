@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableExcepti
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.matching.output.OutputSchemaUnavailableException;
 import org.apache.streampipes.manager.pipeline.PipelineEditChanges;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
@@ -49,6 +50,7 @@ import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.shared.exception.ProblemType;
 import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
@@ -62,6 +64,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -249,6 +252,16 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
       return ok(new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager).verifyPipeline());
+    } catch (OutputSchemaUnavailableException e) {
+      LOG.warn("Could not validate pipeline because the output schema for {} is unavailable", e.getAppId(), e);
+      throw new SpProblemException(
+          HttpStatus.SERVICE_UNAVAILABLE,
+          ProblemType.SERVICE_UNAVAILABLE,
+          "Extension unavailable",
+          "Pipeline validation requires an extension that is currently unavailable.",
+          null,
+          e
+      ).withProperty("appId", e.getAppId());
     } catch (JsonSyntaxException e) {
       throw SpProblemException.badRequest(e.getMessage(), e);
     }

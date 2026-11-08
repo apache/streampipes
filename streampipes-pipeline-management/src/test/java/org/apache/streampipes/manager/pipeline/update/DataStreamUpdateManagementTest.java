@@ -61,7 +61,7 @@ class DataStreamUpdateManagementTest {
   }
 
   @Test
-  void persistsStreamRenameWithoutSchemaEvent() {
+  void persistsStreamRenameWithoutUpdatingPipelinesOrPublishingSchemaEvent() {
     var previous = stream();
     var updated = new SpDataStream(previous);
     updated.setName("Renamed stream");
@@ -76,8 +76,25 @@ class DataStreamUpdateManagementTest {
       new DataStreamUpdateManagement(null, resources, publisher).updateDataStream(updated);
 
       verify(streams).update(updated);
-      verify(coordinators.constructed().getFirst()).updatePipelines(updated);
-      verifyNoInteractions(publisher);
+      verifyNoInteractions(publisher, coordinators.constructed().getFirst());
+    }
+  }
+
+  @Test
+  void persistsUnchangedStreamWithoutUpdatingPipelinesOrPublishingSchemaEvent() {
+    var previous = stream();
+    var updated = new SpDataStream(previous);
+    var resources = mock(SpResourceManager.class);
+    var streams = mock(DataStreamResourceManager.class);
+    var publisher = mock(ApplicationEventPublisher.class);
+    when(resources.manageDataStreams()).thenReturn(streams);
+    when(streams.find("stream-1")).thenReturn(previous);
+
+    try (var coordinators = mockConstruction(PipelineUpdateCoordinator.class)) {
+      new DataStreamUpdateManagement(null, resources, publisher).updateDataStream(updated);
+
+      verify(streams).update(updated);
+      verifyNoInteractions(publisher, coordinators.constructed().getFirst());
     }
   }
 
@@ -110,6 +127,7 @@ class DataStreamUpdateManagementTest {
     var stream = new SpDataStream();
     stream.setElementId("stream-1");
     stream.setName("Stream");
+    stream.getEventSchema().addEventProperty(new EventPropertyPrimitive("xs:string", "value", null, null));
     return stream;
   }
 }

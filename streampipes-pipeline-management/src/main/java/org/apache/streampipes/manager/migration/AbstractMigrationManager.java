@@ -148,21 +148,21 @@ public abstract class AbstractMigrationManager {
         .forEach(config -> {
           if (isInstalled(config.modelType(), config.targetAppId())) {
             var requestTarget = getRequestTarget(config.modelType(), config.targetAppId(), service);
-            performUpdate(requestTarget);
+            performUpdate(requestTarget, service);
           }
         });
   }
 
   protected abstract boolean isInstalled(SpServiceTagPrefix modelType, String appId);
 
-  protected void performUpdate(ExtensionServiceRequestTarget requestTarget) {
+  protected void performUpdate(ExtensionServiceRequestTarget requestTarget, SpServiceRegistration service) {
 
     try {
       var entityPayload = requestManager
           .request(ExtensionServiceRequests.descriptionUpdate(requestTarget, resourceManager))
           .responseBody();
       var updateResult = new TypeExtractor(entityPayload, descriptionStorage, requestManager, resourceManager)
-          .getTypeVerifier().verifyAndUpdate();
+          .getTypeVerifier().verifyAndUpdate(service);
       if (!updateResult.isSuccess()) {
         LOG.error(
             "Updating the pipeline element description failed: {}",

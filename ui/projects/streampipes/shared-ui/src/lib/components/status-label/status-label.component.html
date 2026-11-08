@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -17,22 +16,16 @@
   ~
   -->
 
-<configuration>
-
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-            <charset>utf8</charset>
-        </encoder>
-    </appender>
-
-    <logger name="org.lightcouch" level="ERROR"/>
-    <logger name="org.apache.kafka" level="ERROR"/>
-
-
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-    </root>
-</configuration>
+@if (showLabel()) {
+    <span class="status-text" [class]="'status-text--' + tone()">
+        <span class="status-dot" aria-hidden="true"></span>
+        {{ label() }}
+    </span>
+} @else {
+    <span
+        role="img"
+        [class]="lightClass()"
+        [matTooltip]="label()"
+        [attr.aria-label]="label()"
+    ></span>
+}

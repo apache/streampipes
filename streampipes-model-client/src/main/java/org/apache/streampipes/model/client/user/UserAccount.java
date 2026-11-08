@@ -32,10 +32,6 @@ public class UserAccount extends Principal {
   protected String fullName;
   protected String password;
 
-  protected List<String> preferredDataStreams;
-  protected List<String> preferredDataProcessors;
-  protected List<String> preferredDataSinks;
-
   protected List<UserApiToken> userApiTokens;
 
   protected boolean hideTutorial;
@@ -56,9 +52,6 @@ public class UserAccount extends Principal {
     super(PrincipalType.USER_ACCOUNT);
     this.hideTutorial = false;
     this.userApiTokens = new ArrayList<>();
-    this.preferredDataProcessors = new ArrayList<>();
-    this.preferredDataSinks = new ArrayList<>();
-    this.preferredDataStreams = new ArrayList<>();
     this.createdAtMillis = System.currentTimeMillis();
     this.provider = UserAccount.LOCAL;
   }
@@ -82,54 +75,6 @@ public class UserAccount extends Principal {
 
   public void setRoles(Set<String> roles) {
     this.roles = roles;
-  }
-
-  public List<String> getPreferredDataStreams() {
-    return preferredDataStreams;
-  }
-
-  public void setPreferredDataStreams(List<String> preferredDataStreams) {
-    this.preferredDataStreams = preferredDataStreams;
-  }
-
-  public List<String> getPreferredDataProcessors() {
-    return preferredDataProcessors;
-  }
-
-  public void setPreferredDataProcessors(List<String> preferredDataProcessors) {
-    this.preferredDataProcessors = preferredDataProcessors;
-  }
-
-  public List<String> getPreferredDataSinks() {
-    return preferredDataSinks;
-  }
-
-  public void setPreferredDataSinks(List<String> preferredDataSinks) {
-    this.preferredDataSinks = preferredDataSinks;
-  }
-
-  public void addPreferredDataStream(String elementId) {
-    this.preferredDataStreams.add(elementId);
-  }
-
-  public void addPreferredDataProcessor(String elementId) {
-    this.preferredDataProcessors.add(elementId);
-  }
-
-  public void addPreferredDataSink(String elementId) {
-    this.preferredDataSinks.add(elementId);
-  }
-
-  public void removePreferredDataStream(String elementId) {
-    this.preferredDataStreams.remove(elementId);
-  }
-
-  public void removePreferredDataProcessor(String elementId) {
-    this.preferredDataProcessors.remove(elementId);
-  }
-
-  public void removePreferredDataSink(String elementId) {
-    this.preferredDataSinks.remove(elementId);
   }
 
   public String getFullName() {
