@@ -22,6 +22,7 @@ import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.matching.output.OutputSchemaUnavailableException;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeValidationStep;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
@@ -191,6 +192,38 @@ class PipelineUpdateCoordinatorTest {
   }
 
   @Test
+  void updatePipelines_ShouldDeferPipelineUpdateWhenOutputSchemaIsUnavailable() {
+    var requestManager = mock(ExtensionServiceRequestManager.class);
+    var resourceManager = mock(SpResourceManager.class);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var coordinator = makeCoordinator(requestManager, resourceManager, pipelineStorage);
+    var dataStream = makeDataStream("stream-1", "Updated stream");
+    var storedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
+    when(pipelineStorage.findAll()).thenReturn(List.of(storedPipeline));
+    when(pipelineStorage.getElementById("pipeline-1")).thenReturn(storedPipeline);
+
+    try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
+             mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) ->
+                 when(mock.verifyPipeline()).thenThrow(new OutputSchemaUnavailableException("math-expression",
+                     new RuntimeException("Service unavailable"))));
+         MockedConstruction<PipelineExecutor> executorConstruction =
+             mockConstruction(PipelineExecutor.class)) {
+
+      coordinator.updatePipelines(dataStream);
+
+      assertEquals(1, verificationHandlerConstruction.constructed().size());
+      assertEquals(0, executorConstruction.constructed().size());
+      verify(pipelineStorage).updateElement(storedPipeline);
+      assertTrue(storedPipeline.isRunning());
+      assertTrue(storedPipeline.isValid());
+      assertEquals("Old stream", storedPipeline.getStreams().getFirst().getName());
+      assertEquals(List.of(
+          "Validation deferred: Data stream modification could not be validated because pipeline element math-expression is unavailable"
+      ), storedPipeline.getPipelineNotifications());
+    }
+  }
+
+  @Test
   void checkPipelineMigrations_ShouldUseUpdatedDataStreamValues() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
     var resourceManager = mock(SpResourceManager.class);
@@ -259,6 +292,32 @@ class PipelineUpdateCoordinatorTest {
       var updatedPipeline = verifiedPipelines.get(0);
       assertEquals("Updated stream", updatedPipeline.getStreams().get(0).getName());
       assertSame(dataStream.getEventSchema(), updatedPipeline.getStreams().get(0).getEventSchema());
+    }
+  }
+
+  @Test
+  void checkPipelineMigrations_ShouldReportUnavailableOutputSchemaWithoutMutatingThePipeline() {
+    var requestManager = mock(ExtensionServiceRequestManager.class);
+    var resourceManager = mock(SpResourceManager.class);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var coordinator = makeCoordinator(requestManager, resourceManager, pipelineStorage);
+    var dataStream = makeDataStream("stream-1", "Updated stream");
+    var pipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
+    when(pipelineStorage.findAll()).thenReturn(List.of(pipeline));
+
+    try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
+             mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) ->
+                 when(mock.verifyPipeline()).thenThrow(new OutputSchemaUnavailableException("math-expression",
+                     new RuntimeException("Service unavailable"))))) {
+
+      var result = coordinator.checkPipelineMigrations(dataStream);
+
+      assertEquals(1, verificationHandlerConstruction.constructed().size());
+      assertEquals(1, result.size());
+      assertTrue(result.getFirst().isValidationUnavailable());
+      assertFalse(result.getFirst().isCanAutoMigrate());
+      assertTrue(result.getFirst().getMigrationInfo().contains("math-expression"));
+      assertEquals("Old stream", pipeline.getStreams().getFirst().getName());
     }
   }
 

@@ -86,7 +86,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
@@ -167,15 +166,11 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   public void initialize(SupportedProtocols supportedProtocols,
                          List<Supplier<TransformationEngine>> transformationEngines) {
-    try {
+    startStreamPipesService(StreamPipesCoreApplication.class, () -> {
       registerProtocols(supportedProtocols);
       registerTransformationEngines(transformationEngines);
-      BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
-      startStreamPipesService(StreamPipesCoreApplication.class, networkingConfig);
-    } catch (UnknownHostException e) {
-      LOG.error("Could not auto-resolve host address - please manually provide the hostname"
-          + " using the `SP_HOST` environment variable");
-    }
+      return BaseNetworkingConfig.defaultResolution(8030);
+    });
   }
 
   protected void registerTransformationEngines(List<Supplier<TransformationEngine>> transformationEngines) {

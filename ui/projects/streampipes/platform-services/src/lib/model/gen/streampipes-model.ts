@@ -3316,6 +3316,7 @@ export class PipelineUpdateInfo {
     pipelineId: string;
     pipelineName: string;
     validationInfos: { [index: string]: PipelineElementValidationInfo[] };
+    validationUnavailable: boolean;
 
     static fromData(
         data: PipelineUpdateInfo,
@@ -3335,6 +3336,7 @@ export class PipelineUpdateInfo {
         instance.validationInfos = __getCopyObjectFn(
             __getCopyArrayFn(PipelineElementValidationInfo.fromData),
         )(data.validationInfos);
+        instance.validationUnavailable = data.validationUnavailable;
         return instance;
     }
 }
