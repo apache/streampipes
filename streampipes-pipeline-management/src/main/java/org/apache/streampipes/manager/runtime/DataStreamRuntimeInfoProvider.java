@@ -31,9 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DataStreamRuntimeInfoProvider {
 
@@ -48,7 +48,7 @@ public class DataStreamRuntimeInfoProvider {
     this.dataStreams = dataStreams;
     this.consumers = new ArrayList<>();
     this.env = Environments.getEnvironment();
-    this.latestEvents = new HashMap<>();
+    this.latestEvents = new ConcurrentHashMap<>();
   }
 
   public void startConsuming() throws SpRuntimeException {
@@ -77,11 +77,11 @@ public class DataStreamRuntimeInfoProvider {
 
       if (protocolDefinitionOpt.isPresent()) {
         var consumer = protocolDefinitionOpt.get().getConsumer(protocol);
+        consumers.add(consumer);
         consumer.connect(event -> {
           var deserializedEvent = converter.convert(event);
           this.latestEvents.put(id, deserializedEvent);
         });
-        consumers.add(consumer);
       } else {
         LOG.error("Error while fetching data for preview - protocol {} not found - did you register the protocol? ",
             protocol.getClass().getCanonicalName());
@@ -91,10 +91,25 @@ public class DataStreamRuntimeInfoProvider {
   }
 
   public Map<String, Map<String, Object>> getLatestEvents() {
-    return latestEvents;
+    return Map.copyOf(latestEvents);
   }
 
   public void close() {
-    consumers.forEach(EventConsumer::disconnect);
+    RuntimeException failure = null;
+    for (var consumer : consumers) {
+      try {
+        consumer.disconnect();
+      } catch (RuntimeException e) {
+        if (failure == null) {
+          failure = e;
+        } else if (failure != e) {
+          failure.addSuppressed(e);
+        }
+      }
+    }
+    consumers.clear();
+    if (failure != null) {
+      throw failure;
+    }
   }
 }
