@@ -16,19 +16,13 @@
  *
  */
 
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { Directive } from '@angular/core';
 
-@Component({
-    selector: 'sp-adapter-status-light',
-    templateUrl: './adapter-status-light.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, LayoutAlignDirective],
-})
-export class AdapterStatusLightComponent {
-    @Input()
-    adapterRunning: boolean;
-}
+/**
+ * Marks the template of a table row in the card view. Declaring it enables the
+ * card view mode of `sp-table`. The template context contains the row as
+ * `$implicit` and the table's `actions` and `assetContext` cell templates, which
+ * both expect the row as their `$implicit` context.
+ */
+@Directive({ selector: 'ng-template[spTableCard]' })
+export class SpTableCardDirective {}

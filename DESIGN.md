@@ -294,6 +294,8 @@ Shared components are compact, dependable, and familiar. Prefer the existing
   than introduce a new hue. Keyboard focus uses the shared three-pixel focus ring.
 - **Secondary / Warning:** Secondary actions use a subtle primary-tinted surface;
   destructive actions use the dedicated error role. Both stay flat at rest.
+- **Tertiary:** Actions that repeat many times on a page, such as card footers, stay
+  transparent at rest and show the primary tint only on hover.
 
 ### Chips
 

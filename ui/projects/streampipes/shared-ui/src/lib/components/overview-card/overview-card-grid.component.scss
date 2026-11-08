@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.util;
 
-import com.github.drapostolos.typeparser.TypeParser;
-
-public class EventUtils {
-
-  public static final TypeParser TYPE_PARSER = TypeParser.newBuilder().build();
-
+:host {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 23.75rem), 1fr));
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+    gap: var(--space-lg);
 }

@@ -36,3 +36,14 @@
 .notification-icon {
     width: 50px;
 }
+
+/* Lets the name column take the remaining width and truncate the description,
+   because a table column otherwise grows to fit text that does not wrap. */
+.pipeline-name-cell {
+    width: 100%;
+    max-width: 0;
+}
+
+.pipeline-name-cell small {
+    max-width: 100%;
+}
