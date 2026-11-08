@@ -39,7 +39,7 @@
     <url>https://streampipes.apache.org</url>
 
     <properties>
-        <spring-boot.version>4.0.2</spring-boot.version>
+        <spring-boot.version>4.1.2</spring-boot.version>
         <plc4x.version>0.13.1</plc4x.version>
 
         <apache-poi.version>5.5.1</apache-poi.version>
@@ -56,7 +56,7 @@
         <commons-io.version>2.22.0</commons-io.version>
         <commons-jexl.version>3.4.0</commons-jexl.version>
         <commons-text.version>1.12.0</commons-text.version>
-        <ditto-client.version>1.0.0</ditto-client.version>
+        <ditto-client.version>3.9.0</ditto-client.version>
         <error-prone.version>2.10.0</error-prone.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
@@ -67,6 +67,8 @@
         <jgrapht.version>1.5.1</jgrapht.version>
         <jjwt.version>0.11.2</jjwt.version>
         <lightcouch.version>0.2.0</lightcouch.version>
+        <!-- converges kafka-clients (Spring Boot BOM, 1.11.2) with iotdb-session and tsfile (1.10.1); revisit when IoTDB or TsFile is bumped -->
+        <lz4-java.version>1.11.2</lz4-java.version>
         <eclipse.milo.version>1.1.1</eclipse.milo.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
@@ -94,7 +96,7 @@
         <siddhi.version>5.1.27</siddhi.version>
         <simple-java-mail.version>9.3.2</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
-        <springdoc.version>3.1.1</springdoc.version>
+        <springdoc.version>3.2.0</springdoc.version>
         <swagger.version>2.2.42</swagger.version>
         <tsfile.version>2.4.0</tsfile.version>
         <xz.version>1.12</xz.version>
@@ -196,6 +198,11 @@
                 <groupId>jakarta.activation</groupId>
                 <artifactId>jakarta.activation-api</artifactId>
                 <version>${jakarta-activation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>at.yawk.lz4</groupId>
+                <artifactId>lz4-java</artifactId>
+                <version>${lz4-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>

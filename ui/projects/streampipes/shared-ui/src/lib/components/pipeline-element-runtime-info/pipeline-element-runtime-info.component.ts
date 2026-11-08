@@ -103,6 +103,9 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                         const responseJson = this.livePreviewService.convert(
                             event as HttpDownloadProgressEvent,
                         );
+                        if (!responseJson) {
+                            return;
+                        }
                         const [firstKey] = Object.keys(responseJson);
                         const json = responseJson[firstKey];
                         this.runtimeDataError = !json;

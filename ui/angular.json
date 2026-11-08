@@ -145,6 +145,12 @@
           },
           "defaultConfiguration": "production"
         },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/streampipes/platform-services/tsconfig.spec.json"
+          }
+        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
