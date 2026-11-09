@@ -15,12 +15,25 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.util;
+package org.apache.streampipes.extensions.connectors.mqtt.shared;
 
-import com.github.drapostolos.typeparser.TypeParser;
+import com.hivemq.client.mqtt.lifecycle.MqttClientDisconnectedContext;
+import org.junit.jupiter.api.Test;
 
-public class EventUtils {
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-  public static final TypeParser TYPE_PARSER = TypeParser.newBuilder().build();
+class MqttBaseTest {
 
+  @Test
+  void stoppedClientVetoesAutomaticReconnect() throws Exception {
+    var client = new MqttBase(new MqttConfig("tcp://localhost:1883", "test"))
+        .setupMqttClient(() -> false);
+    var context = mock(MqttClientDisconnectedContext.class, RETURNS_DEEP_STUBS);
+
+    client.getConfig().getDisconnectedListeners().getLast().onDisconnected(context);
+
+    verify(context.getReconnector()).reconnect(false);
+  }
 }
