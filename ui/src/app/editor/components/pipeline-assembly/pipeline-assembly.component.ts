@@ -179,6 +179,8 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
      * clears the Assembly of all elements
      */
     clearAssembly() {
+        // the preview would keep running for elements no longer on the canvas
+        this.drawingAreaComponent?.closeLivePreview();
         this.editorService.makePipelineAssemblyEmpty(true);
         this.rawPipelineModel = [];
         this.jsplumbBridge.deleteEveryEndpoint();

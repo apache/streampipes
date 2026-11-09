@@ -19,14 +19,19 @@ package org.apache.streampipes.manager.preview;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,6 +44,8 @@ class PipelinePreviewTest {
 
   private final ExtensionServiceRequestManager requestManager = mock(ExtensionServiceRequestManager.class);
   private final PipelinePreview preview = new PipelinePreview(mock(SpResourceManager.class));
+  private final PipelinePreview shortGracePreview =
+      new PipelinePreview(mock(SpResourceManager.class), Duration.ofMillis(50));
 
   @AfterEach
   void cleanUp() {
@@ -67,5 +74,97 @@ class PipelinePreviewTest {
   void requestingStreamsOfAnUnknownPreviewIsRejected() {
     assertThrows(IllegalArgumentException.class,
         () -> preview.getPipelineElementPreviewStreams("unknown-preview"));
+  }
+
+  @Test
+  void expiredStreamReleasesThePreviewWhenNoClientReattaches() throws InterruptedException {
+    ActivePipelinePreviews.INSTANCE.addActivePreview(PREVIEW_ID, List.of(new SpDataStream()));
+
+    shortGracePreview.onStreamExpired(PREVIEW_ID, requestManager);
+
+    assertTrue(awaitInactive(Duration.ofSeconds(2)), "preview should be released after the grace period");
+  }
+
+  @Test
+  void reattachingWithinTheGracePeriodKeepsThePreviewRunning() throws InterruptedException {
+    ActivePipelinePreviews.INSTANCE.addActivePreview(PREVIEW_ID, List.of(new SpDataStream()));
+
+    shortGracePreview.onStreamExpired(PREVIEW_ID, requestManager);
+    shortGracePreview.onStreamAttached(PREVIEW_ID);
+
+    Thread.sleep(200);
+    assertTrue(preview.isActive(PREVIEW_ID));
+  }
+
+  @Test
+  void expiryOfAnAlreadyStoppedPreviewSchedulesNothing() throws InterruptedException {
+    shortGracePreview.onStreamExpired(PREVIEW_ID, requestManager);
+
+    Thread.sleep(200);
+    assertFalse(preview.isActive(PREVIEW_ID));
+    verifyNoInteractions(requestManager);
+  }
+
+  private boolean awaitInactive(Duration timeout) throws InterruptedException {
+    var deadline = System.nanoTime() + timeout.toNanos();
+    while (System.nanoTime() < deadline) {
+      if (!preview.isActive(PREVIEW_ID)) {
+        return true;
+      }
+      Thread.sleep(10);
+    }
+    return false;
+  }
+
+  @Test
+  void previewIsReleasedAtItsMaximumDurationEvenWithAnAttachedStream() throws InterruptedException {
+    var cappedPreview = new PipelinePreview(
+        mock(SpResourceManager.class), Duration.ofSeconds(30), Duration.ofMillis(100));
+    ActivePipelinePreviews.INSTANCE.addActivePreview(PREVIEW_ID, List.of(new SpDataStream()));
+
+    cappedPreview.limitLifetime(PREVIEW_ID, requestManager);
+    cappedPreview.onStreamAttached(PREVIEW_ID);
+
+    assertTrue(awaitInactive(Duration.ofSeconds(2)), "preview should be released at its maximum duration");
+  }
+
+  @Test
+  void stoppingAPreviewCancelsItsLifetimeLimit() throws InterruptedException {
+    var cappedPreview = new PipelinePreview(
+        mock(SpResourceManager.class), Duration.ofSeconds(30), Duration.ofMillis(100));
+    ActivePipelinePreviews.INSTANCE.addActivePreview(PREVIEW_ID, List.of(new SpDataStream()));
+    cappedPreview.limitLifetime(PREVIEW_ID, requestManager);
+
+    cappedPreview.deletePreview(PREVIEW_ID, requestManager);
+    // a new preview under the same id must not be released by the old limit
+    ActivePipelinePreviews.INSTANCE.addActivePreview(PREVIEW_ID, List.of(new SpDataStream()));
+
+    Thread.sleep(300);
+    assertTrue(preview.isActive(PREVIEW_ID));
+  }
+
+  @Test
+  void elementsThatMayHaveStartedStayTrackedSoTheyAreDetached() {
+    var stream = processorWithId("stream");
+    var running = processorWithId("running");
+    var timedOut = processorWithId("timed-out");
+    var neverSent = processorWithId("never-sent");
+
+    var tracked = PipelinePreview.elementsToTrack(
+        List.of(stream, running, timedOut, neverSent),
+        Map.of(
+            "timed-out", new PipelinePreview.InvocationFailure("Read timed out", true),
+            "never-sent", new PipelinePreview.InvocationFailure("No extensions service", false)
+        )
+    );
+
+    assertEquals(List.of("stream", "running", "timed-out"),
+        tracked.stream().map(NamedStreamPipesEntity::getElementId).toList());
+  }
+
+  private static DataProcessorInvocation processorWithId(String elementId) {
+    var processor = new DataProcessorInvocation();
+    processor.setElementId(elementId);
+    return processor;
   }
 }

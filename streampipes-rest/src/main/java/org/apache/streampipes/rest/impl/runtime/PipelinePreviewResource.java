@@ -75,12 +75,16 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
     try {
       // deactivate nginx proxy buffering for better performance of streaming output
       response.addHeader("X-Accel-Buffering", "no");
-      var spDataStreams = new PipelinePreview(resourceManager).getPipelineElementPreviewStreams(previewId);
+      var preview = new PipelinePreview(resourceManager);
+      var spDataStreams = preview.getPipelineElementPreviewStreams(previewId);
+      preview.onStreamAttached(previewId);
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
+      // A stream ends after a maximum duration; the client re-attaches to keep the preview open.
       var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(
           runtimeInfoFetcher,
-          () -> new PipelinePreview(resourceManager).deletePreview(previewId, requestManager),
-          () -> new PipelinePreview(resourceManager).isActive(previewId)
+          () -> preview.deletePreview(previewId, requestManager),
+          () -> preview.onStreamExpired(previewId, requestManager),
+          () -> preview.isActive(previewId)
       );
       return outputStream -> runtimeInfoProvider.streamOutput(outputStream, response::flushBuffer);
     } catch (IllegalArgumentException e) {

@@ -50,8 +50,15 @@ import { HttpDownloadProgressEvent } from '@angular/common/http';
 import { ObjectProvider } from '../../../services/object-provider.service';
 import { Subscription } from 'rxjs';
 import { ErrorHintComponent } from '../../../../core-ui/error-hint/error-hint.component';
+import { LivePreviewStore } from '../../../services/live-preview.store';
+import { LivePreviewPanelComponent } from '../../live-preview-panel/live-preview-panel.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+
+/** A result stream that ends sooner than this was not cut off by its time limit. */
+const MIN_STREAM_DURATION_MS = 5000;
+/** Clock and network delay allowed when telling the backend's maximum duration apart from other stream ends. */
+const MAX_DURATION_TOLERANCE_MS = 5000;
 
 @Component({
     selector: 'sp-pipeline-assembly-drawing-area',
@@ -60,9 +67,11 @@ import { TranslateService } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ErrorHintComponent,
+        LivePreviewPanelComponent,
         PipelineAssemblyDrawingAreaPanZoomComponent,
         PipelineComponent,
     ],
+    providers: [LivePreviewStore],
 })
 export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     pipelineValidationService = inject(PipelineValidationService);
@@ -73,6 +82,7 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     private objectProvider = inject(ObjectProvider);
     private snackBar = inject(MatSnackBar);
     private translateService = inject(TranslateService);
+    private livePreviewStore = inject(LivePreviewStore);
 
     @Input()
     jsplumbBridge: JsplumbBridge;
@@ -108,7 +118,11 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
 
     private restartPreviewPending = false;
     private restartPreviewTimer: ReturnType<typeof setTimeout>;
+    private previewLimitTimer: ReturnType<typeof setTimeout>;
     private destroyed = false;
+    /** Identifies the latest start request; responses to earlier ones are released. */
+    private previewAttempt = 0;
+    private readonly stopPreviewOnPageHide = () => this.stopPreviewOnUnload();
 
     @ViewChild('pipelineComponent')
     pipelineComponent: PipelineComponent;
@@ -118,6 +132,8 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     @ViewChild('outerCanvas') pipelineCanvas: ElementRef;
 
     ngOnInit(): void {
+        // Angular does not destroy components when the page itself is left
+        window.addEventListener('pagehide', this.stopPreviewOnPageHide);
         if (this.rawPipelineModel.length > 0) {
             this.displayPipelineInEditor(
                 !this.pipelineCanvasMetadataAvailable,
@@ -127,6 +143,7 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        window.removeEventListener('pagehide', this.stopPreviewOnPageHide);
         this.destroyed = true;
         clearTimeout(this.restartPreviewTimer);
         this.stopPreview();
@@ -198,25 +215,34 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
 
     private startPreview(): void {
         this.restartPreviewPending = false;
+        const attempt = ++this.previewAttempt;
         this.setPreviewState('starting');
         const pipeline = this.objectProvider.makePipeline(
             this.rawPipelineModel,
         );
         this.editorService.initiatePipelinePreview(pipeline).subscribe({
             next: pipelinePreviewModel => {
-                if (this.destroyed || this.previewState !== 'starting') {
-                    // the editor was left while the preview was starting
+                if (this.destroyed || attempt !== this.previewAttempt) {
+                    // stopped, restarted or left while this preview was starting
                     this.releasePreview(pipelinePreviewModel.previewId);
                     return;
                 }
                 this.pipelinePreview = pipelinePreviewModel;
+                this.livePreviewStore.start(
+                    pipelinePreviewModel,
+                    this.rawPipelineModel,
+                );
                 this.setPreviewState('active');
                 this.subscribeToPreview(pipelinePreviewModel.previewId);
+                this.stopAtMaximumDuration(pipelinePreviewModel);
                 if (this.restartPreviewPending) {
                     this.restartPreviewIfActive();
                 }
             },
             error: () => {
+                if (attempt !== this.previewAttempt) {
+                    return;
+                }
                 this.setPreviewState('off');
                 this.notify(
                     this.translateService.instant(
@@ -228,6 +254,7 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     }
 
     private subscribeToPreview(previewId: string): void {
+        const attachedAt = Date.now();
         this.pipelinePreviewSub = this.editorService
             .getPipelinePreviewResult(previewId)
             .subscribe({
@@ -236,33 +263,106 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
                         res as HttpDownloadProgressEvent,
                     );
                     if (data) {
-                        this.livePreviewService.eventSub.next(data);
+                        this.livePreviewStore.ingest(data);
                     }
                 },
                 error: () =>
-                    this.endPreview(
-                        this.translateService.instant(
-                            'The connection to the live preview was lost.',
-                        ),
-                    ),
-                // the backend ends the preview stream after its time limit
-                complete: () =>
-                    this.endPreview(
-                        this.translateService.instant(
-                            'The live preview has stopped. Turn it on again to keep watching live data.',
-                        ),
-                    ),
+                    this.maximumDurationReached()
+                        ? this.endPreviewAtMaximumDuration()
+                        : this.endPreview(
+                              this.translateService.instant(
+                                  'The connection to the live preview was lost.',
+                              ),
+                          ),
+                // Each result stream has a maximum duration as a safeguard against previews
+                // nobody cleans up. While the panel is open, attach to the same preview again.
+                complete: () => {
+                    if (
+                        this.pipelinePreview?.previewId !== previewId ||
+                        this.destroyed
+                    ) {
+                        return;
+                    }
+                    if (this.maximumDurationReached()) {
+                        this.endPreviewAtMaximumDuration();
+                    } else if (
+                        Date.now() - attachedAt <
+                        MIN_STREAM_DURATION_MS
+                    ) {
+                        this.endPreview(
+                            this.translateService.instant(
+                                'The live preview has stopped. Turn it on again to keep watching live data.',
+                            ),
+                        );
+                    } else {
+                        this.subscribeToPreview(previewId);
+                    }
+                },
             });
     }
 
+    closeLivePreview(): void {
+        this.stopPreview();
+    }
+
+    /** The backend stops every preview after a maximum duration; end it here at the same time. */
+    private stopAtMaximumDuration(preview: PipelinePreviewModel): void {
+        clearTimeout(this.previewLimitTimer);
+        if (preview.maxDurationMillis > 0) {
+            this.previewLimitTimer = setTimeout(
+                () => this.endPreviewAtMaximumDuration(),
+                preview.maxDurationMillis,
+            );
+        }
+    }
+
+    private maximumDurationReached(): boolean {
+        const expiresAt = this.livePreviewStore.expiresAt();
+        return (
+            expiresAt !== undefined &&
+            Date.now() >= expiresAt - MAX_DURATION_TOLERANCE_MS
+        );
+    }
+
+    private endPreviewAtMaximumDuration(): void {
+        const minutes = Math.round(
+            (this.pipelinePreview?.maxDurationMillis ?? 0) / 60000,
+        );
+        this.endPreview(
+            this.translateService.instant(
+                'The live preview stopped after {{minutes}} minutes. Turn it on again to keep watching live data.',
+                { minutes },
+            ),
+        );
+    }
+
+    /**
+     * Releases the preview with a request that survives the page unload. If the page only goes
+     * into the back/forward cache, the panel is closed as well, since its stream is gone.
+     */
+    private stopPreviewOnUnload(): void {
+        if (this.pipelinePreview) {
+            this.editorService.releasePipelinePreviewOnUnload(
+                this.pipelinePreview.previewId,
+            );
+            this.pipelinePreview = undefined;
+        }
+        // a preview still starting is released by the backend when no stream attaches to it
+        this.stopPreview();
+    }
+
     private stopPreview(): void {
+        this.previewAttempt++;
+        clearTimeout(this.previewLimitTimer);
         this.pipelinePreviewSub?.unsubscribe();
         this.pipelinePreviewSub = undefined;
         if (this.pipelinePreview) {
             this.releasePreview(this.pipelinePreview.previewId);
             this.pipelinePreview = undefined;
         }
-        if (this.previewState === 'active') {
+        this.livePreviewStore.stop();
+        // a preview that is still starting is released once its start request returns
+        if (this.previewState !== 'off') {
             this.setPreviewState('off');
         }
     }

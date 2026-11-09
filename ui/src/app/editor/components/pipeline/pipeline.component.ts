@@ -49,11 +49,11 @@ import {
     Pipeline,
     PipelineEdgeValidation,
     PipelineModificationMessage,
-    PipelinePreviewModel,
     SpDataStream,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
+import { LivePreviewStore } from '../../services/live-preview.store';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import {
     DialogService,
@@ -113,6 +113,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private dialogService = inject(DialogService);
     private ngZone = inject(NgZone);
     private shortcutService = inject(KeyboardShortcutService);
+    private livePreviewStore = inject(LivePreviewStore, { optional: true });
 
     @Input()
     pipelineValid: boolean;
@@ -147,12 +148,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     idCounter: any;
 
     JsplumbBridge: JsplumbBridge;
-
-    @Input()
-    previewModeActive = false;
-
-    @Input()
-    pipelinePreview: PipelinePreviewModel;
 
     shouldOpenCustomizeSettings = false;
     private shortcutReg: ShortcutRegistration;
@@ -242,6 +237,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
     updateOptionsClick(elementId: string) {
         this.currentMouseOverElement =
             this.currentMouseOverElement === elementId ? '' : elementId;
+        if (this.livePreviewStore?.active()) {
+            const element = this.rawPipelineModel.find(
+                pe => pe.payload.dom === elementId,
+            );
+            if (element) {
+                this.livePreviewStore.select(element.payload.elementId);
+            }
+        }
     }
 
     hasVisibleMetrics(pipelineElementConfig: PipelineElementConfig): boolean {

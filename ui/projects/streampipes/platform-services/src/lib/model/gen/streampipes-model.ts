@@ -17,7 +17,7 @@
  * under the License.
  */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-11-08 21:04:42.
+// Generated using typescript-generator version 3.2.1263 on 2026-11-08 22:30:44.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -3246,6 +3246,7 @@ export class PipelinePlaceholders {
 export class PipelinePreviewModel {
     elementErrors: { [index: string]: string };
     elementIdMappings: { [index: string]: string };
+    maxDurationMillis: number;
     previewId: string;
 
     static fromData(
@@ -3262,6 +3263,7 @@ export class PipelinePreviewModel {
         instance.elementIdMappings = __getCopyObjectFn(__identity<string>())(
             data.elementIdMappings,
         );
+        instance.maxDurationMillis = data.maxDurationMillis;
         instance.previewId = data.previewId;
         return instance;
     }

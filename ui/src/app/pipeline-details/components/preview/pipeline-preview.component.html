@@ -34,8 +34,10 @@
                 "
                 [readonly]="true"
                 (previewStateChange)="previewStateChange.emit($event)"
-            ></sp-pipeline-assembly-drawing-area>
+            >
+                <!-- overlays the canvas only, so it stays clear of the live preview panel -->
+                <ng-content></ng-content>
+            </sp-pipeline-assembly-drawing-area>
         }
     </div>
-    <ng-content></ng-content>
 </div>

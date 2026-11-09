@@ -35,6 +35,11 @@ public class PipelinePreviewModel {
    */
   private Map<String, String> elementErrors;
 
+  /**
+   * How long the preview runs at most after it was started; the backend stops it afterwards.
+   */
+  private long maxDurationMillis;
+
   public PipelinePreviewModel() {
     this.elementIdMappings = new HashMap<>();
     this.elementErrors = new HashMap<>();
@@ -62,5 +67,13 @@ public class PipelinePreviewModel {
 
   public void setElementErrors(Map<String, String> elementErrors) {
     this.elementErrors = elementErrors;
+  }
+
+  public long getMaxDurationMillis() {
+    return maxDurationMillis;
+  }
+
+  public void setMaxDurationMillis(long maxDurationMillis) {
+    this.maxDurationMillis = maxDurationMillis;
   }
 }
