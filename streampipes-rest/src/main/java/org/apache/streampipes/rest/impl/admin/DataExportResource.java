@@ -19,9 +19,11 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ExportManager;
+import org.apache.streampipes.export.OverviewExportManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
+import org.apache.streampipes.model.export.OverviewExport;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -29,6 +31,7 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +55,11 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
     this.pipelineManager = new PipelineManager(resourceManager);
     this.resourceManager = resourceManager;
 
+  }
+
+  @GetMapping(path = "/overview", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<OverviewExport> getOverview() {
+    return ok(OverviewExportManager.getOverviewExport(resourceManager));
   }
 
   @PostMapping(

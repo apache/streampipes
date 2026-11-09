@@ -82,7 +82,7 @@ public class OverviewExportManager {
     var entry = new AdapterOverviewEntry();
     entry.setId(adapter.getElementId());
     entry.setName(adapter.getName());
-    entry.setOwner(findOwner(resourceManager, resolveAdapterPermissionId(adapter)));
+    entry.setOwner(findAdapterOwner(resourceManager, adapter));
     entry.setCreatedAt(adapter.getCreatedAt());
     entry.setAdapterType(adapter.getAppId());
     entry.setRunning(adapter.isRunning());
@@ -134,10 +134,13 @@ public class OverviewExportManager {
     return metadata == null ? null : metadata.getCreatedAtEpochMs();
   }
 
-  private static String resolveAdapterPermissionId(AdapterDescription adapter) {
-    return adapter.getCorrespondingDataStreamElementId() != null
-        ? adapter.getCorrespondingDataStreamElementId()
-        : adapter.getElementId();
+  private static String findAdapterOwner(SpResourceManager resourceManager, AdapterDescription adapter) {
+    // adapter permissions are created on the adapter itself; older adapters may only have one on their stream
+    var owner = findOwner(resourceManager, adapter.getElementId());
+    if (owner == null && adapter.getCorrespondingDataStreamElementId() != null) {
+      owner = findOwner(resourceManager, adapter.getCorrespondingDataStreamElementId());
+    }
+    return owner;
   }
 
   private static String findOwner(SpResourceManager resourceManager, String resourceId) {

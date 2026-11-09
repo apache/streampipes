@@ -454,7 +454,7 @@
   "Export Provider": "Exportanbieter",
   "Export Providers": "Exportanbieter",
   "Export Settings": "Export-Einstellungen",
-  "Export a read-only overview of adapters, pipelines, charts and dashboards, including resource owners and adapter security settings": "Exportiert einen nur lesbaren Überblick über Adapter, Pipelines, Charts und Dashboards, einschließlich Ressourcenverantwortlicher und Adapter-Sicherheitseinstellungen",
+  "Export a read-only overview of adapters, pipelines, charts and dashboards, including resource owners and adapter security settings": "Eine schreibgeschützte Übersicht über Adapter, Pipelines, Diagramme und Dashboards exportieren, einschließlich der Ressourcenbesitzer und der Sicherheitseinstellungen der Adapter",
   "Export all documents": "Alle Dokumente exportieren",
   "Export assets and all linked resources": "Assets und alle damit verbundenen Ressourcen exportieren",
   "Export overview": "Übersicht exportieren",
