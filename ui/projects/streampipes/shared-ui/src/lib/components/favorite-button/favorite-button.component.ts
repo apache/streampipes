@@ -25,25 +25,38 @@ import { MatTooltip } from '@angular/material/tooltip';
     selector: 'sp-favorite-button',
     imports: [MatIconButton, MatIcon, MatTooltip],
     template: `
-        <button
-            type="button"
-            mat-icon-button
-            [disabled]="disabled()"
-            [attr.aria-pressed]="selected()"
-            [attr.aria-label]="label()"
-            [matTooltip]="label()"
-            data-cy="favorite-toggle"
-            (click)="toggle($event)"
-        >
-            <mat-icon aria-hidden="true">{{
-                selected() ? 'star' : 'star_border'
-            }}</mat-icon>
-        </button>
+        @if (readOnly()) {
+            @if (selected()) {
+                <mat-icon
+                    role="img"
+                    [attr.aria-label]="label()"
+                    [matTooltip]="label()"
+                    data-cy="favorite-marker"
+                    >star</mat-icon
+                >
+            }
+        } @else {
+            <button
+                type="button"
+                mat-icon-button
+                [disabled]="disabled()"
+                [attr.aria-pressed]="selected()"
+                [attr.aria-label]="label()"
+                [matTooltip]="label()"
+                data-cy="favorite-toggle"
+                (click)="toggle($event)"
+            >
+                <mat-icon aria-hidden="true">{{
+                    selected() ? 'star' : 'star_border'
+                }}</mat-icon>
+            </button>
+        }
     `,
 })
 export class SpFavoriteButtonComponent {
     readonly selected = input(false);
     readonly disabled = input(false);
+    readonly readOnly = input(false);
     readonly label = input.required<string>();
     readonly toggled = output<void>();
 

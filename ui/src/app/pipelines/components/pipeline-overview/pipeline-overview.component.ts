@@ -150,9 +150,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     readonly pipelineLinkType$ =
         this.assetBrowserService.getAssetLinkType$('pipeline');
 
-    constructor() {
-        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'PIPELINE');
-    }
+    readonly favorites = inject(FavoritesStore);
 
     ngOnInit() {
         this.userSub = this.currentUserService.user$.subscribe(() => {

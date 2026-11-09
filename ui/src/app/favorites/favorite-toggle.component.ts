@@ -29,15 +29,18 @@ import { FavoritesStore } from './favorites.store';
     template: `
         <sp-favorite-button
             [selected]="store.selected(resourceType(), resourceId())"
+            [readOnly]="readOnly()"
             [disabled]="
                 !store.loaded() ||
                 store.loading() ||
                 store.pending().has(store.key(resourceType(), resourceId()))
             "
             [label]="
-                (store.selected(resourceType(), resourceId())
-                    ? 'Remove from favorites'
-                    : 'Add to favorites'
+                (readOnly()
+                    ? 'Favorite'
+                    : store.selected(resourceType(), resourceId())
+                      ? 'Remove from favorites'
+                      : 'Add to favorites'
                 ) | translate
             "
             (toggled)="store.toggle(resourceType(), resourceId())"
@@ -57,6 +60,7 @@ export class FavoriteToggleComponent implements OnInit {
     readonly store = inject(FavoritesStore);
     readonly resourceType = input.required<FavoriteResourceType>();
     readonly resourceId = input.required<string>();
+    readonly readOnly = input(false);
 
     ngOnInit(): void {
         if (!this.store.loaded()) {

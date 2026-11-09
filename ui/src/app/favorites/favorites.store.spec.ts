@@ -24,16 +24,9 @@ import {
     provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { CurrentUserService } from '@streampipes/shared-ui';
-import {
-    FavoriteResourceType,
-    FavoriteSummary,
-    UserInfo,
-} from '@streampipes/platform-services';
+import { FavoriteSummary, UserInfo } from '@streampipes/platform-services';
 import { BehaviorSubject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FavoritesStore } from './favorites.store';
@@ -168,138 +161,17 @@ describe('FavoritesStore', () => {
         expect(store.error()).toBe(false);
     });
 
-    describe('favorite-first table sorting', () => {
-        const rows = [
-            { elementId: 'a', name: 'Alpha' },
-            { elementId: 'b', name: 'Bravo' },
-            { elementId: 'c', name: 'Charlie' },
-            { elementId: 'd', name: 'Delta' },
-        ];
-
-        function createTable(type: FavoriteResourceType = 'ASSET') {
-            const source = new MatTableDataSource([...rows]);
-            const sort = TestBed.runInInjectionContext(() => new MatSort());
-            sort.active = 'name';
-            sort.direction = 'asc';
-            sort.ngOnInit();
-            source.sort = sort;
-            TestBed.runInInjectionContext(() => {
-                store.sortFavoritesFirst(source, type);
-            });
-            return { source, sort };
-        }
-
-        it.each<FavoriteResourceType>([
-            'ASSET',
-            'ADAPTER',
-            'PIPELINE',
-            'DASHBOARD',
-            'CHART',
-        ])('keeps %s favorites first in both sort directions', type => {
-            const { source, sort } = createTable(type);
-            store.favorites.set(
-                ['b', 'd'].map(id => ({
-                    ...favorite,
-                    resourceType: type,
-                    resourceId: id,
-                })),
-            );
-            expect(
-                source.sortData([...rows], sort).map(row => row.elementId),
-            ).toEqual(['b', 'd', 'a', 'c']);
-            sort.direction = 'desc';
-            expect(
-                source.sortData([...rows], sort).map(row => row.elementId),
-            ).toEqual(['d', 'b', 'c', 'a']);
-        });
-
-        it('retains the default row order when sorting is cleared', () => {
-            const { source, sort } = createTable();
-            sort.direction = '';
-            store.favorites.set([{ ...favorite, resourceId: 'd' }]);
-            expect(
-                source.sortData([...rows], sort).map(row => row.elementId),
-            ).toEqual(['d', 'a', 'b', 'c']);
-            store.favorites.set([]);
-            expect(
-                source.sortData([...rows], sort).map(row => row.elementId),
-            ).toEqual(['a', 'b', 'c', 'd']);
-            expect(source.data).toEqual(rows);
-        });
-
-        it('preserves custom column accessors and distinguishes resource types', () => {
-            const { source, sort } = createTable();
-            source.sortingDataAccessor = row => -row.name.length;
-            store.favorites.set([
-                { ...favorite, resourceType: 'CHART', resourceId: 'a' },
-                { ...favorite, resourceId: 'd' },
-            ]);
-            expect(
-                source.sortData([...rows], sort).map(row => row.elementId),
-            ).toEqual(['d', 'c', 'a', 'b']);
-        });
-
-        it('updates visible rows on load, toggle, rollback and user changes', () => {
-            const { source } = createTable();
-            let rendered = [] as typeof rows;
-            const subscription = source.connect().subscribe(value => {
-                rendered = value;
-            });
-            const ids = () => rendered.map(row => row.elementId);
-            store.load();
-            http.expectOne(url).flush([{ ...favorite, resourceId: 'd' }]);
-            TestBed.tick();
-            expect(ids()).toEqual(['d', 'a', 'b', 'c']);
-
-            store.toggle('ASSET', 'c');
-            TestBed.tick();
-            expect(ids()).toEqual(['c', 'd', 'a', 'b']);
-            http.expectOne(req => req.method === 'PUT').flush(null, {
-                status: 500,
-                statusText: 'Error',
-            });
-            TestBed.tick();
-            expect(ids()).toEqual(['d', 'a', 'b', 'c']);
-
-            store.toggle('ASSET', 'd');
-            TestBed.tick();
-            expect(ids()).toEqual(['a', 'b', 'c', 'd']);
-            http.expectOne(req => req.method === 'DELETE').flush(null);
-
-            store.favorites.set([{ ...favorite, resourceId: 'b' }]);
-            TestBed.tick();
-            expect(ids()).toEqual(['b', 'a', 'c', 'd']);
-            user.next({ username: 'bob' } as UserInfo);
-            TestBed.tick();
-            expect(ids()).toEqual(['a', 'b', 'c', 'd']);
-            subscription.unsubscribe();
-            source.disconnect();
-        });
-
-        it('ranks favorites before pagination without bypassing filtering', () => {
-            const { source } = createTable();
-            const paginator = TestBed.runInInjectionContext(
-                () => new MatPaginator(),
-            );
-            paginator.pageSize = 2;
-            paginator.ngOnInit();
-            source.paginator = paginator;
-            source.filterPredicate = row => row.elementId !== 'a';
-            source.filter = 'filtered';
-            store.favorites.set([{ ...favorite, resourceId: 'd' }]);
-            let rendered = [] as typeof rows;
-            const subscription = source.connect().subscribe(value => {
-                rendered = value;
-            });
-            TestBed.tick();
-            expect(rendered.map(row => row.elementId)).toEqual(['d', 'b']);
-            expect(source.filteredData.map(row => row.elementId)).toEqual([
-                'b',
-                'c',
-                'd',
-            ]);
-            subscription.unsubscribe();
-            source.disconnect();
-        });
+    it('groups favorite IDs by resource type and clears them when users change', () => {
+        store.favorites.set([favorite, { ...favorite, resourceType: 'CHART' }]);
+        expect(store.favoriteIds().ASSET).toEqual(
+            new Set([favorite.resourceId]),
+        );
+        expect(store.favoriteIds().CHART).toEqual(
+            new Set([favorite.resourceId]),
+        );
+        expect(store.favoriteIds().ADAPTER.size).toBe(0);
+        user.next({ username: 'bob' } as UserInfo);
+        expect(store.favoriteIds().ASSET.size).toBe(0);
+        expect(store.favoriteIds().CHART.size).toBe(0);
     });
 });

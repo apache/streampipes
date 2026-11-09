@@ -164,9 +164,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         { icon: string; label: string }
     >();
 
-    constructor() {
-        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'CHART');
-    }
+    readonly favorites = inject(FavoritesStore);
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('chart');

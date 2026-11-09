@@ -225,6 +225,7 @@ export class SpTableComponent<T>
      * also applies to the others and survives a reload.
      */
     @Input() rememberViewMode = false;
+    @Input() favoriteIds?: ReadonlySet<string>;
     @Input() groupLabel?: string;
     @Input() groupForRow?: (row: T) => { id: string; title: string };
 
@@ -262,6 +263,7 @@ export class SpTableComponent<T>
     visiblePageRows: T[] = [];
     selectedMultiAction: string | null = null;
     nameSearchTerm = '';
+    favoritesOnly = false;
     viewMode: SpTableViewMode = 'list';
     groupBy: SpTableGroupingMode = 'asset';
     groupedSections: SpTableGroupedSection<T>[] = [];
@@ -293,6 +295,10 @@ export class SpTableComponent<T>
     private defaultFilterPredicates = new WeakMap<
         MatTableDataSource<T>,
         (data: T, filter: string) => boolean
+    >();
+    private defaultSortingAccessors = new WeakMap<
+        MatTableDataSource<T>,
+        (data: T, column: string) => string | number
     >();
     private assetContextIndex = new Map<
         string,
@@ -345,6 +351,7 @@ export class SpTableComponent<T>
     ngOnChanges(changes: SimpleChanges) {
         if (changes['dataSource']) {
             this.visiblePageRows = [];
+            this.applyAssetContextSortingAccessor();
             this.configureNameSearch();
             if (this.viewInitialized) {
                 this.bindDataSource();
@@ -372,6 +379,15 @@ export class SpTableComponent<T>
 
         if (changes['nameSearchConfig'] && !changes['dataSource']) {
             this.configureNameSearch();
+        }
+        if (changes['favoriteIds']) {
+            if (!this.favoriteIds) {
+                this.favoritesOnly = false;
+            }
+            this.configureNameSearch();
+            if (this.dataSource) {
+                this.dataSource.data = [...this.dataSource.data];
+            }
         }
         if (changes['groupForRow']) {
             this.refreshRenderedRows();
@@ -685,12 +701,15 @@ export class SpTableComponent<T>
             return;
         }
 
-        if (!this.shouldShowNameSearch) {
+        if (!this.shouldShowNameSearch && !this.favoritesOnly) {
             this.dataSource.filter = '';
             return;
         }
 
-        const normalizedFilter = value.trim().toLocaleLowerCase();
+        const normalizedSearch = value.trim().toLocaleLowerCase();
+        const normalizedFilter = this.favoritesOnly
+            ? JSON.stringify({ favoritesOnly: true, search: normalizedSearch })
+            : normalizedSearch;
         if (this.dataSource.filter === normalizedFilter) {
             return;
         }
@@ -704,6 +723,18 @@ export class SpTableComponent<T>
 
     clearNameSearch() {
         this.onNameSearchInput('');
+    }
+
+    toggleFavoritesOnly(): void {
+        this.favoritesOnly = !this.favoritesOnly;
+        if (this.paginator) {
+            this.paginator.pageIndex = 0;
+        }
+        this.configureNameSearch();
+    }
+
+    private isFavorite(row: T): boolean {
+        return this.favoriteIds?.has(String(row[this.resourceIdKey])) ?? false;
     }
 
     activateRow(event: Event, row: T): void {
@@ -733,6 +764,7 @@ export class SpTableComponent<T>
         }
 
         this.configureNameSearch();
+        this.applyAssetContextSortingAccessor();
         this.dataSource.paginator = this.showPaginator ? this.paginator : null;
 
         // The table itself is bound to renderedRows$, so this component owns
@@ -781,7 +813,7 @@ export class SpTableComponent<T>
             this.defaultFilterPredicates.get(this.dataSource) ??
             this.dataSource.filterPredicate;
 
-        if (!this.shouldShowNameSearch) {
+        if (!this.shouldShowNameSearch && !this.favoritesOnly) {
             this.nameSearchTerm = '';
             this.dataSource.filterPredicate = defaultFilterPredicate;
             this.dataSource.filter = '';
@@ -789,9 +821,18 @@ export class SpTableComponent<T>
         }
 
         this.dataSource.filterPredicate = (row, filter) => {
-            const normalizedFilter = filter.trim().toLocaleLowerCase();
+            if (this.favoritesOnly && !this.isFavorite(row)) {
+                return false;
+            }
+            const normalizedFilter = this.favoritesOnly
+                ? (JSON.parse(filter).search as string)
+                : filter.trim().toLocaleLowerCase();
             if (!normalizedFilter) {
                 return true;
+            }
+
+            if (!this.shouldShowNameSearch) {
+                return defaultFilterPredicate(row, normalizedFilter);
             }
 
             return this.nameSearchKeys.some(searchKey => {
@@ -803,7 +844,7 @@ export class SpTableComponent<T>
                     .includes(normalizedFilter);
             });
         };
-        this.dataSource.filter = this.nameSearchTerm.trim().toLocaleLowerCase();
+        this.applyNameSearchFilter(this.nameSearchTerm);
     }
 
     private updateRenderedState(rows: T[], reconcileSelection = true) {
@@ -937,13 +978,20 @@ export class SpTableComponent<T>
             return;
         }
 
-        const currentAccessor =
-            this.dataSource.sortingDataAccessor?.bind(this.dataSource) ??
-            ((data: T, sortHeaderId: string) =>
-                (data as Record<string, unknown>)?.[sortHeaderId] as
-                    string | number);
+        if (!this.defaultSortingAccessors.has(this.dataSource)) {
+            this.defaultSortingAccessors.set(
+                this.dataSource,
+                this.dataSource.sortingDataAccessor.bind(this.dataSource),
+            );
+        }
+        const currentAccessor = this.defaultSortingAccessors.get(
+            this.dataSource,
+        );
 
         this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+            if (this.favoriteIds && sortHeaderId === 'favorite') {
+                return Number(this.isFavorite(data));
+            }
             if (
                 this.assetContextConfig &&
                 sortHeaderId === this.assetContextColumnId

@@ -19,15 +19,13 @@
 import {
     DestroyRef,
     Injectable,
-    effect,
+    computed,
     inject,
     signal,
-    untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import {
     FavoritesService,
@@ -51,6 +49,19 @@ export class FavoritesStore {
     private readonly translate = inject(TranslateService);
     private readonly userChanged = new Subject<void>();
     readonly favorites = signal<FavoriteSummary[]>([]);
+    readonly favoriteIds = computed(() => {
+        const ids: Record<FavoriteResourceType, Set<string>> = {
+            ASSET: new Set<string>(),
+            ADAPTER: new Set<string>(),
+            PIPELINE: new Set<string>(),
+            DASHBOARD: new Set<string>(),
+            CHART: new Set<string>(),
+        };
+        for (const favorite of this.favorites()) {
+            ids[favorite.resourceType].add(favorite.resourceId);
+        }
+        return ids;
+    });
     readonly loading = signal(false);
     readonly loaded = signal(false);
     readonly error = signal(false);
@@ -93,35 +104,6 @@ export class FavoritesStore {
         return this.favorites().some(
             item => item.resourceType === type && item.resourceId === id,
         );
-    }
-
-    sortFavoritesFirst<T extends { elementId: string }>(
-        dataSource: MatTableDataSource<T>,
-        type: FavoriteResourceType,
-    ): void {
-        const sortData = dataSource.sortData;
-        dataSource.sortData = (rows, sort) => {
-            const favoriteIds = new Set(
-                this.favorites()
-                    .filter(favorite => favorite.resourceType === type)
-                    .map(favorite => favorite.resourceId),
-            );
-            const sorted: T[] = sortData.call(dataSource, rows, sort);
-            return [
-                ...sorted.filter(row => favoriteIds.has(row.elementId)),
-                ...sorted.filter(row => !favoriteIds.has(row.elementId)),
-            ];
-        };
-
-        effect(() => {
-            this.favorites();
-            untracked(() => {
-                dataSource.data = [...dataSource.data];
-            });
-        });
-        inject(DestroyRef).onDestroy(() => {
-            dataSource.sortData = sortData;
-        });
     }
 
     load(): void {

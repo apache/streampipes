@@ -55,6 +55,7 @@
                     fxFlex="100"
                     [columns]="displayedColumns"
                     [dataSource]="dataSource"
+                    [favoriteIds]="favorites.favoriteIds().ASSET"
                     [nameSearchConfig]="{
                         enabled: true,
                         placeholder: 'Search assets',
@@ -70,8 +71,12 @@
                             mat-header-cell
                             *matHeaderCellDef
                             class="favorite-column"
+                            mat-sort-header
+                            start="desc"
                             [attr.aria-label]="'Favorite' | translate"
-                        ></th>
+                        >
+                            <mat-icon aria-hidden="true">star</mat-icon>
+                        </th>
                         <td
                             mat-cell
                             *matCellDef="let resource"

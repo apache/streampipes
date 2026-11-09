@@ -141,9 +141,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
 
-    constructor() {
-        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'DASHBOARD');
-    }
+    readonly favorites = inject(FavoritesStore);
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('dashboard');

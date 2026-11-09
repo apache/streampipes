@@ -58,4 +58,29 @@ describe('SpFavoriteButtonComponent', () => {
         expect(button.disabled).toBe(true);
         expect(toggles).toBe(0);
     });
+
+    it('shows only a plain star for a selected read-only favorite', () => {
+        const fixture = TestBed.createComponent(SpFavoriteButtonComponent);
+        fixture.componentRef.setInput('label', 'Favorite');
+        fixture.componentRef.setInput('readOnly', true);
+        fixture.componentRef.setInput('selected', true);
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelector('button')).toBeNull();
+        expect(
+            fixture.nativeElement.querySelector('[tabindex="0"]'),
+        ).toBeNull();
+        const marker: HTMLElement = fixture.nativeElement.querySelector(
+            '[data-cy="favorite-marker"]',
+        );
+        expect(marker.getAttribute('aria-label')).toBe('Favorite');
+        let toggles = 0;
+        fixture.componentInstance.toggled.subscribe(() => toggles++);
+        marker.click();
+        expect(toggles).toBe(0);
+
+        fixture.componentRef.setInput('selected', false);
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelector('mat-icon')).toBeNull();
+        expect(fixture.nativeElement.querySelector('button')).toBeNull();
+    });
 });

@@ -182,8 +182,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     readonly pageHeaderAssetLinkType$ =
         this.assetFilterService.getAssetLinkType$('adapter');
 
+    readonly favorites = inject(FavoritesStore);
+
     constructor() {
-        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'ADAPTER');
         this.dataSource.sortingDataAccessor = (adapter, column) => {
             if (column === 'status') {
                 return Number(adapter.running);

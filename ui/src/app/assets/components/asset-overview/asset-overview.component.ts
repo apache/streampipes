@@ -150,9 +150,7 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
 
     private assetFilterService = inject(SpAssetBrowserService);
 
-    constructor() {
-        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'ASSET');
-    }
+    readonly favorites = inject(FavoritesStore);
 
     ngOnInit(): void {
         this.hasWritePrivilege = this.currentUserService.hasRole(

@@ -25,5 +25,4 @@ export enum PageName {
     SETTINGS,
     ASSETS,
     DATASETS,
-    FAVORITES,
 }

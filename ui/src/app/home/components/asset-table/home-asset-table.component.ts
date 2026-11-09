@@ -33,6 +33,7 @@ import {
     LocationConfig,
     SpAssetModel,
 } from '@streampipes/platform-services';
+import { MatIcon } from '@angular/material/icon';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
     MatCell,
@@ -63,6 +64,7 @@ import { FavoritesStore } from '../../../favorites/favorites.store';
         MatHeaderCellDef,
         MatHeaderCell,
         MatSortHeader,
+        MatIcon,
         MatCellDef,
         MatCell,
         SpLabelComponent,
@@ -102,9 +104,7 @@ export class HomeAssetTableComponent implements OnInit, OnChanges {
     private isa95TypeService = inject(Isa95TypeService);
     private router = inject(Router);
 
-    constructor() {
-        inject(FavoritesStore).sortFavoritesFirst(this.dataSource, 'ASSET');
-    }
+    readonly favorites = inject(FavoritesStore);
 
     ngOnInit() {
         this.dataSource.sortingDataAccessor = (assetModel, column) => {

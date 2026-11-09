@@ -17,16 +17,19 @@
  */
 
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
     MatCellDef,
+    MatCell,
     MatColumnDef,
     MatHeaderCellDef,
+    MatHeaderCell,
     MatTableDataSource,
 } from '@angular/material/table';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { BehaviorSubject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SpTableComponent } from './sp-table.component';
@@ -38,6 +41,7 @@ import { FeatureCardService } from '../feature-card-host/feature-card.service';
 import {
     SpTableAssetContextConfig,
     SpTableResolvedAssetContext,
+    SpTableNameSearchConfig,
 } from './sp-table.model';
 
 interface TestRow {
@@ -47,15 +51,40 @@ interface TestRow {
 
 @Component({
     selector: 'sp-table-host',
-    imports: [SpTableComponent, MatColumnDef, MatHeaderCellDef, MatCellDef],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        SpTableComponent,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatCellDef,
+        MatCell,
+        MatHeaderCell,
+        MatSort,
+        MatSortHeader,
+    ],
     template: `
         <sp-table
             [dataSource]="dataSource"
             [columns]="columns"
             [assetContextConfig]="assetContextConfig"
+            [favoriteIds]="favoriteIds"
+            [nameSearchConfig]="nameSearchConfig"
+            [showSelectionCheckboxes]="showSelectionCheckboxes"
             resourceIdKey="_id"
             [rememberViewMode]="true"
+            matSort
         >
+            <ng-container matColumnDef="favorite">
+                <th
+                    mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    start="desc"
+                >
+                    Favorite
+                </th>
+                <td mat-cell *matCellDef="let row"></td>
+            </ng-container>
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let row">{{ row.name }}</td>
@@ -65,6 +94,10 @@ interface TestRow {
 })
 class SpTableHostComponent {
     readonly table = viewChild.required(SpTableComponent<TestRow>);
+    readonly sort = viewChild.required(MatSort);
+    favoriteIds?: ReadonlySet<string>;
+    nameSearchConfig?: SpTableNameSearchConfig<TestRow>;
+    showSelectionCheckboxes = false;
 
     dataSource = new MatTableDataSource<TestRow>([
         { _id: 'r1', name: 'Alpha' },
@@ -169,6 +202,123 @@ describe('SpTableComponent grouped view', () => {
             'Alpha Press',
             'Beta Press',
             'Gamma',
+        ]);
+    });
+
+    it('keeps the existing order until the favorite column is sorted, and restores it when cleared', () => {
+        host.favoriteIds = new Set(['r2']);
+        host.columns = ['favorite', 'name'];
+        host.dataSource.sort = host.sort();
+        fixture.detectChanges();
+        const rows = () => host.table().visiblePageRows.map(row => row._id);
+        expect(rows()).toEqual(['r1', 'r2', 'r3']);
+
+        const header: HTMLElement = fixture.nativeElement.querySelector(
+            '.mat-column-favorite .mat-sort-header-container',
+        );
+        header.click();
+        fixture.detectChanges();
+        expect(rows()).toEqual(['r2', 'r1', 'r3']);
+        header.click();
+        fixture.detectChanges();
+        expect(rows()).toEqual(['r1', 'r3', 'r2']);
+        header.click();
+        fixture.detectChanges();
+        expect(rows()).toEqual(['r1', 'r2', 'r3']);
+    });
+
+    it('combines favorites with search and updates the filtered list when favorites change', () => {
+        host.favoriteIds = new Set(['r1', 'r2']);
+        host.nameSearchConfig = { enabled: true };
+        fixture.detectChanges();
+        const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+            '[data-cy="sp-table-favorites-filter"]',
+        );
+        button.click();
+        fixture.detectChanges();
+        expect(button.getAttribute('aria-pressed')).toBe('true');
+        expect(host.dataSource.filteredData.map(row => row._id)).toEqual([
+            'r1',
+            'r2',
+        ]);
+        host.table().nameSearchTerm = 'alpha';
+        host.favoriteIds = new Set(['r1']);
+        fixture.detectChanges();
+        expect(host.dataSource.filteredData.map(row => row._id)).toEqual([
+            'r1',
+        ]);
+        host.favoriteIds = new Set();
+        fixture.detectChanges();
+        expect(host.dataSource.filteredData).toEqual([]);
+        button.click();
+        fixture.detectChanges();
+        expect(host.dataSource.filteredData.map(row => row._id)).toEqual([
+            'r1',
+        ]);
+        expect(host.dataSource.data).toHaveLength(3);
+    });
+
+    it('preserves custom column sorting and refreshes an active favorite sort', () => {
+        host.favoriteIds = new Set(['r2']);
+        host.dataSource = new MatTableDataSource([...host.dataSource.data]);
+        host.dataSource.sortingDataAccessor = row => -row.name.length;
+        host.dataSource.sort = host.sort();
+        fixture.detectChanges();
+        const rows = () => host.table().visiblePageRows.map(row => row._id);
+        host.sort().sort({ id: 'name', start: 'asc', disableClear: false });
+        fixture.detectChanges();
+        expect(rows()).toEqual(['r1', 'r3', 'r2']);
+        host.sort().sort({
+            id: 'favorite',
+            start: 'desc',
+            disableClear: false,
+        });
+        fixture.detectChanges();
+        expect(rows()).toEqual(['r2', 'r1', 'r3']);
+        host.favoriteIds = new Set(['r3']);
+        fixture.detectChanges();
+        expect(rows()).toEqual(['r3', 'r1', 'r2']);
+    });
+
+    it('filters before pagination and works in grouped view and the selection toolbar', () => {
+        host.favoriteIds = new Set(['r2', 'r3']);
+        host.showSelectionCheckboxes = true;
+        fixture.detectChanges();
+        host.table().paginator.pageSize = 1;
+        host.table().paginator.pageIndex = 2;
+        const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+            '[data-cy="sp-table-favorites-filter"]',
+        );
+        button.click();
+        fixture.detectChanges();
+        expect(host.table().paginator.pageIndex).toBe(0);
+        expect(host.table().visiblePageRows.map(row => row._id)).toEqual([
+            'r2',
+        ]);
+        host.table().setViewMode('grouped');
+        fixture.detectChanges();
+        expect(
+            host
+                .table()
+                .groupedSections.flatMap(section => section.rows)
+                .map(row => row._id),
+        ).toEqual(['r2']);
+    });
+
+    it('shows an empty favorites filter even without search or grouping controls', () => {
+        host.assetContextConfig = undefined;
+        host.favoriteIds = new Set();
+        fixture.detectChanges();
+        const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+            '[data-cy="sp-table-favorites-filter"]',
+        );
+        button.click();
+        fixture.detectChanges();
+        expect(host.table().visiblePageRows).toEqual([]);
+        host.favoriteIds = new Set(['r3']);
+        fixture.detectChanges();
+        expect(host.table().visiblePageRows.map(row => row._id)).toEqual([
+            'r3',
         ]);
     });
 
