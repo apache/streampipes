@@ -33,8 +33,13 @@ export class AssetManagementService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    createAsset(asset: SpAssetModel): Observable<any> {
-        return this.http.post(this.assetBasePath, asset);
+    createAsset(
+        asset: SpAssetModel,
+    ): Observable<Pick<SpAssetModel, 'elementId' | 'rev'>> {
+        return this.http.post<Pick<SpAssetModel, 'elementId' | 'rev'>>(
+            this.assetBasePath,
+            asset,
+        );
     }
 
     getAllAssets(): Observable<SpAssetModel[]> {
@@ -61,5 +66,41 @@ export class AssetManagementService {
 
     private get assetBasePath() {
         return this.platformServicesCommons.apiBasePath + '/assets';
+    }
+
+    uploadAssetImage(
+        elementId: string,
+        selectedAssetId: string,
+        file: File,
+    ): Observable<SpAssetModel> {
+        const data = new FormData();
+        data.append('image_upload', file, file.name);
+        return this.http.post<SpAssetModel>(
+            `${this.assetBasePath}/${elementId}/images`,
+            data,
+            { params: { assetId: selectedAssetId } },
+        );
+    }
+
+    getAssetImage(
+        elementId: string,
+        imageId: string,
+        selectedAssetId: string,
+    ): Observable<Blob> {
+        return this.http.get(
+            `${this.assetBasePath}/${elementId}/images/${imageId}`,
+            { params: { assetId: selectedAssetId }, responseType: 'blob' },
+        );
+    }
+
+    deleteAssetImage(
+        assetId: string,
+        imageId: string,
+        selectedAssetId: string,
+    ): Observable<SpAssetModel> {
+        return this.http.delete<SpAssetModel>(
+            `${this.assetBasePath}/${assetId}/images/${imageId}`,
+            { params: { assetId: selectedAssetId } },
+        );
     }
 }

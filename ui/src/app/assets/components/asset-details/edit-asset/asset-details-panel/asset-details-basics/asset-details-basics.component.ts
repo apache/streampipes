@@ -26,6 +26,7 @@ import {
     SimpleChanges,
     inject,
     ChangeDetectionStrategy,
+    ViewChild,
 } from '@angular/core';
 import {
     AssetSiteDesc,
@@ -47,6 +48,10 @@ import { AssetDetailsLabelsComponent } from './asset-details-labels/asset-detail
 import { AssetDetailsCustomFieldsComponent } from './asset-details-custom-fields/asset-details-custom-fields.component';
 import { AssetDetailsSiteComponent } from './asset-details-site/asset-details-site.component';
 import { AssetDetailsLinksComponent } from '../asset-details-links/asset-details-links.component';
+import {
+    AssetImageComponent,
+    AssetImageChange,
+} from './asset-details-images/asset-image.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -67,6 +72,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         AssetDetailsCustomFieldsComponent,
         AssetDetailsSiteComponent,
         AssetDetailsLinksComponent,
+        AssetImageComponent,
         TranslatePipe,
     ],
 })
@@ -93,6 +99,15 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
 
     @Output()
     reloadSites: EventEmitter<void> = new EventEmitter();
+
+    @ViewChild(AssetDetailsLinksComponent)
+    assetDetailsLinks: AssetDetailsLinksComponent;
+
+    @Input()
+    pendingImage: File | null | undefined;
+
+    @Output()
+    imageChanged = new EventEmitter<AssetImageChange>();
 
     isa95Types: Isa95TypeDesc[] = [];
 

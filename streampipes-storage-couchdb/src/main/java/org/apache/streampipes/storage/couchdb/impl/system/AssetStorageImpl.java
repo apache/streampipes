@@ -31,4 +31,5 @@ public class AssetStorageImpl extends DefaultViewCrudStorage<SpAssetModel> imple
         "assets/all-assets"
     );
   }
+
 }
