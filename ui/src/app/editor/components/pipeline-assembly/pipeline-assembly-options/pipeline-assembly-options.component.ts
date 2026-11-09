@@ -55,6 +55,8 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthService } from '../../../../services/auth.service';
+import { UserPrivilege } from '../../../../core/auth/user-privilege.enum';
 
 export interface PipelineAssemblySaveOptions {
     startPipelineAfterStorage: boolean;
@@ -82,6 +84,11 @@ export class PipelineAssemblyOptionsComponent {
     private pipelinePositioningService = inject(PipelinePositioningService);
     private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
+
+    /** Starting a preview deploys temporary pipeline elements, so it needs the write privilege. */
+    readonly canPreview = inject(AuthService).hasRole(
+        UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
+    );
 
     @Input()
     jsplumbBridge: JsplumbBridge;

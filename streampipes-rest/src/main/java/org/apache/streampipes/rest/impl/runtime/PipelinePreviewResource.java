@@ -60,6 +60,8 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
+  @Operation(summary = "Start a live preview of a pipeline", tags = {"Pipeline Preview"})
+  @PreAuthorize("this.hasWritePipelinePrivilege()")
   public ResponseEntity<PipelinePreviewModel> requestPipelinePreview(@RequestBody Pipeline pipeline) {
     PipelinePreviewModel previewModel = new PipelinePreview(resourceManager).initiatePreview(pipeline, requestManager);
 
@@ -68,6 +70,9 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{previewId}",
               produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @Operation(summary = "Stream the latest events of a running pipeline preview",
+      tags = {"Pipeline Preview"})
+  @PreAuthorize("this.hasWritePipelinePrivilege()")
   public StreamingResponseBody getPipelinePreviewResult(
       HttpServletResponse response,
       @PathVariable("previewId") String previewId
@@ -95,21 +100,18 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "{previewId}")
   @Operation(summary = "Stop a pipeline preview and release its temporary pipeline elements",
       tags = {"Pipeline Preview"})
-  @PreAuthorize("this.hasPipelineAuthority()")
+  @PreAuthorize("this.hasWritePipelinePrivilege()")
   public ResponseEntity<Void> deletePipelinePreview(@PathVariable("previewId") String previewId) {
     new PipelinePreview(resourceManager).deletePreview(previewId, requestManager);
     return ok();
   }
 
   /**
-   * required by Spring expression. Previews are started from the editor (write) and from the
-   * pipeline details view (read), so either privilege may stop one.
+   * required by Spring expression. A preview deploys temporary pipeline elements on the extensions
+   * services, so it needs the same privilege as editing a pipeline.
    */
-  public boolean hasPipelineAuthority() {
-    return isAdminOrHasAnyAuthority(
-        DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE,
-        DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE
-    );
+  public boolean hasWritePipelinePrivilege() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
   }
 
 }

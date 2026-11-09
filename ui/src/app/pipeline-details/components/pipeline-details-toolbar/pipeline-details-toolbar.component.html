@@ -26,29 +26,29 @@
         fxLayout="row wrap"
         fxLayoutAlign="start center"
     >
-        <button
-            type="button"
-            mat-flat-button
-            class="btn-secondary"
-            [attr.aria-pressed]="previewState === 'active'"
-            [attr.aria-busy]="previewState === 'starting'"
-            [disabled]="previewState === 'starting'"
-            (click)="togglePreviewEmitter.emit()"
-        >
-            <mat-icon>visibility</mat-icon>
-            @switch (previewState) {
-                @case ('starting') {
-                    {{ 'Starting live preview' | translate }}...
-                }
-                @case ('active') {
-                    {{ 'Disable live preview' | translate }}
-                }
-                @default {
-                    {{ 'Enable live preview' | translate }}
-                }
-            }
-        </button>
         @if (hasPipelineWritePrivileges) {
+            <button
+                type="button"
+                mat-flat-button
+                class="btn-secondary"
+                [attr.aria-pressed]="previewState === 'active'"
+                [attr.aria-busy]="previewState === 'starting'"
+                [disabled]="previewState === 'starting'"
+                (click)="togglePreviewEmitter.emit()"
+            >
+                <mat-icon>visibility</mat-icon>
+                @switch (previewState) {
+                    @case ('starting') {
+                        {{ 'Starting live preview' | translate }}...
+                    }
+                    @case ('active') {
+                        {{ 'Disable live preview' | translate }}
+                    }
+                    @default {
+                        {{ 'Enable live preview' | translate }}
+                    }
+                }
+            </button>
             <button
                 type="button"
                 mat-flat-button
