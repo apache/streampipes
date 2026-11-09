@@ -42,7 +42,6 @@ import org.apache.streampipes.units.StandardUnits;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
 
-import java.net.URI;
 import java.util.ArrayDeque;
 
 public class SpeedCalculatorProcessor implements IStreamPipesDataProcessor {
