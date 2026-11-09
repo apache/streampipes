@@ -57,8 +57,11 @@ class PreviewResponseFlushTest {
 
   @Test
   void pipelinePreviewFlushesEachMessageBeforeStreamingCompletes() throws Exception {
-    try (var previews = mockConstruction(PipelinePreview.class, (preview, context) ->
-        when(preview.getPipelineElementPreviewStreams("preview-id")).thenReturn(Map.of()))) {
+    try (var previews = mockConstruction(PipelinePreview.class, (preview, context) -> {
+      when(preview.getPipelineElementPreviewStreams("preview-id")).thenReturn(Map.of());
+      // the stream stops as soon as the preview is no longer active
+      when(preview.isActive("preview-id")).thenReturn(true);
+    })) {
       var resource = new PipelinePreviewResource(
           mock(ExtensionServiceRequestManager.class),
           mock(SpResourceManager.class)
