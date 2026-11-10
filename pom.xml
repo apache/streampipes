@@ -124,7 +124,7 @@
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jetbrains.version>26.1.0</jetbrains.version>
         <snakeyaml.version>3.2</snakeyaml.version>
-        <vertx.version>4.5.31</vertx.version>
+        <vertx.version>5.2.2</vertx.version>
 
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
