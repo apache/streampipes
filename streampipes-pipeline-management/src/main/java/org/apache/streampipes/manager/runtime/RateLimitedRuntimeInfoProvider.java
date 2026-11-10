@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 public class RateLimitedRuntimeInfoProvider {
 
@@ -39,19 +40,46 @@ public class RateLimitedRuntimeInfoProvider {
   private final DataStreamRuntimeInfoProvider runtimeInfoProvider;
   private final ObjectMapper objectMapper;
   private final ClientDisconnectCallback callback;
+  private final Runnable expiryCallback;
+  private final BooleanSupplier active;
   private final int previewCycles;
   private final long intervalMillis;
 
 
   public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                         ClientDisconnectCallback callback) {
-    this(runtimeInfoProvider, callback, MAX_PREVIEW_TIME_CYCLES, MAX_FREQUENCY);
+    this(runtimeInfoProvider, callback, callback::onClientDisconnect, () -> true);
+  }
+
+  /**
+   * @param callback       called when the client disconnects, streaming fails or {@code active} turns false
+   * @param expiryCallback called instead of {@code callback} when the stream ends because it reached its
+   *                       maximum duration, so that the client may re-attach to the same source
+   * @param active         checked before each cycle; streaming ends as soon as it returns false,
+   *                       e.g. after the preview was stopped explicitly
+   */
+  public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                        ClientDisconnectCallback callback,
+                                        Runnable expiryCallback,
+                                        BooleanSupplier active) {
+    this(runtimeInfoProvider, callback, expiryCallback, active, MAX_PREVIEW_TIME_CYCLES, MAX_FREQUENCY);
   }
 
   RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                 ClientDisconnectCallback callback,
                                 int previewCycles,
                                 long intervalMillis) {
+    this(runtimeInfoProvider, callback, callback::onClientDisconnect, () -> true, previewCycles, intervalMillis);
+  }
+
+  RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                ClientDisconnectCallback callback,
+                                Runnable expiryCallback,
+                                BooleanSupplier active,
+                                int previewCycles,
+                                long intervalMillis) {
+    this.expiryCallback = expiryCallback;
+    this.active = active;
     this.previewCycles = previewCycles;
     this.intervalMillis = intervalMillis;
     this.runtimeInfoProvider = runtimeInfoProvider;
@@ -67,9 +95,13 @@ public class RateLimitedRuntimeInfoProvider {
   }
 
   public void streamOutput(OutputStream outputStream, Flushable responseFlusher) {
+    var expired = false;
     try {
       runtimeInfoProvider.startConsuming();
       for (int i = 0; i < previewCycles; i++) {
+        if (!active.getAsBoolean()) {
+          return;
+        }
         var messages = runtimeInfoProvider.getLatestEvents();
         if (!messages.isEmpty()) {
           try {
@@ -82,14 +114,18 @@ public class RateLimitedRuntimeInfoProvider {
         }
         TimeUnit.MILLISECONDS.sleep(intervalMillis);
       }
+      expired = true;
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
     } finally {
       try {
         runtimeInfoProvider.close();
       } finally {
-        // The legacy callback also releases temporary pipelines on expiry or failure.
-        callback.onClientDisconnect();
+        if (expired) {
+          expiryCallback.run();
+        } else {
+          callback.onClientDisconnect();
+        }
       }
     }
   }

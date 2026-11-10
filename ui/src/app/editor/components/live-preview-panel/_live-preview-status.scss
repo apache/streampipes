@@ -16,24 +16,28 @@
  *
  */
 
-.data-preview {
-    position: relative;
-    left: 0;
-    top: 120px;
-    width: 250px;
-    height: 120px;
-    background: var(--color-bg-dialog);
-    overflow: auto;
-    border: 1px solid gray;
-    box-shadow: 0.175em 0.175em 0 0 rgba(15, 28, 63, 0.125);
-    z-index: 50;
+// Status dot shared by the canvas badges and the preview panel. Colour is not the only signal:
+// every dot is accompanied by a status text.
+.live-preview-dot {
+    display: inline-block;
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
 }
 
-.data-preview:hover {
-    z-index: 1000;
+.live-preview-dot--live {
+    background: var(--color-success);
 }
 
-.preview-row,
-.preview-table {
-    background: var(--color-bg-dialog);
+.live-preview-dot--waiting {
+    background: var(--color-warning);
+}
+
+.live-preview-dot--error {
+    background: var(--color-error);
+}
+
+.live-preview-dot--input {
+    background: var(--color-border-subtle);
 }

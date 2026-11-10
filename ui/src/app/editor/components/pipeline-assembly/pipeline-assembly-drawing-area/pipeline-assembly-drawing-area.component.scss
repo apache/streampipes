@@ -16,6 +16,19 @@
  *
  */
 
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.drawing-area__canvas {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
 .pipeline-validation-hint {
     position: absolute;
     right: 10px;

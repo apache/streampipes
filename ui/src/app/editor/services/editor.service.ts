@@ -37,6 +37,7 @@ import {
     PipelineElementUnion,
 } from '../model/editor.model';
 import {
+    CurrentUserService,
     DialogService,
     PanelType,
     PipelineElementHelpComponent,
@@ -51,6 +52,7 @@ export class EditorService {
     private platformServicesCommons = inject(PlatformServicesCommons);
     private dialogService = inject(DialogService);
     private pipelineService = inject(PipelineService);
+    private currentUserService = inject(CurrentUserService);
 
     private pipelineElementConfigured = new Subject<string>();
 
@@ -207,6 +209,29 @@ export class EditorService {
             reportProgress: true,
             context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
         });
+    }
+
+    deletePipelinePreview(previewId: string): Observable<void> {
+        return this.http.delete<void>(
+            `${this.pipelinePreviewBasePath}/${previewId}`,
+            {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            },
+        );
+    }
+
+    /**
+     * Stops a preview while the page is being unloaded (tab closed, reload, navigation to
+     * another site). Requests sent through HttpClient are cancelled on unload; a keepalive
+     * fetch is not.
+     */
+    releasePipelinePreviewOnUnload(previewId: string): void {
+        const token = this.currentUserService.authToken$.getValue();
+        fetch(`${this.pipelinePreviewBasePath}/${previewId}`, {
+            method: 'DELETE',
+            keepalive: true,
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }).catch(() => undefined);
     }
 
     get pipelinePreviewBasePath() {
