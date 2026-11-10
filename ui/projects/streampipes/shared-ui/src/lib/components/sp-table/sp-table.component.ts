@@ -19,6 +19,7 @@
 import {
     AfterContentInit,
     AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -55,6 +56,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SpTableActionsDirective } from './sp-actions/sp-table-actions.directive';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { SpTableMultiActionsDirective } from './sp-actions/sp-table-multi-actions.directive';
+import { SpTableCardDirective } from './sp-actions/sp-table-card.directive';
+import { SpOverviewCardGridComponent } from '../overview-card/overview-card-grid.component';
 import { LocalStorageService } from '../../services/local-storage-settings.service';
 import { FeatureCardService } from '../feature-card-host/feature-card.service';
 import {
@@ -77,6 +80,7 @@ import {
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
+    BehaviorSubject,
     debounceTime,
     distinctUntilChanged,
     Subject,
@@ -98,8 +102,17 @@ import {
 } from './sp-table.model';
 import { SpTableAssetContextService } from './sp-asset-context/sp-table-asset-context.service';
 
-type SpTableGroupViewMode = 'list' | 'grouped';
+type SpTableViewMode = 'list' | 'grouped' | 'cards';
 type SpTableGroupingMode = 'label' | 'site' | 'asset';
+
+const VIEW_MODES: SpTableViewMode[] = ['list', 'grouped', 'cards'];
+const VIEW_MODE_STORAGE_KEY = 'table-view-mode';
+const GROUPING_MODES: SpTableGroupingMode[] = ['label', 'site', 'asset'];
+
+interface SpTableStoredViewMode {
+    viewMode: SpTableViewMode;
+    groupBy: SpTableGroupingMode;
+}
 
 interface SpTableGroupedSection<T> {
     id: string;
@@ -118,6 +131,16 @@ interface SpTableGroupHeaderRow {
 }
 
 type SpTableRenderedRow<T> = T | SpTableGroupHeaderRow;
+
+interface SpTableCardAssetContextItem {
+    id: string;
+    label: string;
+    tone?: 'info' | 'neutral';
+    color?: string;
+    tooltip?: string;
+}
+
+const CARD_ASSET_CONTEXT_LIMIT = 2;
 
 @Component({
     selector: 'sp-table',
@@ -161,6 +184,7 @@ type SpTableRenderedRow<T> = T | SpTableGroupHeaderRow;
         TranslatePipe,
         LayoutGapDirective,
         SpLabelComponent,
+        SpOverviewCardGridComponent,
     ],
 })
 export class SpTableComponent<T>
@@ -195,6 +219,12 @@ export class SpTableComponent<T>
     @Input() resourceIdKey = 'elementId';
     @Input() assetContextConfig?: SpTableAssetContextConfig;
     @Input() nameSearchConfig?: SpTableNameSearchConfig<T>;
+    /**
+     * Remembers the view mode and grouping in local storage. All tables that
+     * remember it share one setting, so a mode chosen on one overview page
+     * also applies to the others and survives a reload.
+     */
+    @Input() rememberViewMode = false;
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -209,6 +239,12 @@ export class SpTableComponent<T>
 
     @ViewChild('paginator')
     set paginatorControl(paginator: MatPaginator) {
+        // Angular re-runs this setter whenever the view query is refreshed,
+        // which happens on every table render; only rebind on a real change.
+        if (paginator === this.paginator) {
+            return;
+        }
+
         this.paginator = paginator;
         if (this.viewInitialized) {
             this.bindDataSource();
@@ -218,22 +254,34 @@ export class SpTableComponent<T>
     actionsTemplate?: TemplateRef<any>;
     @ContentChild(SpTableMultiActionsDirective, { read: TemplateRef })
     multiActionsTemplate?: TemplateRef<any>;
+    @ContentChild(SpTableCardDirective, { read: TemplateRef })
+    cardTemplate?: TemplateRef<any>;
 
     visiblePageRows: T[] = [];
     selectedMultiAction: string | null = null;
     nameSearchTerm = '';
-    viewMode: SpTableGroupViewMode = 'list';
+    viewMode: SpTableViewMode = 'list';
     groupBy: SpTableGroupingMode = 'asset';
     groupedSections: SpTableGroupedSection<T>[] = [];
     renderedGroupedRows: SpTableRenderedRow<T>[] = [];
 
+    /**
+     * The only data source the mat-table is bound to. It emits the current
+     * page rows in list mode and the group headers plus their rows in grouped
+     * mode, so switching the view mode never swaps the table's data source. It
+     * stays empty in card mode, where the hidden table has nothing to render.
+     */
+    readonly renderedRows$ = new BehaviorSubject<SpTableRenderedRow<T>[]>([]);
+
     readonly selection = new SelectionModel<T>(true, []);
 
+    private changeDetectorRef = inject(ChangeDetectorRef);
     private localStorageService = inject(LocalStorageService);
     private featureCardService = inject(FeatureCardService);
     private assetBrowserService = inject(SpAssetBrowserService);
     private assetContextService = inject(SpTableAssetContextService);
     private renderedDataSubscription?: Subscription;
+    private connectedDataSource?: MatTableDataSource<T>;
     private assetDataSubscription?: Subscription;
     private nameSearchSubscription?: Subscription;
     private columnDefsSubscription?: Subscription;
@@ -248,6 +296,7 @@ export class SpTableComponent<T>
         string,
         Map<string, SpTableResolvedAssetContext>
     >();
+    private groupHeaderRows = new Map<string, SpTableGroupHeaderRow>();
     private compactLayout = false;
 
     readonly pageSize: Signal<number>;
@@ -276,6 +325,7 @@ export class SpTableComponent<T>
     }
 
     ngAfterContentInit() {
+        this.restoreViewMode();
         this.syncColumnDefs();
         this.columnDefsSubscription = this.columnDefs.changes.subscribe(() => {
             this.syncColumnDefs();
@@ -325,6 +375,7 @@ export class SpTableComponent<T>
 
     ngOnDestroy() {
         this.renderedDataSubscription?.unsubscribe();
+        this.connectedDataSource?.disconnect();
         this.assetDataSubscription?.unsubscribe();
         this.nameSearchSubscription?.unsubscribe();
         this.columnDefsSubscription?.unsubscribe();
@@ -337,9 +388,6 @@ export class SpTableComponent<T>
 
     onPage(event: PageEvent) {
         this.localStorageService.set('paginator-page-size', event.pageSize);
-        if (this.viewMode === 'grouped') {
-            this.refreshRenderedRows();
-        }
     }
 
     openFeatureCard(element: T) {
@@ -371,6 +419,14 @@ export class SpTableComponent<T>
         return !!this.assetContextConfig;
     }
 
+    get showCardView(): boolean {
+        return this.viewMode === 'cards' && !!this.cardTemplate;
+    }
+
+    get showSelectionToolbar(): boolean {
+        return this.showSelectionCheckboxes;
+    }
+
     get shouldShowNameSearch(): boolean {
         return !!this.nameSearchConfig?.enabled;
     }
@@ -381,12 +437,6 @@ export class SpTableComponent<T>
         }
 
         return this.nameSearchConfig.searchKey;
-    }
-
-    get renderedDataSource(): MatTableDataSource<T> | SpTableRenderedRow<T>[] {
-        return this.viewMode === 'grouped'
-            ? this.renderedGroupedRows
-            : this.dataSource;
     }
 
     get showGroupedLabelsInAssetContext(): boolean {
@@ -417,6 +467,43 @@ export class SpTableComponent<T>
             ?.get(resourceId);
     }
 
+    getCardAssetContext(
+        row: T,
+    ):
+        | { visible: SpTableCardAssetContextItem[]; hiddenLabels: string[] }
+        | undefined {
+        const assetContext = this.getAssetContext(row);
+        if (!assetContext) {
+            return undefined;
+        }
+
+        const items: SpTableCardAssetContextItem[] = [
+            ...assetContext.sites.map(site => ({
+                id: `site:${site.id}`,
+                label: site.label,
+                tone: 'info' as const,
+            })),
+            ...assetContext.assets.map(asset => ({
+                id: `asset:${asset.id}`,
+                label: asset.label,
+                tone: 'neutral' as const,
+                tooltip: asset.tooltip,
+            })),
+            ...assetContext.labels.map(label => ({
+                id: `label:${label._id ?? label.label}`,
+                label: label.label,
+                color: label.color,
+            })),
+        ];
+
+        return {
+            visible: items.slice(0, CARD_ASSET_CONTEXT_LIMIT),
+            hiddenLabels: items
+                .slice(CARD_ASSET_CONTEXT_LIMIT)
+                .map(item => item.label),
+        };
+    }
+
     get selectedRows(): T[] {
         return this.selection.selected;
     }
@@ -441,6 +528,14 @@ export class SpTableComponent<T>
             !!this.multiActionsTemplate ||
             this.showMultiActionsExecuteButton
         );
+    }
+
+    /** Name of the row for accessible labels, read from the name search keys. */
+    getRowName(row: T): string {
+        const value = this.nameSearchKeys
+            .map(key => row?.[key as keyof T])
+            .find(name => name !== undefined && name !== null && name !== '');
+        return value === undefined ? '' : String(value);
     }
 
     isRowSelected(row: T): boolean {
@@ -503,18 +598,19 @@ export class SpTableComponent<T>
         );
     }
 
-    setViewMode(mode: SpTableGroupViewMode) {
+    setViewMode(mode: SpTableViewMode) {
         if (mode === 'grouped') {
             this.groupBy = 'asset';
         }
 
         if (this.viewMode === mode) {
+            this.storeViewMode();
             this.refreshRenderedRows();
             return;
         }
 
         this.viewMode = mode;
-        this.bindDataSource();
+        this.storeViewMode();
         this.refreshRenderedRows();
     }
 
@@ -524,7 +620,54 @@ export class SpTableComponent<T>
         }
 
         this.groupBy = mode;
+        this.storeViewMode();
         this.refreshRenderedRows();
+    }
+
+    /**
+     * Restores the stored view mode once the card template is known. A mode
+     * that this table does not offer, such as cards without a card template,
+     * falls back to the list without changing the stored setting.
+     */
+    private restoreViewMode(): void {
+        if (!this.rememberViewMode) {
+            return;
+        }
+
+        const stored = this.localStorageService.get<
+            Partial<SpTableStoredViewMode> | undefined
+        >(VIEW_MODE_STORAGE_KEY, undefined);
+        if (GROUPING_MODES.includes(stored?.groupBy)) {
+            this.groupBy = stored.groupBy;
+        }
+        if (this.isViewModeAvailable(stored?.viewMode)) {
+            this.viewMode = stored.viewMode;
+        }
+    }
+
+    private storeViewMode(): void {
+        if (this.rememberViewMode) {
+            this.localStorageService.set<SpTableStoredViewMode>(
+                VIEW_MODE_STORAGE_KEY,
+                {
+                    viewMode: this.viewMode,
+                    groupBy: this.groupBy,
+                },
+            );
+        }
+    }
+
+    private isViewModeAvailable(mode?: SpTableViewMode): boolean {
+        if (!VIEW_MODES.includes(mode)) {
+            return false;
+        }
+        if (mode === 'cards') {
+            return !!this.cardTemplate;
+        }
+        if (mode === 'grouped') {
+            return this.shouldShowGroupingControls;
+        }
+        return true;
     }
 
     onNameSearchInput(value: string) {
@@ -572,14 +715,24 @@ export class SpTableComponent<T>
         !this.hasGroupHeaderMarker(row);
 
     private bindDataSource() {
+        this.renderedDataSubscription?.unsubscribe();
+        this.renderedDataSubscription = undefined;
+        if (this.connectedDataSource !== this.dataSource) {
+            this.connectedDataSource?.disconnect();
+            this.connectedDataSource = undefined;
+        }
+
         if (!this.dataSource) {
+            this.updateRenderedState([]);
             return;
         }
 
         this.configureNameSearch();
         this.dataSource.paginator = this.showPaginator ? this.paginator : null;
 
-        this.renderedDataSubscription?.unsubscribe();
+        // The table itself is bound to renderedRows$, so this component owns
+        // the connection to the MatTableDataSource (paging, sorting, filter).
+        this.connectedDataSource = this.dataSource;
         this.renderedDataSubscription = this.dataSource.connect().subscribe({
             next: rows => this.updateRenderedState(rows ?? []),
         });
@@ -604,7 +757,7 @@ export class SpTableComponent<T>
     }
 
     private refreshRenderedRows() {
-        this.updateRenderedState(this.getCurrentPageRows(), false);
+        this.updateRenderedState(this.visiblePageRows, false);
     }
 
     private configureNameSearch() {
@@ -648,18 +801,6 @@ export class SpTableComponent<T>
         this.dataSource.filter = this.nameSearchTerm.trim().toLocaleLowerCase();
     }
 
-    private getCurrentPageRows(): T[] {
-        const rows =
-            this.dataSource?.filteredData ?? this.dataSource?.data ?? [];
-        if (!this.paginator) {
-            return rows;
-        }
-
-        const pageSize = this.paginator.pageSize || this.pageSize();
-        const startIndex = this.paginator.pageIndex * pageSize;
-        return rows.slice(startIndex, startIndex + pageSize);
-    }
-
     private updateRenderedState(rows: T[], reconcileSelection = true) {
         this.visiblePageRows = rows;
         this.rebuildGroupedSections(rows);
@@ -668,12 +809,20 @@ export class SpTableComponent<T>
             this.reconcileSelection();
         }
 
-        if (this.viewInitialized) {
-            if (this.viewMode === 'grouped') {
-                this.table.dataSource = this.renderedGroupedRows;
-            }
-            this.table.renderRows();
+        this.renderedRows$.next(this.getTableRows(rows));
+        // Rendered state usually changes from a subscription (data source,
+        // asset data), outside of any template event, so make sure the
+        // bindings that depend on it (group headers, asset context cells,
+        // selection toolbar) are re-checked under OnPush parents.
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private getTableRows(rows: T[]): SpTableRenderedRow<T>[] {
+        if (this.showCardView) {
+            return [];
         }
+
+        return this.viewMode === 'grouped' ? this.renderedGroupedRows : rows;
     }
 
     private reconcileSelection() {
@@ -707,7 +856,7 @@ export class SpTableComponent<T>
         this.emitSelection();
     }
 
-    private getSelectionKey(row: T): unknown {
+    getSelectionKey(row: T): unknown {
         const resourceId = (row as Record<string, unknown>)[this.resourceIdKey];
 
         return resourceId ?? row;
@@ -832,15 +981,36 @@ export class SpTableComponent<T>
                 rows: [...group.rows],
             }));
         this.renderedGroupedRows = this.groupedSections.flatMap(section => [
-            {
-                __spGroupHeader: true as const,
-                id: section.id,
-                title: section.title,
-                color: section.color,
-                count: section.count,
-            },
+            this.getGroupHeaderRow(section),
             ...section.rows,
         ]);
+    }
+
+    /**
+     * Reuses the header row object of a group across rebuilds so the table
+     * can diff by identity and keep the rendered header row instead of
+     * recreating it on every refresh.
+     */
+    private getGroupHeaderRow(
+        section: SpTableGroupedSection<T>,
+    ): SpTableGroupHeaderRow {
+        const existing = this.groupHeaderRows.get(section.id);
+        if (existing) {
+            existing.title = section.title;
+            existing.color = section.color;
+            existing.count = section.count;
+            return existing;
+        }
+
+        const headerRow: SpTableGroupHeaderRow = {
+            __spGroupHeader: true,
+            id: section.id,
+            title: section.title,
+            color: section.color,
+            count: section.count,
+        };
+        this.groupHeaderRows.set(section.id, headerRow);
+        return headerRow;
     }
 
     private resolveGroups(

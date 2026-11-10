@@ -17,57 +17,7 @@
 -->
 
 <ng-template matStepLabel>{{ 'Select Format' | translate }}</ng-template>
-<div>
-    <sp-split-section [level]="3" [title]="'Download Format' | translate">
-        <mat-radio-group
-            class="sp-radio-group"
-            [(ngModel)]="formatExportConfig.format"
-        >
-            <mat-radio-button
-                value="json"
-                class="sp-radio-button"
-                data-cy="download-configuration-json"
-            >
-                JSON
-            </mat-radio-button>
-            <mat-radio-button
-                value="csv"
-                class="sp-radio-button"
-                data-cy="download-configuration-csv"
-            >
-                CSV
-            </mat-radio-button>
-            <mat-radio-button
-                value="xlsx"
-                class="sp-radio-button"
-                data-cy="download-configuration-xlsx"
-            >
-                EXCEL (XLSX)
-            </mat-radio-button>
-        </mat-radio-group>
-    </sp-split-section>
-</div>
-@if (formatExportConfig.format === 'csv') {
-    <sp-split-section [level]="3" [title]="'Delimiter' | translate">
-        <mat-radio-group
-            [(ngModel)]="formatExportConfig.delimiter"
-            class="sp-radio-group"
-        >
-            <mat-radio-button
-                value="comma"
-                class="sp-radio-button"
-                data-cy="download-configuration-delimiter-comma"
-                >&nbsp;,
-            </mat-radio-button>
-            <mat-radio-button
-                value="semicolon"
-                class="sp-radio-button"
-                data-cy="download-configuration-delimiter-semicolon"
-                >&nbsp;;
-            </mat-radio-button>
-        </mat-radio-group>
-    </sp-split-section>
-}
+<sp-export-format-selection [formatExportConfig]="formatExportConfig" />
 @if (formatExportConfig.format === 'xlsx' && hasReadFilePrivilege) {
     <div fxLayout="column">
         <sp-split-section [level]="3" [title]="'Excel template' | translate">

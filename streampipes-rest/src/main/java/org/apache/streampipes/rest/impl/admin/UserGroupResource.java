@@ -17,8 +17,10 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.audit.events.security.SecurityAuditRecorder;
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -46,11 +48,14 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   private final IUserGroupStorage userGroupStorage;
   private final IUserStorage userStorage;
+  private final SecurityAuditRecorder audit;
 
   public UserGroupResource(IUserGroupStorage userGroupStorage,
-                           IUserStorage userStorage) {
+                           IUserStorage userStorage,
+                           SpResourceManager resourceManager) {
     this.userGroupStorage = userGroupStorage;
     this.userStorage = userStorage;
+    this.audit = new SecurityAuditRecorder(resourceManager.getAuditService());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,6 +67,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> addUserGroup(@RequestBody Group group) {
     userGroupStorage.persist(group);
+    audit.groupCreated(getAuthenticatedUserSid(), group.getGroupId());
     return ok();
   }
 
@@ -74,7 +80,13 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
           HttpStatus.BAD_REQUEST,
           Notifications.error("Wrong group id provided"));
     } else {
-      return ok(userGroupStorage.updateElement(group));
+      var existingGroup = userGroupStorage.getElementById(groupId);
+      var updatedGroup = userGroupStorage.updateElement(group);
+      audit.groupUpdated(getAuthenticatedUserSid(), updatedGroup.getGroupId(),
+          existingGroup == null ? null : existingGroup.getGroupName(), updatedGroup.getGroupName(),
+          existingGroup == null ? null : existingGroup.getRoles(), updatedGroup.getRoles(),
+          existingGroup == null ? null : existingGroup.getAlternateIds(), updatedGroup.getAlternateIds());
+      return ok(updatedGroup);
     }
   }
 
@@ -92,6 +104,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
           userStorage.updateUser(user);
         }
       });
+      audit.groupDeleted(getAuthenticatedUserSid(), group.getGroupId());
       return ok();
     } else {
       return badRequest();

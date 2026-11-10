@@ -117,6 +117,7 @@ export class ChartFieldProviderService {
             fieldCharacteristics: {
                 dimension: this.isDimensionProperty(property),
                 numeric: this.isNumber(property) || aggregation === 'COUNT',
+                integer: this.isInteger(property) || aggregation === 'COUNT',
                 binary: this.isBoolean(property),
                 semanticTypes: [property.semanticType],
             },
@@ -153,6 +154,13 @@ export class ChartFieldProviderService {
         return (
             this.isPrimitive(p) &&
             (p as EventPropertyPrimitive).runtimeType === DataType.BOOLEAN
+        );
+    }
+
+    public isInteger(p: EventPropertyUnion): boolean {
+        return (
+            this.isPrimitive(p) &&
+            DataType.isIntegerType((p as EventPropertyPrimitive).runtimeType)
         );
     }
 

@@ -16,6 +16,9 @@
 name: go-client
 on:
   pull_request:
+permissions:
+  contents: read
+
 jobs:
   go-unit-tests:
     runs-on: ${{ matrix.os }}

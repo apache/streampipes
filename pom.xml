@@ -39,34 +39,35 @@
     <url>https://streampipes.apache.org</url>
 
     <properties>
-        <spring-boot.version>4.0.2</spring-boot.version>
+        <spring-boot.version>4.1.2</spring-boot.version>
         <plc4x.version>0.13.1</plc4x.version>
 
+        <apache-poi.version>5.5.1</apache-poi.version>
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
         <bcprov-jdk18on.version>1.86</bcprov-jdk18on.version>
-        <boofcv.version>1.5.0</boofcv.version>
-        <classindex.version>3.9</classindex.version>
-        <camel.version>4.22.0</camel.version>
-        <commons-collections.version>3.2.2</commons-collections.version>
-        <commoms-collection4.version>4.4</commoms-collection4.version>
-        <commons-compress.version>1.27.1</commons-compress.version>
+        <boofcv.version>1.6.0</boofcv.version>
+        <classindex.version>3.13</classindex.version>
+        <camel.version>4.23.0</camel.version>
+        <commoms-collection4.version>4.6.0</commoms-collection4.version>
+        <commons-compress.version>1.28.0</commons-compress.version>
         <commons-configuration2.version>2.15.1</commons-configuration2.version>
         <commons-csv.version>1.14.1</commons-csv.version>
         <commons-io.version>2.22.0</commons-io.version>
         <commons-jexl.version>3.4.0</commons-jexl.version>
         <commons-text.version>1.12.0</commons-text.version>
-        <ditto-client.version>1.0.0</ditto-client.version>
+        <ditto-client.version>3.9.0</ditto-client.version>
         <error-prone.version>2.10.0</error-prone.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
-        <grpc.version>1.84.0</grpc.version>
-        <guava.version>33.5.0-jre</guava.version>
-        <hadoop.version>3.4.1</hadoop.version>
-        <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
-        <jgrapht.version>1.5.1</jgrapht.version>
+        <grpc.version>1.85.1</grpc.version>
+        <guava.version>33.7.2-jre</guava.version>
+        <hadoop.version>3.4.3</hadoop.version>
+        <hadoop-mapreduce-client-core.version>3.4.3</hadoop-mapreduce-client-core.version>
         <jjwt.version>0.11.2</jjwt.version>
         <lightcouch.version>0.2.0</lightcouch.version>
+        <!-- converges kafka-clients (Spring Boot BOM, 1.11.2) with iotdb-session and tsfile (1.10.1); revisit when IoTDB or TsFile is bumped -->
+        <lz4-java.version>1.11.4</lz4-java.version>
         <eclipse.milo.version>1.1.1</eclipse.milo.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
@@ -79,7 +80,6 @@
         <mqtt-client.version>1.3.0</mqtt-client.version>
         <nats.version>2.25.2</nats.version>
         <okhttp.version>4.12.0</okhttp.version>
-        <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.5.9</opennlp.version>
         <parquet.version>1.16.0</parquet.version>
         <protobuf.version>4.28.2</protobuf.version>
@@ -95,18 +95,17 @@
         <siddhi.version>5.1.27</siddhi.version>
         <simple-java-mail.version>9.3.2</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
-        <springdoc.version>3.1.1</springdoc.version>
+        <springdoc.version>3.2.0</springdoc.version>
         <swagger.version>2.2.42</swagger.version>
         <tsfile.version>2.4.0</tsfile.version>
-        <type-parser.version>0.8.1</type-parser.version>
         <xz.version>1.12</xz.version>
 
         <!-- streampipes-maven-plugin -->
-        <file-management.version>3.1.0</file-management.version>
+        <file-management.version>3.2.0</file-management.version>
         <maven.version>3.8.7</maven.version>
-        <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
+        <maven-plugin-annotations.version>3.16.0</maven-plugin-annotations.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
-        <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
+        <plexus-interactivity-api.version>1.6.0</plexus-interactivity-api.version>
         <plexus-utils.version>4.0.3</plexus-utils.version>
 
 
@@ -124,7 +123,7 @@
         <java-websocket.version>1.6.0</java-websocket.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jetbrains.version>26.1.0</jetbrains.version>
-        <snakeyaml.version>3.0.1</snakeyaml.version>
+        <snakeyaml.version>3.2</snakeyaml.version>
         <vertx.version>4.5.31</vertx.version>
 
         <maven.compiler.source>25</maven.compiler.source>
@@ -136,9 +135,10 @@
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.16.1</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-        <checkstyle.version>14.1.0</checkstyle.version>
+        <cyclonedx-maven-plugin.version>2.9.3</cyclonedx-maven-plugin.version>
+        <checkstyle.version>14.3.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
-        <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
+        <formatter-maven-plugin.version>2.29.0</formatter-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
 
@@ -148,6 +148,9 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
+
+        <!-- Set to true to skip the per-module CycloneDX SBOM (target/bom.json) -->
+        <sbom.skip>false</sbom.skip>
     </properties>
 
     <dependencyManagement>
@@ -196,9 +199,9 @@
                 <version>${jakarta-activation.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${commons-collections.version}</version>
+                <groupId>at.yawk.lz4</groupId>
+                <artifactId>lz4-java</artifactId>
+                <version>${lz4-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
@@ -316,11 +319,6 @@
                 <version>${woodstox.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.drapostolos</groupId>
-                <artifactId>type-parser</artifactId>
-                <version>${type-parser.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf.version}</version>
@@ -354,11 +352,6 @@
                 <groupId>com.hivemq</groupId>
                 <artifactId>hivemq-mqtt-client</artifactId>
                 <version>${mqtt-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.opencsv</groupId>
-                <artifactId>opencsv</artifactId>
-                <version>${opencsv.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
@@ -536,6 +529,10 @@
                         <artifactId>reload4j</artifactId>
                     </exclusion>
                     <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-reload4j</artifactId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>io.netty</groupId>
                         <artifactId>netty-transport-native-epoll</artifactId>
                     </exclusion>
@@ -564,6 +561,11 @@
                         <artifactId>zstd-jni</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-hdfs-client</artifactId>
+                <version>${hadoop.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
@@ -597,6 +599,14 @@
                     <exclusion>
                         <groupId>com.google.inject</groupId>
                         <artifactId>guice</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.reload4j</groupId>
+                        <artifactId>reload4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-reload4j</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -779,11 +789,6 @@
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
                 <version>${jetbrains.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jgrapht</groupId>
-                <artifactId>jgrapht-core</artifactId>
-                <version>${jgrapht.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.lightcouch</groupId>
@@ -1050,6 +1055,24 @@
                     <version>${typescript-generator-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.cyclonedx</groupId>
+                    <artifactId>cyclonedx-maven-plugin</artifactId>
+                    <version>${cyclonedx-maven-plugin.version}</version>
+                    <configuration>
+                        <skip>${sbom.skip}</skip>
+                        <!-- Describe what ends up in the built jar: provided dependencies are not shipped -->
+                        <includeProvidedScope>false</includeProvidedScope>
+                        <includeTestScope>false</includeTestScope>
+                        <!-- Service modules set maven.deploy.skip; still generate their SBOM -->
+                        <skipNotDeployed>false</skipNotDeployed>
+                        <!-- The SBOM is published through the UI, not as a Maven artifact -->
+                        <skipAttach>true</skipAttach>
+                        <outputFormat>json</outputFormat>
+                        <outputName>bom</outputName>
+                        <schemaVersion>1.6</schemaVersion>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>net.revelc.code.formatter</groupId>
                     <artifactId>formatter-maven-plugin</artifactId>
                     <version>${formatter-maven-plugin.version}</version>
@@ -1137,6 +1160,23 @@
 
 
         <plugins>
+            <!--
+              Software bill of materials: every module writes target/bom.json (CycloneDX JSON).
+              ui/scripts/write-sbom-index.cjs picks selected modules up and publishes them with the UI.
+            -->
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sbom</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

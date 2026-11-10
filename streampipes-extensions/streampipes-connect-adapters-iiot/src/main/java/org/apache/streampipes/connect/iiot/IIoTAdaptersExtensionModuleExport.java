@@ -23,6 +23,7 @@ import org.apache.streampipes.connect.iiot.adapters.oi4.migration.Oi4AdapterMigr
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataSimulatorAdapter;
 import org.apache.streampipes.connect.iiot.migration.HttpStreamProtocolMigrationV1;
 import org.apache.streampipes.connect.iiot.migration.MachineDataSimulatorMigrationV1;
+import org.apache.streampipes.connect.iiot.migration.MachineDataSimulatorMigrationV2;
 import org.apache.streampipes.connect.iiot.protocol.stream.FileReplayAdapter;
 import org.apache.streampipes.connect.iiot.protocol.stream.HttpServerProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.HttpStreamProtocol;
@@ -56,6 +57,7 @@ public class IIoTAdaptersExtensionModuleExport implements IExtensionModuleExport
     return List.of(
         new Oi4AdapterMigrationV1(),
         new MachineDataSimulatorMigrationV1(),
+        new MachineDataSimulatorMigrationV2(),
         new HttpStreamProtocolMigrationV1());
   }
 }

@@ -45,6 +45,28 @@
   Apache StreamPipes helps teams connect industrial data sources, build real-time streaming pipelines, explore time-series data, and deliver live operational insights without requiring many different systems or custom code for every use case.
 </p>
 
+## Try it in 60 seconds
+
+No hardware, no setup wizard: one container runs the whole platform with a simulated machine already streaming data.
+
+```bash
+docker run --rm -p 80:80 apachestreampipes/all-in-one:dev
+```
+
+Then open [http://localhost](http://localhost) and sign in with `admin@streampipes.apache.org` / `admin`.
+The container seeds a fictional company with simulated machines: a water works with pumps and tanks, and an
+automotive plant with CNC machining centres, screwing stations and an end-of-line test. Click **Dashboards**
+in the left menu and open **CNC Machining** or **Plant Overview** to watch live charts of most chart types,
+from KPI tiles to histograms and heatmaps (they refresh every five seconds). The home page shows the sites on a map, **Assets** holds the plant structure with links to
+everything, **Pipelines** has the persist and analytics pipelines, and the simulated machines are listed under
+**Adapters**, one of them with a JavaScript transformation. The first start takes about a minute while the
+services boot and the demo is seeded.
+
+The `dev` tag follows the latest build of the `dev` branch; `latest` and version tags such as `0.99.0` are
+published with each release. The image bundles CouchDB, NATS, InfluxDB, the core, the IIoT extensions and the
+UI, and is meant for trying things out. For a real installation use the Compose installer below. Details, options and how to
+build the image yourself are in [installer/all-in-one](installer/all-in-one).
+
 ## Overview
 
 Apache StreamPipes is an end-to-end industrial IoT data platform that combines a graphical user interface for domain experts with an extensible framework for developers. It enables teams to connect industrial data sources, process real-time data streams, store historical data, and build data-driven applications on top of industrial equipment.
@@ -89,6 +111,7 @@ As a ready-to-use platform, StreamPipes enables users to implement industrial Io
 
 The fastest way to get a full installation with extensions is to use one of the Docker-based installers:
 
+- [StreamPipes all-in-one](installer/all-in-one) for a single-container demo with simulated data (see [Try it in 60 seconds](#try-it-in-60-seconds))
 - [StreamPipes Compose](installer/compose) for container-based deployment
 - [StreamPipes CLI](installer/cli) for developers who want to extend StreamPipes (**deprecated**)
 - [StreamPipes k8s](installer/k8s) for cluster-based operation

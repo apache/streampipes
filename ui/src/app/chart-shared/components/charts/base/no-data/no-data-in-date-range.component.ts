@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    Input,
+    ChangeDetectionStrategy,
+    inject,
+} from '@angular/core';
 import { TimeSettings } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -24,8 +29,8 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartTimeFormatService } from '../../../../services/formatting';
 
 @Component({
     selector: 'sp-no-data-in-date-range',
@@ -37,13 +42,19 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutAlignDirective,
         FlexDirective,
         LayoutGapDirective,
-        DatePipe,
         TranslatePipe,
     ],
 })
 export class NoDataInDateRangeComponent {
+    private timeFormatService = inject(ChartTimeFormatService);
+
     @Input()
     public viewDateRange: TimeSettings;
 
-    constructor() {}
+    get rangeLabel(): string {
+        return this.timeFormatService.formatRange(
+            this.viewDateRange?.startTime,
+            this.viewDateRange?.endTime,
+        );
+    }
 }

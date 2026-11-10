@@ -35,6 +35,10 @@ export class ConfigurationUtils {
         cy.visit('#/configuration/labels');
     }
 
+    public static goToAuditLogConfiguration() {
+        cy.visit('#/configuration/audit-log');
+    }
+
     public static addNewLabel(name: string, description: string = '') {
         cy.dataCy('new-label-button').click();
         cy.dataCy('label-name')

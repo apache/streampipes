@@ -24,7 +24,7 @@
 >
     @if (
         (shouldShowGroupingControls || shouldShowNameSearch) &&
-        !showSelectionCheckboxes
+        !showSelectionToolbar
     ) {
         <div
             class="grouping-toolbar"
@@ -52,7 +52,7 @@
         </div>
     }
 
-    @if (showSelectionCheckboxes) {
+    @if (showSelectionToolbar) {
         <div
             class="selection-toolbar"
             [class.no-toolbar-border-top]="noToolbarBorderTop"
@@ -241,13 +241,45 @@
             <mat-button-toggle value="list">
                 {{ 'List' | translate }}
             </mat-button-toggle>
+            @if (cardTemplate) {
+                <mat-button-toggle value="cards" data-cy="sp-table-view-cards">
+                    {{ 'Cards' | translate }}
+                </mat-button-toggle>
+            }
         </mat-button-toggle-group>
     </ng-template>
+
+    @if (showCardView) {
+        <div class="sp-table-cards">
+            <sp-overview-card-grid data-cy="sp-table-card-grid">
+                @for (row of visiblePageRows; track getSelectionKey(row)) {
+                    <ng-container
+                        *ngTemplateOutlet="
+                            cardTemplate;
+                            context: {
+                                $implicit: row,
+                                actions: actionsCell,
+                                assetContext: cardAssetContext,
+                                selection: cardSelectionCell,
+                            }
+                        "
+                    >
+                    </ng-container>
+                }
+            </sp-overview-card-grid>
+            @if (!visiblePageRows.length) {
+                <p class="sp-table-cards__empty" data-cy="no-table-entries">
+                    {{ 'No entries available.' | translate }}
+                </p>
+            }
+        </div>
+    }
 
     <table
         mat-table
         class="sp-table"
-        [dataSource]="renderedDataSource"
+        [class.sp-table--hidden]="showCardView"
+        [dataSource]="renderedRows$"
         [multiTemplateDataRows]="viewMode === 'grouped'"
     >
         <ng-content></ng-content>
@@ -412,6 +444,20 @@
     }
 </div>
 
+<ng-template #cardSelectionCell let-row>
+    @if (showSelectionCheckboxes) {
+        <mat-checkbox
+            class="sp-table-card-checkbox"
+            data-cy="sp-table-card-checkbox"
+            [checked]="isRowSelected(row)"
+            [aria-label]="
+                'Select {{name}}' | translate: { name: getRowName(row) }
+            "
+            (change)="toggleRowSelection(row, $event.checked)"
+        ></mat-checkbox>
+    }
+</ng-template>
+
 <ng-template #actionsCell let-element>
     <div fxLayoutAlign="end center">
         @if (featureCardId) {
@@ -490,6 +536,38 @@
                     >
                     </sp-label>
                 }
+            }
+        </div>
+    }
+</ng-template>
+
+<ng-template #cardAssetContext let-element>
+    @if (getCardAssetContext(element); as assetContext) {
+        <div class="card-asset-context">
+            @for (item of assetContext.visible; track item.id) {
+                <sp-label
+                    size="small"
+                    variant="soft"
+                    [tone]="item.tone"
+                    [color]="item.color"
+                    [labelText]="item.label"
+                    [matTooltip]="item.tooltip ?? item.label"
+                >
+                </sp-label>
+            }
+            @if (assetContext.hiddenLabels.length) {
+                <sp-label
+                    class="card-asset-context__more"
+                    size="small"
+                    tone="neutral"
+                    variant="soft"
+                    tabindex="0"
+                    data-cy="sp-table-card-asset-more"
+                    [labelText]="'+' + assetContext.hiddenLabels.length"
+                    [matTooltip]="assetContext.hiddenLabels.join(', ')"
+                    [attr.aria-label]="assetContext.hiddenLabels.join(', ')"
+                >
+                </sp-label>
             }
         </div>
     }

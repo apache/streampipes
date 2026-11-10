@@ -67,6 +67,16 @@ public enum RunningInstances {
     return runningInstances.size();
   }
 
+  /**
+   * Returns a snapshot of the keys under which runtimes are registered. These are the
+   * ids accepted by {@link #getInvocation(String)} and {@link #remove(String)}, as
+   * opposed to {@link #getRunningInstanceIds()} which returns the element ids of the
+   * descriptions.
+   */
+  public Set<String> getRunningInstanceKeys() {
+    return Set.copyOf(runningInstances.keySet());
+  }
+
   public Set<String> getRunningInstanceIds() {
     return runningInstances
         .entrySet()

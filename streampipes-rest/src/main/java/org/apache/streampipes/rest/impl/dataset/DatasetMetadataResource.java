@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dataset;
 
+import org.apache.streampipes.audit.events.dataset.DatasetAuditReporter;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -49,11 +50,13 @@ import java.util.Objects;
 @RequestMapping("/api/v4/datalake/measure")
 public class DatasetMetadataResource extends AbstractDatasetResource {
 
+  private final DatasetAuditReporter datasetAudit;
   private final SpResourceManager resourceManager;
 
   public DatasetMetadataResource(IChartStorage chartStorage,
                                  SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
+    this.datasetAudit = new DatasetAuditReporter(resourceManager.getAuditService());
     this.resourceManager = resourceManager;
   }
 
@@ -67,10 +70,17 @@ public class DatasetMetadataResource extends AbstractDatasetResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> addDataLake(@RequestBody DatasetMetadata datasetMetadata) {
     try {
+      var existingDataset = this.datasetMetadataManagement
+          .getExistingMeasureByName(datasetMetadata.getMeasureName());
       DatasetMetadata result = this.datasetMetadataManagement.createOrUpdateMeasurement(
           datasetMetadata,
           getAuthenticatedUserSid()
       );
+      if (existingDataset.isPresent()) {
+        datasetAudit.edited(getAuthenticatedUserSid(), result.getElementId());
+      } else {
+        datasetAudit.created(getAuthenticatedUserSid(), result.getElementId());
+      }
       return ok(result);
     } catch (RuntimeException e) {
       return badRequest(SpLogMessage.from(e));
@@ -141,6 +151,7 @@ public class DatasetMetadataResource extends AbstractDatasetResource {
     if (elementId.equals(measure.getElementId())) {
       try {
         this.datasetMetadataManagement.updateMeasurement(measure);
+        datasetAudit.edited(getAuthenticatedUserSid(), elementId);
         return ok();
       } catch (IllegalArgumentException e) {
         return badRequest(e.getMessage());
@@ -154,6 +165,7 @@ public class DatasetMetadataResource extends AbstractDatasetResource {
   public ResponseEntity<?> deleteDatasetMetadata(@PathVariable("id") String elementId) {
     try {
       this.datasetMetadataManagement.deleteMeasurement(elementId);
+      datasetAudit.deleted(getAuthenticatedUserSid(), elementId);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());

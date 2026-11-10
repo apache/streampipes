@@ -16,7 +16,11 @@
 ~
 -->
 
-<div class="main-panel">
+<div
+    class="main-panel"
+    (mouseenter)="setToolboxHovered(true)"
+    (mouseleave)="setToolboxHovered(false)"
+>
     @if (showNoDataInDateRange) {
         <sp-no-data-in-date-range [viewDateRange]="timeSettings" class="h-100">
         </sp-no-data-in-date-range>

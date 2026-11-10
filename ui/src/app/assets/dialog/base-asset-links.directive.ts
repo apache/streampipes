@@ -24,7 +24,6 @@ import {
     DatalakeRestService,
     FileMetadata,
     FilesService,
-    GenericStorageService,
     PipelineElementService,
     PipelineService,
     SpDataStream,
@@ -39,7 +38,6 @@ import {
 
 @Directive()
 export abstract class BaseAssetLinksDirective {
-    protected genericStorageService = inject(GenericStorageService);
     protected pipelineService = inject(PipelineService);
     protected chartService = inject(ChartService);
     protected dashboardService = inject(DashboardService);

@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.message.NotificationType;
@@ -35,14 +36,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 public class TypeExtractorTest {
+
+  private final SpServiceRegistration service = new SpServiceRegistration();
 
   private IPipelineElementDescriptionStorage storageApi;
   private SpResourceManager resourceManager;
@@ -60,7 +66,7 @@ public class TypeExtractorTest {
   public void verifyAndUpdateDataStream() throws SepaParseException {
     var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
-        .verifyAndUpdate();
+        .verifyAndUpdate(service);
 
     assertTrue(message.isSuccess());
     verify(storageApi).update(any(SpDataStream.class));
@@ -70,7 +76,7 @@ public class TypeExtractorTest {
   public void verifyAndUpdateDataProcessor() throws SepaParseException {
     var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
-        .verifyAndUpdate();
+        .verifyAndUpdate(service);
 
     assertTrue(message.isSuccess());
     verify(storageApi).update(any(DataProcessorDescription.class));
@@ -80,7 +86,7 @@ public class TypeExtractorTest {
   public void verifyAndUpdateDataSink() throws SepaParseException {
     var message = new TypeExtractor(payload(DataSinkDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
-        .verifyAndUpdate();
+        .verifyAndUpdate(service);
 
     assertTrue(message.isSuccess());
     verify(storageApi).update(any(DataSinkDescription.class));
@@ -90,7 +96,7 @@ public class TypeExtractorTest {
   public void verifyAndUpdateAdapter() throws SepaParseException {
     var message = new TypeExtractor(payload(AdapterDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
-        .verifyAndUpdate();
+        .verifyAndUpdate(service);
 
     assertTrue(message.isSuccess());
     verify(storageApi).update(any(AdapterDescription.class));
@@ -100,10 +106,32 @@ public class TypeExtractorTest {
   public void verifyAndUpdateWithoutNameOrIcon_onlyContainsStorageSuccessNotification() throws SepaParseException {
     var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
-        .verifyAndUpdate();
+        .verifyAndUpdate(service);
 
     assertEquals(1, message.getNotifications().size());
     assertEquals(NotificationType.STORAGE_SUCCESS.title(), message.getNotifications().get(0).getTitle());
+  }
+
+  @Test
+  public void updateWithoutAssetsDoesNotRequireAService() throws SepaParseException {
+    var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager, resourceManager)
+        .getTypeVerifier().verifyAndUpdate(null);
+
+    assertTrue(message.isSuccess());
+    verifyNoInteractions(requestManager);
+    verify(resourceManager, never()).getServiceDiscovery();
+  }
+
+  @Test
+  public void updateWithAssetsReportsMissingServiceWithoutDiscovery() throws SepaParseException {
+    var description = payload(DataSinkDescription.class).replace("\"elementId\"", "\"includesAssets\":true,\"elementId\"");
+    var message = new TypeExtractor(description, storageApi, requestManager, resourceManager)
+        .getTypeVerifier().verifyAndUpdate(null);
+
+    assertFalse(message.isSuccess());
+    assertTrue(message.getNotifications().stream().anyMatch(n -> n.getTitle().equals("Asset update failed")));
+    verifyNoInteractions(requestManager);
+    verify(resourceManager, never()).getServiceDiscovery();
   }
 
   @Test

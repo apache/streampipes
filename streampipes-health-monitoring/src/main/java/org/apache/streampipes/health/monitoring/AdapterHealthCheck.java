@@ -173,6 +173,7 @@ public class AdapterHealthCheck implements HealthCheck {
         .stream()
         .filter(Objects::nonNull)
         .filter(a -> a.getElementId() != null)
+        .filter(a -> !isOnUnreachableService(a))
         .filter(a -> !adapterInstanceStates.containsKey(a.getElementId()))
         .toList();
   }
@@ -182,8 +183,25 @@ public class AdapterHealthCheck implements HealthCheck {
     return adapterInstanceStates == null ? Map.of() : adapterInstanceStates;
   }
 
+  /**
+   * The adapter's service is registered but did not answer. The adapter may still run
+   * there, so recovering it on another service could start a duplicate.
+   */
+  private boolean isOnUnreachableService(AdapterDescription adapter) {
+    var serviceId = adapter.getSelectedServiceId();
+    var unreachable = serviceId != null && healthCheckData.unreachableServiceIds().contains(serviceId);
+    if (unreachable) {
+      LOG.debug("Adapter {} runs on unreachable service {}, deferring recovery", adapter.getElementId(), serviceId);
+    }
+    return unreachable;
+  }
+
   public void recoverAdapters(List<AdapterDescription> adaptersToRecover) {
     for (AdapterDescription adapterDescription : adaptersToRecover) {
+      if (ShutdownSignal.INSTANCE.isShutdownRequested()) {
+        LOG.debug("Shutdown in progress, skipping adapter recovery");
+        return;
+      }
       // Invoke all adapters that were running when the adapter container was stopped
       try {
         if (adapterDescription.isRunning()) {

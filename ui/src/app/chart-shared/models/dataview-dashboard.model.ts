@@ -103,7 +103,10 @@ export interface WidgetChartAppearanceConfig {
 }
 
 export interface WidgetNumberFormatConfig {
+    /** Fixed fraction digits; unset means automatic formatting. */
     decimals?: number;
+    /** Show stored values unchanged instead of formatting them. */
+    rawValues?: boolean;
 }
 
 export interface WidgetNumberAppearanceConfig extends WidgetBaseAppearanceConfig {
