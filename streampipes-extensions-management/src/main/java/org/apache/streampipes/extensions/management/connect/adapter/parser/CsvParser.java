@@ -34,11 +34,8 @@ import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +43,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -163,9 +162,9 @@ public class CsvParser implements IParser {
       do {
         var event = toMap(header, sample, false);
         handler.handle(event);
-      } while ((sample = csvReader.readNext()) != null);
+      } while ((sample = readNext(csvReader)) != null);
 
-    } catch (CsvValidationException | IOException e) {
+    } catch (IOException e) {
       LOG.error("Could not parse row: " + Arrays.toString(sample));
     }
   }
@@ -197,30 +196,38 @@ public class CsvParser implements IParser {
     return event;
   }
 
-  private CSVReader getCsvReader(InputStream inputStream) {
-
+  private Iterator<CSVRecord> getCsvReader(InputStream inputStream) throws ParseException {
     var reader = new BufferedReader(new InputStreamReader(inputStream));
-    CSVParser parser = new CSVParserBuilder()
-        .withSeparator(delimiter)
-        .build();
-
-    return new CSVReaderBuilder(reader)
-        .withSkipLines(0)
-        .withCSVParser(parser)
-        .build();
+    var format = CSVFormat.DEFAULT.builder()
+                                  .setDelimiter(delimiter)
+                                  .setIgnoreEmptyLines(false)
+                                  .get();
+    try {
+      return format.parse(reader).iterator();
+    } catch (IOException e) {
+      throw new ParseException("Could not read csv: " + e.getMessage());
+    }
   }
 
-  private Tuple2<String[], String[]> getHeaderAndFirstSample(CSVReader csvReader) throws ParseException {
+  private String[] readNext(Iterator<CSVRecord> csvReader) throws IOException {
+    try {
+      return csvReader.hasNext() ? csvReader.next().values() : null;
+    } catch (UncheckedIOException e) {
+      throw e.getCause();
+    }
+  }
+
+  private Tuple2<String[], String[]> getHeaderAndFirstSample(Iterator<CSVRecord> csvReader) throws ParseException {
     String[] headers = {};
     String[] sample;
 
     try {
       // use first row as headers
       if (header) {
-        headers = csvReader.readNext();
+        headers = readNext(csvReader);
       }
       // read first data sample that is used to guess data types
-      sample = csvReader.readNext();
+      sample = readNext(csvReader);
 
       // create headers if not available in data
       if (!header) {
@@ -229,7 +236,7 @@ public class CsvParser implements IParser {
                            .toArray(String[]::new);
       }
 
-    } catch (IOException | CsvValidationException e) {
+    } catch (IOException e) {
       throw new RuntimeException(e);
     }
 

@@ -34,3 +34,15 @@
 .icon {
     max-width: 60px;
 }
+
+/* Lets the name column take the remaining width and truncate the description,
+   because a table column otherwise grows to fit text that does not wrap. */
+.adapter-name-cell {
+    width: 100%;
+    max-width: 0;
+}
+
+.adapter-name-cell span,
+.adapter-name-cell small {
+    max-width: 100%;
+}

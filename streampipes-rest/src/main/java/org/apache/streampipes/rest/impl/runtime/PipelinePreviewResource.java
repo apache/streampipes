@@ -77,7 +77,7 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
           runtimeInfoFetcher,
           () -> new PipelinePreview(resourceManager).deletePreview(previewId, requestManager)
       );
-      return runtimeInfoProvider::streamOutput;
+      return outputStream -> runtimeInfoProvider.streamOutput(outputStream, response::flushBuffer);
     } catch (IllegalArgumentException e) {
       throw new BadRequestException("Could not generate preview", e);
     }

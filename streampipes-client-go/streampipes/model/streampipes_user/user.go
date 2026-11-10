@@ -24,24 +24,21 @@ type ShortUserInfo struct {
 }
 
 type UserAccount struct {
-	PrincipalID             string         `json:"principalId"`
-	Rev                     string         `json:"rev"`
-	Username                string         `json:"username"`
-	ObjectPermissions       []string       `json:"objectPermissions"`
-	Roles                   []string       `json:"roles"`
-	Groups                  []string       `json:"groups"`
-	AccountEnabled          bool           `json:"accountEnabled"`
-	AccountLocked           bool           `json:"accountLocked"`
-	AccountExpired          bool           `json:"accountExpired"`
-	PrincipalType           string         `json:"principalType"`
-	FullName                string         `json:"fullName"`
-	Password                string         `json:"password"`
-	PreferredDataStreams    []string       `json:"preferredDataStreams"`
-	PreferredDataProcessors []string       `json:"preferredDataProcessors"`
-	PreferredDataSinks      []string       `json:"preferredDataSinks"`
-	UserApiTokens           []UserApiToken `json:"userApiTokens"`
-	HideTutorial            bool           `json:"hideTutorial"`
-	DarkMode                bool           `json:"darkMode"`
+	PrincipalID       string         `json:"principalId"`
+	Rev               string         `json:"rev"`
+	Username          string         `json:"username"`
+	ObjectPermissions []string       `json:"objectPermissions"`
+	Roles             []string       `json:"roles"`
+	Groups            []string       `json:"groups"`
+	AccountEnabled    bool           `json:"accountEnabled"`
+	AccountLocked     bool           `json:"accountLocked"`
+	AccountExpired    bool           `json:"accountExpired"`
+	PrincipalType     string         `json:"principalType"`
+	FullName          string         `json:"fullName"`
+	Password          string         `json:"password"`
+	UserApiTokens     []UserApiToken `json:"userApiTokens"`
+	HideTutorial      bool           `json:"hideTutorial"`
+	DarkMode          bool           `json:"darkMode"`
 }
 
 type UserApiToken struct {

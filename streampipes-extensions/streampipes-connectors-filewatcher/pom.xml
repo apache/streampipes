@@ -51,10 +51,9 @@
             <artifactId>streampipes-serializers-json</artifactId>
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
         </dependency>
 
         <dependency>

@@ -41,9 +41,8 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
 
-import org.apache.commons.collections.buffer.CircularFifoBuffer;
-
 import java.net.URI;
+import java.util.ArrayDeque;
 
 public class SpeedCalculatorProcessor implements IStreamPipesDataProcessor {
   private static final String TIMESTAMP_KEY = "timestamp-key";
@@ -55,7 +54,7 @@ public class SpeedCalculatorProcessor implements IStreamPipesDataProcessor {
   private String longitudeFieldMapper;
   private String timestampFieldMapper;
   private Integer countWindowSize;
-  private CircularFifoBuffer buffer;
+  private ArrayDeque<Event> buffer;
 
   @Override
   public IDataProcessorConfiguration declareConfig() {
@@ -107,18 +106,21 @@ public class SpeedCalculatorProcessor implements IStreamPipesDataProcessor {
                                       .mappingPropertyValue(TIMESTAMP_KEY);
     this.countWindowSize = params.extractor()
                                  .singleValueParameter(COUNT_WINDOW_KEY, Integer.class);
-    this.buffer = new CircularFifoBuffer(countWindowSize);
+    if (countWindowSize == null || countWindowSize < 1) {
+      throw new SpRuntimeException("Count window size must be at least 1, but was " + countWindowSize);
+    }
+    this.buffer = new ArrayDeque<>(countWindowSize);
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-    if (this.buffer.isFull()) {
-      Event firstEvent = (Event) buffer.get();
+    if (this.buffer.size() == countWindowSize) {
+      Event firstEvent = this.buffer.pollFirst();
       double speed = calculateSpeed(firstEvent, event);
       event.addField(SPEED_RUNTIME_NAME, speed);
       collector.collect(event);
     }
-    this.buffer.add(event);
+    this.buffer.addLast(event);
   }
 
   @Override

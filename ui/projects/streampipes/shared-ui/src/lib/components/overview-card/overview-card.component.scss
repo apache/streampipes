@@ -1,0 +1,229 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+    height: 100%;
+    min-width: 0;
+}
+
+.card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--color-bg-0);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--mat-sys-on-surface);
+    transition: border-color var(--motion-duration-fast)
+        var(--motion-easing-standard);
+}
+
+/* Hover and keyboard focus lift the card with the theme colour instead of a
+   shadow, so it stays on the flat working plane. The title takes the primary
+   colour because it is the part that opens the resource. Focus uses
+   :focus-visible, so a card does not stay highlighted after a mouse click. */
+.card:hover,
+.card:has(:focus-visible) {
+    border-color: color-mix(
+        in srgb,
+        var(--color-primary) 40%,
+        var(--color-border-subtle)
+    );
+}
+
+.card:hover .card-title-link,
+.card:has(:focus-visible) .card-title-link {
+    color: var(--mat-sys-primary);
+}
+
+.card:hover .card-icon,
+.card:has(:focus-visible) .card-icon {
+    background: color-mix(
+        in srgb,
+        var(--card-accent, var(--color-primary)) 20%,
+        transparent
+    );
+}
+
+/* A checked checkbox in the select slot marks the card as selected, like a
+   selected table row. It is stronger than the hover state. */
+.card:has(.card-select input:checked) {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 4%, var(--color-bg-0));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .card-icon,
+    .card-title-link {
+        transition: none;
+    }
+}
+
+/* Reserves the title and two description lines, so that the sections of
+   neighbouring cards stay aligned regardless of their text length. */
+.card-header {
+    --card-title-line-height: 1.3;
+    --card-description-line-height: 1.4;
+
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    min-height: calc(
+        var(--font-size-lg) * var(--card-title-line-height) + var(--space-2xs) +
+            var(--font-size-sm) * var(--card-description-line-height) * 2 +
+            var(--space-md) * 2
+    );
+    padding: var(--space-md) var(--space-lg);
+}
+
+.card-header--compact {
+    min-height: 0;
+}
+
+.card-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(
+        in srgb,
+        var(--card-accent, var(--color-primary)) 12%,
+        transparent
+    );
+    color: var(--card-accent, var(--color-primary));
+    transition: background-color var(--motion-duration-fast)
+        var(--motion-easing-standard);
+}
+
+/* Pulls the checkbox's touch target into the header padding, so that the
+   box itself lines up with the card content and the title line. */
+.card-select {
+    display: flex;
+    flex-shrink: 0;
+    margin: calc(0.25rem - var(--space-sm)) calc(var(--space-xs) * -1) 0
+        calc(var(--space-sm) * -1);
+}
+
+.card-identity {
+    flex: 1;
+    min-width: 0;
+}
+
+.card-title {
+    overflow: hidden;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--card-title-line-height);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-title-link {
+    display: block;
+    max-width: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.card-title-link:hover {
+    color: var(--mat-sys-primary);
+    text-decoration: underline;
+}
+
+.card-title-link:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+}
+
+.card-description {
+    display: -webkit-box;
+    margin: var(--space-2xs) 0 0;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--font-size-sm);
+    line-height: var(--card-description-line-height);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-md);
+    min-width: 0;
+    padding: 0 var(--space-lg) var(--space-md);
+}
+
+.card-context {
+    min-width: 0;
+    padding: 0 var(--space-lg) var(--space-md);
+}
+
+/* The start padding lines up the icon of a btn-tertiary with the card content,
+   the end padding the glyph of an icon button with the card icon. */
+.card-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-xs) calc(var(--space-lg) - 0.25rem) var(--space-xs)
+        calc(var(--space-lg) - 0.75rem - 1px);
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+.card-footer-start,
+.card-footer-end {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-width: 0;
+}
+
+.card-footer-end {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+}
+
+.card-footer:not(:has(> :not(:empty))),
+.card-select:empty,
+.card-body:empty,
+.card-context:empty,
+.card-footer-start:empty,
+.card-footer-end:empty,
+.card-icon:empty {
+    display: none;
+}

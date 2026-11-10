@@ -48,6 +48,7 @@ import {
     SpAssetBrowserService,
     SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableCardDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
@@ -64,6 +65,8 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { DashboardOverviewCardComponent } from '../dashboard-overview-card/dashboard-overview-card.component';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -88,6 +91,10 @@ import { MatIcon } from '@angular/material/icon';
         SpTableActionsDirective,
         MatMenuItem,
         MatIcon,
+        SpTableCardDirective,
+        DashboardOverviewCardComponent,
+        NgTemplateOutlet,
+        AsyncPipe,
         TranslatePipe,
     ],
 })
@@ -122,6 +129,9 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     private assetFilterService = inject(SpAssetBrowserService);
     private routingService = inject(ChartRoutingService);
     private dialogService = inject(DialogService);
+
+    readonly dashboardLinkType$ =
+        this.assetFilterService.getAssetLinkType$('dashboard');
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
