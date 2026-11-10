@@ -101,9 +101,60 @@ export class SpRangeSelectionDirective
     onKeyDown(event: KeyboardEvent): void {
         this.syncInputs();
         const input = this.inputAt(event.target);
-        if (event.key === ' ' && event.shiftKey && input && this.anchor) {
+        if (
+            !input ||
+            event.target !== input ||
+            input.disabled ||
+            event.altKey ||
+            event.ctrlKey ||
+            event.metaKey
+        ) {
+            return;
+        }
+
+        if (event.key === ' ') {
             event.preventDefault();
-            this.applyRange(input);
+            event.stopPropagation();
+            if (!event.repeat) {
+                if (event.shiftKey && this.anchor) {
+                    this.applyRange(input);
+                } else {
+                    input.click();
+                }
+            }
+            return;
+        }
+
+        const direction =
+            event.key === 'ArrowDown' || event.key === 'ArrowRight'
+                ? 1
+                : event.key === 'ArrowUp' || event.key === 'ArrowLeft'
+                  ? -1
+                  : 0;
+        if (!direction) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        const enabledInputs = this.inputs.filter(item => !item.disabled);
+        const nextInput =
+            enabledInputs[enabledInputs.indexOf(input) + direction];
+        if (nextInput) {
+            nextInput.focus();
+            if (event.shiftKey && this.anchor) {
+                this.applyRange(nextInput);
+            }
+        }
+    }
+
+    @HostListener('keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent): void {
+        const input = this.inputAt(event.target);
+        if (event.key === ' ' && input && event.target === input) {
+            // Space is handled on keydown; suppress native keyup activation.
+            event.preventDefault();
+            event.stopPropagation();
         }
     }
 

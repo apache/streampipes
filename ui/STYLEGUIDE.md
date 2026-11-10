@@ -410,7 +410,8 @@ Check the examples to see how to add table actions.
 ##### Checkbox range selection
 
 `sp-table` supports Shift-click, Shift-hover and Shift-Space range selection when
-`showSelectionCheckboxes` is enabled. The last ordinary activation sets the anchor;
+`showSelectionCheckboxes` is enabled. Arrow keys move checkbox focus; Shift+Arrow
+extends the range, and Space toggles the focused checkbox. The last ordinary activation sets the anchor;
 its checked state determines whether the range is selected or deselected. Ranges
 follow rendered order on the current page, skip disabled items and reset the anchor
 when the visible checkbox sequence changes.

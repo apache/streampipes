@@ -28,6 +28,7 @@ import { SpRangeSelectionDirective } from './range-selection.directive';
     imports: [FormsModule, MatCheckbox, SpRangeSelectionDirective],
     template: `
         <div [spRangeSelection]="context">
+            <input class="search" />
             <mat-checkbox class="header">Select all</mat-checkbox>
             @for (row of rows; track row.id) {
                 <mat-checkbox
@@ -91,6 +92,24 @@ describe('SpRangeSelectionDirective', () => {
             }),
         );
         fixture.detectChanges();
+    }
+
+    function pressKey(
+        index: number,
+        key: string,
+        shiftKey = false,
+        repeat = false,
+    ) {
+        const event = new KeyboardEvent('keydown', {
+            key,
+            shiftKey,
+            repeat,
+            bubbles: true,
+            cancelable: true,
+        });
+        inputs()[index].dispatchEvent(event);
+        fixture.detectChanges();
+        return event;
     }
 
     beforeEach(async () => {
@@ -177,6 +196,117 @@ describe('SpRangeSelectionDirective', () => {
         );
         fixture.detectChanges();
         expect(selected()).toEqual([1, 2, 3, 4, 5]);
+    });
+
+    it('toggles with Space, sets the anchor and suppresses a second keyup activation', () => {
+        inputs()[1].focus();
+        expect(pressKey(1, ' ').defaultPrevented).toBe(true);
+        expect(selected()).toEqual([1]);
+
+        const keyUp = new KeyboardEvent('keyup', {
+            key: ' ',
+            bubbles: true,
+            cancelable: true,
+        });
+        inputs()[1].dispatchEvent(keyUp);
+        expect(keyUp.defaultPrevented).toBe(true);
+        expect(host.changes).toEqual([1]);
+
+        pressKey(1, 'ArrowDown');
+        pressKey(2, 'ArrowDown', true);
+        expect(document.activeElement).toBe(inputs()[3]);
+        expect(selected()).toEqual([1, 2, 3]);
+    });
+
+    it('moves focus with all four arrow keys without changing selection', () => {
+        inputs()[2].focus();
+        for (const [index, key, target] of [
+            [2, 'ArrowDown', 3],
+            [3, 'ArrowRight', 4],
+            [4, 'ArrowUp', 3],
+            [3, 'ArrowLeft', 2],
+        ] as const) {
+            expect(pressKey(index, key).defaultPrevented).toBe(true);
+            expect(document.activeElement).toBe(inputs()[target]);
+        }
+        expect(selected()).toEqual([]);
+    });
+
+    it('skips disabled checkboxes and stops at the current group boundaries', () => {
+        host.rows[2].disabled = true;
+        fixture.detectChanges();
+        inputs()[1].focus();
+        pressKey(1, 'ArrowDown');
+        expect(document.activeElement).toBe(inputs()[3]);
+        pressKey(3, 'ArrowUp');
+        expect(document.activeElement).toBe(inputs()[1]);
+
+        inputs()[0].focus();
+        pressKey(0, 'ArrowUp');
+        expect(document.activeElement).toBe(inputs()[0]);
+        inputs()[7].focus();
+        pressKey(7, 'ArrowDown');
+        expect(document.activeElement).toBe(inputs()[7]);
+    });
+
+    it('keeps the anchor fixed when extending a range with Shift and arrows', () => {
+        inputs()[3].focus();
+        pressKey(3, ' ');
+        pressKey(3, 'ArrowDown', true);
+        pressKey(4, 'ArrowRight', true);
+        pressKey(5, 'ArrowUp', true);
+        pressKey(4, 'ArrowLeft', true);
+        pressKey(3, 'ArrowUp', true);
+        expect(document.activeElement).toBe(inputs()[2]);
+        expect(selected()).toEqual([2, 3, 4, 5]);
+    });
+
+    it('deselects a keyboard range from an unchecked anchor', () => {
+        inputs()[1].focus();
+        pressKey(1, ' ');
+        pressKey(1, 'ArrowDown', true);
+        pressKey(2, 'ArrowDown', true);
+        expect(selected()).toEqual([1, 2, 3]);
+        pressKey(3, ' ');
+        pressKey(3, 'ArrowUp', true);
+        pressKey(2, 'ArrowUp', true);
+        expect(selected()).toEqual([]);
+    });
+
+    it('moves focus without selecting when Shift arrows have no anchor', () => {
+        inputs()[1].focus();
+        pressKey(1, 'ArrowDown', true);
+        expect(document.activeElement).toBe(inputs()[2]);
+        expect(selected()).toEqual([]);
+        pressKey(2, ' ', true);
+        expect(selected()).toEqual([2]);
+    });
+
+    it('ignores repeated Space keydowns', () => {
+        inputs()[1].focus();
+        pressKey(1, ' ');
+        pressKey(1, ' ', false, true);
+        expect(selected()).toEqual([1]);
+        expect(host.changes).toEqual([1]);
+    });
+
+    it('leaves keyboard behavior of search fields and header checkboxes unchanged', () => {
+        for (const element of [
+            fixture.nativeElement.querySelector('.search'),
+            fixture.nativeElement.querySelector('.header input'),
+        ] as HTMLInputElement[]) {
+            element.focus();
+            for (const key of ['ArrowDown', ' ']) {
+                const event = new KeyboardEvent('keydown', {
+                    key,
+                    bubbles: true,
+                    cancelable: true,
+                });
+                element.dispatchEvent(event);
+                expect(event.defaultPrevented).toBe(false);
+                expect(document.activeElement).toBe(element);
+            }
+        }
     });
 
     it('deselects a range using an unchecked anchor and skips disabled items', async () => {
