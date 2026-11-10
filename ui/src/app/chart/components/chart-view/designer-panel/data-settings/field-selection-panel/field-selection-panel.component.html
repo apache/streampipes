@@ -57,12 +57,37 @@
             </button>
         }
     </div>
+    <mat-form-field
+        appearance="outline"
+        subscriptSizing="dynamic"
+        class="w-100 mb-sm"
+    >
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+            matInput
+            [(ngModel)]="fieldSearch"
+            [placeholder]="'Search fields' | translate"
+            [attr.aria-label]="'Search fields' | translate"
+            data-cy="data-explorer-field-search"
+        />
+        @if (fieldSearch) {
+            <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                [attr.aria-label]="'Clear search' | translate"
+                (click)="fieldSearch = ''"
+            >
+                <mat-icon>close</mat-icon>
+            </button>
+        }
+    </mat-form-field>
     <div
         fxLayout="column"
         [class.field-scroll-panel]="!expandFields"
         data-cy="data-explorer-field-selection-panel"
     >
-        @for (field of sourceConfig.queryConfig.fields; track field) {
+        @for (field of filteredFields; track field) {
             <div fxLayout="column">
                 <sp-field-selection
                     [field]="field"
@@ -70,6 +95,8 @@
                 >
                 </sp-field-selection>
             </div>
+        } @empty {
+            <p role="status">{{ 'No matching fields' | translate }}</p>
         }
     </div>
 </sp-split-section>
