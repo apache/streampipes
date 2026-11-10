@@ -16,11 +16,12 @@
 ~
 -->
 
-<div id="formWrapper" fxFlex="100" fxLayout="column">
+<div spRangeSelection id="formWrapper" fxFlex="100" fxLayout="column">
     @if (!staticProperty.horizontalRendering) {
         <div fxLayout="column">
             @for (option of staticProperty.options; track option) {
                 <mat-checkbox
+                    spRangeSelectionItem
                     color="accent"
                     [(ngModel)]="option.selected"
                     style="margin-left: 10px"

@@ -102,6 +102,8 @@ import {
 } from './sp-table.model';
 import { SpTableAssetContextService } from './sp-asset-context/sp-table-asset-context.service';
 
+import { SpRangeSelectionDirective } from '../../range-selection/range-selection.directive';
+
 type SpTableViewMode = 'list' | 'grouped' | 'cards';
 type SpTableGroupingMode = 'label' | 'site' | 'asset';
 
@@ -148,6 +150,7 @@ const CARD_ASSET_CONTEXT_LIMIT = 2;
     styleUrls: ['./sp-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         LayoutDirective,
         MatTable,
         MatColumnDef,

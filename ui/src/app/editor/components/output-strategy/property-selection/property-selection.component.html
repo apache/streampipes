@@ -19,6 +19,7 @@
 <div class="property-selection" style="margin-left:{{ layer * 5 }}%">
     <div fxLayout="row">
         <mat-checkbox
+            spRangeSelectionItem
             [checked]="exists(eventProperty.runtimeId)"
             (change)="toggle(eventProperty.runtimeId)"
             style="margin-right: 10px"

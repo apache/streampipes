@@ -76,7 +76,7 @@
                 <h3 class="sbom-sources-title">
                     {{ 'Included components' | translate }}
                 </h3>
-                <ul class="sbom-source-list">
+                <ul spRangeSelection class="sbom-source-list">
                     @for (entry of entries; track entry.id) {
                         <li
                             class="sbom-source"
@@ -85,6 +85,7 @@
                             fxLayoutGap="var(--space-sm)"
                         >
                             <mat-checkbox
+                                spRangeSelectionItem
                                 [attr.data-cy]="'sbom-source-' + entry.id"
                                 [checked]="isSelected(entry.id)"
                                 (change)="

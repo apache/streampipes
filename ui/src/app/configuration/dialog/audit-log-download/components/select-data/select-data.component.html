@@ -83,10 +83,10 @@
     </div>
 </sp-split-section>
 
-<sp-split-section [level]="3" [title]="'Columns' | translate">
+<sp-split-section spRangeSelection [level]="3" [title]="'Columns' | translate">
     <p>{{ 'Choose the columns to include in the export.' | translate }}</p>
     @for (column of exportConfig.columns; track column.id) {
-        <mat-checkbox [(ngModel)]="column.selected">
+        <mat-checkbox spRangeSelectionItem [(ngModel)]="column.selected">
             {{ column.label | translate }}
         </mat-checkbox>
     }

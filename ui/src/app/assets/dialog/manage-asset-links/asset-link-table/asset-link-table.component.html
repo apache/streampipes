@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxLayout="column" fxLayoutGap="8px">
+<div spRangeSelection fxLayout="column" fxLayoutGap="8px">
     @if (resourcesLoading) {
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
             <sp-spinner
@@ -101,6 +101,7 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let resource">
                     <mat-checkbox
+                        spRangeSelectionItem
                         color="accent"
                         [checked]="isResourceSelected(resource.resourceId)"
                         [attr.data-cy]="

@@ -15,7 +15,7 @@
 ~ limitations under the License.
 ~
 -->
-<div fxFlex="100" fxLayout="column">
+<div spRangeSelection fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="mb-10">
         <h5 style="margin-right: 10px">
             {{ selectedElement.inputStreams[0].name || '' }}
@@ -55,7 +55,7 @@
         </div>
     }
     @if (collectedPropertiesSecondStream.length > 0) {
-        <div fxLayout="column" fxFlex="100" class="mt-10">
+        <div spRangeSelection fxLayout="column" fxFlex="100" class="mt-10">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                 <h5 style="margin-right: 10px">
                     {{ selectedElement.inputStreams[1].name }}

@@ -102,12 +102,15 @@ const TEXT_FILTER_OPTIONS = [
 const TIMESTAMP_FILTER_OPTIONS = ['Before', 'After', 'Between'];
 const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
 
+import { SpRangeSelectionDirective } from '@streampipes/shared-ui';
+
 @Component({
     selector: 'sp-data-explorer-table-widget',
     templateUrl: './table-widget.component.html',
     styleUrls: ['./table-widget.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         LayoutDirective,
         FlexDirective,
         NgStyle,

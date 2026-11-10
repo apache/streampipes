@@ -185,12 +185,13 @@
                         </div>
                     }
                     @if (getGenericStorageAppDocTypes().length > 0) {
-                        <div fxLayout="column" class="mt-md">
+                        <div spRangeSelection fxLayout="column" class="mt-md">
                             @for (
                                 exportItem of getGenericStorageAppDocTypes();
                                 track exportItem.resourceId
                             ) {
                                 <mat-checkbox
+                                    spRangeSelectionItem
                                     [checked]="exportItem.selected"
                                     (change)="changeItem($event, exportItem)"
                                 >

@@ -17,6 +17,7 @@
   -->
 
 <div
+    [spRangeSelection]="visiblePageRows"
     fxLayout="column"
     class="table-outer"
     [class.no-border]="noBorder"
@@ -306,6 +307,7 @@
                     class="checkbox-multi-select"
                 >
                     <mat-checkbox
+                        spRangeSelectionItem
                         data-cy="sp-table-row-checkbox"
                         [checked]="isRowSelected(element)"
                         (change)="toggleRowSelection(element, $event.checked)"
@@ -447,6 +449,7 @@
 <ng-template #cardSelectionCell let-row>
     @if (showSelectionCheckboxes) {
         <mat-checkbox
+            spRangeSelectionItem
             class="sp-table-card-checkbox"
             data-cy="sp-table-card-checkbox"
             [checked]="isRowSelected(row)"

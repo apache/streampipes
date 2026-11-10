@@ -35,12 +35,15 @@ import { MatButton } from '@angular/material/button';
 import { PropertySelectionComponent } from '../property-selection/property-selection.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { SpRangeSelectionDirective } from '@streampipes/shared-ui';
+
 @Component({
     selector: 'sp-custom-output-strategy',
     templateUrl: './custom-output-strategy.component.html',
     styleUrls: ['./custom-output-strategy.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,

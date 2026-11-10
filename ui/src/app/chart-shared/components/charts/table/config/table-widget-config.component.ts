@@ -23,6 +23,7 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
 import {
+    SpRangeSelectionDirective,
     FormFieldComponent,
     SpAlertBannerComponent,
     SplitSectionComponent,
@@ -47,6 +48,7 @@ import { FieldOrderConfigComponent } from '../../../chart-config/field-order-con
     styleUrls: ['./table-widget-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         SpVisualizationConfigOuterComponent,
         SelectMultiplePropertiesConfigComponent,
         SplitSectionComponent,

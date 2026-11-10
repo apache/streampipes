@@ -16,7 +16,7 @@
 ~
 -->
 
-<sp-split-section [level]="3" [title]="title">
+<sp-split-section spRangeSelection [level]="3" [title]="title">
     <div section-actions>
         <button
             mat-button
@@ -41,6 +41,7 @@
     <div fxLayout="column" class="field-scroll-panel">
         @for (field of availableProperties; track field) {
             <mat-checkbox
+                spRangeSelectionItem
                 color="accent"
                 [checked]="isSelected(field)"
                 (change)="toggleFieldSelection(field)"

@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import {
+    SpRangeSelectionDirective,
     DateInputComponent,
     FormFieldComponent,
     SearchSelectComponent,
@@ -52,6 +53,7 @@ interface AuditOutcomeOption {
     styleUrls: ['./select-data.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FormsModule,
         MatCheckboxModule,
         MatRadioGroup,
