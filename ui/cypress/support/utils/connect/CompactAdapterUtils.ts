@@ -48,6 +48,43 @@ export class CompactAdapterUtils {
         return this.postCompactAdapterRequest('application/yml', body);
     }
 
+    /**
+     * Returns the id of the adapter that {@link storeCompactAdapter} created.
+     *
+     * @param response - The response of a successful {@link storeCompactAdapter} request.
+     */
+    public static getAdapterId(response: Cypress.Response<any>): string {
+        return response.body.notifications[0].title;
+    }
+
+    /**
+     * Loads a stored adapter through the REST API and yields one of its event properties.
+     *
+     * @param adapterId - The id of the adapter.
+     * @param runtimeName - The runtime name of the event property.
+     */
+    public static getStoredEventProperty(
+        adapterId: string,
+        runtimeName: string,
+    ): Cypress.Chainable<any> {
+        const token = window.localStorage.getItem('auth-token');
+        return cy
+            .request({
+                method: 'GET',
+                url: `/streampipes-backend/api/v2/connect/master/adapters/${adapterId}`,
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then(response =>
+                response.body.dataStream.eventSchema.eventProperties.find(
+                    (property: { runtimeName: string }) =>
+                        property.runtimeName === runtimeName,
+                ),
+            );
+    }
+
     private static postCompactAdapterRequest(
         contentType: string,
         body: any,

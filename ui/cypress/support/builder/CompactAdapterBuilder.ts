@@ -20,6 +20,7 @@ import { CompactAdapter } from '../../../projects/streampipes/platform-services/
 
 export class CompactAdapterBuilder {
     private compactAdapter: CompactAdapter;
+    private scriptActive = false;
 
     constructor() {
         this.compactAdapter = new CompactAdapter();
@@ -115,7 +116,19 @@ export class CompactAdapterBuilder {
         return this;
     }
 
+    /**
+     * Runs the transformation script (see {@link withScript}) on every event
+     * of the running adapter. Without it, the script is only stored.
+     */
+    public setScriptActive() {
+        this.scriptActive = true;
+        return this;
+    }
+
     public build() {
+        if (this.scriptActive && this.compactAdapter.transformationConfig) {
+            this.compactAdapter.transformationConfig.scriptActive = true;
+        }
         if (!this.compactAdapter.id) {
             this.compactAdapter.id =
                 'sp:adapterdescription:' +

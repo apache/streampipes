@@ -69,7 +69,6 @@
         <!-- converges kafka-clients (Spring Boot BOM, 1.11.2) with iotdb-session and tsfile (1.10.1); revisit when IoTDB or TsFile is bumped -->
         <lz4-java.version>1.11.4</lz4-java.version>
         <eclipse.milo.version>1.1.1</eclipse.milo.version>
-        <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <influxdb.version>2.25</influxdb.version>
@@ -87,7 +86,6 @@
         <plc4x.version>0.13.1</plc4x.version>
 
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
-        <rdf4j.version>3.7.7</rdf4j.version>
 
         <rocketmq.version>5.2.0</rocketmq.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
@@ -367,11 +365,6 @@
                 <groupId>edu.wpi.rail</groupId>
                 <artifactId>jrosbridge</artifactId>
                 <version>${jsrosbridge.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.fogsy</groupId>
-                <artifactId>qudt</artifactId>
-                <version>${fogsy-qudt.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.grpc</groupId>
@@ -748,16 +741,6 @@
                 <groupId>org.eclipse.ditto</groupId>
                 <artifactId>ditto-client</artifactId>
                 <version>${ditto-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.rdf4j</groupId>
-                <artifactId>rdf4j-rio-turtle</artifactId>
-                <version>${rdf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.rdf4j</groupId>
-                <artifactId>rdf4j-rio-rdfxml</artifactId>
-                <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.graalvm.polyglot</groupId>
@@ -1356,9 +1339,6 @@
                         <exclude>
                             streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
                         </exclude>
-
-                        <!-- External vocabularies -->
-                        <exclude>streampipes-measurement-units/src/main/java/com/github/jqudt/**</exclude>
 
                         <!-- Exclude some UI files which we need to check in more detail -->
                         <exclude>ui/src/assets/img/svg/**</exclude>
