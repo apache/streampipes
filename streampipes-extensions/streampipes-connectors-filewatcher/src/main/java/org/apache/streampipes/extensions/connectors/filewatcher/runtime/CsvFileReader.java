@@ -21,20 +21,21 @@ package org.apache.streampipes.extensions.connectors.filewatcher.runtime;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.connectors.filewatcher.model.CsvParserSettings;
 
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,12 +80,13 @@ public class CsvFileReader {
          var csvReader = newCsvReader(bufferedReader, parserSettings)) {
       LOG.debug("Reading CSV file '{}' using charset '{}'.", path.getFileName(), charset.name());
 
-      String[] header = parserSettings.hasHeader() ? csvReader.readNext() : null;
+      Iterator<CSVRecord> records = csvReader.iterator();
+      String[] header = parserSettings.hasHeader() ? readNext(records, path) : null;
       String[] row;
       long currentRecordIndex = -1L;
       long lastProcessedRecord = startRecordIndex - 1;
 
-      while ((row = csvReader.readNext()) != null) {
+      while ((row = readNext(records, path)) != null) {
         currentRecordIndex++;
 
         if (header == null) {
@@ -109,20 +111,27 @@ public class CsvFileReader {
           path.getFileName(), emittedEvents, startRecordIndex);
 
       return new FileWatchReadResult(lastProcessedRecord, emittedEvents, true);
-    } catch (CsvValidationException e) {
-      throw new ParseException("Could not parse CSV file " + path.getFileName(), e);
     }
   }
 
-  private CSVReader newCsvReader(BufferedReader reader, CsvParserSettings parserSettings) {
-    var csvParser = new CSVParserBuilder()
-        .withSeparator(parserSettings.delimiter())
-        .build();
+  private CSVParser newCsvReader(BufferedReader reader, CsvParserSettings parserSettings) throws IOException {
+    var format = CSVFormat.DEFAULT.builder()
+        .setDelimiter(parserSettings.delimiter())
+        .setIgnoreEmptyLines(false)
+        .get();
 
-    return new CSVReaderBuilder(reader)
-        .withSkipLines(0)
-        .withCSVParser(csvParser)
-        .build();
+    return format.parse(reader);
+  }
+
+  private String[] readNext(Iterator<CSVRecord> records, Path path) throws IOException {
+    try {
+      return records.hasNext() ? records.next().values() : null;
+    } catch (UncheckedIOException e) {
+      if (e.getCause() instanceof MalformedInputException) {
+        throw e.getCause();
+      }
+      throw new ParseException("Could not parse CSV file " + path.getFileName(), e.getCause());
+    }
   }
 
   private Map<String, Object> toMap(String[] header, String[] row) {

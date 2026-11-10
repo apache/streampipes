@@ -49,9 +49,11 @@ import {
     SpAssetBrowserService,
     SpTableAssetContextConfig,
     SpTableActionsDirective,
+    SpTableCardDirective,
     SpTableComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
@@ -67,23 +69,12 @@ import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ChartRegistry } from '../../../../chart-shared/registry/chart-registry.service';
+import { ChartOverviewRow } from '../chart-overview-row';
+import { ChartOverviewCardComponent } from '../chart-overview-card/chart-overview-card.component';
 
 type ManageableChart = DataExplorerWidgetModel & {
     name: string;
     description: string;
-};
-
-type ChartOverviewRow = ChartSummaryDto & {
-    chartTypeIcon: string;
-    chartTypeName: string;
-    createdAtLabel: string;
-    lastModifiedLabel: string;
-    showLegacyWarning: boolean;
-    showRequiresAttentionWarning: boolean;
-    showDataCyId: string;
-    editDataCyId: string;
-    manageDataCyId: string;
-    deleteDataCyId: string;
 };
 
 @Component({
@@ -108,6 +99,10 @@ type ChartOverviewRow = ChartSummaryDto & {
         MatIcon,
         MatTooltip,
         SpSpinnerComponent,
+        SpTableCardDirective,
+        ChartOverviewCardComponent,
+        NgTemplateOutlet,
+        AsyncPipe,
         TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -154,6 +149,9 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
     private assetFilterService = inject(SpAssetBrowserService);
     private chartRegistryService = inject(ChartRegistry);
     private cdr = inject(ChangeDetectorRef);
+
+    readonly chartLinkType$ =
+        this.assetFilterService.getAssetLinkType$('chart');
 
     assetFilter$: Subscription;
     currentFilterIds?: Set<string>;

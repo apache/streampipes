@@ -38,12 +38,12 @@ FROM eclipse-temurin:25-jre-jammy AS jre
 FROM eclipse-temurin:25-jre-jammy AS backend-layers
 WORKDIR /layers
 COPY --from=core streampipes-core.jar application.jar
-RUN java -Djarmode=layertools -jar application.jar extract && rm application.jar
+RUN java -Djarmode=tools -jar application.jar extract --layers --launcher --destination extracted && rm application.jar
 
 FROM eclipse-temurin:25-jre-jammy AS extensions-layers
 WORKDIR /layers
 COPY --from=extensions streampipes-extensions-all-iiot.jar application.jar
-RUN java -Djarmode=layertools -jar application.jar extract && rm application.jar
+RUN java -Djarmode=tools -jar application.jar extract --layers --launcher --destination extracted && rm application.jar
 FROM influxdb:${INFLUXDB_VERSION} AS influxdb
 FROM nats:${NATS_VERSION} AS nats
 
@@ -72,14 +72,14 @@ COPY --from=influxdb /entrypoint.sh /opt/streampipes/bin/influxdb-entrypoint.sh
 COPY --from=influxdb /etc/defaults/influxdb2/config.yml /etc/defaults/influxdb2/config.yml
 
 # StreamPipes core and extensions (exploded Spring Boot layers)
-COPY --from=backend-layers /layers/dependencies/ /opt/streampipes/backend/
-COPY --from=backend-layers /layers/snapshot-dependencies/ /opt/streampipes/backend/
-COPY --from=backend-layers /layers/spring-boot-loader/ /opt/streampipes/backend/
-COPY --from=backend-layers /layers/application/ /opt/streampipes/backend/
-COPY --from=extensions-layers /layers/dependencies/ /opt/streampipes/extensions/
-COPY --from=extensions-layers /layers/snapshot-dependencies/ /opt/streampipes/extensions/
-COPY --from=extensions-layers /layers/spring-boot-loader/ /opt/streampipes/extensions/
-COPY --from=extensions-layers /layers/application/ /opt/streampipes/extensions/
+COPY --from=backend-layers /layers/extracted/dependencies/ /opt/streampipes/backend/
+COPY --from=backend-layers /layers/extracted/snapshot-dependencies/ /opt/streampipes/backend/
+COPY --from=backend-layers /layers/extracted/spring-boot-loader/ /opt/streampipes/backend/
+COPY --from=backend-layers /layers/extracted/application/ /opt/streampipes/backend/
+COPY --from=extensions-layers /layers/extracted/dependencies/ /opt/streampipes/extensions/
+COPY --from=extensions-layers /layers/extracted/snapshot-dependencies/ /opt/streampipes/extensions/
+COPY --from=extensions-layers /layers/extracted/spring-boot-loader/ /opt/streampipes/extensions/
+COPY --from=extensions-layers /layers/extracted/application/ /opt/streampipes/extensions/
 
 # StreamPipes UI (production build of ui/)
 COPY --from=ui / /usr/share/nginx/html/

@@ -155,7 +155,7 @@
 
     .mat-mdc-unelevated-button:not(.mat-basic):not(.btn-secondary):not(
             .btn-secondary-outline
-        ):not(.btn-warn):hover:not(:disabled) {
+        ):not(.btn-tertiary):not(.btn-warn):hover:not(:disabled) {
         --mat-button-filled-container-color: color-mix(
             in srgb,
             var(--color-primary) 88%,
@@ -166,7 +166,7 @@
 
     .mat-mdc-unelevated-button:not(.mat-basic):not(.btn-secondary):not(
             .btn-secondary-outline
-        ):not(.btn-warn):active:not(:disabled) {
+        ):not(.btn-tertiary):not(.btn-warn):active:not(:disabled) {
         --mat-button-filled-container-color: color-mix(
             in srgb,
             var(--color-primary) 82%,
@@ -224,6 +224,43 @@
                 filled-state-layer-color: var(--mat-sys-primary),
                 filled-hover-state-layer-opacity: 0.06,
             )
+        );
+    }
+
+    .btn-tertiary {
+        --btn-tertiary-padding: 0.75rem;
+
+        border: 1px solid transparent;
+
+        @include mat.button-overrides(
+            (
+                filled-container-color: transparent,
+                filled-label-text-color: var(--color-primary),
+                filled-state-layer-color: var(--color-primary),
+                filled-hover-state-layer-opacity: 0,
+                filled-pressed-state-layer-opacity: 0,
+                filled-disabled-container-color: transparent,
+                filled-horizontal-padding: var(--btn-tertiary-padding),
+                filled-icon-offset: 0,
+            )
+        );
+    }
+
+    .btn-tertiary:hover:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--color-primary) 8%,
+            var(--color-bg-0)
+        );
+    }
+
+    .btn-tertiary:active:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--color-primary) 12%,
+            var(--color-bg-0)
         );
     }
 

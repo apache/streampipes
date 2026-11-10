@@ -113,6 +113,12 @@
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
+      <artifactId>streampipes-sinks-databases-jvm</artifactId>
+      <version>0.99.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.streampipes</groupId>
       <artifactId>streampipes-pipeline-management</artifactId>
       <version>0.99.0-SNAPSHOT</version>
       <scope>test</scope>
@@ -167,7 +173,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
+        <version>3.6.1</version>
         <configuration>
           <skipTests>true</skipTests> <!-- Skip tests during mvn clean package -->
         </configuration>
@@ -184,7 +190,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.2.5</version>
+            <version>3.6.1</version>
             <configuration>
             <skipTests>false</skipTests>
               <environmentVariables>
@@ -204,7 +210,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.2.5</version>
+            <version>3.6.1</version>
             <configuration>
             <skipTests>false</skipTests>
               <environmentVariables>

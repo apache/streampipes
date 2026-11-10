@@ -18,12 +18,14 @@
 
 package org.apache.streampipes.export.resolver;
 
+import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.exceptions.StorageException;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -78,10 +80,35 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   @Override
   public void writeDocument(String document, AssetExportConfiguration config)
       throws JsonProcessingException, StorageConflictException {
+    if (isDuplicateAssetLinkType(document)) {
+      LOG.info("Skipping import of asset link type because its linkType already exists");
+      return;
+    }
+
     try {
       genericStorage.create(document);
     } catch (StorageException e) {
       LOG.warn("Could not write document", e);
+    }
+  }
+
+  private boolean isDuplicateAssetLinkType(String document) throws JsonProcessingException {
+    var importedDocument = defaultMapper.readValue(document, new TypeReference<Map<String, Object>>() {
+    });
+    if (!GenericDocTypes.DOC_ASSET_LINK_TYPE.equals(importedDocument.get("appDocType"))) {
+      return false;
+    }
+
+    var linkType = importedDocument.get("linkType");
+    if (!(linkType instanceof String type) || type.isBlank()) {
+      return false;
+    }
+
+    try {
+      return genericStorage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE).stream()
+          .anyMatch(storedDocument -> type.equals(storedDocument.get("linkType")));
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not check existing asset link types before import", e);
     }
   }
 

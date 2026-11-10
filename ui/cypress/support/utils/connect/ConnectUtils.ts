@@ -548,6 +548,28 @@ export class ConnectUtils {
         });
     }
 
+    /**
+     * Waits until the live preview shows a numeric value close to the expected one.
+     */
+    public static livePreviewValueShouldBeCloseTo(
+        runtimeName: string,
+        expected: number,
+        delta = 1e-6,
+    ) {
+        ConnectUtils.getLivePreviewValue(runtimeName).should($value => {
+            expect(parseFloat($value.text().trim())).to.be.closeTo(
+                expected,
+                delta,
+            );
+        });
+    }
+
+    public static openAdapterDetails(adapterName: string) {
+        ConnectUtils.goToConnect();
+        GeneralUtils.openMenuForRow(adapterName);
+        ConnectBtns.detailsAdapter().click();
+    }
+
     public static replaceAdapterScript(script: string) {
         // Ensure that the script is loaded
         ConnectBtns.configureSchemaScriptEditor().should(
