@@ -36,8 +36,8 @@ import java.util.UUID;
  * Documents of one type in a database, serialized with one codec. Thread-safe.
  *
  * <p>Writes take {@code _id} and {@code _rev} from the encoded document, so the codec decides how the model names
- * them. A missing {@code _id} on create is generated (32 hex characters, as LightCouch did). By default the passed
- * document is not modified; see {@link #withMetadataWriter(MetadataWriter)}.</p>
+ * them. A missing {@code _id} on create is generated (32 hex characters, the format of existing ids). By default the
+ * passed document is not modified; see {@link #withMetadataWriter(MetadataWriter)}.</p>
  *
  * @param <T> document type
  */
@@ -117,7 +117,7 @@ public final class TypedCollection<T> {
    *
    * @param document document without {@code _rev}
    * @return id and revision
-   * @throws DocumentConflictException if a document with the id exists
+   * @throws DocumentConflictException if a document with the given id exists
    */
   public DocumentRef create(T document) {
     byte[] json = codec.encode(document);
@@ -125,11 +125,23 @@ public final class TypedCollection<T> {
     if (meta.rev() != null) {
       throw new IllegalArgumentException("A document to create must not have a _rev");
     }
-    String id = meta.id() != null ? meta.id() : generateId();
+    boolean generatedId = meta.id() == null;
+    String id = generatedId ? generateId() : meta.id();
     if (meta.hasNullMetadata()) {
       json = CouchJson.withoutFields(json, METADATA_FIELDS);
     }
-    return write(document, CouchRequest.put(database.documentPath(id), json));
+    try {
+      return write(document, CouchRequest.put(database.documentPath(id), json));
+    } catch (DocumentConflictException e) {
+      if (!generatedId) {
+        throw e;
+      }
+      // Nothing else can hold a freshly generated id: the transport repeated the PUT after the first attempt had
+      // already stored the document.
+      DocumentRef ref = new DocumentRef(id, revision(id).orElseThrow(() -> e));
+      writeMetadata(document, ref);
+      return ref;
+    }
   }
 
   /**
@@ -297,10 +309,14 @@ public final class TypedCollection<T> {
 
   private DocumentRef write(T document, CouchRequest request) {
     DocumentRef ref = database.execute(request, CouchJson::readRef);
+    writeMetadata(document, ref);
+    return ref;
+  }
+
+  private void writeMetadata(T document, DocumentRef ref) {
     if (metadataWriter != null) {
       metadataWriter.write(document, ref);
     }
-    return ref;
   }
 
   private static String generateId() {

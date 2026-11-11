@@ -44,7 +44,8 @@ import java.util.concurrent.Executors;
  *
  * <p>The JDK client sends a request over a pooled connection without checking it first and repeats only {@code GET}
  * and {@code HEAD} by itself when that connection turns out to be closed. A {@code PUT} is repeated once here. That
- * cannot write twice: if the first attempt reached CouchDB, the second one fails with a conflict.</p>
+ * cannot write twice: if the first attempt reached CouchDB, the second one fails with a conflict. For a create with a
+ * generated id, {@code TypedCollection} recognises that conflict as its own write; any other caller sees it.</p>
  */
 public class JdkHttpTransport implements CouchTransport {
 

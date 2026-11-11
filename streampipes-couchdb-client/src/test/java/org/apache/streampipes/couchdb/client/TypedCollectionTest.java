@@ -57,6 +57,31 @@ public class TypedCollectionTest {
   }
 
   @Test
+  public void createRecognisesItsOwnWriteWhenARepeatedPutConflicts() {
+    var stub = StubTransport.create()
+        .respond(409, "{\"error\":\"conflict\",\"reason\":\"Document update conflict.\"}")
+        .respond(200, "", Map.of("ETag", "\"1-a\""));
+    var doc = new LinkedHashMap<String, Object>();
+    doc.put("name", "x");
+
+    var ref = stub.server().database("db").raw().create(doc);
+
+    assertEquals("1-a", ref.rev());
+    assertEquals("HEAD", stub.request(1).method());
+    assertEquals(stub.request(0).path(), stub.request(1).path());
+  }
+
+  @Test
+  public void createKeepsTheConflictForAGivenId() {
+    var stub = StubTransport.create()
+        .respond(409, "{\"error\":\"conflict\",\"reason\":\"Document update conflict.\"}");
+
+    assertThrows(DocumentConflictException.class,
+        () -> stub.server().database("db").raw().create(new LinkedHashMap<>(Map.of("_id", "given"))));
+    assertEquals(1, stub.requests.size());
+  }
+
+  @Test
   public void createGeneratesIdAndStripsNullMetadata() {
     var stub = StubTransport.create().respond(201, OK.formatted("gen", "1-a"));
     var doc = new LinkedHashMap<String, Object>();

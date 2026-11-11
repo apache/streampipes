@@ -24,7 +24,7 @@ import org.apache.streampipes.couchdb.client.DatabaseOptions;
 
 /**
  * Entry point of the storage implementations to CouchDB: hands out databases of one shared {@link CouchServer},
- * paired with the codec of the storage. Databases are created on first use, as with LightCouch.
+ * paired with the codec of the storage. Databases are created on first use.
  */
 public class CouchDbStores {
 

@@ -23,8 +23,8 @@ import org.apache.streampipes.couchdb.client.codec.GsonCodec;
 import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
 
 /**
- * The codecs documents are stored with, built once. They produce the same JSON as the Gson setups the storages used
- * with LightCouch (verified by the tests in {@code storage.couchdb.compat}).
+ * The codecs documents are stored with, built once. They read and write the stored format of previous versions,
+ * which the tests in {@code storage.couchdb.compat} check.
  *
  * @param gson      default Gson setup
  * @param adapter   Gson setup for adapter descriptions and instances
