@@ -25,7 +25,6 @@ import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.exceptions.StorageException;
-import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -121,7 +120,8 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   }
 
   @Override
-  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager)
+      throws JsonProcessingException {
     try {
       var asset = readDocument(document);
       var resourceId = asset.get("_id").toString();
