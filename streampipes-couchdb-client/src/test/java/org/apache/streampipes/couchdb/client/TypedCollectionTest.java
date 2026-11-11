@@ -21,6 +21,7 @@ package org.apache.streampipes.couchdb.client;
 import org.apache.streampipes.couchdb.client.design.DesignDocument;
 import org.apache.streampipes.couchdb.client.design.SyncResult;
 import org.apache.streampipes.couchdb.client.exception.DocumentConflictException;
+import org.apache.streampipes.couchdb.client.exception.DocumentMappingException;
 import org.apache.streampipes.couchdb.client.query.MangoQuery;
 import org.apache.streampipes.couchdb.client.query.Selector;
 
@@ -46,6 +47,13 @@ public class TypedCollectionTest {
     stub.server().database("db").raw().get("a");
     assertEquals("Basic YWRtaW46c2VjcmV0", stub.headers.get(0).get("Authorization"));
     assertEquals("application/json", stub.request(0).accept());
+  }
+
+  @Test
+  public void reportsAResponseThatIsNotADocumentAsMappingError() {
+    var stub = StubTransport.create().respond(200, "[\"not\", \"a document\"]");
+
+    assertThrows(DocumentMappingException.class, () -> stub.server().database("db").raw().get("a"));
   }
 
   @Test

@@ -19,9 +19,14 @@
 package org.apache.streampipes.couchdb.client.exception;
 
 /**
- * A document could not be converted between JSON and its Java type by the configured codec.
+ * A document could not be converted between JSON and its Java type by the configured codec, or a response did not
+ * have the shape CouchDB documents for it.
  */
 public class DocumentMappingException extends CouchDbException {
+
+  public DocumentMappingException(String message) {
+    super(message, null);
+  }
 
   public DocumentMappingException(String message, Throwable cause) {
     super(message, cause);

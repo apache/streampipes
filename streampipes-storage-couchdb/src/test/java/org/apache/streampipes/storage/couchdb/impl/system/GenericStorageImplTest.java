@@ -106,6 +106,13 @@ public class GenericStorageImplTest {
   }
 
   @Test
+  public void reportsAResponseThatIsNotADocumentAsStorageErrorRatherThanUnavailable() {
+    var exception = assertThrows(StorageException.class, () -> storageAnswering(200, "[]").findOne("a"));
+
+    assertEquals(StorageException.class, exception.getClass());
+  }
+
+  @Test
   public void returnsNullOnlyForAMissingDocument() {
     assertNull(storageAnswering(404, DOCUMENT_MISSING).findOneWithNullIfEmpty("a"));
     assertThrows(StorageUnavailableException.class, () -> storageAnswering(500, "{}").findOneWithNullIfEmpty("a"));

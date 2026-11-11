@@ -151,7 +151,7 @@ final class CouchJson {
   static <T> T readDocument(InputStream body, DocumentCodec codec, Type type) throws IOException {
     try (JsonParser parser = MAPPER.createParser(body)) {
       if (parser.nextToken() != JsonToken.START_OBJECT) {
-        throw new IOException("Expected a JSON object");
+        throw new DocumentMappingException("Expected a JSON object");
       }
       return codec.decode(parser, type);
     }
@@ -312,9 +312,10 @@ final class CouchJson {
     }
   }
 
-  private static void expect(JsonToken actual, JsonToken expected) throws IOException {
+  private static void expect(JsonToken actual, JsonToken expected) {
     if (actual != expected) {
-      throw new IOException("Unexpected response from CouchDB: expected " + expected + " but got " + actual);
+      throw new DocumentMappingException(
+          "Unexpected response from CouchDB: expected " + expected + " but got " + actual);
     }
   }
 }

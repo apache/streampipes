@@ -24,6 +24,7 @@ import org.apache.streampipes.couchdb.client.exception.CouchDbAuthenticationExce
 import org.apache.streampipes.couchdb.client.exception.CouchDbException;
 import org.apache.streampipes.couchdb.client.exception.DatabaseNotFoundException;
 import org.apache.streampipes.couchdb.client.exception.DocumentConflictException;
+import org.apache.streampipes.couchdb.client.exception.DocumentMappingException;
 import org.apache.streampipes.couchdb.client.exception.DocumentNotFoundException;
 import org.apache.streampipes.couchdb.client.exception.PreconditionFailedException;
 import org.apache.streampipes.couchdb.client.transport.CouchRequest;
@@ -128,6 +129,15 @@ public class CouchJsonTest {
     assertEquals(2, result.docs().size());
     assertEquals("g1", result.bookmark());
     assertEquals("No matching index found", result.warning());
+  }
+
+  @Test
+  public void reportsUnexpectedResponseShapesAsMappingErrors() {
+    assertThrows(DocumentMappingException.class,
+        () -> CouchJson.readDocument(stream("[]"), JacksonCodec.defaults(), MAP));
+    assertThrows(DocumentMappingException.class,
+        () -> CouchJson.readFindResult(stream("[]"), JacksonCodec.defaults(), MAP));
+    assertThrows(DocumentMappingException.class, () -> CouchJson.readRows(stream("\"text\""), false));
   }
 
   @Test

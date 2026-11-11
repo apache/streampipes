@@ -61,7 +61,15 @@ public class HttpClient5Transport implements CouchTransport {
   private final CloseableHttpClient client;
 
   public HttpClient5Transport(CouchServerConfig config) {
-    this.baseUrl = config.baseUrl();
+    this(config.baseUrl(), createClient(config));
+  }
+
+  HttpClient5Transport(String baseUrl, CloseableHttpClient client) {
+    this.baseUrl = baseUrl;
+    this.client = client;
+  }
+
+  private static CloseableHttpClient createClient(CouchServerConfig config) {
     var connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
         .setMaxConnTotal(MAX_CONNECTIONS)
         .setMaxConnPerRoute(MAX_CONNECTIONS)
@@ -71,7 +79,7 @@ public class HttpClient5Transport implements CouchTransport {
             .setValidateAfterInactivity(TimeValue.ofSeconds(2))
             .build())
         .build();
-    this.client = HttpClients.custom()
+    return HttpClients.custom()
         .setConnectionManager(connectionManager)
         .setDefaultRequestConfig(RequestConfig.custom().setResponseTimeout(Timeout.of(config.requestTimeout())).build())
         .disableRedirectHandling()
@@ -89,24 +97,44 @@ public class HttpClient5Transport implements CouchTransport {
     if (request.body() != null) {
       builder.setEntity(new ByteArrayEntity(request.body(), ContentType.parse(request.contentType())));
     }
+    ClassicHttpResponse response = null;
     try {
-      ClassicHttpResponse response = client.executeOpen(null, builder.build(), null);
-      var responseHeaders = new HashMap<String, String>();
-      for (Header header : response.getHeaders()) {
-        responseHeaders.putIfAbsent(header.getName().toLowerCase(Locale.ROOT), header.getValue());
-      }
-      InputStream content = response.getEntity() != null
-          ? response.getEntity().getContent()
-          : new ByteArrayInputStream(new byte[0]);
-      return new CouchResponse(response.getCode(), responseHeaders, new FilterInputStream(content) {
-        @Override
-        public void close() throws IOException {
-          // Closing the response returns a fully read connection to the pool.
-          response.close();
-        }
-      });
+      response = client.executeOpen(null, builder.build(), null);
+      return toCouchResponse(response);
     } catch (IOException e) {
+      closeQuietly(response);
       throw new CouchDbTransportException(request.method() + " " + pathOnly(request.path()) + " failed", e);
+    }
+  }
+
+  private static CouchResponse toCouchResponse(ClassicHttpResponse response) throws IOException {
+    var responseHeaders = new HashMap<String, String>();
+    for (Header header : response.getHeaders()) {
+      responseHeaders.putIfAbsent(header.getName().toLowerCase(Locale.ROOT), header.getValue());
+    }
+    InputStream content = response.getEntity() != null
+        ? response.getEntity().getContent()
+        : new ByteArrayInputStream(new byte[0]);
+    return new CouchResponse(response.getCode(), responseHeaders, new FilterInputStream(content) {
+      @Override
+      public void close() throws IOException {
+        // Closing the response returns a fully read connection to the pool.
+        response.close();
+      }
+    });
+  }
+
+  /**
+   * Releases the connection of a response that could not be handed to the caller.
+   */
+  private static void closeQuietly(ClassicHttpResponse response) {
+    if (response == null) {
+      return;
+    }
+    try {
+      response.close();
+    } catch (IOException e) {
+      // The request already failed; that error is the one reported.
     }
   }
 
