@@ -106,7 +106,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
     try {
       return genericStorage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE).stream()
           .anyMatch(storedDocument -> type.equals(storedDocument.get("linkType")));
-    } catch (IOException e) {
+    } catch (StorageException e) {
       throw new IllegalStateException("Could not check existing asset link types before import", e);
     }
   }

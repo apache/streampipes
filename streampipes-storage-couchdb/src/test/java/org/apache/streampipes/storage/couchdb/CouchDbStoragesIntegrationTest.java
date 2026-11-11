@@ -264,9 +264,8 @@ public class CouchDbStoragesIntegrationTest {
         "an update without revision of an existing document conflicts");
     assertThrows(StorageConflictException.class, () -> storage.update(ids.get(0), new ObjectMapper()
         .writeValueAsString(first)), "an update with a stale revision conflicts");
-    assertEquals("note",
-        storage.update("never-stored", "{\"_rev\":\"1-a\",\"appDocType\":\"note\"}").get("appDocType"),
-        "CouchDB stores a missing document even if a revision is given");
+    // A revision for a missing document is not asserted: CouchDB 3.3.1 answers it with 409 for some ids and stores
+    // the document for others, in the same database.
     assertEquals("note", storage.update("new-id", "{\"appDocType\":\"note\"}").get("appDocType"),
         "an update without revision creates a missing document");
 

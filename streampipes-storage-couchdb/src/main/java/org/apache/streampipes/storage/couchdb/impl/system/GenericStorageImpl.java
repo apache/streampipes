@@ -146,8 +146,8 @@ public class GenericStorageImpl implements IGenericStorage {
 
   /**
    * Writes the document under the given id. Without {@code _rev} it is created, or rejected as a conflict if it
-   * exists, which is what CouchDB does for the same {@code PUT}. CouchDB also stores a document that does not exist
-   * when {@code _rev} is given, so this does not report a missing document.
+   * exists, which is what CouchDB does for the same {@code PUT}. With {@code _rev}, a document that does not exist is
+   * never reported as not found: CouchDB usually rejects it as a conflict, but sometimes stores it.
    */
   @Override
   public Map<String, Object> update(String id, String payload) {
