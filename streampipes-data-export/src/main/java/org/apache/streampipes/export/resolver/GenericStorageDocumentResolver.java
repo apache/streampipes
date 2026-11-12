@@ -23,13 +23,14 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   public Map<String, Object> findDocument(String resourceId) {
     try {
       return genericStorage.findOne(resourceId);
-    } catch (IOException e) {
+    } catch (StorageException e) {
       return null;
     }
   }
@@ -77,7 +78,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
   @Override
   public void writeDocument(String document, AssetExportConfiguration config)
-      throws JsonProcessingException, DocumentConflictException {
+      throws JsonProcessingException, StorageConflictException {
     if (isDuplicateAssetLinkType(document)) {
       LOG.info("Skipping import of asset link type because its linkType already exists");
       return;
@@ -85,7 +86,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
 
     try {
       genericStorage.create(document);
-    } catch (IOException e) {
+    } catch (StorageException e) {
       LOG.warn("Could not write document", e);
     }
   }
@@ -105,7 +106,7 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
     try {
       return genericStorage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE).stream()
           .anyMatch(storedDocument -> type.equals(storedDocument.get("linkType")));
-    } catch (IOException e) {
+    } catch (StorageException e) {
       throw new IllegalStateException("Could not check existing asset link types before import", e);
     }
   }
@@ -119,13 +120,14 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   }
 
   @Override
-  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager)
+      throws JsonProcessingException {
     try {
       var asset = readDocument(document);
       var resourceId = asset.get("_id").toString();
       var storedAsset = genericStorage.findOne(resourceId);
       genericStorage.delete(resourceId, storedAsset.get("_rev").toString());
-    } catch (IOException e) {
+    } catch (IOException | StorageException e) {
       // Do nothing
     }
   }
@@ -134,6 +136,5 @@ public class GenericStorageDocumentResolver extends AbstractResolver<Map<String,
   protected ObjectMapper getObjectMapper() {
     return defaultMapper;
   }
-
 
 }

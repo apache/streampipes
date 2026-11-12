@@ -19,8 +19,8 @@ package org.apache.streampipes.storage.couchdb.impl.user;
 
 import org.apache.streampipes.model.client.user.RefreshToken;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
@@ -30,9 +30,9 @@ public class RefreshTokenStorageImpl extends DefaultViewCrudStorage<RefreshToken
   private static final String REFRESH_TOKEN_BY_HASH_VIEW = "users/refresh-token-by-hash";
   private static final String REFRESH_TOKEN_BY_PRINCIPAL_ID_VIEW = "users/refresh-token-by-user";
 
-  public RefreshTokenStorageImpl() {
+  public RefreshTokenStorageImpl(CouchDbStores stores) {
     super(
-        Utils::getCouchDbUserClient,
+        stores.principal(CouchDbStores.USER_DB_NAME),
         RefreshToken.class,
         REFRESH_TOKEN_BY_HASH_VIEW
     );
@@ -40,12 +40,9 @@ public class RefreshTokenStorageImpl extends DefaultViewCrudStorage<RefreshToken
 
   @Override
   public RefreshToken findByHashedToken(String hashedToken) {
-    return couchDbClientSupplier
-        .get()
-        .view(REFRESH_TOKEN_BY_HASH_VIEW)
+    return view(REFRESH_TOKEN_BY_HASH_VIEW, RefreshToken.class)
         .key(hashedToken)
-        .includeDocs(true)
-        .query(RefreshToken.class)
+        .docs()
         .stream()
         .findFirst()
         .orElse(null);
@@ -53,11 +50,8 @@ public class RefreshTokenStorageImpl extends DefaultViewCrudStorage<RefreshToken
 
   @Override
   public List<RefreshToken> findByPrincipalId(String principalId) {
-    return couchDbClientSupplier
-        .get()
-        .view(REFRESH_TOKEN_BY_PRINCIPAL_ID_VIEW)
+    return view(REFRESH_TOKEN_BY_PRINCIPAL_ID_VIEW, RefreshToken.class)
         .key(principalId)
-        .includeDocs(true)
-        .query(RefreshToken.class);
+        .docs();
   }
 }

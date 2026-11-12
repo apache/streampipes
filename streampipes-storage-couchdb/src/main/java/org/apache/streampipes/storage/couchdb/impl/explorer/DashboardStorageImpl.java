@@ -19,15 +19,15 @@ package org.apache.streampipes.storage.couchdb.impl.explorer;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class DashboardStorageImpl extends DefaultCrudStorage<DashboardModel>
     implements IDashboardStorage {
 
-  public DashboardStorageImpl() {
+  public DashboardStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("dataexplorerdashboard"),
+        stores.gson("dataexplorerdashboard"),
         DashboardModel.class
     );
   }

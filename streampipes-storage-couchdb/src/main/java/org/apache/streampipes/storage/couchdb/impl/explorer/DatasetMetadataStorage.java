@@ -20,42 +20,29 @@ package org.apache.streampipes.storage.couchdb.impl.explorer;
 
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStore;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 
-import org.lightcouch.CouchDbClient;
-
 import java.util.List;
-import java.util.function.Supplier;
 
 public class DatasetMetadataStorage extends DefaultCrudStorage<DatasetMetadata> implements IDatasetMetadataStorage {
 
   public static final String MEASUREMENT_BY_NAME_VIEW = "measurement/by-measure-name";
 
-  public DatasetMetadataStorage(Supplier<CouchDbClient> couchDbClientSupplier, Class<DatasetMetadata> clazz) {
-    super(couchDbClientSupplier, clazz);
+  public DatasetMetadataStorage(CouchDbStore store, Class<DatasetMetadata> clazz) {
+    super(store, clazz);
   }
 
   @Override
   public DatasetMetadata getByMeasureName(String measureName) {
-    List<DatasetMetadata> results = couchDbClientSupplier.get()
-        .view(MEASUREMENT_BY_NAME_VIEW)
+    return view(MEASUREMENT_BY_NAME_VIEW, clazz)
         .key(measureName)
-        .includeDocs(true)
-        .limit(1)
-        .query(DatasetMetadata.class);
-
-    if (!results.isEmpty()) {
-      return results.get(0);
-    } else {
-      return null;
-    }
+        .first()
+        .orElse(null);
   }
 
   @Override
   public List<DatasetMetadata> findAll() {
-    return couchDbClientSupplier.get()
-        .view(MEASUREMENT_BY_NAME_VIEW)
-        .includeDocs(true)
-        .query(DatasetMetadata.class);
+    return findAll(MEASUREMENT_BY_NAME_VIEW, clazz);
   }
 }

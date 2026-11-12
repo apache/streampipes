@@ -18,23 +18,32 @@
 
 package org.apache.streampipes.storage.couchdb.impl.system;
 
+import org.apache.streampipes.couchdb.client.Attachments;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.system.IImageStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
-import org.lightcouch.CouchDbClient;
-
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class ImageStorageImpl implements IImageStorage {
 
-  private final CouchDbClient couchDbClient;
+  private static final String DB_NAME = "images";
 
-  public ImageStorageImpl() {
-    this.couchDbClient = Utils.getCouchDbImageClient();
+  private final Attachments attachments;
+
+  public ImageStorageImpl(CouchDbStores stores) {
+    this.attachments = stores.database(DB_NAME).attachments();
   }
 
+  /**
+   * Reads the image completely, so that the connection goes back to the pool even if the caller never closes the
+   * stream.
+   */
   @Override
   public InputStream getImageBytes(String documentId) {
-    return couchDbClient.find(documentId + "/" + documentId);
+    return attachments.get(documentId, documentId)
+        .map(attachment -> new ByteArrayInputStream(attachment.data()))
+        .orElseThrow(() -> new StorageException("No image with id " + documentId));
   }
 }

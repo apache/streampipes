@@ -65,7 +65,6 @@
         <hadoop.version>3.4.3</hadoop.version>
         <hadoop-mapreduce-client-core.version>3.4.3</hadoop-mapreduce-client-core.version>
         <jjwt.version>0.11.2</jjwt.version>
-        <lightcouch.version>0.2.0</lightcouch.version>
         <!-- converges kafka-clients (Spring Boot BOM, 1.11.2) with iotdb-session and tsfile (1.10.1); revisit when IoTDB or TsFile is bumped -->
         <lz4-java.version>1.11.4</lz4-java.version>
         <eclipse.milo.version>1.1.1</eclipse.milo.version>
@@ -84,8 +83,6 @@
         <protobuf.version>4.28.2</protobuf.version>
         <qdrant-java-client.version>1.14.0</qdrant-java-client.version>
         <plc4x.version>0.13.1</plc4x.version>
-
-        <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
 
         <rocketmq.version>5.2.0</rocketmq.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
@@ -774,11 +771,6 @@
                 <version>${jetbrains.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.lightcouch</groupId>
-                <artifactId>lightcouch</artifactId>
-                <version>${lightcouch.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.locationtech.jts</groupId>
                 <artifactId>jts-core</artifactId>
                 <version>${jts-core.version}</version>
@@ -903,6 +895,8 @@
         <module>streampipes-commons</module>
         <module>streampipes-connect-management</module>
         <module>streampipes-connect-shared</module>
+        <module>streampipes-couchdb-client</module>
+        <module>streampipes-couchdb-client-httpclient5</module>
         <module>streampipes-extensions-api</module>
         <module>streampipes-extensions-management</module>
         <module>streampipes-data-explorer</module>
