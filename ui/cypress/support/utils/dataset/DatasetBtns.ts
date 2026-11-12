@@ -172,4 +172,20 @@ export class DatasetBtns {
     public static confirmDataLakeDeleteBtn() {
         return cy.dataCy('confirm-delete-data-btn', { timeout: 10000 });
     }
+
+    public static datasetRowCheckbox(name: string) {
+        return this.datasetRow(name).find('[data-cy="sp-table-row-checkbox"]');
+    }
+
+    public static multiActionSelect() {
+        return cy.dataCy('sp-table-multi-action-select');
+    }
+
+    public static multiActionOptionDownload() {
+        return cy.dataCy('sp-table-multi-action-option-download');
+    }
+
+    public static multiActionExecute() {
+        return cy.dataCy('sp-table-multi-action-execute');
+    }
 }

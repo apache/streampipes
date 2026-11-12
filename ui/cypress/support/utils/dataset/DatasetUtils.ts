@@ -321,4 +321,16 @@ export class DatasetUtils {
             timeout: 10000,
         }).should('not.exist');
     }
+
+    public static openDownloadDialogForSelectedDatasets(
+        datasetNames: string[],
+    ) {
+        this.goToDatasets();
+        datasetNames.forEach(name => {
+            DatasetBtns.datasetRowCheckbox(name).click();
+        });
+        DatasetBtns.multiActionSelect().click();
+        DatasetBtns.multiActionOptionDownload().click();
+        DatasetBtns.multiActionExecute().should('not.be.disabled').click();
+    }
 }

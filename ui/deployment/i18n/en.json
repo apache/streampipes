@@ -265,6 +265,7 @@
   "Copyright notice": null,
   "Could not change email address.": null,
   "Could not change the password.": null,
+  "Could not download: {{names}}": null,
   "Could not load running instances": null,
   "Could not send email": null,
   "Could not send test email.": null,
@@ -415,10 +416,15 @@
   "Download File": null,
   "Download Format": null,
   "Download audit log": null,
+  "Download cancelled after {{completed}} of {{total}} files": null,
   "Download data": null,
   "Download export": null,
+  "Download failed": null,
+  "Download selected": null,
   "Download successful": null,
+  "Downloading dataset {{current}} of {{total}}: {{name}}": null,
   "Dropped events": "Dropped events",
+  "Each dataset is downloaded as a separate file using the same export settings.": null,
   "Edge": null,
   "Edit": null,
   "Edit Chart": null,
@@ -1498,5 +1504,6 @@
   "visible to registered users": null,
   "waiting": null,
   "{{ widgetTitle }} Clone": "{{ widgetTitle }} Clone",
-  "{{action}} {{ current }} of {{ total }} ({{ name }})...{{ status }}": "{{action}} {{ current }} of {{ total }} ({{name}})...{{ status }}"
+  "{{action}} {{ current }} of {{ total }} ({{ name }})...{{ status }}": "{{action}} {{ current }} of {{ total }} ({{name}})...{{ status }}",
+  "{{completed}} of {{total}} datasets downloaded": null
 }

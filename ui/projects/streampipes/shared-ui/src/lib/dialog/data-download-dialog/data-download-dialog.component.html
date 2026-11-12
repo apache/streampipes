@@ -21,6 +21,32 @@
         <div fxFlex="100">
             <mat-horizontal-stepper #downloadDialogStepper>
                 <mat-step>
+                    @if (multipleMeasurements) {
+                        <sp-split-section
+                            class="mt-10"
+                            [level]="3"
+                            [title]="'Datasets' | translate"
+                            [subtitle]="
+                                'Each dataset is downloaded as a separate file using the same export settings.'
+                                    | translate
+                            "
+                        >
+                            <div
+                                fxLayout="row wrap"
+                                fxLayoutGap="0.5rem grid"
+                                data-cy="download-selected-datasets"
+                            >
+                                @for (name of measurementNames; track name) {
+                                    <div>
+                                        <sp-label
+                                            tone="neutral"
+                                            [labelText]="name"
+                                        ></sp-label>
+                                    </div>
+                                }
+                            </div>
+                        </sp-split-section>
+                    }
                     <sp-select-data
                         [dataExplorerDataConfig]="
                             dataDownloadDialogModel.dataExplorerDataConfig
