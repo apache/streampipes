@@ -24,9 +24,8 @@ import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,18 +44,21 @@ public class RemoveInternalNotificationSinkMigration implements Migration {
   static final String PIPELINE_WARNING =
       "Internal notification sink was removed during migration. Review and update this pipeline before using it again.";
 
+  private final LegacyDatabase notificationDatabase;
   private final IPipelineStorage pipelineStorage;
   private final IDataSinkStorage dataSinkStorage;
 
-  public RemoveInternalNotificationSinkMigration(IPipelineStorage pipelineStorage,
+  public RemoveInternalNotificationSinkMigration(CouchDbStores stores,
+                                                 IPipelineStorage pipelineStorage,
                                                  IDataSinkStorage dataSinkStorage) {
+    this.notificationDatabase = new LegacyDatabase(stores.server().database(NOTIFICATION_DB_NAME));
     this.pipelineStorage = pipelineStorage;
     this.dataSinkStorage = dataSinkStorage;
   }
 
   @Override
   public boolean shouldExecute() {
-    return databaseExists()
+    return notificationDatabase.exists()
         || containsDeprecatedSinkInPipelines()
         || !dataSinkStorage.getDataSinksByAppId(INTERNAL_NOTIFICATION_SINK_APP_ID).isEmpty();
   }
@@ -65,7 +67,7 @@ public class RemoveInternalNotificationSinkMigration implements Migration {
   public void executeMigration() throws IOException {
     migratePipelines();
     removeSinkDescriptions();
-    removeDatabase();
+    notificationDatabase.remove();
   }
 
   @Override
@@ -118,32 +120,5 @@ public class RemoveInternalNotificationSinkMigration implements Migration {
   private void removeSinkDescriptions() {
     dataSinkStorage.getDataSinksByAppId(INTERNAL_NOTIFICATION_SINK_APP_ID)
         .forEach(dataSinkStorage::deleteElement);
-  }
-
-  protected boolean databaseExists() {
-    try {
-      var response = Utils.getRequest(Utils.getDatabaseRoute(NOTIFICATION_DB_NAME))
-          .execute()
-          .returnResponse();
-      int statusCode = response.getStatusLine().getStatusCode();
-      return statusCode == HttpStatus.SC_OK;
-    } catch (IOException e) {
-      LOG.warn("Could not determine whether notification database exists", e);
-      return false;
-    }
-  }
-
-  protected void removeDatabase() throws IOException {
-    var response = Utils.deleteRequest(Utils.getDatabaseRoute(NOTIFICATION_DB_NAME))
-        .execute()
-        .returnResponse();
-    int statusCode = response.getStatusLine().getStatusCode();
-
-    if (statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_ACCEPTED
-        || statusCode == HttpStatus.SC_NOT_FOUND) {
-      LOG.info("Notification database removal finished with status {}", statusCode);
-    } else {
-      throw new IOException("Unexpected response while deleting notification database: " + statusCode);
-    }
   }
 }

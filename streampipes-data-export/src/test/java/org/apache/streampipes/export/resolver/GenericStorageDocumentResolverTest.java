@@ -20,11 +20,11 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.storage.api.exceptions.StorageUnavailableException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +65,7 @@ class GenericStorageDocumentResolverTest {
   @Test
   void doesNotImportWhenExistingTypesCannotBeChecked() throws Exception {
     var storage = mock(IGenericStorage.class);
-    when(storage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)).thenThrow(new IOException("synthetic lookup failure"));
+    when(storage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)).thenThrow(new StorageUnavailableException("synthetic lookup failure"));
 
     assertThrows(IllegalStateException.class,
         () -> new GenericStorageDocumentResolver(storage).writeDocument(EXPORTED_LINK_TYPE,

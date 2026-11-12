@@ -19,14 +19,14 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
 import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class PipelineCanvasMetadataStorageImpl extends AbstractDao<PipelineCanvasMetadata>
     implements IPipelineCanvasMetadataStorage {
 
-  public PipelineCanvasMetadataStorageImpl() {
-    super(Utils::getCouchDbPipelineCanvasMetadataClient, PipelineCanvasMetadata.class);
+  public PipelineCanvasMetadataStorageImpl(CouchDbStores stores) {
+    super(stores.gson("pipelinecanvasmetadata"), PipelineCanvasMetadata.class);
   }
 
   @Override

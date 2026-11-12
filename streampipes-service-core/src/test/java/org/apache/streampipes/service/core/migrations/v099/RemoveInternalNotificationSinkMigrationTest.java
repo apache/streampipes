@@ -22,6 +22,7 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
+import org.apache.streampipes.service.core.migrations.InMemoryCouchTransport;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
@@ -33,6 +34,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -41,34 +43,24 @@ import static org.mockito.Mockito.when;
 
 class RemoveInternalNotificationSinkMigrationTest {
 
+  private static final String NOTIFICATION_DB = RemoveInternalNotificationSinkMigration.NOTIFICATION_DB_NAME;
+
   private IPipelineStorage pipelineStorage;
   private IDataSinkStorage dataSinkStorage;
+  private InMemoryCouchTransport couch;
   private RemoveInternalNotificationSinkMigration migration;
-  private boolean databaseExists;
-  private boolean databaseRemoved;
 
   @BeforeEach
   void setUp() {
     this.pipelineStorage = mock(IPipelineStorage.class);
     this.dataSinkStorage = mock(IDataSinkStorage.class);
-    this.databaseExists = false;
-    this.databaseRemoved = false;
-    this.migration = new RemoveInternalNotificationSinkMigration(pipelineStorage, dataSinkStorage) {
-      @Override
-      protected boolean databaseExists() {
-        return RemoveInternalNotificationSinkMigrationTest.this.databaseExists;
-      }
-
-      @Override
-      protected void removeDatabase() {
-        RemoveInternalNotificationSinkMigrationTest.this.databaseRemoved = true;
-      }
-    };
+    this.couch = new InMemoryCouchTransport();
+    this.migration = new RemoveInternalNotificationSinkMigration(couch.stores(), pipelineStorage, dataSinkStorage);
   }
 
   @Test
   void shouldExecuteReturnsTrueWhenNotificationDatabaseExists() {
-    this.databaseExists = true;
+    couch.createDatabase(NOTIFICATION_DB);
     when(pipelineStorage.findAll()).thenReturn(List.of());
     when(dataSinkStorage.getDataSinksByAppId(RemoveInternalNotificationSinkMigration.INTERNAL_NOTIFICATION_SINK_APP_ID))
         .thenReturn(List.of());
@@ -77,7 +69,50 @@ class RemoveInternalNotificationSinkMigrationTest {
   }
 
   @Test
+  void shouldExecuteDoesNotCreateTheNotificationDatabase() {
+    when(pipelineStorage.findAll()).thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(RemoveInternalNotificationSinkMigration.INTERNAL_NOTIFICATION_SINK_APP_ID))
+        .thenReturn(List.of());
+
+    assertFalse(migration.shouldExecute());
+    assertFalse(couch.hasDatabase(NOTIFICATION_DB));
+  }
+
+  @Test
+  void databaseCheckFailureCountsAsNotExisting() {
+    couch.createDatabase(NOTIFICATION_DB);
+    couch.fail("HEAD /notification", 503);
+    when(pipelineStorage.findAll()).thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(RemoveInternalNotificationSinkMigration.INTERNAL_NOTIFICATION_SINK_APP_ID))
+        .thenReturn(List.of());
+
+    assertFalse(migration.shouldExecute());
+  }
+
+  @Test
+  void missingNotificationDatabaseIsNotAnError() throws IOException {
+    when(pipelineStorage.findAll()).thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(RemoveInternalNotificationSinkMigration.INTERNAL_NOTIFICATION_SINK_APP_ID))
+        .thenReturn(List.of());
+
+    migration.executeMigration();
+  }
+
+  @Test
+  void failedDatabaseRemovalIsReported() {
+    couch.createDatabase(NOTIFICATION_DB);
+    couch.fail("DELETE /notification", 500);
+    when(pipelineStorage.findAll()).thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(RemoveInternalNotificationSinkMigration.INTERNAL_NOTIFICATION_SINK_APP_ID))
+        .thenReturn(List.of());
+
+    assertThrows(IOException.class, migration::executeMigration);
+    assertTrue(couch.hasDatabase(NOTIFICATION_DB));
+  }
+
+  @Test
   void executeMigrationRemovesDeprecatedSinkAndMarksPipeline() throws IOException {
+    couch.createDatabase(NOTIFICATION_DB);
     var deprecatedSink = new DataSinkInvocation();
     deprecatedSink.setAppId(RemoveInternalNotificationSinkMigration.INTERNAL_NOTIFICATION_SINK_APP_ID);
 
@@ -117,6 +152,6 @@ class RemoveInternalNotificationSinkMigrationTest {
     verify(pipelineStorage).updateElement(affectedPipeline);
     verify(pipelineStorage, never()).updateElement(unaffectedPipeline);
     verify(dataSinkStorage).deleteElement(sinkDescription);
-    assertTrue(databaseRemoved);
+    assertFalse(couch.hasDatabase(NOTIFICATION_DB));
   }
 }

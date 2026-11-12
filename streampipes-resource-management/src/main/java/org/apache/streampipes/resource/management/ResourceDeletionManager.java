@@ -18,12 +18,12 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 
 /** Coordinates document deletion and asset-link cleanup for linkable resources. */
 public class ResourceDeletionManager {
@@ -47,7 +47,7 @@ public class ResourceDeletionManager {
   public void removeAssetLinks(String resourceId) {
     try {
       genericStorage.deleteAssetLinkToResource(resourceId);
-    } catch (IOException e) {
+    } catch (StorageException e) {
       LOG.error("Asset links for {} could not be deleted", resourceId, e);
     }
   }

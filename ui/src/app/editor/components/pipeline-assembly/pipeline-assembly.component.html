@@ -105,7 +105,7 @@
             [pipelineCanvasMetadata]="pipelineCanvasMetadata"
             [allElements]="allElements"
             [jsplumbBridge]="jsplumbBridge"
-            [previewModeActive]="previewModeActive"
+            [previewState]="previewState"
             (clearAssemblyEmitter)="clearAssembly()"
             (togglePreviewEmitter)="togglePreview()"
             (displayPipelineTemplateEmitter)="displayPipelineTemplate($event)"
@@ -137,6 +137,7 @@
                             pipelineCanvasMetadataAvailable
                         "
                         [jsplumbBridge]="jsplumbBridge"
+                        (previewStateChange)="previewState = $event"
                     >
                     </sp-pipeline-assembly-drawing-area>
                 }

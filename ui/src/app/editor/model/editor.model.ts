@@ -22,6 +22,12 @@ import {
     SpDataStream,
 } from '@streampipes/platform-services';
 
+/**
+ * Lifecycle of the live data preview in the pipeline editor.
+ * `starting` covers the time the backend needs to start the temporary pipeline elements.
+ */
+export type LivePreviewState = 'off' | 'starting' | 'active';
+
 export interface PipelineStorageOptions {
     startPipelineAfterStorage: boolean;
     navigateToPipelineOverview: boolean;

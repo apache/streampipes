@@ -18,20 +18,42 @@
 
 package org.apache.streampipes.connect.management.compact;
 
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.compact.CompactEventProperty;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.units.UnitConverter;
+import org.apache.streampipes.units.catalog.UnitCatalog;
+import org.apache.streampipes.units.model.MeasurementUnit;
 
-import java.net.URI;
 import java.util.Map;
 
 public class SchemaMetadataEnricher {
 
+  private final UnitCatalog unitCatalog;
+
+  public SchemaMetadataEnricher() {
+    this(UnitCatalog.builtIn());
+  }
+
+  public SchemaMetadataEnricher(UnitCatalog unitCatalog) {
+    this.unitCatalog = unitCatalog;
+  }
+
+  /**
+   * Applies the metadata of a compact adapter definition to an event property.
+   *
+   * <p>Measurement units may be given by any identifier the unit catalog knows (e.g.
+   * {@code DEG_C}); they are stored with their canonical identifier.</p>
+   *
+   * @throws AdapterException if a measurement unit is unknown or the two units of a unit
+   *                          conversion measure different quantities
+   */
   public void enrich(
       EventProperty property,
       CompactEventProperty propertyDef
-  ) {
+  ) throws AdapterException {
     if (propertyDef.propertyScope() != null) {
       property.setPropertyScope(convertScope(propertyDef.propertyScope()).name());
     }
@@ -51,19 +73,30 @@ public class SchemaMetadataEnricher {
         && propertyDef.additionalMetadata()
                       .get(
                           "toMeasurementUnit") != null) {
-      String toUnit = propertyDef.additionalMetadata()
-                                 .get("toMeasurementUnit")
-                                 .toString();
-      String fromUnit = propertyDef.additionalMetadata()
-                                   .get("fromMeasurementUnit")
-                                   .toString();
-      ((EventPropertyPrimitive) property).setMeasurementUnit(URI.create(toUnit));
+      var fromUnit = resolveUnit(propertyDef.additionalMetadata().get("fromMeasurementUnit"), property);
+      var toUnit = resolveUnit(propertyDef.additionalMetadata().get("toMeasurementUnit"), property);
+      if (!UnitConverter.isConvertible(fromUnit, toUnit)) {
+        throw new AdapterException(
+            "Cannot convert property '%s' from %s to %s: the units measure different quantities".formatted(
+                property.getRuntimeName(), fromUnit.label(), toUnit.label()));
+      }
+      ((EventPropertyPrimitive) property).setMeasurementUnit(toUnit.resource());
 
       property.setAdditionalMetadata(Map.of(
-          "fromMeasurementUnit", fromUnit,
-          "toMeasurementUnit", toUnit
+          "fromMeasurementUnit", fromUnit.resource().toString(),
+          "toMeasurementUnit", toUnit.resource().toString()
       ));
     }
+  }
+
+  private MeasurementUnit resolveUnit(Object unitId, EventProperty property) throws AdapterException {
+    var id = unitId == null ? null : unitId.toString();
+    var unit = unitCatalog.find(id);
+    if (unit.isEmpty()) {
+      throw new AdapterException(
+          "Unknown measurement unit '%s' for property '%s'".formatted(id, property.getRuntimeName()));
+    }
+    return unit.get();
   }
 
   private PropertyScope convertScope(String scope) {

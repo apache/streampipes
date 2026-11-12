@@ -19,8 +19,8 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElementTemplate>
     implements IPipelineElementTemplateStorage {
 
-  public PipelineElementTemplateStorageImpl() {
-    super(Utils::getCouchDbPipelineElementTemplateClient, PipelineElementTemplate.class);
+  public PipelineElementTemplateStorageImpl(CouchDbStores stores) {
+    super(stores.gson("pipelineelementtemplate-v2"), PipelineElementTemplate.class);
   }
 
   @Override

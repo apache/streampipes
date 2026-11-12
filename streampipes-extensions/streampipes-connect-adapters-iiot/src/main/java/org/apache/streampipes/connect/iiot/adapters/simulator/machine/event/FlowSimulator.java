@@ -25,9 +25,9 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.units.StandardUnits;
 import org.apache.streampipes.vocabulary.SO;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,7 +103,7 @@ public class FlowSimulator implements EventSimulator {
             .description("Denotes the current temperature in degrees celsius")
             .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://qudt.org/vocab/unit#DegreeCelsius"))
+            .measurementUnit(StandardUnits.DEGREE_CELSIUS)
             .valueSpecification(0.0f, 100.0f, 0.1f)
             .build())
         .sample(TEMPERATURE, 33.221f)
