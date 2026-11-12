@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JexlEvaluatorTest {
@@ -95,32 +94,17 @@ public class JexlEvaluatorTest {
     assertThrows(JexlException.class, () -> new JexlEvaluator(number("result1", script), engine));
   }
 
-  /**
-   * Reflection through java.lang.Class is denied by the permissions; JEXL resolves the call to null
-   * instead of throwing, so no Class, ClassLoader or Runtime instance leaks into the event.
-   */
   @ParameterizedTest
   @ValueSource(strings = {
       "Math.forName('java.lang.Runtime')",
       "Math.forName('java.lang.Runtime').getRuntime()",
       "Math.getClassLoader()",
-      "''.getClass().forName('java.lang.Runtime')"
-  })
-  void deniesReflectionThroughClass(String script) {
-    var evaluator = new JexlEvaluator(number("result1", script), engine);
-    var event = makeBaseEvent();
-
-    evaluator.evaluate(makeContext(), event);
-
-    assertNull(event.getRaw().get("result1"));
-  }
-
-  @ParameterizedTest
-  @ValueSource(strings = {
+      "''.getClass().forName('java.lang.Runtime')",
       "new('java.lang.ProcessBuilder', 'id')",
-      "new('java.io.File', '/tmp/x').delete()"
+      "new('java.io.File', '/tmp/x').delete()",
+      "Math.foo(a)"
   })
-  void rejectsInstantiationOutsideMath(String script) {
+  void rejectsAccessOutsideMath(String script) {
     var evaluator = new JexlEvaluator(number("result1", script), engine);
     var event = makeBaseEvent();
 

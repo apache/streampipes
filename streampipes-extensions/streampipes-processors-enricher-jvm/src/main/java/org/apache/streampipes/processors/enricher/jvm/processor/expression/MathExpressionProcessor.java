@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
@@ -42,6 +43,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import org.apache.commons.jexl3.JexlEngine;
 import org.apache.commons.jexl3.JexlException;
 
 import java.util.List;
@@ -95,9 +97,19 @@ public class MathExpressionProcessor implements
     var extractor = new MathExpressionFieldExtractor(params.getModel());
     var engine = new JexlEngineProvider().getEngine();
     var scripts = extractor.getAdditionalFields();
-    jexlEvaluators = scripts.stream().map(script -> new JexlEvaluator(script, engine)).toList();
+    jexlEvaluators = scripts.stream().map(script -> makeEvaluator(script, engine)).toList();
     jexlContextGenerator = new JexlContextGenerator(extractor);
     context = runtimeContext;
+  }
+
+  private JexlEvaluator makeEvaluator(JexlDescription description,
+                                      JexlEngine engine) {
+    try {
+      return new JexlEvaluator(description, engine);
+    } catch (JexlException e) {
+      throw new SpRuntimeException(
+          "Invalid expression for field '%s': %s".formatted(description.getFieldName(), e.getMessage()), e);
+    }
   }
 
   @Override
@@ -107,7 +119,8 @@ public class MathExpressionProcessor implements
       try {
         evaluator.evaluate(ctx, event);
       } catch (JexlException e) {
-        context.getLogger().error(e);
+        context.getLogger().error(
+            "Could not evaluate the expression for field '%s'".formatted(evaluator.getFieldName()), e);
       }
     });
     collector.collect(event);
