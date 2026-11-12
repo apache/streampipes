@@ -16,40 +16,50 @@
 ~
 -->
 
-<div class="pipeline-validation-hint">
-    @if (!readonly) {
-        <sp-error-hint
-            [displayMessages]="!isPipelineAssemblyEmpty()"
-            [errorMessages]="pipelineValidationService.errorMessages"
-            [validationString]="'Pipeline'"
-        >
-        </sp-error-hint>
-    }
-</div>
+<div class="drawing-area__canvas">
+    <div class="pipeline-validation-hint">
+        @if (!readonly) {
+            <sp-error-hint
+                [displayMessages]="!isPipelineAssemblyEmpty()"
+                [errorMessages]="pipelineValidationService.errorMessages"
+                [validationString]="'Pipeline'"
+            >
+            </sp-error-hint>
+        }
+    </div>
 
-<sp-pipeline-assembly-drawing-area-pan-zoom
-    #zoomComponent
-    [pipelineCanvas]="pipelineCanvas"
-    [jsplumbBridge]="jsplumbBridge"
->
-</sp-pipeline-assembly-drawing-area-pan-zoom>
-
-<div class="pipeline-canvas-outer" #outerCanvas>
-    <sp-pipeline
-        class="canvas jtk-surface"
-        id="assembly"
-        #pipelineComponent
-        [pipelineValid]="pipelineValid"
-        [rawPipelineModel]="rawPipelineModel"
-        [allElements]="allElements"
-        [readonly]="readonly"
-        [metricsInfo]="metricsInfo"
-        [previewModeActive]="previewModeActive"
-        [pipelinePreview]="pipelinePreview"
-        (triggerPipelineCacheUpdateEmitter)="
-            triggerPipelineCacheUpdateEmitter.emit()
-        "
-        style="position: absolute"
+    <sp-pipeline-assembly-drawing-area-pan-zoom
+        #zoomComponent
+        [pipelineCanvas]="pipelineCanvas"
+        [jsplumbBridge]="jsplumbBridge"
     >
-    </sp-pipeline>
+    </sp-pipeline-assembly-drawing-area-pan-zoom>
+
+    <div class="pipeline-canvas-outer" #outerCanvas>
+        <sp-pipeline
+            class="canvas jtk-surface"
+            id="assembly"
+            #pipelineComponent
+            [pipelineValid]="pipelineValid"
+            [rawPipelineModel]="rawPipelineModel"
+            [allElements]="allElements"
+            [readonly]="readonly"
+            [metricsInfo]="metricsInfo"
+            (previewInvalidatedEmitter)="restartPreviewIfActive()"
+            (triggerPipelineCacheUpdateEmitter)="
+                triggerPipelineCacheUpdateEmitter.emit()
+            "
+            style="position: absolute"
+        >
+        </sp-pipeline>
+    </div>
+    <!-- overlays positioned against the canvas, e.g. the side panel of the pipeline details view -->
+    <ng-content></ng-content>
 </div>
+
+@if (previewState !== 'off') {
+    <sp-live-preview-panel
+        [starting]="previewState === 'starting'"
+        (closePanel)="closeLivePreview()"
+    ></sp-live-preview-panel>
+}

@@ -32,6 +32,7 @@ import { PipelineEditorService } from '../../services/pipeline-editor.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import {
     InvocablePipelineElementUnion,
+    LivePreviewState,
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../model/editor.model';
@@ -143,7 +144,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         { label: 'Store', action: 'store', icon: 'save' },
     ];
 
-    previewModeActive = false;
+    previewState: LivePreviewState = 'off';
     readonly: boolean;
     private pendingManagePipelineResult?: ObjectManageDialogResult<Pipeline>;
 
@@ -178,6 +179,8 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
      * clears the Assembly of all elements
      */
     clearAssembly() {
+        // the preview would keep running for elements no longer on the canvas
+        this.drawingAreaComponent?.closeLivePreview();
         this.editorService.makePipelineAssemblyEmpty(true);
         this.rawPipelineModel = [];
         this.jsplumbBridge.deleteEveryEndpoint();
@@ -483,7 +486,6 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     }
 
     togglePreview(): void {
-        this.previewModeActive = !this.previewModeActive;
         this.drawingAreaComponent.togglePipelineElementLivePreview();
     }
 

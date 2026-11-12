@@ -57,26 +57,51 @@
         fxLayout="row"
         fxLayoutAlign="end center"
     >
-        <button
-            mat-flat-button
-            class="mat-basic"
-            [matTooltip]="'Data Preview' | translate"
-            matTooltipPosition="above"
-            [attr.aria-pressed]="previewModeActive"
-            (click)="togglePreviewEmitter.emit()"
-            [disabled]="isPipelineAssemblyEmpty()"
-        >
-            <div fxLayoutAlign="start center" fxLayout="row">
-                <i class="material-icons">visibility</i>
-                @if (!previewModeActive) {
-                    <span>&nbsp;{{ 'Enable live preview' | translate }}</span>
-                }
-                @if (previewModeActive) {
-                    <span>&nbsp;{{ 'Disable live preview' | translate }}</span>
-                }
-            </div>
-        </button>
-        <span class="assembly-options-divider"></span>
+        @if (canPreview) {
+            <button
+                mat-flat-button
+                class="mat-basic"
+                [matTooltip]="'Data Preview' | translate"
+                matTooltipPosition="above"
+                [attr.aria-pressed]="previewState === 'active'"
+                [attr.aria-busy]="previewState === 'starting'"
+                (click)="togglePreviewEmitter.emit()"
+                [disabled]="
+                    isPipelineAssemblyEmpty() || previewState === 'starting'
+                "
+                data-cy="sp-editor-toggle-live-preview"
+            >
+                <div fxLayoutAlign="start center" fxLayout="row">
+                    @switch (previewState) {
+                        @case ('starting') {
+                            <sp-spinner [diameter]="16"></sp-spinner>
+                            <span
+                                >&nbsp;{{
+                                    'Starting live preview' | translate
+                                }}...</span
+                            >
+                        }
+                        @case ('active') {
+                            <i class="material-icons">visibility</i>
+                            <span
+                                >&nbsp;{{
+                                    'Disable live preview' | translate
+                                }}</span
+                            >
+                        }
+                        @default {
+                            <i class="material-icons">visibility</i>
+                            <span
+                                >&nbsp;{{
+                                    'Enable live preview' | translate
+                                }}</span
+                            >
+                        }
+                    }
+                </div>
+            </button>
+            <span class="assembly-options-divider"></span>
+        }
         <button
             mat-icon-button
             [attr.aria-label]="'Auto Layout' | translate"

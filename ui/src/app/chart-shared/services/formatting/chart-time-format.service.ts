@@ -21,9 +21,13 @@ import { TranslateService } from '@ngx-translate/core';
 
 export type TimestampInput = number | string | Date | null | undefined;
 
-/** How much detail a timestamp needs, derived from the visible time span. */
+/**
+ * How much detail a timestamp needs, derived from the visible time span.
+ * 'full' (date and time down to milliseconds) is never derived from a span;
+ * callers that show individual data points, such as table cells, request it.
+ */
 export type TimeResolution =
-    'milliseconds' | 'seconds' | 'minutes' | 'date-time' | 'date';
+    'full' | 'milliseconds' | 'seconds' | 'minutes' | 'date-time' | 'date';
 
 const ONE_SECOND = 1000;
 const ONE_MINUTE = 60 * ONE_SECOND;
@@ -145,6 +149,13 @@ export class ChartTimeFormatService {
             day: '2-digit',
         };
         switch (resolution) {
+            case 'full':
+                return {
+                    ...date,
+                    ...time,
+                    second: '2-digit',
+                    fractionalSecondDigits: 3,
+                };
             case 'milliseconds':
                 return {
                     ...time,

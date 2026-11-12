@@ -43,6 +43,13 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { FieldSelectionComponent } from '../field-selection/field-selection.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import {
+    MatFormField,
+    MatPrefix,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'sp-field-selection-panel',
@@ -60,6 +67,11 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutDirective,
         FieldSelectionComponent,
         TranslatePipe,
+        FormsModule,
+        MatFormField,
+        MatPrefix,
+        MatSuffix,
+        MatInput,
     ],
 })
 export class FieldSelectionPanelComponent implements OnInit {
@@ -74,6 +86,14 @@ export class FieldSelectionPanelComponent implements OnInit {
     initialFieldSelectionEvent: EventEmitter<void> = new EventEmitter();
 
     expandFields = false;
+    fieldSearch = '';
+
+    get filteredFields(): FieldConfig[] {
+        const search = this.fieldSearch.trim().toLocaleLowerCase();
+        return this.sourceConfig.queryConfig.fields.filter(field =>
+            field.runtimeName.toLocaleLowerCase().includes(search),
+        );
+    }
 
     ngOnInit() {
         this.applyDefaultFields();
@@ -81,6 +101,7 @@ export class FieldSelectionPanelComponent implements OnInit {
     }
 
     applyDefaultFields() {
+        this.fieldSearch = '';
         if (this.sourceConfig.queryConfig.fields.length === 0) {
             this.addAllFields();
             this.selectInitialFields();
@@ -126,9 +147,7 @@ export class FieldSelectionPanelComponent implements OnInit {
     }
 
     selectFields(selected: boolean) {
-        this.sourceConfig.queryConfig.fields.forEach(
-            field => (field.selected = selected),
-        );
+        this.filteredFields.forEach(field => (field.selected = selected));
         this.widgetConfigService.notify({
             refreshData: true,
             refreshView: true,

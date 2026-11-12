@@ -16,20 +16,24 @@
  *
  */
 
-package org.apache.streampipes.units.test;
+package org.apache.streampipes.units;
 
-import org.apache.streampipes.units.UnitProvider;
+/**
+ * Thrown when a unit identifier is not part of the unit catalog.
+ *
+ * <p>Extends {@link IllegalStateException} because that is what unit lookups threw before, so
+ * existing handlers keep working.</p>
+ */
+public class UnknownMeasurementUnitException extends IllegalStateException {
 
-import org.junit.jupiter.api.Test;
+  private final String unitId;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+  public UnknownMeasurementUnitException(String unitId) {
+    super("Unknown measurement unit: " + unitId);
+    this.unitId = unitId;
+  }
 
-public class TestUnitProvider {
-
-  @Test
-  public void testUnitProvider() {
-    var unit = UnitProvider.INSTANCE.getUnit("http://qudt.org/vocab/unit#KilometerPerHour");
-    assertEquals("Kilometer per Hour", unit.getLabel());
-    assertEquals("km/hr", unit.getAbbreviation());
+  public String getUnitId() {
+    return unitId;
   }
 }

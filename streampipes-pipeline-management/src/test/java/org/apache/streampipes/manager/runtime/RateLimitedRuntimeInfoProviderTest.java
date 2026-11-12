@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Flushable;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,6 +33,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 class RateLimitedRuntimeInfoProviderTest {
@@ -107,5 +109,49 @@ class RateLimitedRuntimeInfoProviderTest {
     } finally {
       Thread.interrupted();
     }
+  }
+
+  @Test
+  void stopsStreamingOnceThePreviewIsNoLongerActive() {
+    when(fetcher.getLatestEvents()).thenReturn(Map.of("adapter", Map.of("value", 42)));
+    var activeChecks = new AtomicInteger();
+    var expiry = mock(Runnable.class);
+    var stoppingProvider = new RateLimitedRuntimeInfoProvider(
+        fetcher, cleanup, expiry, () -> activeChecks.incrementAndGet() <= 1, 3, 0);
+
+    stoppingProvider.streamOutput(new ByteArrayOutputStream());
+
+    verify(fetcher, times(1)).getLatestEvents();
+    verify(fetcher).close();
+    verify(cleanup).onClientDisconnect();
+    verifyNoInteractions(expiry);
+  }
+
+  @Test
+  void reachingTheMaximumDurationCallsTheExpiryCallbackInsteadOfCleanup() {
+    when(fetcher.getLatestEvents()).thenReturn(Map.of());
+    var expiry = mock(Runnable.class);
+    var expiringProvider = new RateLimitedRuntimeInfoProvider(fetcher, cleanup, expiry, () -> true, 3, 0);
+
+    expiringProvider.streamOutput(new ByteArrayOutputStream());
+
+    verify(fetcher, times(3)).getLatestEvents();
+    verify(fetcher).close();
+    verify(expiry).run();
+    verifyNoInteractions(cleanup);
+  }
+
+  @Test
+  void disconnectDoesNotCallTheExpiryCallback() throws Exception {
+    when(fetcher.getLatestEvents()).thenReturn(Map.of("adapter", Map.of("value", 42)));
+    var expiry = mock(Runnable.class);
+    var flusher = mock(Flushable.class);
+    doThrow(new IOException("Disconnected")).when(flusher).flush();
+    var expiringProvider = new RateLimitedRuntimeInfoProvider(fetcher, cleanup, expiry, () -> true, 3, 0);
+
+    expiringProvider.streamOutput(new ByteArrayOutputStream(), flusher);
+
+    verify(cleanup).onClientDisconnect();
+    verifyNoInteractions(expiry);
   }
 }

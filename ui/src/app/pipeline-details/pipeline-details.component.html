@@ -81,7 +81,7 @@
                 [hasPipelineWritePrivileges]="hasPipelineWritePrivileges"
                 (openCodeDialogEmitter)="openPipelineAsCodeDialog()"
                 [autoRefresh]="autoRefresh"
-                [previewModeActive]="previewModeActive"
+                [previewState]="previewState"
                 (togglePreviewEmitter)="toggleLivePreview()"
                 (autoRefreshChange)="autoRefresh = $event"
                 (reloadMetricsEmitter)="triggerReload()"
@@ -93,6 +93,7 @@
                 [pipeline]="pipeline"
                 [pipelineCanvasMetadata]="pipelineCanvasMetadata"
                 (selectedElementEmitter)="selectElement($event)"
+                (previewStateChange)="previewState = $event"
             >
                 <div class="expansion-panel" fxLayout="column">
                     <sp-pipeline-details-expansion-panel
