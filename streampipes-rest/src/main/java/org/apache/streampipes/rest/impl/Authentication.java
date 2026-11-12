@@ -30,11 +30,10 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
@@ -204,13 +203,9 @@ public class Authentication extends AbstractRestResource {
       resourceManager.manageUsers().registerUser(enrichedUserRegistrationData);
       return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     } catch (UsernameAlreadyTakenException e) {
-      throw new SpMessageException(
-          HttpStatus.BAD_REQUEST,
-          Notifications.error("This email address already exists. Please choose another address."));
+      throw SpProblemException.badRequest("This email address already exists. Please choose another address.");
     } catch (IllegalArgumentException e) {
-      throw new SpMessageException(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          Notifications.error("User registration failed. Please report this to your admin."));
+      throw SpProblemException.internalError("User registration failed. Please report this to your admin.", e);
     }
   }
 
@@ -224,7 +219,7 @@ public class Authentication extends AbstractRestResource {
     } catch (UserNotFoundException e) {
       return ok();
     } catch (Exception e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
+      throw SpProblemException.badRequest(e.getMessage(), e);
     }
   }
 

@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 
 import org.springframework.http.MediaType;
@@ -51,8 +52,11 @@ public class TransformationScriptTemplateResource extends AbstractAuthGuardedRes
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ConnectTransformationScriptTemplate findById(@PathVariable String id) {
-
-    return templateStorage.getElementById(id);
+    var scriptTemplate = templateStorage.getElementById(id);
+    if (scriptTemplate == null) {
+      throw SpProblemException.notFound("Transformation script template", id);
+    }
+    return scriptTemplate;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +73,7 @@ public class TransformationScriptTemplateResource extends AbstractAuthGuardedRes
   public ConnectTransformationScriptTemplate update(@PathVariable String id,
                                                     @RequestBody ConnectTransformationScriptTemplate scriptTemplate) {
     if (!id.equals(scriptTemplate.getElementId())) {
-      throw new IllegalArgumentException("ID in path and body do not match");
+      throw SpProblemException.badRequest("ID in path and body do not match");
     }
 
     return templateStorage.updateElement(scriptTemplate);
@@ -86,7 +90,7 @@ public class TransformationScriptTemplateResource extends AbstractAuthGuardedRes
   public void delete(@PathVariable String id) {
     var scriptTemplate = templateStorage.getElementById(id);
     if (scriptTemplate == null) {
-      throw new IllegalArgumentException("Certificate with ID " + id + " does not exist");
+      throw SpProblemException.notFound("Transformation script template", id);
     }
     templateStorage.deleteElement(scriptTemplate);
   }

@@ -25,6 +25,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
@@ -38,7 +39,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -94,10 +94,10 @@ class CompactAdapterResourceTest {
   void rejectsPersistWithoutPipelineWritePrivilegeBeforeCreatingAnything() throws Exception {
     authenticateWith(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
 
-    var response = resource.addAdapterCompact(compactAdapter(new CreateOptions(true, true)));
+    var problem = assertThrows(SpProblemException.class,
+        () -> resource.addAdapterCompact(compactAdapter(new CreateOptions(true, true))));
 
-    assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    assertNull(response.getBody());
+    assertEquals(HttpStatus.FORBIDDEN, problem.getStatus());
     verifyNoInteractions(compactAdapterManagement, adapterManagement, descriptionStorage);
   }
 

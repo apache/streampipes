@@ -409,6 +409,43 @@ class TestStreamPipesEndpoints(TestCase):
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_endpoint_problem_detail_message(self, server_version: MagicMock, http_session: MagicMock):
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        response_mock = MagicMock()
+        response_mock.status_code = 404
+        response_mock.text = '{"type":"urn:streampipes:problem:not-found","title":"Not found","status":404}'
+        response_mock.url = "localhost"
+        response_mock.json.return_value = {
+            "type": "urn:streampipes:problem:not-found",
+            "title": "Not found",
+            "status": 404,
+            "detail": "Dataset with id ds-1 not found",
+        }
+
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.status_code = 404
+        http_session_mock.get.return_value.raise_for_status.side_effect = HTTPError(response=response_mock)
+        http_session.return_value = http_session_mock
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        with self.assertRaises(HTTPError) as http_error:
+            client.datasetApi.all()
+        self.assertMultiLineEqual(
+            _error_code_to_message[404]
+            + "url: localhost\nstatus code: 404\nserver message: Dataset with id ds-1 not found",
+            http_error.exception.args[0],
+        )
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
     def test_endpoint_dataset_json_error(self, server_version: MagicMock, http_session: MagicMock):
 
         server_version.return_value = {"backendVersion": "0.x.y"}

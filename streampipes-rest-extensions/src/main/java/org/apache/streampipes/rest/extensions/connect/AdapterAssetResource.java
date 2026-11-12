@@ -20,8 +20,7 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.extensions.management.connect.AdapterAssetManagement;
-import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import org.springframework.http.HttpStatus;
@@ -56,12 +55,10 @@ public class AdapterAssetResource extends AbstractSharedRestInterface {
       if (assetOpt.isPresent()) {
         return ok(assetOpt.get());
       } else {
-        throw new SpMessageException(
-            HttpStatus.NOT_FOUND,
-            Notifications.error(String.format("Could not find adapter with id %s", appId)));
+        throw SpProblemException.of(HttpStatus.NOT_FOUND, String.format("Could not find adapter with id %s", appId));
       }
     } catch (IOException e) {
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
   }
 

@@ -51,6 +51,7 @@ import {
     PipelineModificationMessage,
     SpDataStream,
     SpMetricsEntry,
+    ProblemDetail,
 } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
 import { LivePreviewStore } from '../../services/live-preview.store';
@@ -522,7 +523,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     modifyPipeline(pm: PipelineModificationMessage) {
-        this.restoreUnavailablePipelineElements();
         if (pm.pipelineModifications) {
             pm.pipelineModifications.forEach(modification => {
                 const id = modification.domId;
@@ -589,14 +589,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     private handlePipelineValidationFailure(status: HttpErrorResponse): void {
-        const error = status.error as Notification;
+        // RFC 9457 problem detail; an unavailable extension carries its appId as `appId`
+        const error = status.error as ProblemDetail | undefined;
         const title = error?.title ?? 'Pipeline validation failed';
-        const description = error?.description ?? status.message;
-        const extensionId = error?.additionalInformation;
+        const description = error?.detail ?? status.message;
+        const extensionId =
+            typeof error?.appId === 'string' ? error.appId : undefined;
         const unavailableExtensions =
             this.getUnavailableExtensions(extensionId);
 
-        if (title === 'Extension unavailable' && unavailableExtensions.length) {
+        if (extensionId && unavailableExtensions.length) {
             unavailableExtensions.forEach(pipelineElement => {
                 if (
                     !this.unavailablePipelineElementStatuses.has(

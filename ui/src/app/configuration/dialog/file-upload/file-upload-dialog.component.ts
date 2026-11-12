@@ -19,7 +19,10 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { FilesService } from '@streampipes/platform-services';
+import {
+    FilesService,
+    problemDetailMessage,
+} from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -129,12 +132,10 @@ export class FileUploadDialogComponent {
                 },
                 error => {
                     this.uploadError = true;
-                    if (error.error?.notifications?.length > 0) {
-                        this.uploadErrorMessage =
-                            error.error.notifications[0].title;
-                    } else {
-                        this.uploadErrorMessage = error.message;
-                    }
+                    this.uploadErrorMessage = problemDetailMessage(
+                        error,
+                        error.message,
+                    );
                 },
             );
     }

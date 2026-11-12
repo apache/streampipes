@@ -19,11 +19,10 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.audit.events.security.SecurityAuditRecorder;
 import org.apache.streampipes.model.client.user.Group;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 
@@ -76,9 +75,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Group> updateUserGroup(@PathVariable("groupId") String groupId,
                                            @RequestBody Group group) {
     if (!groupId.equals(group.getGroupId())) {
-      throw new SpMessageException(
-          HttpStatus.BAD_REQUEST,
-          Notifications.error("Wrong group id provided"));
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, "Wrong group id provided");
     } else {
       var existingGroup = userGroupStorage.getElementById(groupId);
       var updatedGroup = userGroupStorage.updateElement(group);
