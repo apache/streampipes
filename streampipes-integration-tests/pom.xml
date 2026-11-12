@@ -33,14 +33,12 @@
   <properties>
     <owasp.check.skip>true</owasp.check.skip>
     <maven.deploy.skip>false</maven.deploy.skip>
-    <pulsar.version>5.0.1</pulsar.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.pulsar</groupId>
       <artifactId>pulsar-client</artifactId>
-      <version>${pulsar.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.streampipes</groupId>
