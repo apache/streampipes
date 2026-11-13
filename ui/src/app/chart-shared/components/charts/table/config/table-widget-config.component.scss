@@ -50,3 +50,34 @@
     cursor: default;
     opacity: 0.45;
 }
+
+.highlight-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.highlight-range-config {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-left: calc(var(--space-md) * 1.5);
+}
+
+.highlight-range-mode {
+    font-size: var(--font-size-sm);
+}
+
+.highlight-range-inputs {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.highlight-range-inputs mat-form-field {
+    flex: 1;
+}
+
+.highlight-range-error {
+    color: var(--color-error);
+    font-size: var(--font-size-xs);
+}

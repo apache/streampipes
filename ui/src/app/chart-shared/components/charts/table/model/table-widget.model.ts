@@ -23,10 +23,16 @@ import {
 } from '@streampipes/platform-services';
 import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
+export interface TableHighlightRange {
+    min?: number;
+    max?: number;
+}
+
 export interface TableVisConfig extends DataExplorerVisConfig {
     selectedColumns: DataExplorerField[];
     highlightedColumns?: DataExplorerField[];
     highlightedColumnColors?: Record<string, string>;
+    highlightedColumnRanges?: Record<string, TableHighlightRange>;
     pageSize?: number;
     stickyHeaders?: boolean;
     searchValue: string;
