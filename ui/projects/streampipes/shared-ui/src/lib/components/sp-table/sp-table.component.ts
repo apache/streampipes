@@ -275,6 +275,9 @@ export class SpTableComponent<T>
 
     readonly selection = new SelectionModel<T>(true, []);
 
+    private shiftSelectionAnchor: T | null = null;
+    private shiftKeyPressed = false;
+
     private changeDetectorRef = inject(ChangeDetectorRef);
     private localStorageService = inject(LocalStorageService);
     private featureCardService = inject(FeatureCardService);
@@ -542,12 +545,41 @@ export class SpTableComponent<T>
         return this.selection.isSelected(row);
     }
 
+    onRowSelectionClick(event: MouseEvent) {
+        this.shiftKeyPressed = event.shiftKey;
+        event.stopPropagation();
+    }
+
     toggleRowSelection(row: T, checked: boolean) {
+        const rowIndex = this.visiblePageRows.indexOf(row);
+        const shift = this.shiftKeyPressed;
+        this.shiftKeyPressed = false;
+
+        if (shift && this.shiftSelectionAnchor) {
+            const anchorIndex = this.visiblePageRows.indexOf(
+                this.shiftSelectionAnchor,
+            );
+            if (anchorIndex !== -1 && rowIndex !== -1) {
+                const range = this.visiblePageRows.slice(
+                    Math.min(anchorIndex, rowIndex),
+                    Math.max(anchorIndex, rowIndex) + 1,
+                );
+                if (checked) {
+                    this.selection.select(...range);
+                } else {
+                    this.selection.deselect(...range);
+                }
+                this.emitSelection();
+                return;
+            }
+        }
+
         if (checked) {
             this.selection.select(row);
         } else {
             this.selection.deselect(row);
         }
+        this.shiftSelectionAnchor = rowIndex === -1 ? null : row;
 
         this.emitSelection();
     }
@@ -562,6 +594,7 @@ export class SpTableComponent<T>
     }
 
     clearSelection() {
+        this.shiftSelectionAnchor = null;
         if (!this.selection.hasValue()) {
             return;
         }
@@ -571,6 +604,7 @@ export class SpTableComponent<T>
     }
 
     toggleSelectAllVisibleRows(checked: boolean) {
+        this.shiftSelectionAnchor = null;
         if (checked) {
             this.selectVisiblePageRows();
             return;
