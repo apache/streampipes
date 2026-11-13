@@ -27,9 +27,11 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
+from typing import Generic
 
 import pandas as pd
 from pydantic import ValidationError
+from typing_extensions import Self, TypeVar
 
 __all__ = [
     "ResourceContainer",
@@ -63,7 +65,9 @@ class StreamPipesDataModelError(Exception):
         -------
         The error description (`str`)
         """
-        affected_model = getattr(self.validation_error, "title", str(getattr(self.validation_error, "model", "unknown")))
+        affected_model = getattr(
+            self.validation_error, "title", str(getattr(self.validation_error, "model", "unknown"))
+        )
 
         return (
             f"\nOops, there seems to be a problem with our internal StreamPipes data model.\n"
@@ -116,7 +120,10 @@ class StreamPipesResourceContainerJSONError(Exception):
         )
 
 
-class ResourceContainer(ABC):
+ResourceT = TypeVar("ResourceT", bound=Resource, default=Resource, covariant=True)
+
+
+class ResourceContainer(ABC, Generic[ResourceT]):
     """General and abstract implementation for a resource container.
 
     A resource container is a collection of resources returned by the StreamPipes API.
@@ -130,10 +137,10 @@ class ResourceContainer(ABC):
 
     """
 
-    def __init__(self, resources: list[Resource]):
+    def __init__(self, resources: list[ResourceT]):
         self._resources = resources
 
-    def __getitem__(self, position: int) -> Resource:
+    def __getitem__(self, position: int) -> ResourceT:
         return self._resources[position]
 
     def __len__(self) -> int:
@@ -145,7 +152,7 @@ class ResourceContainer(ABC):
 
     @classmethod
     @abstractmethod
-    def _resource_cls(cls) -> type[Resource]:
+    def _resource_cls(cls) -> type[ResourceT]:
         """Returns the class of the resource that are bundled.
 
         Returns
@@ -156,7 +163,7 @@ class ResourceContainer(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @classmethod
-    def from_json(cls, json_string: str) -> ResourceContainer:
+    def from_json(cls, json_string: str) -> Self:
         """Creates a `ResourceContainer` from the given JSON string.
 
         Parameters

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from confluent_kafka import Consumer  # type: ignore
+from confluent_kafka import Consumer
 
 
 class KafkaMessage:

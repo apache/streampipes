@@ -149,7 +149,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7.1.0
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install and configure Poetry
         uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263
@@ -175,7 +175,7 @@ jobs:
       # Leave room for four independent jobs within ASF's recommended limit of 15.
       max-parallel: 11
       matrix:
-        python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        python: ["3.11", "3.12", "3.13", "3.14"]
         os: [ubuntu-latest, macos-latest, windows-latest]
     defaults:
       run:
@@ -215,7 +215,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7.1.0
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install and configure Poetry
         uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263

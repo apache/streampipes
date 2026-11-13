@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 
+from typing import assert_type
 from unittest import TestCase
 
 from streampipes.model.container import Pipelines
@@ -52,7 +53,7 @@ class TestPipelineSummary(TestCase):
             },
         )
 
-    def test_summary_container(self):
+    def test_summary_container(self) -> None:
         pipelines = Pipelines.from_json(
             '{"resources": ['
             '{"elementId": "pipeline-1", "name": "Pipeline", "createdAt": 123, '
@@ -62,4 +63,6 @@ class TestPipelineSummary(TestCase):
 
         self.assertEqual(len(pipelines), 1)
         self.assertEqual(pipelines.total_count, 3)
-        self.assertIsInstance(pipelines[0], PipelineSummary)
+        self.assertIsInstance(assert_type(pipelines[0], PipelineSummary), PipelineSummary)
+        for pipeline in pipelines:
+            self.assertEqual(assert_type(pipeline, PipelineSummary).element_id, "pipeline-1")
