@@ -18,7 +18,7 @@
 
 ## 📚 Installation
 
-The StreamPipes Python library is meant to work with Python 3.8 and above. Installation can be done via `pip`:
+The StreamPipes Python library is meant to work with Python 3.11.5 and above. Installation can be done via `pip`:
 You can install the latest development version from GitHub, as so:
 
 ```bash

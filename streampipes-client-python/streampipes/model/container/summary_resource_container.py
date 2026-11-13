@@ -25,18 +25,18 @@ from typing_extensions import Self
 
 from streampipes.model.container.resource_container import (
     ResourceContainer,
+    ResourceT,
     StreamPipesDataModelError,
     StreamPipesResourceContainerJSONError,
 )
-from streampipes.model.resource.resource import Resource
 
 __all__ = ["SummaryResourceContainer"]
 
 
-class SummaryResourceContainer(ResourceContainer):
+class SummaryResourceContainer(ResourceContainer[ResourceT]):
     """Container for ``resources`` and ``totalCount`` summary responses."""
 
-    def __init__(self, resources: list[Resource], total_count: int):
+    def __init__(self, resources: list[ResourceT], total_count: int):
         super().__init__(resources=resources)
         self.total_count = total_count
 
@@ -58,6 +58,6 @@ class SummaryResourceContainer(ResourceContainer):
 
         return cls(resources=resources, total_count=parsed_json["totalCount"])
 
-    def __iter__(self) -> Iterator[Resource]:
+    def __iter__(self) -> Iterator[ResourceT]:
         """Iterate over contained summary resources."""
         return iter(self._resources)
