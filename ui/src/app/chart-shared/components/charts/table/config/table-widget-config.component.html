@@ -80,7 +80,7 @@
         </sp-form-field>
     </sp-split-section>
     <sp-split-section [level]="3" [title]="'Value Highlighting' | translate">
-        <div fxLayout="column" class="highlight-color-list">
+        <div fxLayout="column" spRangeSelection class="highlight-color-list">
             @for (field of highlightableFields; track colorKey(field)) {
                 <div
                     class="highlight-color-row"
@@ -88,6 +88,7 @@
                     fxLayoutAlign="space-between center"
                 >
                     <mat-checkbox
+                        spRangeSelectionItem
                         [checked]="isHighlighted(field)"
                         (change)="toggleHighlightedField(field)"
                     >

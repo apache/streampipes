@@ -39,6 +39,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
+    SpRangeSelectionDirective,
     SpAlertBannerComponent,
     SpLabelComponent,
     SpTableComponent,
@@ -57,6 +58,7 @@ import { LoadedSbom, mergeSbomComponents } from './sbom-merge';
     styleUrls: ['./sbom.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         DatePipe,
         MatButtonModule,
         MatCheckboxModule,

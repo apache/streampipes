@@ -531,6 +531,7 @@
                 [class.no-overflow-hint]="filterListScrollEnd"
             >
                 <div
+                    [spRangeSelection]="openFilterColumn"
                     class="column-filter-list"
                     (scroll)="onFilterListScroll($event)"
                 >
@@ -539,6 +540,7 @@
                         track value
                     ) {
                         <mat-checkbox
+                            spRangeSelectionItem
                             class="filter-checkbox"
                             [title]="value"
                             [checked]="isValueChecked(openFilterColumn, value)"

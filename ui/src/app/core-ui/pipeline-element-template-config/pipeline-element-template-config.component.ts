@@ -35,6 +35,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import {
+    SpRangeSelectionDirective,
     FormFieldComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
@@ -53,6 +54,7 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template.pipe';
     styleUrls: ['./pipeline-element-template-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         SplitSectionComponent,

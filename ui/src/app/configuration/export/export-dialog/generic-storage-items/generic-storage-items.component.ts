@@ -18,7 +18,10 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
+import {
+    SpRangeSelectionDirective,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import { GenericStorageItemComponent } from './generic-storage-item/generic-storage-item.component';
 import {
     FlexDirective,
@@ -36,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './generic-storage-items.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         SplitSectionComponent,
         GenericStorageItemComponent,
         LayoutDirective,

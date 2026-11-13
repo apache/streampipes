@@ -112,3 +112,5 @@ export * from './lib/components/feature-card-host/feature-card.service';
 export * from './lib/pipes/sort-by-runtime-name.pipe';
 
 export * from './lib/services/ui-update.service';
+
+export * from './lib/range-selection/range-selection.directive';

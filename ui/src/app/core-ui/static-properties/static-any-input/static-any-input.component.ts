@@ -25,12 +25,15 @@ import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 
+import { SpRangeSelectionDirective } from '@streampipes/shared-ui';
+
 @Component({
     selector: 'sp-app-static-any-input',
     templateUrl: './static-any-input.component.html',
     styleUrls: ['./static-any-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         MatCheckbox,

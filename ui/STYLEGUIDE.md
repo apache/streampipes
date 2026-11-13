@@ -407,6 +407,30 @@ For rendering tables, always use the `sp-table` component which comes with pre-d
 In most cases, table actions should be shown in a popup menu to ensure a clean UI.
 Check the examples to see how to add table actions.
 
+##### Checkbox range selection
+
+`sp-table` supports Shift-click, Shift-hover and Shift-Space range selection when
+`showSelectionCheckboxes` is enabled. Arrow keys move checkbox focus; Shift+Arrow
+extends the range, and Space toggles the focused checkbox. The last ordinary activation sets the anchor;
+its checked state determines whether the range is selected or deselected. Ranges
+follow rendered order on the current page, skip disabled items and reset the anchor
+when the visible checkbox sequence changes.
+
+For other lists, import `SpRangeSelectionDirective`, add `spRangeSelection` to the
+container and `spRangeSelectionItem` to participating checkboxes. Leave header and
+setting checkboxes unmarked. An optional stable `[spRangeSelection]` context also
+resets the anchor when its value changes.
+
+```html
+<div [spRangeSelection]="items">
+  @for (item of items; track item.id) {
+  <mat-checkbox spRangeSelectionItem [(ngModel)]="item.selected">
+    {{ item.name }}
+  </mat-checkbox>
+  }
+</div>
+```
+
 ### Localization & Internationalization (i18n)
 
 Always prepare strings for translation:

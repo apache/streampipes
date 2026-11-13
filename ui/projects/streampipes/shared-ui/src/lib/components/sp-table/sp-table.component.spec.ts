@@ -573,6 +573,117 @@ describe('SpTableComponent card view', () => {
         expect(checked('sp-table-row-checkbox')).toBe(2);
     });
 
+    it.each(['list', 'grouped', 'cards'] as const)(
+        'selects ranges in rendered order in the %s view',
+        async mode => {
+            const fixture = await setup(SpTableCardHostComponent);
+            const host = fixture.componentInstance;
+            const table = host.table();
+            host.dataSource.data = [
+                { _id: 'r3', name: 'Gamma' },
+                { _id: 'r1', name: 'Alpha' },
+                { _id: 'r4', name: 'Delta' },
+                { _id: 'r2', name: 'Beta' },
+            ];
+            table.setViewMode(mode);
+            fixture.detectChanges();
+            const checkbox =
+                mode === 'cards'
+                    ? 'sp-table-card-checkbox'
+                    : 'sp-table-row-checkbox';
+            const inputs = query(fixture, `[data-cy="${checkbox}"] input`);
+            inputs[0].click();
+            fixture.detectChanges();
+            inputs[2].dispatchEvent(
+                new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    shiftKey: true,
+                }),
+            );
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(table.selectedRows.map(row => row._id)).toEqual(
+                mode === 'grouped' ? ['r1', 'r2', 'r3'] : ['r3', 'r1', 'r4'],
+            );
+            expect((inputs[3] as HTMLInputElement).checked).toBe(false);
+        },
+    );
+
+    it('starts a new range after searching and preserves hidden selections', async () => {
+        const fixture = await setup(SpTableCardHostComponent);
+        const host = fixture.componentInstance;
+        const table = host.table();
+        host.dataSource.data = Array.from({ length: 6 }, (_, index) => ({
+            _id: `r${index}`,
+            name: index === 0 ? 'Hidden' : `Visible ${index}`,
+        }));
+        fixture.detectChanges();
+        query(fixture, '[data-cy="sp-table-row-checkbox"] input')[0].click();
+        host.dataSource.filter = 'visible';
+        fixture.detectChanges();
+        query(
+            fixture,
+            '[data-cy="sp-table-row-checkbox"] input',
+        )[3].dispatchEvent(
+            new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                shiftKey: true,
+            }),
+        );
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(table.selectedRows.map(row => row._id)).toEqual(['r0', 'r4']);
+    });
+
+    it('limits ranges to the current page and resets the anchor on page changes', async () => {
+        const fixture = await setup(SpTableCardHostComponent);
+        const host = fixture.componentInstance;
+        const table = host.table();
+        host.dataSource.data = Array.from({ length: 20 }, (_, index) => ({
+            _id: `r${index}`,
+            name: `Row ${index}`,
+        }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        query(fixture, '[data-cy="sp-table-row-checkbox"] input')[1].click();
+        table.paginator.nextPage();
+        fixture.detectChanges();
+        const inputs = query(
+            fixture,
+            '[data-cy="sp-table-row-checkbox"] input',
+        );
+        inputs[4].dispatchEvent(
+            new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                shiftKey: true,
+            }),
+        );
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(table.selectedRows.map(row => row._id)).toEqual(['r1', 'r14']);
+
+        inputs[7].dispatchEvent(
+            new MouseEvent('mouseover', {
+                bubbles: true,
+                shiftKey: true,
+            }),
+        );
+        fixture.detectChanges();
+        expect(table.selectedRows.map(row => row._id)).toEqual([
+            'r1',
+            'r14',
+            'r15',
+            'r16',
+            'r17',
+        ]);
+    });
+
     it('shows the empty message when there are no rows', async () => {
         const fixture = await setupInCardMode();
 

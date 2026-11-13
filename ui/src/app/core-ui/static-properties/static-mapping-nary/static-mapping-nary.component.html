@@ -16,7 +16,7 @@
 ~
 -->
 
-<div id="formWrapper" fxFlex="100" fxLayout="column">
+<div spRangeSelection id="formWrapper" fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayoutAlign="start center">
         <button
             mat-button
@@ -46,6 +46,7 @@
             track property
         ) {
             <mat-checkbox
+                spRangeSelectionItem
                 [attr.data-cy]="property.runtimeName"
                 [(ngModel)]="property['checked']"
                 (change)="selectOption(property)"

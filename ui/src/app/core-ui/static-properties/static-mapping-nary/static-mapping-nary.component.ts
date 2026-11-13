@@ -35,12 +35,15 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { SpRangeSelectionDirective } from '@streampipes/shared-ui';
+
 @Component({
     selector: 'sp-app-static-mapping-nary',
     templateUrl: './static-mapping-nary.component.html',
     styleUrls: ['./static-mapping-nary.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
