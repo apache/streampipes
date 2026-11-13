@@ -62,14 +62,14 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
       return handleRecommendationMessage(authentication, msg);
     }
 
+    if (isAdmin(authentication)) {
+      return true;
+    }
+
     String objectId = String.valueOf(targetDomainObject);
     List<Permission> perms = getObjectPermission(objectId);
 
     if (isAnonymousAccess(perms)) {
-      return true;
-    }
-
-    if (isAdmin(authentication)) {
       return true;
     }
 

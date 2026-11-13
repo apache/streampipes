@@ -71,7 +71,7 @@ import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-start
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
-import { interval, Subscription } from 'rxjs';
+import { interval, of, Subscription, switchMap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -319,11 +319,20 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    getMonitoringInfos(adapters: AdapterSummaryDto[]): void {
+    getMonitoringInfos(adapters: AdapterSummaryDto[], refresh = false): void {
         const filteredElementIds = adapters.map(adapter => adapter.elementId);
 
-        this.adapterMonitoringService
-            .getMetricsInfoForAdapters(filteredElementIds)
+        const refresh$ = refresh
+            ? this.adapterMonitoringService.triggerMonitoringUpdate()
+            : of(undefined);
+        refresh$
+            .pipe(
+                switchMap(() =>
+                    this.adapterMonitoringService.getCollectedMetricsInfoForAdapters(
+                        filteredElementIds,
+                    ),
+                ),
+            )
             .subscribe(metrics => {
                 this.adapterMetrics = metrics;
                 this.currentTime.set(Date.now());
@@ -462,13 +471,13 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    getAdaptersRunning(): void {
+    getAdaptersRunning(refreshMetrics = false): void {
         this.adapterService.getAdapterSummary().subscribe(adapterSummary => {
             this.existingAdapters = adapterSummary.resources;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
             this.applyAdapterFilters(this.currentFilterIds);
             this.operationInProgressAdapterId = undefined;
-            this.getMonitoringInfos(this.existingAdapters);
+            this.getMonitoringInfos(this.existingAdapters, refreshMetrics);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
             });
