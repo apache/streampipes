@@ -73,7 +73,7 @@
     "marked": "^18.1.1",
     "marked-katex-extension": "^5.1.12",
     "material-icons": "^1.13.14",
-    "monaco-editor": "^0.56.0",
+    "monaco-editor": "^0.57.0",
     "ngx-color-picker": "^20.1.1",
     "ngx-echarts": "^22.0.0",
     "ngx-markdown": "^22.1.1",
