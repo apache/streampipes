@@ -133,9 +133,9 @@ After the services are up, open `http://localhost` to complete the setup in the 
 
 The repository includes an experimental dev container setup in [`.devcontainer`](.devcontainer). It starts the required third-party services with Docker Compose and provides a containerized development environment for running StreamPipes from source.
 
-For users not using VS Code, the dev container files can still serve as the reference setup for the required development services and environment variables. See [`.devcontainer/docker-compose.yml`](.devcontainer/docker-compose.yml), [`.devcontainer/.env.example`](.devcontainer/.env.example), and [`.devcontainer/README.md`](.devcontainer/README.md) for the current Compose configuration.
+Follow the setup instructions for [VS Code](.devcontainer/README.md#first-start-with-vs-code) or [IntelliJ IDEA](.devcontainer/README.md#first-start-with-intellij-idea).
 
-For VS Code users, open the repository in VS Code and run `Dev Containers: Reopen in Container`. After the container has started, use the included VS Code tasks or debug launch configurations to start the core, extensions, and UI.
+If you use another IDE, the dev container files can still serve as the reference setup for the required development services and environment variables. See [`.devcontainer/docker-compose.yml`](.devcontainer/docker-compose.yml), [`.devcontainer/.env.example`](.devcontainer/.env.example), and [`.devcontainer/README.md`](.devcontainer/README.md) for the current Compose configuration.
 
 Prerequisites:
 
