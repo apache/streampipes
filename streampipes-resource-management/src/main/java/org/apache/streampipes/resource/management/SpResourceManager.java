@@ -18,6 +18,7 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.audit.api.AuditService;
+import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
@@ -33,6 +34,7 @@ import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IFavoriteStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
@@ -61,6 +63,7 @@ public class SpResourceManager {
   private final IUserGroupStorage userGroupStorage;
   private final IPrivilegeStorage privilegeStorage;
   private final IUserStorage userStorage;
+  private final IFavoriteStorage favoriteStorage;
   private final IDataProcessorStorage dataProcessorStorage;
   private final IDataSinkStorage dataSinkStorage;
   private final IDataStreamStorage dataStreamStorage;
@@ -87,6 +90,7 @@ public class SpResourceManager {
                            IUserGroupStorage userGroupStorage,
                            IPrivilegeStorage privilegeStorage,
                            IUserStorage userStorage,
+                           IFavoriteStorage favoriteStorage,
                            IDataProcessorStorage dataProcessorStorage,
                            IDataSinkStorage dataSinkStorage,
                            IDataStreamStorage dataStreamStorage,
@@ -100,7 +104,8 @@ public class SpResourceManager {
     this(permissionStorage, chartStorage, adapterStorage, adapterDescriptionStorage,
         assetStorage, dashboardStorage, pipelineStorage,
         datasetStorage, coreConfigurationStorage, fileMetadataStorage, roleStorage, userGroupStorage,
-        privilegeStorage, userStorage, dataProcessorStorage, dataSinkStorage, dataStreamStorage, descriptionStorage, genericStorage,
+        privilegeStorage, userStorage, favoriteStorage, dataProcessorStorage, dataSinkStorage, dataStreamStorage,
+        descriptionStorage, genericStorage,
         userActivationTokenStorage,
         passwordRecoveryTokenStorage, certificateStorage, extensionsServiceStorage, serviceDiscovery,
         AuditService.disabled());
@@ -120,6 +125,7 @@ public class SpResourceManager {
                            IUserGroupStorage userGroupStorage,
                            IPrivilegeStorage privilegeStorage,
                            IUserStorage userStorage,
+                           IFavoriteStorage favoriteStorage,
                            IDataProcessorStorage dataProcessorStorage,
                            IDataSinkStorage dataSinkStorage,
                            IDataStreamStorage dataStreamStorage,
@@ -146,6 +152,7 @@ public class SpResourceManager {
     this.userGroupStorage = userGroupStorage;
     this.privilegeStorage = privilegeStorage;
     this.userStorage = userStorage;
+    this.favoriteStorage = Objects.requireNonNull(favoriteStorage);
     this.dataProcessorStorage = dataProcessorStorage;
     this.dataSinkStorage = dataSinkStorage;
     this.dataStreamStorage = dataStreamStorage;
@@ -203,6 +210,14 @@ public class SpResourceManager {
     return new AssetResourceManager(assetStorage, managePermissions(), resourceDeletionManager);
   }
 
+  public FavoriteResourceManager manageFavorites() {
+    return new FavoriteResourceManager(
+        favoriteStorage,
+        assetStorage, adapterStorage, pipelineStorage, dashboardStorage, chartStorage,
+        new SpPermissionEvaluator(permissionStorage)
+    );
+  }
+
   public AdapterResourceManager manageAdapters() {
     return new AdapterResourceManager(adapterStorage, certificateStorage, managePermissions(), resourceDeletionManager);
   }
@@ -212,7 +227,14 @@ public class SpResourceManager {
   }
 
   public PermissionResourceManager managePermissions() {
-    return new PermissionResourceManager(permissionStorage);
+    return new PermissionResourceManager(permissionStorage, manageFavoriteCleanup());
+  }
+
+  public FavoriteCleanupManager manageFavoriteCleanup() {
+    return new FavoriteCleanupManager(
+        favoriteStorage,
+        manageFavorites(), userStorage, permissionStorage, roleStorage, userGroupStorage
+    );
   }
 
   public DashboardResourceManager manageDashboards() {

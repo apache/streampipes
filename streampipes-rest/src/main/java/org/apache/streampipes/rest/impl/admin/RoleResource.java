@@ -19,6 +19,8 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.resource.management.FavoriteCleanupManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.DefaultCRUDRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
@@ -35,8 +37,11 @@ import java.util.List;
 @RequestMapping("/api/v2/admin/roles")
 public class RoleResource extends DefaultCRUDRestResource<Role> {
 
-  public RoleResource(IRoleStorage roleStorage) {
+  private final FavoriteCleanupManager favoriteCleanup;
+
+  public RoleResource(IRoleStorage roleStorage, SpResourceManager resourceManager) {
     super(roleStorage);
+    this.favoriteCleanup = resourceManager.manageFavoriteCleanup();
   }
 
   @Override
@@ -60,12 +65,15 @@ public class RoleResource extends DefaultCRUDRestResource<Role> {
   @Override
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Void update(@RequestBody Role entity) {
-    return super.update(entity);
+    var response = super.update(entity);
+    favoriteCleanup.permissionsChanged();
+    return response;
   }
 
   @Override
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public void delete(@PathVariable String id) {
     super.delete(id);
+    favoriteCleanup.permissionsChanged();
   }
 }

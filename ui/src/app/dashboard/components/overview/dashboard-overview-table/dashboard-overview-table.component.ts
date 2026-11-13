@@ -68,6 +68,9 @@ import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { DashboardOverviewCardComponent } from '../dashboard-overview-card/dashboard-overview-card.component';
 
+import { FavoriteToggleComponent } from '../../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../../favorites/favorites.store';
+
 @Component({
     selector: 'sp-dashboard-overview-table',
     templateUrl: './dashboard-overview-table.component.html',
@@ -76,6 +79,7 @@ import { DashboardOverviewCardComponent } from '../dashboard-overview-card/dashb
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        FavoriteToggleComponent,
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
@@ -108,6 +112,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     sort: MatSort;
 
     displayedColumns: string[] = [
+        'favorite',
         'name',
         'assetContext',
         'lastModified',
@@ -135,6 +140,8 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
+
+    readonly favorites = inject(FavoritesStore);
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('dashboard');

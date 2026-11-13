@@ -39,6 +39,7 @@ import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IFavoriteStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
@@ -126,6 +127,7 @@ public class ExtensionServiceRequestConfiguration {
                                              IUserGroupStorage userGroupStorage,
                                              IPrivilegeStorage privilegeStorage,
                                              IUserStorage userStorage,
+                                             IFavoriteStorage favoriteStorage,
                                              IDataProcessorStorage dataProcessorStorage,
                                              IDataSinkStorage dataSinkStorage,
                                              IDataStreamStorage dataStreamStorage,
@@ -152,6 +154,7 @@ public class ExtensionServiceRequestConfiguration {
         userGroupStorage,
         privilegeStorage,
         userStorage,
+        favoriteStorage,
         dataProcessorStorage,
         dataSinkStorage,
         dataStreamStorage,

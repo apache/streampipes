@@ -33,6 +33,7 @@ import {
     LocationConfig,
     SpAssetModel,
 } from '@streampipes/platform-services';
+import { MatIcon } from '@angular/material/icon';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
     MatCell,
@@ -47,6 +48,8 @@ import { SpLabelComponent, SpTableComponent } from '@streampipes/shared-ui';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { AssetTableLinkPreviewComponent } from './asset-table-link-preview/asset-table-link-preview.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FavoriteToggleComponent } from '../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../favorites/favorites.store';
 
 @Component({
     selector: 'sp-home-asset-table',
@@ -61,11 +64,13 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatHeaderCellDef,
         MatHeaderCell,
         MatSortHeader,
+        MatIcon,
         MatCellDef,
         MatCell,
         SpLabelComponent,
         AssetTableLinkPreviewComponent,
         TranslatePipe,
+        FavoriteToggleComponent,
     ],
 })
 export class HomeAssetTableComponent implements OnInit, OnChanges {
@@ -82,6 +87,7 @@ export class HomeAssetTableComponent implements OnInit, OnChanges {
     assetLinkTypes: Record<string, AssetLinkType> = {};
 
     displayedColumns: string[] = [
+        'favorite',
         'assetName',
         'assetType',
         'location',
@@ -97,6 +103,8 @@ export class HomeAssetTableComponent implements OnInit, OnChanges {
 
     private isa95TypeService = inject(Isa95TypeService);
     private router = inject(Router);
+
+    readonly favorites = inject(FavoritesStore);
 
     ngOnInit() {
         this.dataSource.sortingDataAccessor = (assetModel, column) => {

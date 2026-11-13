@@ -21,6 +21,7 @@
  */
 
 export * from './lib/apis/commons.service';
+export * from './lib/apis/favorites.service';
 export * from './lib/apis/adapter.service';
 export * from './lib/apis/adapter-monitoring.service';
 export * from './lib/apis/asset-management.service';

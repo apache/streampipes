@@ -23,7 +23,7 @@
     [class.no-padding-top]="noToolbarBorderTop"
 >
     @if (
-        (shouldShowGroupingControls || shouldShowNameSearch) &&
+        (shouldShowGroupingControls || shouldShowNameSearch || favoriteIds) &&
         !showSelectionToolbar
     ) {
         <div
@@ -40,6 +40,11 @@
                 fxLayoutAlign="end center"
                 fxLayoutGap="12px"
             >
+                @if (favoriteIds) {
+                    <ng-container
+                        *ngTemplateOutlet="favoritesFilter"
+                    ></ng-container>
+                }
                 @if (shouldShowNameSearch) {
                     <ng-container *ngTemplateOutlet="nameSearchField">
                     </ng-container>
@@ -164,13 +169,22 @@
                 }
             </div>
 
-            @if (shouldShowGroupingControls || shouldShowNameSearch) {
+            @if (
+                shouldShowGroupingControls ||
+                shouldShowNameSearch ||
+                favoriteIds
+            ) {
                 <div
                     class="selection-toolbar__right"
                     fxLayout="row wrap"
                     fxLayoutAlign="end center"
                     fxLayoutGap="8px"
                 >
+                    @if (favoriteIds) {
+                        <ng-container
+                            *ngTemplateOutlet="favoritesFilter"
+                        ></ng-container>
+                    }
                     @if (shouldShowNameSearch) {
                         <ng-container *ngTemplateOutlet="nameSearchField">
                         </ng-container>
@@ -183,6 +197,20 @@
             }
         </div>
     }
+
+    <ng-template #favoritesFilter>
+        <button
+            type="button"
+            mat-flat-button
+            [class.btn-secondary]="!favoritesOnly"
+            [attr.aria-pressed]="favoritesOnly"
+            data-cy="sp-table-favorites-filter"
+            (click)="toggleFavoritesOnly()"
+        >
+            <mat-icon aria-hidden="true">star</mat-icon>
+            {{ 'Favorites' | translate }}
+        </button>
+    </ng-template>
 
     <ng-template #nameSearchField>
         <mat-form-field class="form-field-small table-search-field">
@@ -211,7 +239,10 @@
     </ng-template>
 
     <ng-template #groupingControls>
-        @if (viewMode === 'grouped') {
+        @if (groupForRow && viewMode === 'grouped') {
+            <span>{{ groupLabel }}</span>
+        }
+        @if (viewMode === 'grouped' && !groupForRow) {
             <mat-form-field class="form-field-small grouping-toolbar__select">
                 <mat-select
                     [value]="groupBy"

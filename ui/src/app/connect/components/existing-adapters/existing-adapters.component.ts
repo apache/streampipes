@@ -85,12 +85,16 @@ import { AdapterOverviewCardComponent } from './adapter-overview-card/adapter-ov
 import { MatMenuItem } from '@angular/material/menu';
 import { AsyncPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 
+import { FavoriteToggleComponent } from '../../../favorites/favorite-toggle.component';
+import { FavoritesStore } from '../../../favorites/favorites.store';
+
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
     styleUrls: ['./existing-adapters.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        FavoriteToggleComponent,
         SpBasicViewComponent,
         FlexDirective,
         LayoutAlignDirective,
@@ -130,6 +134,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     sort: MatSort;
 
     displayedColumns: string[] = [
+        'favorite',
         'status',
         'start',
         'name',
@@ -176,6 +181,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     readonly pageHeaderAssetLinkType$ =
         this.assetFilterService.getAssetLinkType$('adapter');
+
+    readonly favorites = inject(FavoritesStore);
 
     constructor() {
         this.dataSource.sortingDataAccessor = (adapter, column) => {

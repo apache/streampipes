@@ -40,10 +40,12 @@ import { IconbarComponent } from '../iconbar/iconbar.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { FavoritesStore } from '../../../favorites/favorites.store';
 import { ShortcutDialogComponent } from '../../../help/components/shortcuts/shortcut-dialog.component';
 
 @Component({
     selector: 'sp-streampipes',
+    providers: [FavoritesStore],
     templateUrl: './streampipes.component.html',
     styleUrls: ['./streampipes.component.scss'],
     animations: [

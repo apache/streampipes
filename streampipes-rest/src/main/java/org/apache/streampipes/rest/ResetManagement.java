@@ -31,6 +31,7 @@ import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
+import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.configuration.SystemNotificationConfig;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -205,6 +206,7 @@ public class ResetManagement {
     try {
       for (Map<String, Object> asset : genericStorage.findAll("asset-management")) {
         genericStorage.delete((String) asset.get("_id"), (String) asset.get("_rev"));
+        resourceManager.manageFavoriteCleanup().resourceDeleted(SpAssetModel.class, (String) asset.get("_id"));
       }
     } catch (StorageException e) {
       throw new SpRuntimeException("Could not delete assets of user %s".formatted(username));
@@ -235,6 +237,9 @@ public class ResetManagement {
               doc.get("_rev")
                  .toString()
           );
+          if ("asset-management".equals(docType)) {
+            resourceManager.manageFavoriteCleanup().resourceDeleted(SpAssetModel.class, doc.get("_id").toString());
+          }
         }
       } catch (StorageException e) {
         throw new RuntimeException(e);
