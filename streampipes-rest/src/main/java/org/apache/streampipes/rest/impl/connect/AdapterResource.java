@@ -49,7 +49,8 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,13 +150,24 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#adapterDescription.correspondingDataStreamElementId, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority()")
+  @Operation(summary = "Update an existing adapter",
+             description = "Updates adapter configuration while retaining its associated data stream. "
+                 + "Running adapters are restarted as part of the update.",
+             tags = {"Adapters"},
+             responses = {
+                 @ApiResponse(responseCode = "200", description = "Adapter operation result"),
+                 @ApiResponse(responseCode = "403", description = "Operation not permitted")
+             })
   public ResponseEntity<? extends Message> updateAdapter(@RequestBody AdapterDescription adapterDescription) {
+    if (!canUpdateStoredAdapter(adapterDescription)) {
+      return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).build();
+    }
     try {
       adapterUpdateManagement.updateAdapter(adapterDescription, getAuthenticatedUserSid());
     } catch (AdapterException e) {
       LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
-      return ok(Notifications.error(e.getMessage(), ExceptionUtils.getStackTrace(e)));
+      return ok(Notifications.error("Could not update adapter"));
     }
 
     return ok(Notifications.success(adapterDescription.getElementId()));
@@ -163,11 +175,36 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
   @PutMapping(path = "pipeline-migration-preflight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
+  @Operation(summary = "Preview pipeline migrations for an adapter update",
+             description = "Returns pipeline changes associated with the proposed adapter schema. "
+                 + "This operation does not persist the adapter update or restart pipelines.",
+             tags = {"Adapters"},
+             responses = {
+                 @ApiResponse(responseCode = "200", description = "Pipeline migration preview"),
+                 @ApiResponse(responseCode = "403", description = "Operation not permitted")
+             })
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
       @RequestBody AdapterDescription adapterDescription) {
+    if (!canUpdateStoredAdapter(adapterDescription)) {
+      return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).build();
+    }
     var migrations = adapterUpdateManagement.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);
+  }
+
+  private boolean canUpdateStoredAdapter(AdapterDescription submitted) {
+    if (submitted == null || submitted.getElementId() == null || submitted.getElementId().isBlank()) {
+      return false;
+    }
+    var stored = resourceManager.manageAdapters().getDb().getElementById(submitted.getElementId());
+    if (stored == null || stored.getCorrespondingDataStreamElementId() == null
+        || stored.getCorrespondingDataStreamElementId().isBlank()
+        || !stored.getCorrespondingDataStreamElementId().equals(submitted.getCorrespondingDataStreamElementId())) {
+      LOG.warn("Adapter update or preflight rejected: missing adapter or changed stream association");
+      return false;
+    }
+    return checkAdapterPermission(stored, "WRITE");
   }
 
   @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
