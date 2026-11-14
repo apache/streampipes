@@ -63,7 +63,6 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
@@ -93,7 +92,6 @@ type ManageableChart = DataExplorerWidgetModel & {
         MatSortHeader,
         MatCellDef,
         MatCell,
-        LayoutGapDirective,
         SpTableActionsDirective,
         MatMenuItem,
         MatIcon,

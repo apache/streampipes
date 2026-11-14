@@ -60,11 +60,7 @@
                         data-cy="charts-table-overview"
                         *matCellDef="let element"
                     >
-                        <div
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            fxLayoutGap="5px"
-                        >
+                        <div class="chart-name-content">
                             @if (element.showLegacyWarning) {
                                 <mat-icon
                                     [matTooltip]="
@@ -86,7 +82,7 @@
                                     >sync_problem</mat-icon
                                 >
                             }
-                            <div fxLayout="column" fxLayoutAlign="start start">
+                            <div class="chart-name-label">
                                 <span class="text-sm" data-cy="chart-name">{{
                                     element.name
                                 }}</span>
@@ -100,11 +96,7 @@
                         {{ 'Type' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <div
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            class="text-sm"
-                        >
+                        <div class="chart-type-content text-sm">
                             <mat-icon [matTooltip]="element.chartTypeName">{{
                                 element.chartTypeIcon
                             }}</mat-icon>

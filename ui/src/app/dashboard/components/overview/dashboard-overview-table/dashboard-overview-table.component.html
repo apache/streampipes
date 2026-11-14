@@ -44,12 +44,8 @@
                     data-cy="dashboard-table-overview"
                     *matCellDef="let element"
                 >
-                    <div
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        fxLayoutGap="5px"
-                    >
-                        <div fxLayout="column" fxLayoutAlign="start start">
+                    <div class="dashboard-name-cell">
+                        <div class="dashboard-name-content">
                             <span class="text-sm" data-cy="dashboard-name">{{
                                 element.name
                             }}</span>

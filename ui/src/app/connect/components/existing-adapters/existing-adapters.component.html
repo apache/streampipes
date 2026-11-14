@@ -43,7 +43,7 @@
             [matTooltip]="'Refresh adapters' | translate"
             matTooltipPosition="below"
             color="accent"
-            (click)="getAdaptersRunning()"
+            (click)="getAdaptersRunning(true)"
         >
             <mat-icon aria-hidden="true">refresh</mat-icon>
         </button>
@@ -146,7 +146,7 @@
                         class="adapter-name-cell"
                         *matCellDef="let adapter"
                     >
-                        <div fxLayout="column" fxLayoutAlign="start start">
+                        <div class="adapter-name-content">
                             <span data-cy="adapter-name">{{
                                 adapter.name
                             }}</span>

@@ -16,6 +16,7 @@
  *
  */
 
+import { MatMenuItem } from '@angular/material/menu';
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -260,6 +261,7 @@ describe('SpTableComponent grouped view', () => {
         SpTableComponent,
         SpTableCardDirective,
         SpTableActionsDirective,
+        MatMenuItem,
         NgTemplateOutlet,
         MatColumnDef,
         MatHeaderCellDef,
@@ -304,11 +306,24 @@ describe('SpTableComponent grouped view', () => {
                     ></ng-container>
                 </article>
             </ng-template>
-            <ng-template spTableActions></ng-template>
+            <ng-template spTableActions let-row>
+                <button
+                    mat-menu-item
+                    class="test-row-action"
+                    (click)="selectedRow = row"
+                >
+                    {{ actionLabel(row) }}
+                </button>
+            </ng-template>
         </sp-table>
     `,
 })
 class SpTableCardHostComponent {
+    selectedRow?: TestRow;
+    actionLabel(row: TestRow): string {
+        return row.name;
+    }
+
     readonly table = viewChild.required(SpTableComponent<TestRow>);
 
     dataSource = new MatTableDataSource<TestRow>([
@@ -382,6 +397,28 @@ describe('SpTableComponent card view', () => {
         Array.from(fixture.nativeElement.querySelectorAll(selector));
 
     afterEach(() => TestBed.resetTestingModule());
+
+    it('creates actions lazily and passes the current row when switching menus', async () => {
+        const fixture = await setup(SpTableCardHostComponent);
+        const host = fixture.componentInstance;
+        const renderAction = vi.spyOn(host, 'actionLabel');
+        fixture.detectChanges();
+        expect(renderAction).not.toHaveBeenCalled();
+        expect(document.querySelector('.test-row-action')).toBeNull();
+
+        for (const [index, row] of host.dataSource.data.entries()) {
+            query(fixture, '[data-cy="more-options"]')[index].click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const action =
+                document.querySelector<HTMLButtonElement>('.test-row-action');
+            expect(action?.textContent?.trim()).toBe(row.name);
+            action!.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(host.selectedRow).toBe(row);
+        }
+    });
 
     it('offers the cards toggle only with a card template', async () => {
         const withoutTemplate = await setup(SpTableHostComponent);
