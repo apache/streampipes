@@ -46,3 +46,11 @@
 .adapter-name-cell small {
     max-width: 100%;
 }
+
+// Avoid creating layout directive subscriptions for every static name cell.
+.adapter-name-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-sizing: border-box;
+}

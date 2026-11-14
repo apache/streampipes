@@ -19,3 +19,17 @@
 .mat-mdc-header-cell {
     font-weight: bold;
 }
+
+.asset-name-cell {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.asset-name-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+}

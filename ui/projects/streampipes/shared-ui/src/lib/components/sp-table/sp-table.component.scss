@@ -296,3 +296,10 @@
 .card-asset-context .card-asset-context__more {
     flex: none;
 }
+
+.table-row-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-sizing: border-box;
+}
