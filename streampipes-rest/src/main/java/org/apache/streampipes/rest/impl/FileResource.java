@@ -17,10 +17,12 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.audit.events.settings.SettingsAuditRecorder;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.ResourceDeletionManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -59,12 +61,15 @@ public class FileResource extends AbstractAuthGuardedRestResource {
 
   private final FileManager fileManager;
   private final ResourceDeletionManager resourceDeletionManager;
+  private final SettingsAuditRecorder audit;
 
   public FileResource(ISpCoreConfigurationStorage coreConfigurationStorage,
                       IFileMetadataStorage fileMetadataStorage,
-                       ResourceDeletionManager resourceDeletionManager) {
+                      ResourceDeletionManager resourceDeletionManager,
+                      SpResourceManager resourceManager) {
     this.fileManager = new FileManager(coreConfigurationStorage, fileMetadataStorage);
     this.resourceDeletionManager = resourceDeletionManager;
+    this.audit = new SettingsAuditRecorder(resourceManager.getAuditService());
   }
 
   @PostMapping(
@@ -79,8 +84,10 @@ public class FileResource extends AbstractAuthGuardedRestResource {
               fileDetail.getOriginalFilename(),
               fileDetail.getInputStream()
           );
+      audit.fileUploaded(getAuthenticatedUserSid(), metadata);
       return ok(metadata);
     } catch (IllegalArgumentException e) {
+      audit.fileUploadFailed(getAuthenticatedUserSid());
       return badRequest(Notifications.error(
           String.format(
               "This file type is not supported. Allowed file types are %s.",
@@ -88,6 +95,7 @@ public class FileResource extends AbstractAuthGuardedRestResource {
           )
       ));
     } catch (Exception e) {
+      audit.fileUploadFailed(getAuthenticatedUserSid());
       return fail();
     }
   }
@@ -95,8 +103,14 @@ public class FileResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "{fileId}")
   @PreAuthorize(AuthConstants.HAS_WRITE_FILE_PRIVILEGE)
   public ResponseEntity<Void> deleteFile(@PathVariable("fileId") String fileId) {
-    fileManager.deleteFile(fileId, resourceDeletionManager);
-    return ok();
+    try {
+      fileManager.deleteFile(fileId, resourceDeletionManager);
+      audit.fileDeleted(getAuthenticatedUserSid(), fileId);
+      return ok();
+    } catch (RuntimeException e) {
+      audit.fileDeleteFailed(getAuthenticatedUserSid(), fileId);
+      throw e;
+    }
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

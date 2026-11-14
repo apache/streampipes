@@ -24,10 +24,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 public class RateLimitedRuntimeInfoProvider {
 
@@ -37,10 +40,48 @@ public class RateLimitedRuntimeInfoProvider {
   private final DataStreamRuntimeInfoProvider runtimeInfoProvider;
   private final ObjectMapper objectMapper;
   private final ClientDisconnectCallback callback;
+  private final Runnable expiryCallback;
+  private final BooleanSupplier active;
+  private final int previewCycles;
+  private final long intervalMillis;
 
 
   public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
                                         ClientDisconnectCallback callback) {
+    this(runtimeInfoProvider, callback, callback::onClientDisconnect, () -> true);
+  }
+
+  /**
+   * @param callback       called when the client disconnects, streaming fails or {@code active} turns false
+   * @param expiryCallback called instead of {@code callback} when the stream ends because it reached its
+   *                       maximum duration, so that the client may re-attach to the same source
+   * @param active         checked before each cycle; streaming ends as soon as it returns false,
+   *                       e.g. after the preview was stopped explicitly
+   */
+  public RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                        ClientDisconnectCallback callback,
+                                        Runnable expiryCallback,
+                                        BooleanSupplier active) {
+    this(runtimeInfoProvider, callback, expiryCallback, active, MAX_PREVIEW_TIME_CYCLES, MAX_FREQUENCY);
+  }
+
+  RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                ClientDisconnectCallback callback,
+                                int previewCycles,
+                                long intervalMillis) {
+    this(runtimeInfoProvider, callback, callback::onClientDisconnect, () -> true, previewCycles, intervalMillis);
+  }
+
+  RateLimitedRuntimeInfoProvider(DataStreamRuntimeInfoProvider runtimeInfoProvider,
+                                ClientDisconnectCallback callback,
+                                Runnable expiryCallback,
+                                BooleanSupplier active,
+                                int previewCycles,
+                                long intervalMillis) {
+    this.expiryCallback = expiryCallback;
+    this.active = active;
+    this.previewCycles = previewCycles;
+    this.intervalMillis = intervalMillis;
     this.runtimeInfoProvider = runtimeInfoProvider;
     this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
@@ -50,28 +91,43 @@ public class RateLimitedRuntimeInfoProvider {
   }
 
   public void streamOutput(OutputStream outputStream) {
-    runtimeInfoProvider.startConsuming();
+    streamOutput(outputStream, outputStream::flush);
+  }
+
+  public void streamOutput(OutputStream outputStream, Flushable responseFlusher) {
+    var expired = false;
     try {
-      for (int i = 0; i < MAX_PREVIEW_TIME_CYCLES; i++) {
+      runtimeInfoProvider.startConsuming();
+      for (int i = 0; i < previewCycles; i++) {
+        if (!active.getAsBoolean()) {
+          return;
+        }
         var messages = runtimeInfoProvider.getLatestEvents();
         if (!messages.isEmpty()) {
           try {
-            outputStream.write((objectMapper.writeValueAsString(messages) + "\n").getBytes());
-            outputStream.flush();
+            outputStream.write((objectMapper.writeValueAsString(messages) + "\n").getBytes(StandardCharsets.UTF_8));
+            // Streaming HTTP output streams may suppress flush(); flush the response explicitly.
+            responseFlusher.flush();
           } catch (IOException ignored) {
-            callback.onClientDisconnect();
+            return;
           }
         }
-        TimeUnit.MILLISECONDS.sleep(MAX_FREQUENCY);
+        TimeUnit.MILLISECONDS.sleep(intervalMillis);
       }
+      expired = true;
     } catch (InterruptedException e) {
-      throw new RuntimeException(e);
+      Thread.currentThread().interrupt();
     } finally {
-      closeResources(runtimeInfoProvider);
+      try {
+        runtimeInfoProvider.close();
+      } finally {
+        if (expired) {
+          expiryCallback.run();
+        } else {
+          callback.onClientDisconnect();
+        }
+      }
     }
   }
 
-  private void closeResources(DataStreamRuntimeInfoProvider fetcher) {
-    fetcher.close();
-  }
 }

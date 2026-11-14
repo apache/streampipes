@@ -25,6 +25,7 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 
 import org.springframework.security.core.Authentication;
@@ -76,7 +77,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
 
     try {
       return db.persist(encryptedAdapterDescription).v;
-    } catch (org.lightcouch.DocumentConflictException e) {
+    } catch (StorageConflictException e) {
       throw new AdapterException("Conflict occurred while creating the adapter", e);
     }
   }
@@ -89,7 +90,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   public void encryptAndUpdate(AdapterDescription adapterDescription) throws AdapterException {
     try {
       db.updateElement(cloneAndEncrypt(adapterDescription));
-    } catch (org.lightcouch.DocumentConflictException e) {
+    } catch (StorageConflictException e) {
       throw new AdapterException(
           "Conflict occurred while editing the adapter with id: %s".formatted(adapterDescription.getElementId()),
           e

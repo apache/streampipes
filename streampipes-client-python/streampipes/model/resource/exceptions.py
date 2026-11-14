@@ -16,7 +16,6 @@
 #
 
 
-
 class StreamPipesUnsupportedDataSeries(Exception):
     """Exception to be raised when the returned data lake series
     cannot be parsed with the current implementation of the resource.

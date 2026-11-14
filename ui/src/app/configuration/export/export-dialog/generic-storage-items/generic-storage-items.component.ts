@@ -63,6 +63,7 @@ export class GenericStorageItemsComponent {
             resourceId: this.newDocumentId,
             label: this.newDocumentId,
             selected: true,
+            category: null,
         });
     }
 

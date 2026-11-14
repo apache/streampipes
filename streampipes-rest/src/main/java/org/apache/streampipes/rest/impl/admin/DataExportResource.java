@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.audit.api.AuditOutcome;
+import org.apache.streampipes.audit.events.settings.SettingsAuditRecorder;
 import org.apache.streampipes.export.ExportManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -45,12 +47,14 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
+  private final SettingsAuditRecorder audit;
 
   public DataExportResource(ExtensionServiceRequestManager extensionServiceRequestManager,
                             SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.pipelineManager = new PipelineManager(resourceManager);
     this.resourceManager = resourceManager;
+    this.audit = new SettingsAuditRecorder(resourceManager.getAuditService());
 
   }
 
@@ -69,13 +73,21 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   public ResponseEntity<byte[]> download(@RequestBody ExportConfiguration exportConfiguration) throws IOException {
-    var applicationPackage = ExportManager
-        .getExportPackage(
-            exportConfiguration,
-            extensionServiceRequestManager,
-            resourceManager,
-            pipelineManager);
-    return ok(applicationPackage);
+    var actor = getAuthenticatedUserSid();
+    audit.exportDownloaded(actor, AuditOutcome.REQUESTED, exportConfiguration);
+    try {
+      var applicationPackage = ExportManager
+          .getExportPackage(
+              exportConfiguration,
+              extensionServiceRequestManager,
+              resourceManager,
+              pipelineManager);
+      audit.exportDownloaded(actor, AuditOutcome.SUCCEEDED, exportConfiguration);
+      return ok(applicationPackage);
+    } catch (IOException | RuntimeException e) {
+      audit.exportDownloaded(actor, AuditOutcome.FAILED, exportConfiguration);
+      throw e;
+    }
   }
 
 }

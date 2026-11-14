@@ -19,7 +19,7 @@ import json
 import logging
 from typing import Any
 
-from confluent_kafka import Producer  # type: ignore
+from confluent_kafka import Producer
 
 from streampipes.functions.broker import Publisher
 

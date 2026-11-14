@@ -17,9 +17,15 @@
  */
 package org.apache.streampipes.service.core.storage;
 
+import org.apache.streampipes.couchdb.client.CouchServer;
+import org.apache.streampipes.couchdb.client.transport.CouchRequest;
+import org.apache.streampipes.couchdb.client.transport.CouchResponse;
+import org.apache.streampipes.couchdb.client.transport.CouchTransport;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.manager.setup.InstallationConfiguration;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.core.PipelineManagementConfiguration;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
@@ -41,6 +47,8 @@ import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateSt
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbCodecs;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
@@ -60,6 +68,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfi
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
@@ -67,7 +76,6 @@ import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -75,14 +83,18 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 class StorageApiConfigurationTest {
@@ -101,11 +113,19 @@ class StorageApiConfigurationTest {
       CachedSpCoreConfigurationStorage.CACHE_NAME
   );
 
+  private final List<CouchRequest> couchDbRequests = new ArrayList<>();
+
+  private final CouchDbStores stores = new CouchDbStores(
+      CouchServer.builder().url("http://localhost:5984").transport(config -> new RecordingTransport()).build(),
+      CouchDbCodecs.defaults());
+
   @Test
   void registersUncachedStoragesAndDistinguishesAdapterDescriptions() {
-    try (var clients = mockStatic(Utils.class);
-         var context = new AnnotationConfigApplicationContext()) {
+    try (var context = new AnnotationConfigApplicationContext()) {
+      context.registerBean(CouchDbStores.class, () -> stores);
       context.registerBean(CacheManager.class, () -> cacheManager);
+      context.registerBean(ExtensionServiceRequestManager.class, () -> mock(ExtensionServiceRequestManager.class));
+      context.registerBean(SpResourceManager.class, () -> mock(SpResourceManager.class, RETURNS_DEEP_STUBS));
       context.register(StorageApiConfiguration.class, PipelineManagementConfiguration.class, AdapterStorages.class);
       context.refresh();
 
@@ -138,11 +158,10 @@ class StorageApiConfigurationTest {
           context.getBean(ITransformationScriptTemplateStorage.class));
       assertInstanceOf(PipelineElementDescriptionStorageImpl.class,
           context.getBean(IPipelineElementDescriptionStorage.class));
-      assertEquals(IImageStorage.class, context.getType("imageStorage"));
-      assertFalse(context.getBeanFactory().containsSingleton("imageStorage"));
+      assertInstanceOf(ImageStorageImpl.class, context.getBean(IImageStorage.class));
       assertNotNull(context.getBean(InstallationConfiguration.class));
       assertNotNull(context.getBean(AvailableExtensionsProvider.class));
-      clients.verifyNoInteractions();
+      assertEquals(List.of(), couchDbRequests, "creating the storages must not contact CouchDB");
     }
   }
 
@@ -152,7 +171,7 @@ class StorageApiConfigurationTest {
     var processor = new DataProcessorDescription();
     processor.setElementId("processor-id");
     when(processors.getElementById("processor-id")).thenReturn(processor);
-    var configuration = new StorageApiConfiguration(true, true, true, true, true, true, true, true, true, true, true);
+    var configuration = new StorageApiConfiguration(stores, true, true, true, true, true, true, true, true, true, true, true);
     var descriptions = configuration.pipelineElementDescriptionStorage(
         processors, mock(IDataStreamStorage.class), mock(IDataSinkStorage.class), mock(IAdapterStorage.class));
 
@@ -168,7 +187,7 @@ class StorageApiConfigurationTest {
 
   @Test
   void enablesStorageCaches() {
-    var configuration = new StorageApiConfiguration(true, true, true, true, true, true, true, true, true, true, true);
+    var configuration = new StorageApiConfiguration(stores, true, true, true, true, true, true, true, true, true, true, true);
 
     assertInstanceOf(CachedChartStorage.class, configuration.chartStorage(cacheManager));
     assertInstanceOf(CachedPermissionStorage.class, configuration.permissionStorage(cacheManager));
@@ -185,7 +204,7 @@ class StorageApiConfigurationTest {
 
   @Test
   void configuresStorageCachesIndependently() {
-    var configuration = new StorageApiConfiguration(false, true, false, true, false, true, false, true, false, false, false);
+    var configuration = new StorageApiConfiguration(stores, false, true, false, true, false, true, false, true, false, false, false);
 
     assertInstanceOf(ChartStorageImpl.class, configuration.chartStorage(cacheManager));
     assertInstanceOf(CachedPermissionStorage.class, configuration.permissionStorage(cacheManager));
@@ -198,5 +217,18 @@ class StorageApiConfigurationTest {
     assertInstanceOf(PrivilegeStorageImpl.class, configuration.privilegeStorage(cacheManager));
     assertInstanceOf(UserStorage.class, configuration.userStorage(cacheManager));
     assertInstanceOf(CoreConfigurationStorageImpl.class, configuration.coreConfigurationStorage(cacheManager));
+  }
+
+  private class RecordingTransport implements CouchTransport {
+
+    @Override
+    public CouchResponse send(CouchRequest request, Map<String, String> headers) {
+      couchDbRequests.add(request);
+      throw new IllegalStateException("Unexpected CouchDB request " + request.method() + " " + request.path());
+    }
+
+    @Override
+    public void close() {
+    }
   }
 }

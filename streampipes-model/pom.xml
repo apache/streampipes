@@ -60,10 +60,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.drapostolos</groupId>
-            <artifactId>type-parser</artifactId>
-        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

@@ -16,7 +16,7 @@
  *
  */
 
-import { DatePipe, NgClass, NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import {
     CdkDrag,
     CdkDragDrop,
@@ -48,6 +48,10 @@ import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.compon
 import { TranslatePipe } from '@ngx-translate/core';
 import { WidgetNumberAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ResultLabelService } from '../../../services/result-label.service';
+import {
+    ChartNumberFormatService,
+    ChartTimeFormatService,
+} from '../../../services/formatting';
 
 type SortDirection = 'asc' | 'desc' | '';
 
@@ -117,13 +121,14 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
         MatIcon,
         MatCheckbox,
         FormsModule,
-        DatePipe,
         TranslatePipe,
     ],
 })
 export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableWidgetModel> {
     private elRef = inject(ElementRef);
     private resultLabelService = inject(ResultLabelService);
+    private numberFormatService = inject(ChartNumberFormatService);
+    private timeFormatService = inject(ChartTimeFormatService);
 
     private static readonly DEFAULT_PAGE_SIZE = 20;
 
@@ -910,7 +915,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
 
     formatDisplayCellValue(column: string, value: unknown): unknown {
         if (this.isNumericColumn(column)) {
-            return this.formatNumericValue(value);
+            return this.formatNumericValue(column, value);
         }
 
         return this.formatCellValue(column, value);
@@ -951,35 +956,51 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             : TableWidgetComponent.DEFAULT_PAGE_SIZE;
     }
 
-    private formatNumericValue(value: unknown): unknown {
+    private formatNumericValue(column: string, value: unknown): unknown {
         const numericValue = this.toNumber(value);
         if (numericValue === undefined) {
             return this.formatCellValue('', value);
         }
 
-        const decimals = this.getDecimals();
-        return decimals === undefined
-            ? String(numericValue)
-            : numericValue.toFixed(decimals);
+        return this.numberFormatService.format(
+            numericValue,
+            this.numberFormatService.resolveOptions(
+                this.dataExplorerWidget
+                    .baseAppearanceConfig as WidgetNumberAppearanceConfig,
+                this.resolveField(this.getFieldByColumnName(column)),
+            ),
+        );
     }
 
-    private getDecimals(): number | undefined {
-        const appearanceConfig = this.dataExplorerWidget
-            .baseAppearanceConfig as WidgetNumberAppearanceConfig;
-        return this.normalizeDecimals(appearanceConfig?.numberFormat?.decimals);
+    /**
+     * Each row is a single raw data point, so timestamp cells always show the
+     * full date and time down to milliseconds, independent of the time range.
+     */
+    formatTimestamp(value: unknown): string {
+        return this.timeFormatService.formatTimestamp(
+            this.asTimestamp(value),
+            undefined,
+            'full',
+        );
     }
 
-    private normalizeDecimals(decimals: unknown): number | undefined {
-        if (decimals === null || decimals === undefined || decimals === '') {
+    /**
+     * A label configured for the dataset's timestamp field (result label
+     * overrides) replaces the generic "Time" header of the time column.
+     */
+    get timeHeaderLabel(): string | undefined {
+        const sourceConfig =
+            this.dataExplorerWidget.dataConfig.sourceConfigs[0];
+        const timestampRuntimeName = sourceConfig?.measure?.timestampField
+            ?.split('::')
+            .pop();
+        if (!sourceConfig?.queryConfig || !timestampRuntimeName) {
             return undefined;
         }
-
-        const parsedValue = Number(decimals);
-        if (!Number.isFinite(parsedValue)) {
-            return undefined;
-        }
-
-        return Math.min(10, Math.max(0, Math.round(parsedValue)));
+        return this.resultLabelService.getOverride(sourceConfig.queryConfig, {
+            fullDbName: timestampRuntimeName,
+            sourceIndex: 0,
+        });
     }
 
     private applyTableState(resetPageIndex: boolean): void {

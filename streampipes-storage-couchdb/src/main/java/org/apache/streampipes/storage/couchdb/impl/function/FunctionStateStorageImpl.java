@@ -20,15 +20,16 @@ package org.apache.streampipes.storage.couchdb.impl.function;
 
 import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class FunctionStateStorageImpl extends DefaultViewCrudStorage<FunctionState>
     implements IFunctionStateStorage {
 
-  public FunctionStateStorageImpl() {
+  public FunctionStateStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("genericstorage"),
+        stores.gson(GenericCouchDbConstants.DB_NAME),
         FunctionState.class,
         "function-states/all-function-states"
     );

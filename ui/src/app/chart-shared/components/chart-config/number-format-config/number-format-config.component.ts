@@ -29,7 +29,9 @@ import { FormFieldComponent } from '@streampipes/shared-ui';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
+import { normalizeDecimals } from '../../../services/formatting';
 
 @Component({
     selector: 'sp-number-format-config',
@@ -38,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         FormFieldComponent,
         FormsModule,
+        MatCheckbox,
         MatFormField,
         MatInput,
         TranslatePipe,
@@ -63,22 +66,26 @@ export class SpNumberFormatConfigComponent implements OnInit {
         });
     }
 
+    updateRawValues(rawValues: boolean): void {
+        this.appearanceConfig.numberFormat ??= {};
+        this.appearanceConfig.numberFormat.rawValues = rawValues;
+        this.widgetConfigurationService.notify({
+            refreshView: true,
+            refreshData: false,
+        });
+    }
+
     get decimals(): number | null {
         return this.appearanceConfig.numberFormat?.decimals ?? null;
+    }
+
+    get rawValues(): boolean {
+        return this.appearanceConfig.numberFormat?.rawValues === true;
     }
 
     private normalizeDecimals(
         decimals: number | string | null,
     ): number | undefined {
-        if (decimals === null || decimals === '') {
-            return undefined;
-        }
-
-        const parsedDecimals = Number(decimals);
-        if (!Number.isFinite(parsedDecimals)) {
-            return undefined;
-        }
-
-        return Math.min(10, Math.max(0, Math.round(parsedDecimals)));
+        return normalizeDecimals(decimals);
     }
 }

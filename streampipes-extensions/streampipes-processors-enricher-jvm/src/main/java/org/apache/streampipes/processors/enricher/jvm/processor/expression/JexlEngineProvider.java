@@ -33,6 +33,13 @@ public class JexlEngineProvider {
 
     var permissions = new JexlPermissions.ClassPermissions(java.lang.Math.class);
 
-    return new JexlBuilder().features(features).permissions(permissions).create();
+    // strict + non-safe: unsolvable methods (including calls denied by the permissions) and undefined
+    // variables throw a JexlException instead of silently evaluating to null.
+    return new JexlBuilder()
+        .features(features)
+        .permissions(permissions)
+        .strict(true)
+        .safe(false)
+        .create();
   }
 }

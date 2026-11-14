@@ -36,7 +36,11 @@
         <dependency>
             <groupId>org.apache.pulsar</groupId>
             <artifactId>pulsar-client</artifactId>
-            <version>4.2.4</version>
+        </dependency>
+        <!-- pulsar-client 5.x references classes from pulsar-client-admin-api (e.g. TopicDomain) without declaring it -->
+        <dependency>
+            <groupId>org.apache.pulsar</groupId>
+            <artifactId>pulsar-client-admin-api</artifactId>
         </dependency>
     </dependencies>
 

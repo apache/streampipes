@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.configuration;
 
+import org.apache.streampipes.model.dataset.RetentionTimeConfig;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -33,6 +35,7 @@ public class SpCoreConfiguration {
   private EmailConfig emailConfig;
   private EmailTemplateConfig emailTemplateConfig;
   private GeneralConfig generalConfig;
+  private RetentionTimeConfig auditRetentionConfiguration;
   private LocationConfig locationConfig;
 
   private boolean isConfigured;
@@ -85,6 +88,14 @@ public class SpCoreConfiguration {
 
   public void setGeneralConfig(GeneralConfig generalConfig) {
     this.generalConfig = generalConfig;
+  }
+
+  public RetentionTimeConfig getAuditRetentionConfiguration() {
+    return auditRetentionConfiguration;
+  }
+
+  public void setAuditRetentionConfiguration(RetentionTimeConfig auditRetentionConfiguration) {
+    this.auditRetentionConfiguration = auditRetentionConfiguration;
   }
 
   public boolean isConfigured() {

@@ -19,15 +19,15 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class CompactPipelineTemplateStorageImpl extends DefaultCrudStorage<CompactPipelineTemplate>
     implements ICompactPipelineTemplateStorage {
 
-  public CompactPipelineTemplateStorageImpl() {
+  public CompactPipelineTemplateStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("pipeline-templates"),
+        stores.gson("pipeline-templates"),
         CompactPipelineTemplate.class
     );
   }

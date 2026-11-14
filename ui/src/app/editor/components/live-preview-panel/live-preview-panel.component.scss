@@ -1,0 +1,207 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+@use 'live-preview-status';
+
+:host {
+    display: block;
+    flex: none;
+}
+
+.live-preview-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 10rem;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-bg-0);
+}
+
+.live-preview-panel__resize {
+    position: absolute;
+    top: -0.25rem;
+    left: 0;
+    right: 0;
+    height: 0.5rem;
+    cursor: ns-resize;
+    z-index: 1;
+    touch-action: none;
+}
+
+.live-preview-panel__resize:hover,
+.live-preview-panel__resize:focus-visible {
+    background: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    outline: none;
+}
+
+.live-preview-panel__header {
+    padding: var(--space-2xs) var(--space-xs) var(--space-2xs) var(--space-md);
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.live-preview-panel__title {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+.live-preview-panel__meta {
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-xs);
+    font-weight: normal;
+}
+
+.live-preview-panel__starting {
+    flex: 1 1 auto;
+}
+
+.live-preview-panel__body {
+    display: grid;
+    grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.live-preview-panel__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: auto;
+    border-right: 1px solid var(--color-border-subtle);
+}
+
+.live-preview-panel__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    width: 100%;
+    padding: var(--space-xs) var(--space-md);
+    border: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.live-preview-panel__row:hover {
+    background: var(--color-bg-1);
+}
+
+.live-preview-panel__row:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.live-preview-panel__row--selected {
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.live-preview-panel__row-name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.live-preview-panel__row-summary {
+    padding-left: 0.875rem;
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-xs);
+}
+
+.live-preview-panel__detail {
+    overflow: auto;
+    padding: var(--space-xs) var(--space-md) var(--space-md);
+}
+
+.live-preview-panel__detail-header {
+    margin-bottom: var(--space-xs);
+}
+
+.live-preview-panel__detail-name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+.live-preview-panel__message {
+    margin-bottom: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-1);
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-sm);
+}
+
+.live-preview-panel__message--error {
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+.live-preview-panel__message--waiting {
+    border-color: var(--color-warning);
+}
+
+.live-preview-panel__table {
+    border-collapse: collapse;
+    min-width: 100%;
+    font-size: var(--font-size-sm);
+}
+
+.live-preview-panel__table th,
+.live-preview-panel__table td {
+    padding: var(--space-2xs) var(--space-sm);
+    border-bottom: 1px solid var(--color-border-subtle);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.live-preview-panel__table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--color-bg-0);
+    color: var(--color-secondary-text);
+    font-weight: var(--font-weight-medium);
+}
+
+.live-preview-panel__field {
+    color: var(--color-secondary-text);
+    font-weight: normal;
+}
+
+.live-preview-panel__value {
+    font-variant-numeric: tabular-nums;
+}
+
+// an output older than the latest input, e.g. after a filter dropped events
+.live-preview-panel__value--behind {
+    color: var(--color-secondary-text);
+}
+
+.live-preview-panel__changed {
+    padding: 0 var(--space-2xs);
+    border-radius: var(--radius-xs);
+    background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+    color: var(--color-primary);
+}
+
+.live-preview-panel__caption {
+    margin: var(--space-xs) 0 0;
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-xs);
+}

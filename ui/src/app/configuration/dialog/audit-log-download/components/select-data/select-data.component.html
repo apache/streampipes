@@ -1,0 +1,93 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-split-section [level]="3" [title]="'Data Range' | translate">
+    <mat-radio-group
+        class="sp-radio-group audit-date-range-selection"
+        [ngModel]="exportConfig.dateRangeSelection"
+        (ngModelChange)="onDateRangeSelectionChange($event)"
+    >
+        <mat-radio-button value="current" class="sp-radio-button">
+            {{ 'Current selection' | translate }}
+        </mat-radio-button>
+        <mat-radio-button value="custom" class="sp-radio-button">
+            {{ 'Custom selection' | translate }}
+        </mat-radio-button>
+    </mat-radio-group>
+    @if (exportConfig.dateRangeSelection === 'custom') {
+        <div class="audit-date-range">
+            <div>
+                <h5>{{ 'From' | translate }}</h5>
+                <sp-date-input [(date)]="exportConfig.fromDate" />
+            </div>
+            <div>
+                <h5>{{ 'To' | translate }}</h5>
+                <sp-date-input [(date)]="exportConfig.toDate" />
+            </div>
+        </div>
+    }
+</sp-split-section>
+
+<sp-split-section [level]="3" [title]="'Filters' | translate">
+    <div class="audit-download-filters">
+        <sp-form-field
+            [level]="3"
+            [label]="'Event type' | translate"
+            margin="0"
+        >
+            <sp-search-select
+                [items]="dialogModel.eventTypes"
+                [value]="dialogModel.query.eventType || undefined"
+                [freeTextValue]="eventTypeFromText"
+                [placeholder]="'All event types' | translate"
+                (valueChange)="onEventTypeChange($event)"
+            />
+        </sp-form-field>
+        <sp-form-field
+            [level]="3"
+            [label]="'Actor username' | translate"
+            margin="0"
+        >
+            <sp-search-select
+                [items]="dialogModel.actors"
+                [value]="selectedActor"
+                [freeTextValue]="actorFromText"
+                [searchTextFor]="actorSearchText"
+                [placeholder]="'All actors' | translate"
+                (valueChange)="onActorChange($event)"
+            />
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Outcome' | translate" margin="0">
+            <sp-search-select
+                [items]="outcomeOptions"
+                [value]="selectedOutcome"
+                [placeholder]="'All outcomes' | translate"
+                (valueChange)="onOutcomeChange($event)"
+            />
+        </sp-form-field>
+    </div>
+</sp-split-section>
+
+<sp-split-section [level]="3" [title]="'Columns' | translate">
+    <p>{{ 'Choose the columns to include in the export.' | translate }}</p>
+    @for (column of exportConfig.columns; track column.id) {
+        <mat-checkbox [(ngModel)]="column.selected">
+            {{ column.label | translate }}
+        </mat-checkbox>
+    }
+</sp-split-section>

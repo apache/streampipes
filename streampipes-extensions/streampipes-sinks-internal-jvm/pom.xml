@@ -28,7 +28,6 @@
     <artifactId>streampipes-sinks-internal-jvm</artifactId>
 
     <properties>
-        <lightcouch.version>0.1.8</lightcouch.version>
         <influxdb.java.version>2.14</influxdb.java.version>
     </properties>
 
@@ -64,10 +63,6 @@
         <!-- External dependencies -->
         <!-- TODO remove after refactoring -->
         <dependency>
-            <groupId>org.lightcouch</groupId>
-            <artifactId>lightcouch</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.influxdb</groupId>
             <artifactId>influxdb-java</artifactId>
         </dependency>
@@ -76,10 +71,6 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
         </dependency>
 
         <!-- Test dependencies -->

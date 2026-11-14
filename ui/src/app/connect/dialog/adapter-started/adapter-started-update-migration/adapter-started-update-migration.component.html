@@ -61,7 +61,33 @@
                             </div>
                         </div>
                     }
-                    @if (!updateInfo.canAutoMigrate) {
+                    @if (updateInfo.validationUnavailable) {
+                        <div
+                            class="pipeline-status"
+                            fxLayoutAlign="start center"
+                            data-cy="adapter-pipeline-validation-unavailable-warning"
+                        >
+                            <mat-icon class="status-icon status-icon-warning">
+                                warning
+                            </mat-icon>
+                            <div>
+                                <div class="pipeline-title">
+                                    {{ 'Pipeline' | translate }}
+                                    <b>{{ updateInfo.pipelineName }}</b>
+                                </div>
+                                <div class="pipeline-description">
+                                    {{
+                                        'This pipeline could not be revalidated because a required extension is unavailable. Its configuration will remain unchanged.'
+                                            | translate
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (
+                        !updateInfo.canAutoMigrate &&
+                        !updateInfo.validationUnavailable
+                    ) {
                         <div
                             class="pipeline-status"
                             fxLayoutAlign="start center"

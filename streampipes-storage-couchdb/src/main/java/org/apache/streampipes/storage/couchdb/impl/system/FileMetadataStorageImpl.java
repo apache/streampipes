@@ -19,14 +19,14 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class FileMetadataStorageImpl extends DefaultCrudStorage<FileMetadata> implements IFileMetadataStorage {
 
-  public FileMetadataStorageImpl() {
+  public FileMetadataStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("filemetadata"),
+        stores.gson("filemetadata"),
         FileMetadata.class
     );
   }
