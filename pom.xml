@@ -63,7 +63,7 @@
         <grpc.version>1.85.1</grpc.version>
         <guava.version>33.7.2-jre</guava.version>
         <hadoop.version>3.4.3</hadoop.version>
-        <hadoop-mapreduce-client-core.version>3.4.3</hadoop-mapreduce-client-core.version>
+        <hadoop-mapreduce-client-core.version>3.5.0</hadoop-mapreduce-client-core.version>
         <jjwt.version>0.11.2</jjwt.version>
         <!-- converges kafka-clients (Spring Boot BOM, 1.11.2) with iotdb-session and tsfile (1.10.1); revisit when IoTDB or TsFile is bumped -->
         <lz4-java.version>1.11.4</lz4-java.version>
