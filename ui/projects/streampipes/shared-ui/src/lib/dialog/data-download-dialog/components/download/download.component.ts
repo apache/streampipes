@@ -24,11 +24,14 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { DataExportService } from '../../services/data-export.service';
-import { DownloadProgress } from '../../model/download-progress.model';
+import {
+    DownloadProgress,
+    FailedDownload,
+} from '../../model/download-progress.model';
 import { Subscription } from 'rxjs';
 import { MatStepLabel } from '@angular/material/stepper';
 import { DownloadStatusComponent } from '../download-status/download-status.component';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-download',
@@ -39,21 +42,29 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class DownloadComponent implements OnInit, OnDestroy {
     dataExportService = inject(DataExportService);
+    private translateService = inject(TranslateService);
 
     downloadProgress: DownloadProgress;
     downloadProgressSubscription: Subscription;
 
+    downloading = true;
+    multipleFiles = false;
+    allFailed = false;
+    failedDownloads: FailedDownload[] = [];
+    fileProgressText = '';
+    cancelledText = '';
+    partialFailureText = '';
+    summaryText = '';
+
     ngOnInit(): void {
-        this.downloadProgress = {
+        this.applyProgress({
             downloadedMBs: 0,
             finished: false,
-        };
+        });
 
         this.downloadProgressSubscription =
-            this.dataExportService.updateDownloadProgress.subscribe(
-                progress => {
-                    this.downloadProgress = progress;
-                },
+            this.dataExportService.updateDownloadProgress.subscribe(progress =>
+                this.applyProgress(progress),
             );
     }
 
@@ -62,6 +73,43 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     cancelDownload() {
-        // TODO implement
+        this.dataExportService.cancelDownload();
+    }
+
+    private applyProgress(progress: DownloadProgress): void {
+        this.downloadProgress = progress;
+        const completed = progress.completedFiles ?? 0;
+        const total = progress.totalFiles ?? 1;
+
+        this.downloading = !progress.finished && !progress.cancelled;
+        this.multipleFiles = total > 1;
+        this.failedDownloads = progress.failedDownloads ?? [];
+        this.allFailed =
+            progress.finished && this.failedDownloads.length > 0 && !completed;
+
+        this.fileProgressText = this.translateService.instant(
+            'Downloading dataset {{current}} of {{total}}: {{name}}',
+            {
+                current: completed + 1,
+                total,
+                name: progress.currentMeasurement,
+            },
+        );
+        this.cancelledText = this.translateService.instant(
+            'Download cancelled after {{completed}} of {{total}} files',
+            { completed, total },
+        );
+        this.partialFailureText = this.translateService.instant(
+            'Could not download: {{names}}',
+            {
+                names: this.failedDownloads
+                    .map(failed => `${failed.measurement} (${failed.reason})`)
+                    .join(', '),
+            },
+        );
+        this.summaryText = this.translateService.instant(
+            '{{completed}} of {{total}} datasets downloaded',
+            { completed, total },
+        );
     }
 }

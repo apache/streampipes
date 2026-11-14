@@ -265,6 +265,7 @@
   "Copyright notice": "Informacja o prawach autorskich",
   "Could not change email address.": "Nie udało się zmienić adresu e-mail.",
   "Could not change the password.": "Nie udało się zmienić hasła.",
+  "Could not download: {{names}}": "Nie udało się pobrać: {{names}}",
   "Could not load running instances": "Nie można załadować uruchomionych instancji",
   "Could not send email": "Nie można wysłać e-maila",
   "Could not send test email.": "Nie można wysłać testowej wiadomości e-mail.",
@@ -415,10 +416,15 @@
   "Download File": "Pobierz plik",
   "Download Format": "Format pobierania",
   "Download audit log": "Pobierz dziennik audytu",
+  "Download cancelled after {{completed}} of {{total}} files": "Pobieranie anulowane po {{completed}} z {{total}} plików",
   "Download data": "Pobierz dane",
   "Download export": "Pobierz eksport",
+  "Download failed": "Pobieranie nie powiodło się",
+  "Download selected": "Pobierz zaznaczone",
   "Download successful": "Pobieranie zakończone powodzeniem",
+  "Downloading dataset {{current}} of {{total}}: {{name}}": "Pobieranie zbioru danych {{current}} z {{total}}: {{name}}",
   "Dropped events": "Odrzucone zdarzenia",
+  "Each dataset is downloaded as a separate file using the same export settings.": "Każdy zbiór danych jest pobierany jako osobny plik z tymi samymi ustawieniami eksportu.",
   "Edge": "Krawędź",
   "Edit": "Edytuj",
   "Edit Chart": "Edytuj wykres",
@@ -1498,5 +1504,6 @@
   "visible to registered users": "widoczne dla zarejestrowanych użytkowników",
   "waiting": "oczekiwanie",
   "{{ widgetTitle }} Clone": "Kopia {{ widgetTitle }}",
-  "{{action}} {{ current }} of {{ total }} ({{ name }})...{{ status }}": "{{action}} {{ current }} z {{ total }} ({{ name }})...{{ status }}"
+  "{{action}} {{ current }} of {{ total }} ({{ name }})...{{ status }}": "{{action}} {{ current }} z {{ total }} ({{ name }})...{{ status }}",
+  "{{completed}} of {{total}} datasets downloaded": "Pobrano {{completed}} z {{total}} zbiorów danych"
 }

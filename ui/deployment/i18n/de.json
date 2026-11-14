@@ -265,6 +265,7 @@
   "Copyright notice": "Copyright-Hinweis",
   "Could not change email address.": "Die E-Mail-Adresse konnte nicht geändert werden.",
   "Could not change the password.": "Das Passwort konnte nicht geändert werden.",
+  "Could not download: {{names}}": "Download fehlgeschlagen: {{names}}",
   "Could not load running instances": "Laufende Instanzen konnten nicht geladen werden",
   "Could not send email": "E-Mail konnte nicht versendet werden",
   "Could not send test email.": "Test-E-Mail konnte nicht versendet werden.",
@@ -415,10 +416,15 @@
   "Download File": "Datei herunterladen",
   "Download Format": "Download-Format",
   "Download audit log": "Audit-Protokoll herunterladen",
+  "Download cancelled after {{completed}} of {{total}} files": "Download nach {{completed}} von {{total}} Dateien abgebrochen",
   "Download data": "Daten herunterladen",
   "Download export": "Export herunterladen",
+  "Download failed": "Download fehlgeschlagen",
+  "Download selected": "Ausgewählte herunterladen",
   "Download successful": "Download erfolgreich",
+  "Downloading dataset {{current}} of {{total}}: {{name}}": "Lade Datensatz {{current}} von {{total}} herunter: {{name}}",
   "Dropped events": "Verworfene Ereignisse",
+  "Each dataset is downloaded as a separate file using the same export settings.": "Jeder Datensatz wird mit denselben Exporteinstellungen als separate Datei heruntergeladen.",
   "Edge": "Rand",
   "Edit": "Bearbeiten",
   "Edit Chart": "Diagramm bearbeiten",
@@ -1498,5 +1504,6 @@
   "visible to registered users": "sichtbar für registrierte Benutzer",
   "waiting": "Warten",
   "{{ widgetTitle }} Clone": "{{ widgetTitle }} Kopie",
-  "{{action}} {{ current }} of {{ total }} ({{ name }})...{{ status }}": "{{action}} {{ current }} von {{ total }} ({{name}})...{{ status }}"
+  "{{action}} {{ current }} of {{ total }} ({{ name }})...{{ status }}": "{{action}} {{ current }} von {{ total }} ({{name}})...{{ status }}",
+  "{{completed}} of {{total}} datasets downloaded": "{{completed}} von {{total}} Datensätzen heruntergeladen"
 }

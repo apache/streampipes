@@ -19,4 +19,14 @@
 export interface DownloadProgress {
     downloadedMBs?: number;
     finished: boolean;
+    cancelled?: boolean;
+    totalFiles?: number;
+    completedFiles?: number;
+    currentMeasurement?: string;
+    failedDownloads?: FailedDownload[];
+}
+
+export interface FailedDownload {
+    measurement: string;
+    reason: string;
 }

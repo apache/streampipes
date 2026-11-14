@@ -155,7 +155,14 @@ export class DatasetOverviewComponent
         resourceIdKey: 'elementId',
     };
 
+    readonly downloadDatasetActionOption: SpTableMultiActionOption = {
+        value: 'download',
+        label: this.translateService.instant('Download selected'),
+        icon: 'download',
+    };
+
     readonly bulkDatasetActionOptions: SpTableMultiActionOption[] = [
+        this.downloadDatasetActionOption,
         {
             value: 'truncate',
             label: this.translateService.instant('Truncate selected'),
@@ -168,9 +175,19 @@ export class DatasetOverviewComponent
         },
     ];
 
+    readonly readOnlyDatasetActionOptions: SpTableMultiActionOption[] = [
+        this.downloadDatasetActionOption,
+    ];
+
     executeSelectedDatasetAction(
         event: SpTableMultiActionExecuteEvent<DatasetOverviewEntry>,
     ): void {
+        if (event.action === 'download' && event.selectedRows.length) {
+            this.openMultiDownloadDialog(
+                event.selectedRows.map(dataset => dataset.name),
+            );
+            return;
+        }
         if (
             !this.writeAccess ||
             !event.selectedRows.length ||
@@ -379,6 +396,19 @@ export class DatasetOverviewComponent
             data: {
                 dataDownloadDialogModel: {
                     measureName: datasetName,
+                },
+            },
+        });
+    }
+
+    openMultiDownloadDialog(datasetNames: string[]): void {
+        this.dialogService.open(DataDownloadDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Download data'),
+            width: '50vw',
+            data: {
+                dataDownloadDialogModel: {
+                    measureNames: datasetNames,
                 },
             },
         });

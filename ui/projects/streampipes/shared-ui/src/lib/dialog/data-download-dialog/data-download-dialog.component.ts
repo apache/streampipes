@@ -36,12 +36,19 @@ import { DownloadComponent } from './components/download/download.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SplitSectionComponent } from '../../components/split-section/split-section.component';
+import { SpLabelComponent } from '../../components/sp-label/sp-label.component';
+import {
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-data-download-dialog',
     templateUrl: 'data-download-dialog.component.html',
     styleUrls: ['./data-download-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
+    providers: [DataExportService],
     imports: [
         FlexDirective,
         MatStepper,
@@ -53,6 +60,10 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatDivider,
         MatButton,
         TranslatePipe,
+        SplitSectionComponent,
+        SpLabelComponent,
+        LayoutDirective,
+        LayoutGapDirective,
     ],
 })
 export class DataDownloadDialogComponent implements OnInit {
@@ -67,12 +78,11 @@ export class DataDownloadDialogComponent implements OnInit {
     @Input()
     exportConfig: ExportConfig;
 
+    measurementNames: string[] = [];
+
     ngOnInit() {
-        const measurementName =
-            this.dataDownloadDialogModel.measureName !== undefined
-                ? this.dataDownloadDialogModel.measureName
-                : this.dataDownloadDialogModel.dataExplorerDataConfig
-                      .sourceConfigs[0].measureName;
+        this.measurementNames = this.resolveMeasurementNames();
+        const measurementName = this.measurementNames[0];
 
         this.exportConfig ??= {
             dataExportConfig: {
@@ -86,7 +96,10 @@ export class DataDownloadDialogComponent implements OnInit {
                 headerColumnName: 'key',
             },
         };
-        console.log(this.exportConfig);
+    }
+
+    get multipleMeasurements(): boolean {
+        return this.measurementNames.length > 1;
     }
 
     exitDialog() {
@@ -110,10 +123,22 @@ export class DataDownloadDialogComponent implements OnInit {
                 this.dataDownloadDialogModel.dataExplorerDateRange;
         }
 
-        this.dataExportService.downloadData(
+        this.dataExportService.downloadMeasurements(
             this.exportConfig,
             this.dataDownloadDialogModel,
+            this.measurementNames,
         );
         this.downloadDialogStepper.next();
+    }
+
+    private resolveMeasurementNames(): string[] {
+        const model = this.dataDownloadDialogModel;
+        if (model.measureNames?.length) {
+            return [...new Set(model.measureNames)];
+        }
+        if (model.measureName !== undefined) {
+            return [model.measureName];
+        }
+        return [model.dataExplorerDataConfig.sourceConfigs[0].measureName];
     }
 }
