@@ -151,11 +151,14 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
 
   @DeleteMapping(path = "{id}")
   @Operation(summary = "Delete a pipeline element template by a given id",
+             description = "Removes a shared template from the template catalog. "
+                 + "Existing configured pipeline elements are not removed.",
              tags = {"Pipeline Element Templates"},
              responses = {
                  @ApiResponse(responseCode = "200", description = "Pipeline element template successfully deleted"),
                  @ApiResponse(responseCode = "400", description = "Template with given id not found")
              })
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<Void> delete(
       @Parameter(description = "The id of the pipeline element template", required = true)
       @PathVariable("id") String s

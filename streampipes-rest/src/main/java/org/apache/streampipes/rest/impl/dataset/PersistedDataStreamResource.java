@@ -25,12 +25,11 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.impl.dashboard.AbstractPipelineExtractionResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,15 +50,12 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DATASET_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ') and hasPermission(filterObject.measureName, 'READ')")
+  @Operation(summary = "List dataset-producing pipelines",
+             description = "Returns pipeline identifiers, names and event schemas for dataset sinks "
+                 + "visible to the current user.",
+             tags = {"Data Lake"})
   public List<DatasetMetadata> getPersistedDataStreams() {
     return extract(new ArrayList<>(), DatasetAppId);
-  }
-
-  @GetMapping(path = "{pipelineId}/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getVisualizablePipelineByPipelineIdAndVisualizationName(
-      @PathVariable("pipelineId") String pipelineId,
-      @PathVariable("measureName") String measureName) {
-    return getPipelineByIdAndFieldValue(DatasetAppId, pipelineId, measureName);
   }
 
   @Override
@@ -76,8 +72,4 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
     return measure;
   }
 
-  @Override
-  protected boolean matches(DatasetMetadata measure, String pipelineId, String fieldValue) {
-    return measure.getMeasureName().equals(fieldValue);
-  }
 }

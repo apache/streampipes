@@ -37,6 +37,7 @@ import {
 import {
     FormFieldComponent,
     SplitSectionComponent,
+    SpAlertBannerComponent,
 } from '@streampipes/shared-ui';
 import { MatFormField, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -56,6 +57,7 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template.pipe';
         FlexDirective,
         LayoutDirective,
         SplitSectionComponent,
+        SpAlertBannerComponent,
         FormFieldComponent,
         MatFormField,
         MatInput,
