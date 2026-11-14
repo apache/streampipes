@@ -20,7 +20,10 @@ package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
 import org.apache.streampipes.audit.events.authentication.AuthenticationMethod;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
+import org.apache.streampipes.service.core.oauth2.util.RedirectUriValidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,16 +52,20 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
   private static final Logger LOG = LoggerFactory.getLogger(OAuth2AuthenticationFailureHandler.class);
   private static final String ERROR_PARAM = "error";
+  private static final String DEFAULT_TARGET_URL = "/";
 
   private final AuthenticationAuditRecorder audit;
 
   private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+  private final Environment env;
 
   @Autowired
-  public OAuth2AuthenticationFailureHandler(HttpCookieOAuth2AuthorizationRequestRepository repository,
+  public OAuth2AuthenticationFailureHandler(HttpCookieOAuth2AuthorizationRequestRepository
+                                                httpCookieOAuth2AuthorizationRequestRepository,
                                             AuthenticationAuditRecorder audit) {
-    this.httpCookieOAuth2AuthorizationRequestRepository = repository;
+    this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     this.audit = java.util.Objects.requireNonNull(audit);
+    this.env = Environments.getEnvironment();
   }
 
   @Override
@@ -66,16 +73,33 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
                                       HttpServletResponse response,
                                       AuthenticationException exception) throws IOException {
     audit.loginDenied(AuthenticationMethod.OAUTH2);
-    String targetUrl = CookieUtils
-        .getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-        .map(Cookie::getValue)
-        .orElse(("/"));
+    var authorizedRedirectUri = env.getOAuthRedirectUri();
+    String targetUrl = targetUrl(
+        CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue).orElse(null),
+        authorizedRedirectUri.exists() ? authorizedRedirectUri.getValue() : null
+    );
 
     LOG.warn("OAuth login failed: {}", sanitizeForLog(exception.getMessage()));
 
     httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
     getRedirectStrategy().sendRedirect(request, response, appendErrorCode(targetUrl));
+  }
+
+  /**
+   * The redirect uri cookie is set from a request parameter, so it is only followed if it points to the
+   * configured OAuth redirect uri.
+   */
+  static String targetUrl(String redirectUri,
+                          String authorizedRedirectUri) {
+    if (redirectUri == null) {
+      return DEFAULT_TARGET_URL;
+    }
+    if (!RedirectUriValidator.isAuthorized(redirectUri, authorizedRedirectUri)) {
+      LOG.warn("Ignoring redirect uri of failed OAuth login that does not match the configured redirect uri");
+      return DEFAULT_TARGET_URL;
+    }
+    return redirectUri;
   }
 
   /**
