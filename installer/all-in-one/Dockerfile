@@ -28,7 +28,7 @@
 # The third-party services use the same images as installer/compose.
 # Only port 80 is exposed.
 
-ARG COUCHDB_VERSION=3.4.3
+ARG COUCHDB_VERSION=3.5.3
 ARG INFLUXDB_VERSION=2.6
 ARG NATS_VERSION=2.11
 
@@ -48,9 +48,7 @@ FROM influxdb:${INFLUXDB_VERSION} AS influxdb
 FROM nats:${NATS_VERSION} AS nats
 
 # CouchDB is the only service that cannot be copied as a static binary, so its
-# image (Debian) is the base; everything else is layered on top of it. 3.4.x is
-# the first CouchDB image on a Debian release that still receives updates
-# (the Compose installer's 3.3.1 is built on end-of-life bullseye).
+# image (Debian) is the base; everything else is layered on top of it.
 FROM couchdb:${COUCHDB_VERSION}
 
 RUN apt-get update \

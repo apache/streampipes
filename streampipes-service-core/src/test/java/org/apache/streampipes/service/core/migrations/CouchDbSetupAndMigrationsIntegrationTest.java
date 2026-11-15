@@ -68,7 +68,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Installation step and CouchDB migrations against CouchDB 3.3.1. Enable with
+ * Installation step and CouchDB migrations against CouchDB 3.5.3. Enable with
  * {@code -Dstreampipes.couchdb.integration=true}.
  */
 public class CouchDbSetupAndMigrationsIntegrationTest {
@@ -90,7 +90,7 @@ public class CouchDbSetupAndMigrationsIntegrationTest {
     if (!ENABLED) {
       return;
     }
-    couchDb = new GenericContainer<>("couchdb:3.3.1")
+    couchDb = new GenericContainer<>("couchdb:3.5.3")
         .withEnv("COUCHDB_USER", "admin")
         .withEnv("COUCHDB_PASSWORD", "admin")
         .withExposedPorts(5984)

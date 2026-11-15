@@ -70,7 +70,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * The storages on the new client against CouchDB 3.3.1, with the views the installation step creates. Enable with
+ * The storages on the new client against CouchDB 3.5.3, with the views the installation step creates. Enable with
  * {@code -Dstreampipes.couchdb.integration=true}.
  */
 @EnabledIfSystemProperty(named = "streampipes.couchdb.integration", matches = "true")
@@ -82,7 +82,7 @@ public class CouchDbStoragesIntegrationTest {
 
   @BeforeAll
   public static void startCouchDb() {
-    couchDb = new GenericContainer<>("couchdb:3.3.1")
+    couchDb = new GenericContainer<>("couchdb:3.5.3")
         .withEnv("COUCHDB_USER", "admin")
         .withEnv("COUCHDB_PASSWORD", "admin")
         .withExposedPorts(5984)
