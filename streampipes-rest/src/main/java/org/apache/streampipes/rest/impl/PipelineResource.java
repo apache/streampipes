@@ -149,8 +149,11 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @GetMapping(
       path = "{pipelineId}/status",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Get the pipeline status of a given pipeline", tags = {"Pipeline"})
-  @PreAuthorize("this.hasReadAuthority()")
+  @Operation(summary = "Get the pipeline status of a given pipeline",
+             description = "Returns up to five recent status messages for the requested pipeline. "
+                 + "Returns an empty list when no messages are available.",
+             tags = {"Pipeline"})
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#pipelineId, 'READ')")
   public List<PipelineStatusMessage> getPipelineStatus(@PathVariable("pipelineId") String pipelineId) {
     return PipelineStatusManager.getPipelineStatus(pipelineId, 5);
   }
