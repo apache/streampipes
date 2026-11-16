@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.assets.AssetManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public class WorkerAdministrationManagement {
 
@@ -71,7 +73,9 @@ public class WorkerAdministrationManagement {
           if (!assetManager.existsAssetDir(adapter.getAppId())) {
             try {
               LOG.info("Updating assets for adapter {}", adapter.getAppId());
-              assetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId(), requestManager, serviceDiscovery);
+              var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery)
+                  .selectService(adapter.getAppId(), SpServiceUrlProvider.ADAPTER, Set.of());
+              assetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId(), requestManager, service);
             } catch (IOException | NoServiceEndpointsAvailableException e) {
               LOG.error(
                   "Could not fetch asset for adapter {}, please try to manually update this adapter.",

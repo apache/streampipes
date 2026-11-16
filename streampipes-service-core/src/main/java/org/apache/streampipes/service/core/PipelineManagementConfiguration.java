@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStora
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscoveryCore;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
@@ -67,11 +68,12 @@ public class PipelineManagementConfiguration {
 
   @Bean
   public InstallationConfiguration installationConfiguration(
+      CouchDbStores stores,
       IGenericStorage genericStorage,
       ICompactPipelineTemplateStorage pipelineTemplateStorage,
       IPipelineElementDescriptionStorage descriptionStorage,
       AvailableExtensionsProvider availableExtensionsProvider) {
     return new InstallationConfiguration(
-        genericStorage, pipelineTemplateStorage, descriptionStorage, availableExtensionsProvider);
+        stores, genericStorage, pipelineTemplateStorage, descriptionStorage, availableExtensionsProvider);
   }
 }

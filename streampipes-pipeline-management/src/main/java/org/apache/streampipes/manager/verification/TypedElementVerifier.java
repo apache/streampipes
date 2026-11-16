@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.manager.verification;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
@@ -37,7 +36,6 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
   private final Consumer<T> updateOperation;
   private final SpServiceUrlProvider serviceUrlProvider;
   private final ExtensionServiceRequestManager requestManager;
-  private final ISpServiceDiscovery serviceDiscovery;
 
   public TypedElementVerifier(
       String graphData,
@@ -56,7 +54,6 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
     this.updateOperation = updateOperation;
     this.serviceUrlProvider = serviceUrlProvider;
     this.requestManager = requestManager;
-    this.serviceDiscovery = resourceManager.getServiceDiscovery();
   }
 
   public TypedElementVerifier(
@@ -75,7 +72,6 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
     this.updateOperation = updateOperation;
     this.serviceUrlProvider = serviceUrlProvider;
     this.requestManager = requestManager;
-    this.serviceDiscovery = resourceManager.getServiceDiscovery();
   }
 
   @Override
@@ -93,9 +89,12 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
   }
 
   @Override
-  protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
+  protected void storeAssets(SpServiceRegistration service) throws IOException {
     if (elementDescription.isIncludesAssets()) {
-      assetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId(), requestManager, serviceDiscovery);
+      if (service == null) {
+        throw new IOException("No source service provided for assets of " + elementDescription.getAppId());
+      }
+      assetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId(), requestManager, service);
     }
   }
 }

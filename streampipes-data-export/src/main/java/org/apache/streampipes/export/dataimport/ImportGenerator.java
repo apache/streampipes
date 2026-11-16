@@ -22,13 +22,14 @@ import org.apache.streampipes.commons.zip.ZipFileExtractor;
 import org.apache.streampipes.export.constants.ExportConstants;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.lightcouch.DocumentConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +62,7 @@ public abstract class ImportGenerator<T> {
     for (String assetId : manifest.getAssets()) {
       try {
         handleAsset(previewFiles, assetId);
-      } catch (DocumentConflictException | IOException e) {
+      } catch (StorageException | IOException e) {
         LOG.warn("Skipping import of asset model {} (already present with the same id)", assetId);
       }
     }
@@ -69,7 +70,7 @@ public abstract class ImportGenerator<T> {
     for (String adapterId : manifest.getAdapters()) {
       try {
         handleAdapter(asString(previewFiles.get(adapterId)), adapterId);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of adapter {} (already present with the same id)", adapterId);
       }
     }
@@ -77,7 +78,7 @@ public abstract class ImportGenerator<T> {
     for (String chartId : manifest.getDataViews()) {
       try {
         handleChart(asString(previewFiles.get(chartId)), chartId);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of chart {} (already present with the same id)", chartId);
       }
     }
@@ -85,7 +86,7 @@ public abstract class ImportGenerator<T> {
     for (String dataSourceId : manifest.getDataSources()) {
       try {
         handleDataSource(asString(previewFiles.get(dataSourceId)), dataSourceId);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of data source {} (already present with the same id)", dataSourceId);
       }
     }
@@ -93,7 +94,7 @@ public abstract class ImportGenerator<T> {
     for (String pipelineId : manifest.getPipelines()) {
       try {
         handlePipeline(asString(previewFiles.get(pipelineId)), pipelineId);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of pipeline {} (already present with the same id)", pipelineId);
       }
     }
@@ -101,7 +102,7 @@ public abstract class ImportGenerator<T> {
     for (String measurementId : manifest.getDataLakeMeasures()) {
       try {
         handleDatasetMetadata(asString(previewFiles.get(measurementId)), measurementId);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of data lake measure {} (already present with the same id)", measurementId);
       }
     }
@@ -109,7 +110,7 @@ public abstract class ImportGenerator<T> {
     for (String dashboardId : manifest.getDashboards()) {
       try {
         handleDashboard(asString(previewFiles.get(dashboardId)), dashboardId);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of dashboard {} (already present with the same id)", dashboardId);
       }
     }
@@ -117,7 +118,7 @@ public abstract class ImportGenerator<T> {
     for (String fileMetadataId : manifest.getFiles()) {
       try {
         handleFile(asString(previewFiles.get(fileMetadataId)), fileMetadataId, previewFiles);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of file {} (already present with the same id)", fileMetadataId);
       }
     }
@@ -125,7 +126,7 @@ public abstract class ImportGenerator<T> {
     for (String documentId : manifest.getGenericStorageDocuments()) {
       try {
         handleGenericStorageDocumentByType(asString(previewFiles.get(documentId)), documentId);
-      } catch (DocumentConflictException e) {
+      } catch (StorageConflictException e) {
         LOG.warn("Skipping import of generic storage doc {} (already present with the same id)", documentId);
       }
     }

@@ -19,6 +19,7 @@ package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.units.model.MeasurementUnit;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
@@ -57,6 +58,15 @@ public class PropertyRequirementsBuilder {
 
   public PropertyRequirementsBuilder measurementUnitReq(String measurementUnit) {
     this.propertyReq.setMeasurementUnit(URI.create(measurementUnit));
+    return this;
+  }
+
+  /**
+   * Requires the property to have the given measurement unit. Matching accepts any identifier
+   * of the same unit.
+   */
+  public PropertyRequirementsBuilder measurementUnitReq(MeasurementUnit measurementUnit) {
+    this.propertyReq.setMeasurementUnit(measurementUnit.resource());
     return this;
   }
 

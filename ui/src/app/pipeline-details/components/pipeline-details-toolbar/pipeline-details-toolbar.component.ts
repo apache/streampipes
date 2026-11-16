@@ -33,6 +33,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
+import { LivePreviewState } from '../../../editor/model/editor.model';
 
 @Component({
     selector: 'sp-pipeline-details-toolbar',
@@ -61,7 +62,7 @@ export class PipelineDetailsToolbarComponent {
     autoRefresh: boolean;
 
     @Input()
-    previewModeActive: boolean;
+    previewState: LivePreviewState = 'off';
 
     @Output()
     autoRefreshChange = new EventEmitter<boolean>();

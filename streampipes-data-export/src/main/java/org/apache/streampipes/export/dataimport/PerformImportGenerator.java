@@ -43,6 +43,7 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.exceptions.StorageNotFoundException;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
@@ -99,7 +100,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
       if (config.isOverwriteExistingDocuments()) {
         genericStorage.delete(assetId, existing.get("_rev").toString());
       }
-    } catch (IOException e) {
+    } catch (StorageNotFoundException e) {
       // Document not found, do nothing
     }
     genericStorage.create(document);
@@ -146,9 +147,10 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handlePipeline(String document, String pipelineId) throws JsonProcessingException {
     if (shouldStore(pipelineId, config.getPipelines())) {
-      writeDocument(document,
-          new PipelineResolver(extensionServiceRequestManager, pipelineManager, resourceManager.managePipelines()));
-      permissionsToStore.add(new PermissionInfo(pipelineId, Pipeline.class));
+      var resolver = new PipelineResolver(extensionServiceRequestManager, pipelineManager, resourceManager.managePipelines());
+      writeDocument(document, resolver);
+      var pipeline = resolver.deserializeDocument(document);
+      permissionsToStore.add(new PermissionInfo(pipeline.getPipelineId(), Pipeline.class));
     }
   }
 

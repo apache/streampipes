@@ -19,13 +19,13 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.storage.api.exceptions.StorageUnavailableException;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.mockito.Mockito.doThrow;
@@ -50,7 +50,7 @@ class ResourceDeletionManagerTest {
   }
 
   @Test
-  void removesAssetLinksBeforeDeletingTheDocument() throws IOException {
+  void removesAssetLinksBeforeDeletingTheDocument() {
     manager.delete(storage, "asset-1");
 
     var order = inOrder(genericStorage, storage);
@@ -59,8 +59,8 @@ class ResourceDeletionManagerTest {
   }
 
   @Test
-  void stillDeletesTheDocumentWhenAssetLinkCleanupFails() throws IOException {
-    doThrow(new IOException("unavailable")).when(genericStorage).deleteAssetLinkToResource("asset-1");
+  void stillDeletesTheDocumentWhenAssetLinkCleanupFails() {
+    doThrow(new StorageUnavailableException("unavailable")).when(genericStorage).deleteAssetLinkToResource("asset-1");
 
     manager.delete(storage, "asset-1");
 
@@ -68,7 +68,7 @@ class ResourceDeletionManagerTest {
   }
 
   @Test
-  void resourceManagerDeletesPermissionsAfterDeletingTheDocument() throws IOException {
+  void resourceManagerDeletesPermissionsAfterDeletingTheDocument() {
     var permissions = mock(PermissionResourceManager.class);
     var permission = new Permission();
     when(permissions.findForObjectId("asset-1")).thenReturn(List.of(permission));

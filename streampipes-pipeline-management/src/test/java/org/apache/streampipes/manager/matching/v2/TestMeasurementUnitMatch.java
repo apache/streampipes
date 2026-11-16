@@ -39,4 +39,31 @@ public class TestMeasurementUnitMatch {
     boolean matches = new MeasurementUnitMatch().match(offered, required, errorLog);
     Assertions.assertTrue(matches);
   }
+
+  @Test
+  public void aliasesOfTheSameUnitMatch() {
+    var matcher = new MeasurementUnitMatch();
+    URI qudt1 = URI.create("http://qudt.org/vocab/unit#DegreeCelsius");
+    URI qudt2 = URI.create("http://qudt.org/vocab/unit/DEG_C");
+    URI streamPipes = URI.create("https://streampipes.apache.org/vocabulary/unit/DEG_C");
+
+    Assertions.assertTrue(matcher.match(qudt2, qudt1, new ArrayList<>()));
+    Assertions.assertTrue(matcher.match(qudt1, streamPipes, new ArrayList<>()));
+  }
+
+  @Test
+  public void differentUnitsDoNotMatch() {
+    URI celsius = URI.create("http://qudt.org/vocab/unit#DegreeCelsius");
+    URI kelvin = URI.create("http://qudt.org/vocab/unit#Kelvin");
+
+    Assertions.assertFalse(new MeasurementUnitMatch().match(kelvin, celsius, new ArrayList<>()));
+  }
+
+  @Test
+  public void missingOfferDoesNotMatchARequirement() {
+    URI celsius = URI.create("http://qudt.org/vocab/unit#DegreeCelsius");
+
+    Assertions.assertFalse(new MeasurementUnitMatch().match(null, celsius, new ArrayList<>()));
+    Assertions.assertTrue(new MeasurementUnitMatch().match(null, null, new ArrayList<>()));
+  }
 }

@@ -25,9 +25,9 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.units.StandardUnits;
 import org.apache.streampipes.vocabulary.SO;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -195,7 +195,7 @@ public class AssemblyStationSimulator extends StatefulMachineSimulator<AssemblyS
             .description("Progress of the current cycle in percent")
             .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://qudt.org/vocab/unit#Percent"))
+            .measurementUnit(StandardUnits.PERCENT)
             .build())
         .sample(CYCLE_PROGRESS, 40.0f)
         .property(PrimitivePropertyBuilder
@@ -204,7 +204,7 @@ public class AssemblyStationSimulator extends StatefulMachineSimulator<AssemblyS
             .description("Final tightening torque of the last joint in newton metres")
             .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://qudt.org/vocab/unit#NewtonMeter"))
+            .measurementUnit(StandardUnits.NEWTON_METER)
             .build())
         .sample(TORQUE, 24.0f)
         .property(PrimitivePropertyBuilder
@@ -213,7 +213,7 @@ public class AssemblyStationSimulator extends StatefulMachineSimulator<AssemblyS
             .description("Rotation angle after the snug torque of the last joint in degrees")
             .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://qudt.org/vocab/unit#DegreeAngle"))
+            .measurementUnit(StandardUnits.DEGREE)
             .build())
         .sample(TORQUE_ANGLE, 31.0f)
         .property(PrimitivePropertyBuilder
@@ -222,7 +222,7 @@ public class AssemblyStationSimulator extends StatefulMachineSimulator<AssemblyS
             .description("Duration of the last completed cycle in seconds")
             .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://qudt.org/vocab/unit#SecondTime"))
+            .measurementUnit(StandardUnits.SECOND)
             .build())
         .sample(CYCLE_TIME, 45.0f)
         .property(PrimitivePropertyBuilder

@@ -64,12 +64,14 @@ import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class AvailableMigrations {
 
+  private final CouchDbStores stores;
   private final IChartStorage chartStorage;
   private final IPermissionStorage permissionStorage;
   private final IAdapterStorage adapterStorage;
@@ -88,9 +90,11 @@ public class AvailableMigrations {
   private final IDataStreamStorage dataStreamStorage;
   private final IGenericStorage genericStorage;
 
-  public AvailableMigrations(SpResourceManager resourceManager,
+  public AvailableMigrations(CouchDbStores stores,
+                             SpResourceManager resourceManager,
                              ICertificateStorage certificateStorage,
                              ICompactPipelineTemplateStorage pipelineTemplateStorage) {
+    this.stores = stores;
     this.certificateStorage = certificateStorage;
     this.genericStorage = resourceManager.getGenericStorage();
     this.chartStorage = resourceManager.manageCharts().getDb();
@@ -114,27 +118,27 @@ public class AvailableMigrations {
     return Arrays.asList(
         new ModifyAssetLinksMigration(genericStorage),
         new ModifyAssetLinkTypesMigration(genericStorage),
-        new AddDatasetMetadataViewMigration(),
+        new AddDatasetMetadataViewMigration(stores),
         new AddDefaultExportProviderMigration(coreConfigStorage),
         new FixImportedPermissionsMigration(chartStorage, dataStreamStorage, dashboardStorage, permissionStorage),
-        new AddAssetManagementViewMigration(),
+        new AddAssetManagementViewMigration(stores),
         new MoveAssetContentMigration(genericStorage),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
-        new MigrateDataLakeDatabaseToDatasetMigration(),
+        new MigrateDataLakeDatabaseToDatasetMigration(stores),
         new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
         new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage, permissionStorage),
         new RemoveObsoletePrivilegesMigration(privilegeStorage),
         new UniqueDashboardIdMigration(dashboardStorage),
-        new AddScriptTemplateViewMigration(),
+        new AddScriptTemplateViewMigration(stores),
         new ComputeCertificateThumbprintMigration(certificateStorage),
         new MigrateAdaptersToUseScript(adapterStorage),
         new MigratePlc4xS7AdaptersToGenericAdapter(adapterStorage),
         new ModifyAssetLinkIconMigration(genericStorage),
         new RemoveDuplicatedAssetPermissions(permissionStorage, assetStorage),
-        new AddFunctionStateViewMigration(),
-        new AddRefreshTokenViewsMigration(),
+        new AddFunctionStateViewMigration(stores),
+        new AddRefreshTokenViewsMigration(stores),
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
-        new RemoveInternalNotificationSinkMigration(pipelineStorage, dataSinkStorage),
+        new RemoveInternalNotificationSinkMigration(stores, pipelineStorage, dataSinkStorage),
         new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
         new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage),

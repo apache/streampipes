@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v7.0.1
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v6.1.0
+        uses: actions/setup-java@v6.2.0
         with:
           distribution: 'temurin'
           java-version: '25'
@@ -49,11 +49,13 @@ jobs:
 
       # Step 2: Run only integration tests (selfsigned)
       - name: Run Integration Tests (selfsigned)
+        timeout-minutes: 30
         run: |
           mvn -B test -P selfsigned -pl streampipes-integration-tests -Dtest='**/*Test'
 
       # Step 3: Run only integration tests (keystore)
       - name: Run Integration Tests (keystore)
+        timeout-minutes: 30
         run: |
           mvn -B test -P keystore -pl streampipes-integration-tests -Dtest='**/*Test'
  

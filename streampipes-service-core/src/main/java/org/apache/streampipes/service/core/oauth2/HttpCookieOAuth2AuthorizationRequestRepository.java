@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
+import org.apache.streampipes.service.core.oauth2.util.AuthorizationRequestCookieCodec;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.time.Duration;
 
 
 @Component
@@ -38,12 +41,15 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
   public static final String REMEMBER_ME_PARAM_COOKIE_NAME = "remember_me";
   private static final int cookieExpireSeconds = 180;
 
+  private final AuthorizationRequestCookieCodec codec =
+      new AuthorizationRequestCookieCodec(Duration.ofSeconds(cookieExpireSeconds));
+
   @Override
   public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
     return CookieUtils.getCookie(
             request,
             OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME
-        ).map(cookie -> CookieUtils.deserialize(cookie, OAuth2AuthorizationRequest.class))
+        ).flatMap(cookie -> codec.decode(cookie.getValue()))
         .orElse(null);
   }
 
@@ -58,27 +64,30 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
     }
 
     CookieUtils.addCookie(
+        request,
         response,
         OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-        CookieUtils.serialize(authorizationRequest),
+        codec.encode(authorizationRequest),
         cookieExpireSeconds
     );
 
     String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
     if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
-      CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
+      CookieUtils.addCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
     }
 
     String rememberMe = request.getParameter(REMEMBER_ME_PARAM_COOKIE_NAME);
     if (StringUtils.isNotBlank(rememberMe)) {
-      CookieUtils.addCookie(response, REMEMBER_ME_PARAM_COOKIE_NAME, rememberMe, cookieExpireSeconds);
+      CookieUtils.addCookie(request, response, REMEMBER_ME_PARAM_COOKIE_NAME, rememberMe, cookieExpireSeconds);
     }
   }
 
   @Override
   public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request,
                                                                HttpServletResponse response) {
-    return this.loadAuthorizationRequest(request);
+    var authorizationRequest = this.loadAuthorizationRequest(request);
+    CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+    return authorizationRequest;
   }
 
   public void removeAuthorizationRequestCookies(HttpServletRequest request,

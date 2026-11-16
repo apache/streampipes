@@ -59,6 +59,7 @@ import {
     SpSpinnerComponent,
     SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableCardDirective,
     SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
@@ -72,8 +73,6 @@ import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { UserRole } from '../../../core/auth/user-role.enum';
 import { CsvImportDialogComponent } from '../../dialog/csv-import-dialog/csv-import-dialog.component';
 import {
-    FlexDirective,
-    FlexOrderDirective,
     LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
@@ -81,11 +80,12 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
 import { DatasetLastEventLabelComponent } from './dataset-last-event-label/dataset-last-event-label.component';
+import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-overview-card.component';
 
 @Component({
     selector: 'sp-dataset-overview',
@@ -96,7 +96,6 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         DatePipe,
         LayoutDirective,
         LayoutAlignDirective,
-        FlexDirective,
         MatIconButton,
         MatTooltip,
         MatIcon,
@@ -109,7 +108,6 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         MatCellDef,
         MatCell,
         SpSpinnerComponent,
-        FlexOrderDirective,
         NgStyle,
         StyleDirective,
         MatMenuItem,
@@ -119,8 +117,11 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         SpBasicViewComponent,
         SpPageHeaderComponent,
         SpTableActionsDirective,
+        SpTableCardDirective,
         DatasetLastEventLabelComponent,
+        DatasetOverviewCardComponent,
         AsyncPipe,
+        NgTemplateOutlet,
     ],
 })
 export class DatasetOverviewComponent
@@ -219,6 +220,7 @@ export class DatasetOverviewComponent
     isAdmin = false;
     writeAccess = false;
     assetFilter$: Subscription;
+    private tableSubscriptions = new Subscription();
     currentTime = Date.now();
     currentFilterIds: Set<string> = new Set<string>();
 
@@ -257,15 +259,22 @@ export class DatasetOverviewComponent
         this.paginator = this.spTable.paginator;
         this.dataSource.sort = this.sort;
 
-        this.spTable.paginator.page.subscribe(event => {
-            this.pageIndex = event.pageIndex;
-            this.pageSize = event.pageSize;
-            this.receiveLastEventTimes(this.pageIndex);
-        });
+        this.tableSubscriptions.add(
+            this.spTable.paginator.page.subscribe(event => {
+                this.pageIndex = event.pageIndex;
+                this.pageSize = event.pageSize;
+            }),
+        );
+        this.tableSubscriptions.add(
+            this.dataSource.connect().subscribe(datasets => {
+                this.receiveLastEventTimes(datasets);
+            }),
+        );
     }
 
     ngOnDestroy(): void {
         this.assetFilter$?.unsubscribe();
+        this.tableSubscriptions.unsubscribe();
     }
 
     loadAvailableDatasets(): void {
@@ -298,7 +307,6 @@ export class DatasetOverviewComponent
 
         this.dataSource.data = this.filteredDatasets;
         this.updatePaginatorAfterFiltering();
-        this.receiveLastEventTimes(this.pageIndex);
 
         setTimeout(() => {
             this.dataSource.paginator = this.paginator;
@@ -412,14 +420,12 @@ export class DatasetOverviewComponent
         this.pageSize = event.pageSize;
     }
 
-    receiveLastEventTimes(pageIndex: number): void {
-        const start = pageIndex * this.pageSize;
-        const end = start + this.pageSize;
-        const datasets = this.filteredDatasets
-            .slice(start, end)
-            .filter(dataset => dataset.lastEvent === null);
-        if (datasets.length > 0) {
-            this.queryLastEventTimes(datasets);
+    receiveLastEventTimes(datasets: DatasetOverviewEntry[]): void {
+        const unloadedDatasets = datasets.filter(
+            dataset => dataset.lastEvent === null && !dataset.lastEventLoading,
+        );
+        if (unloadedDatasets.length > 0) {
+            this.queryLastEventTimes(unloadedDatasets);
         }
     }
     showPermissionsDialog(element: DatasetOverviewEntry): void {

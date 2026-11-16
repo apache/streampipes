@@ -20,16 +20,16 @@ package org.apache.streampipes.storage.couchdb.impl.connect;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AdapterDescriptionStorageImpl extends DefaultCrudStorage<AdapterDescription> implements IAdapterStorage {
 
-  public AdapterDescriptionStorageImpl() {
-    super(Utils::getCouchDbAdapterDescriptionClient, AdapterDescription.class);
+  public AdapterDescriptionStorageImpl(CouchDbStores stores) {
+    super(stores.adapter("adapterdescription"), AdapterDescription.class);
   }
 
   @Override

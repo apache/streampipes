@@ -48,6 +48,6 @@ public class StreamPreviewResource extends AbstractRestResource {
     response.addHeader("X-Accel-Buffering", "no");
     var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(Map.of("adapter", spDataStream));
     var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(runtimeInfoFetcher, () -> {});
-    return runtimeInfoProvider::streamOutput;
+    return outputStream -> runtimeInfoProvider.streamOutput(outputStream, response::flushBuffer);
   }
 }

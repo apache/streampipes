@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.enricher.jvm.processor.expression;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.test.executors.PrefixStrategy;
 import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
@@ -27,6 +28,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MathExpressionProcessorTest {
 
@@ -73,5 +77,25 @@ public class MathExpressionProcessorTest {
     var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
 
     testExecutor.run(inputEvents, outputEvents);
+  }
+
+  @Test
+  public void testInvalidExpressionFailsPipelineStart() {
+    var config = List.of(Map.of(
+        MathExpressionProcessor.FIELD_NAME, "result1",
+        MathExpressionProcessor.EXPRESSION, "temperature = 5"
+    ));
+
+    var configuration = TestConfiguration
+        .builder()
+        .config(MathExpressionProcessor.ENRICHED_FIELDS, config)
+        .prefixStrategy(PrefixStrategy.SAME_PREFIX)
+        .build();
+
+    var testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+    List<Map<String, Object>> inputEvents = List.of(Map.of("temperature", 10.1));
+
+    var e = assertThrows(SpRuntimeException.class, () -> testExecutor.run(inputEvents, List.of()));
+    assertTrue(e.getMessage().contains("'result1'"), e.getMessage());
   }
 }

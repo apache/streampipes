@@ -44,6 +44,7 @@ import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.avro.AvroParquetWriter;
 import org.apache.parquet.hadoop.ParquetWriter;
@@ -54,7 +55,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -267,13 +267,12 @@ public class ParquetSink implements IStreamPipesDataSink {
 
   private Path createNewParquetFilePath(String sourceDir, String parquetFileName) throws IOException {
     Path newParquetFilePath = new Path(sourceDir, parquetFileName + suffix);
-    String path = newParquetFilePath.toString();
+    FileSystem fileSystem = newParquetFilePath.getFileSystem(new Configuration());
     int counter = 1;
-    while (Files.exists(java.nio.file.Path.of(path))) {
+    while (fileSystem.exists(newParquetFilePath)) {
       long index = setIndex();
       String filename = parquetFileName + "_" + index;
       newParquetFilePath = new Path(sourceDir, filename + suffix);
-      path = newParquetFilePath.toString();
       counter++;
       if (counter > 5) {
         throw new SpRuntimeException("Failed to create new parquetFilePath after 5 attempts");

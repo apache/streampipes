@@ -1,0 +1,74 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<article
+    class="card"
+    [style.--card-accent]="accentColor()"
+    [attr.aria-label]="title()"
+>
+    <header
+        class="card-header"
+        [class.card-header--compact]="!reserveDescription()"
+    >
+        <div class="card-select">
+            <ng-content select="[cardSelect]" />
+        </div>
+        <div class="card-identity">
+            <div
+                class="card-title"
+                role="heading"
+                aria-level="2"
+                [matTooltip]="title()"
+            >
+                @if (titleClickable()) {
+                    <button
+                        type="button"
+                        class="card-title-link"
+                        (click)="titleClick.emit()"
+                    >
+                        {{ title() }}
+                    </button>
+                } @else {
+                    {{ title() }}
+                }
+            </div>
+            @if (description()) {
+                <p class="card-description" [matTooltip]="description()">
+                    {{ description() }}
+                </p>
+            }
+        </div>
+        <div class="card-icon">
+            <ng-content select="[cardIcon]" />
+        </div>
+    </header>
+    <div class="card-body">
+        <ng-content />
+    </div>
+    <div class="card-context">
+        <ng-content select="[cardAssetContext]" />
+    </div>
+    <footer class="card-footer">
+        <div class="card-footer-start">
+            <ng-content select="[cardFooter]" />
+        </div>
+        <div class="card-footer-end">
+            <ng-content select="[cardFooterActions]" />
+        </div>
+    </footer>
+</article>

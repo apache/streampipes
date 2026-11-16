@@ -91,7 +91,7 @@ class CustomTransformOutputSchemaGeneratorTest {
   }
 
   @Test
-  void throwsWhenTheExtensionReturnsAnErrorResponse() throws IOException {
+  void returnsEmptySchemaWhenTheExtensionReturnsAnErrorResponse() throws IOException {
     var invocation = invocation();
     var serviceDiscovery = mock(ISpServiceDiscovery.class);
     var requestManager = mock(ExtensionServiceRequestManager.class);
@@ -104,10 +104,9 @@ class CustomTransformOutputSchemaGeneratorTest {
         requestManager
     );
 
-    var exception = assertThrows(IllegalStateException.class,
-        () -> generator.buildFromOneStream(null));
+    var schema = generator.buildFromOneStream(null).k;
 
-    assertTrue(exception.getMessage().contains("status code: 500"));
+    assertTrue(schema.getEventProperties().isEmpty());
   }
 
   @Test
@@ -131,7 +130,7 @@ class CustomTransformOutputSchemaGeneratorTest {
   }
 
   @Test
-  void throwsWhenTheExtensionReturnsAnInvalidSchema() throws IOException {
+  void returnsEmptySchemaWhenTheExtensionReturnsAnInvalidSchema() throws IOException {
     var invocation = invocation();
     var serviceDiscovery = mock(ISpServiceDiscovery.class);
     var requestManager = mock(ExtensionServiceRequestManager.class);
@@ -145,10 +144,9 @@ class CustomTransformOutputSchemaGeneratorTest {
         requestManager
     );
 
-    var exception = assertThrows(IllegalStateException.class,
-        () -> generator.buildFromOneStream(null));
+    var schema = generator.buildFromOneStream(null).k;
 
-    assertTrue(exception.getMessage().contains("invalid output schema"));
+    assertTrue(schema.getEventProperties().isEmpty());
   }
 
   private DataProcessorInvocation invocation() {

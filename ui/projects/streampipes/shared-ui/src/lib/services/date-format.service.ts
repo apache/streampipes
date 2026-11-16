@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class DateFormatService {
     private translateService = inject(TranslateService);
+    private formatters = new Map<string, Intl.DateTimeFormat>();
 
     formatDate(timestamp?: number): string {
         if (!timestamp) {
@@ -30,9 +31,14 @@ export class DateFormatService {
         }
 
         const currentLang = this.translateService.currentLang() ?? 'en';
-        return new Intl.DateTimeFormat(currentLang, {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-        }).format(new Date(timestamp));
+        let formatter = this.formatters.get(currentLang);
+        if (!formatter) {
+            formatter = new Intl.DateTimeFormat(currentLang, {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+            });
+            this.formatters.set(currentLang, formatter);
+        }
+        return formatter.format(new Date(timestamp));
     }
 }

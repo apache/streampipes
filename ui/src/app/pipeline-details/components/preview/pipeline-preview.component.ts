@@ -33,6 +33,7 @@ import {
     SpMetricsEntry,
 } from '@streampipes/platform-services';
 import {
+    LivePreviewState,
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../../editor/model/editor.model';
@@ -65,6 +66,10 @@ export class PipelinePreviewComponent implements OnInit, AfterViewInit {
     @Output()
     selectedElementEmitter: EventEmitter<PipelineElementUnion> =
         new EventEmitter<PipelineElementUnion>();
+
+    @Output()
+    previewStateChange: EventEmitter<LivePreviewState> =
+        new EventEmitter<LivePreviewState>();
 
     @ViewChild('pipelineDrawingAreaComponent')
     pipelineDrawingAreaComponent: PipelineAssemblyDrawingAreaComponent;

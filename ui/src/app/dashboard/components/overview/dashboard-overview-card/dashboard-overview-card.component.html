@@ -1,0 +1,75 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-overview-card
+    [title]="dashboard().name"
+    [description]="dashboard().description"
+    [titleClickable]="true"
+    [accentColor]="accentColor()"
+    (titleClick)="showDashboard.emit()"
+    data-cy="dashboard-overview-card"
+>
+    @if (icon(); as moduleIcon) {
+        <mat-icon cardIcon aria-hidden="true">{{ moduleIcon }}</mat-icon>
+    }
+
+    <sp-overview-card-facts>
+        <div spOverviewCardFact [label]="'Last modified' | translate">
+            <span data-cy="dashboard-card-last-modified">{{
+                lastModified()
+            }}</span>
+        </div>
+        <div spOverviewCardFact [label]="'Created' | translate">
+            <span data-cy="dashboard-card-created">{{ created() }}</span>
+        </div>
+    </sp-overview-card-facts>
+    <ng-content select="[cardSelect]" ngProjectAs="[cardSelect]"></ng-content>
+    <ng-content
+        select="[cardAssetContext]"
+        ngProjectAs="[cardAssetContext]"
+    ></ng-content>
+
+    <button
+        cardFooter
+        type="button"
+        mat-flat-button
+        class="btn-tertiary"
+        data-cy="dashboard-card-show"
+        (click)="showDashboard.emit()"
+    >
+        <mat-icon aria-hidden="true">visibility</mat-icon>
+        <span>{{ 'Show' | translate }}</span>
+    </button>
+    @if (canEdit()) {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            data-cy="dashboard-card-edit"
+            (click)="editDashboard.emit()"
+        >
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+    }
+    <ng-content
+        select="[cardFooterActions]"
+        ngProjectAs="[cardFooterActions]"
+    ></ng-content>
+</sp-overview-card>

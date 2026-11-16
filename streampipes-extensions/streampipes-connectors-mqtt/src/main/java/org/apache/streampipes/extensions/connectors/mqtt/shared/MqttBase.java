@@ -37,6 +37,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 
 public class MqttBase {
 
@@ -50,6 +51,10 @@ public class MqttBase {
     }
 
     protected Mqtt3AsyncClient setupMqttClient() throws Exception {
+        return setupMqttClient(() -> true);
+    }
+
+    protected Mqtt3AsyncClient setupMqttClient(BooleanSupplier reconnectAllowed) throws Exception {
         URI brokerUri = new URI(mqttConfig.getUrl());
         boolean tls = tlsEnabled(brokerUri);
 
@@ -59,7 +64,12 @@ public class MqttBase {
                 .serverPort(resolvePort(brokerUri))
                 .automaticReconnectWithDefaultConfig()
                 .addConnectedListener(context -> logConnected())
-                .addDisconnectedListener(context -> logDisconnected(context.getCause()))
+                .addDisconnectedListener(context -> {
+                    if (!reconnectAllowed.getAsBoolean()) {
+                        context.getReconnector().reconnect(false);
+                    }
+                    logDisconnected(context.getCause());
+                })
                 .useMqttVersion3();
 
         if (mqttConfig.getAuthenticated()) {

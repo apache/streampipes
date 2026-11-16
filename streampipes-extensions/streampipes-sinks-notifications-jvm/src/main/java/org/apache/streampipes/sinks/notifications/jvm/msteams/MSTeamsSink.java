@@ -95,6 +95,7 @@ public class MSTeamsSink extends StreamPipesNotificationSink {
     @Override
     public IDataSinkConfiguration declareConfig() {
         var builder = declareModelWithoutSilentPeriod();
+        addSilentPeriodParameter(builder);
         return DataSinkConfiguration.create(MSTeamsSink::new, builder.build());
     }
 

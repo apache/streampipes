@@ -16,6 +16,7 @@
 ~
 -->
 
+@let chartLinkType = chartLinkType$ | async;
 <div fxFlex="100" fxLayout="column">
     @if (isLoading && !hasLoadedCharts) {
         <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
@@ -44,6 +45,7 @@
                 [nameSearchConfig]="nameSearchConfig"
                 [assetContextConfig]="assetContextConfig"
                 featureCardId="chart"
+                [rememberViewMode]="true"
                 [showActionsMenu]="true"
                 [rowsClickable]="true"
                 (rowClicked)="openChart($event, true)"
@@ -58,11 +60,7 @@
                         data-cy="charts-table-overview"
                         *matCellDef="let element"
                     >
-                        <div
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            fxLayoutGap="5px"
-                        >
+                        <div class="chart-name-content">
                             @if (element.showLegacyWarning) {
                                 <mat-icon
                                     [matTooltip]="
@@ -84,7 +82,7 @@
                                     >sync_problem</mat-icon
                                 >
                             }
-                            <div fxLayout="column" fxLayoutAlign="start start">
+                            <div class="chart-name-label">
                                 <span class="text-sm" data-cy="chart-name">{{
                                     element.name
                                 }}</span>
@@ -98,11 +96,7 @@
                         {{ 'Type' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <div
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            class="text-sm"
-                        >
+                        <div class="chart-type-content text-sm">
                             <mat-icon [matTooltip]="element.chartTypeName">{{
                                 element.chartTypeIcon
                             }}</mat-icon>
@@ -126,6 +120,45 @@
                         <div>{{ element.createdAtLabel }}</div>
                     </td>
                 </ng-container>
+
+                <ng-template
+                    spTableCard
+                    let-chart
+                    let-actions="actions"
+                    let-assetContext="assetContext"
+                    let-select="selection"
+                >
+                    <sp-chart-overview-card
+                        [chart]="chart"
+                        [accentColor]="chartLinkType?.linkColor"
+                        [canEdit]="hasDataExplorerWritePrivileges"
+                        (openChart)="openChart(chart, true)"
+                        (showChart)="openChart(chart, false)"
+                        (editChart)="openChart(chart, true)"
+                    >
+                        <ng-container
+                            cardFooterActions
+                            *ngTemplateOutlet="
+                                actions;
+                                context: { $implicit: chart }
+                            "
+                        ></ng-container>
+                        <ng-container
+                            cardSelect
+                            *ngTemplateOutlet="
+                                select;
+                                context: { $implicit: chart }
+                            "
+                        ></ng-container>
+                        <ng-container
+                            cardAssetContext
+                            *ngTemplateOutlet="
+                                assetContext;
+                                context: { $implicit: chart }
+                            "
+                        ></ng-container>
+                    </sp-chart-overview-card>
+                </ng-template>
 
                 <ng-template spTableActions let-element>
                     <button

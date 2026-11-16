@@ -1,0 +1,71 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: inline-flex;
+    align-items: center;
+}
+
+.light {
+    flex-shrink: 0;
+}
+
+/* The dot and the rounded rectangle set status apart from the pill of sp-label.
+   The text mixes the tone with the text colour to stay readable on the tint in
+   both themes; the dot keeps the pure tone. */
+.status-text {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--status-tone) 12%, transparent);
+    color: color-mix(
+        in srgb,
+        var(--status-tone) 50%,
+        var(--mat-sys-on-surface)
+    );
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+.status-text--success {
+    --status-tone: var(--color-success);
+}
+
+.status-text--warning {
+    --status-tone: var(--color-warning);
+}
+
+.status-text--error {
+    --status-tone: var(--color-error);
+}
+
+.status-text--neutral {
+    --status-tone: var(--color-neutral);
+}
+
+.status-dot {
+    flex-shrink: 0;
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: var(--status-tone);
+}

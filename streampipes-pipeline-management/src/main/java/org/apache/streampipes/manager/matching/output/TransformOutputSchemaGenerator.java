@@ -34,6 +34,7 @@ import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.units.catalog.UnitCatalog;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -153,7 +154,8 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
       }
     } else if (transformOperationType == TransformOperationType.MEASUREMENT_UNIT_TRANSFORMATION) {
       if (eventProperty instanceof EventPropertyPrimitive) {
-        ((EventPropertyPrimitive) eventProperty).setMeasurementUnit(URI.create(value));
+        ((EventPropertyPrimitive) eventProperty)
+            .setMeasurementUnit(UnitCatalog.builtIn().canonicalizeOrKeep(URI.create(value)));
       }
 
     } else if (transformOperationType == TransformOperationType.DOMAIN_PROPERTY_TRANSFORMATION) {

@@ -256,12 +256,12 @@ export class DatalakeRestService {
     store(
         measureName: string,
         spQueryResult: SpQueryResult,
-        _ignoreSchemaMismatch = true,
+        ignoreSchemaMismatch = false,
     ): Observable<void> {
         return this.http.post<void>(
             `${this.dataLakeUrl}/measurements/${encodeURIComponent(measureName)}`,
             spQueryResult,
-            {},
+            { params: { ignoreSchemaMismatch } },
         );
     }
 

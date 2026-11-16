@@ -54,6 +54,9 @@ export * from './lib/components/property-scope-badge/property-scope-badge.compon
 export * from './lib/components/search-select/search-select.component';
 export * from './lib/components/search-select/search-select-template.directive';
 export * from './lib/components/progress-bar/progress-bar.component';
+export * from './lib/components/overview-card/overview-card.component';
+export * from './lib/components/overview-card/overview-card-grid.component';
+export * from './lib/components/overview-card/overview-card-facts.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/split-button/split-button.component';
 export * from './lib/components/sp-spinner/sp-spinner.component';
@@ -61,8 +64,10 @@ export * from './lib/components/sp-exception-message/sp-exception-message.compon
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
+export * from './lib/components/status-label/status-label.component';
 export * from './lib/components/sp-table/sp-table.component';
 export * from './lib/components/sp-table/sp-actions/sp-table-actions.directive';
+export * from './lib/components/sp-table/sp-actions/sp-table-card.directive';
 export * from './lib/components/sp-table/sp-actions/sp-table-multi-actions.directive';
 export * from './lib/components/sp-table/sp-table.model';
 export * from './lib/components/sp-table/sp-asset-context/sp-table-asset-context.service';

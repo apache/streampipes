@@ -972,11 +972,15 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         );
     }
 
-    /** Timestamp cells carry as much detail as the visible time window needs. */
+    /**
+     * Each row is a single raw data point, so timestamp cells always show the
+     * full date and time down to milliseconds, independent of the time range.
+     */
     formatTimestamp(value: unknown): string {
         return this.timeFormatService.formatTimestamp(
             this.asTimestamp(value),
-            this.visibleTimeSpan,
+            undefined,
+            'full',
         );
     }
 
@@ -997,14 +1001,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             fullDbName: timestampRuntimeName,
             sourceIndex: 0,
         });
-    }
-
-    private get visibleTimeSpan(): number | undefined {
-        const settings = this.timeSettings;
-        return settings?.startTime !== undefined &&
-            settings?.endTime !== undefined
-            ? settings.endTime - settings.startTime
-            : undefined;
     }
 
     private applyTableState(resetPageIndex: boolean): void {

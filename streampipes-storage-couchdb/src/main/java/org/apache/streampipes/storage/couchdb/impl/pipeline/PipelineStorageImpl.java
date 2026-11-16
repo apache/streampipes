@@ -20,33 +20,26 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PipelineStorageImpl extends DefaultCrudStorage<Pipeline> implements IPipelineStorage {
 
   private static final String ADAPTER_VIEW = "adapters/used-adapters";
   private static final String ALL_PIPELINES_VIEW = "pipelines/all";
 
-  public PipelineStorageImpl() {
-    super(Utils::getCouchDbPipelineClient, Pipeline.class);
+  public PipelineStorageImpl(CouchDbStores stores) {
+    super(stores.gson("pipeline"), Pipeline.class);
   }
 
   @Override
   public List<String> getPipelinesUsingAdapter(String adapterId) {
-    List<JsonObject> pipelinesWithAdapter =
-            couchDbClientSupplier
-                    .get()
-                    .view(ADAPTER_VIEW)
-                    .key(adapterId)
-                    .query(JsonObject.class);
-    return pipelinesWithAdapter.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
+    return new ArrayList<>(view(ADAPTER_VIEW, Pipeline.class)
+        .key(adapterId)
+        .values(String.class));
   }
 
   @Override

@@ -49,6 +49,7 @@ import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
@@ -80,7 +81,6 @@ import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,13 +88,13 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
 @EnableCaching
 public class StorageApiConfiguration {
 
+  private final CouchDbStores stores;
   private final boolean chartCacheEnabled;
   private final boolean permissionCacheEnabled;
   private final boolean adapterCacheEnabled;
@@ -108,6 +108,7 @@ public class StorageApiConfiguration {
   private final boolean coreConfigurationCacheEnabled;
 
   public StorageApiConfiguration(
+      CouchDbStores stores,
       @Value("${streampipes.storage.cache.data-explorer-widgets.enabled:true}") boolean chartCacheEnabled,
       @Value("${streampipes.storage.cache.permissions.enabled:true}") boolean permissionCacheEnabled,
       @Value("${streampipes.storage.cache.adapters.enabled:true}") boolean adapterCacheEnabled,
@@ -119,6 +120,7 @@ public class StorageApiConfiguration {
       @Value("${streampipes.storage.cache.privileges.enabled:true}") boolean privilegeCacheEnabled,
       @Value("${streampipes.storage.cache.users.enabled:true}") boolean userCacheEnabled,
       @Value("${streampipes.storage.cache.core-configuration.enabled:true}") boolean coreConfigurationCacheEnabled) {
+    this.stores = stores;
     this.chartCacheEnabled = chartCacheEnabled;
     this.permissionCacheEnabled = permissionCacheEnabled;
     this.adapterCacheEnabled = adapterCacheEnabled;
@@ -134,60 +136,60 @@ public class StorageApiConfiguration {
 
   @Bean
   public IFunctionStateStorage functionStateStorage() {
-    return new FunctionStateStorageImpl();
+    return new FunctionStateStorageImpl(stores);
   }
 
   @Bean
   public IChartStorage chartStorage(CacheManager cacheManager) {
-    IChartStorage delegate = new ChartStorageImpl();
+    IChartStorage delegate = new ChartStorageImpl(stores);
     return chartCacheEnabled ? new CachedChartStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IPermissionStorage permissionStorage(CacheManager cacheManager) {
-    IPermissionStorage delegate = new PermissionStorageImpl("users/permissions");
+    IPermissionStorage delegate = new PermissionStorageImpl(stores, "users/permissions");
     return permissionCacheEnabled ? new CachedPermissionStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   @Primary
   public IAdapterStorage adapterStorage(CacheManager cacheManager) {
-    IAdapterStorage delegate = new AdapterInstanceStorageImpl();
+    IAdapterStorage delegate = new AdapterInstanceStorageImpl(stores);
     return adapterCacheEnabled ? new CachedAdapterStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IDashboardStorage dashboardStorage(CacheManager cacheManager) {
-    IDashboardStorage delegate = new DashboardStorageImpl();
+    IDashboardStorage delegate = new DashboardStorageImpl(stores);
     return dashboardCacheEnabled ? new CachedDashboardStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IAssetStorage assetStorage() {
-    return new AssetStorageImpl();
+    return new AssetStorageImpl(stores);
   }
 
   @Bean
   public ISpCoreConfigurationStorage coreConfigurationStorage(CacheManager cacheManager) {
-    ISpCoreConfigurationStorage delegate = new CoreConfigurationStorageImpl();
+    ISpCoreConfigurationStorage delegate = new CoreConfigurationStorageImpl(stores);
     return coreConfigurationCacheEnabled ? new CachedSpCoreConfigurationStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IFileMetadataStorage fileMetadataStorage() {
-    return new FileMetadataStorageImpl();
+    return new FileMetadataStorageImpl(stores);
   }
 
   @Bean
   public IPipelineStorage pipelineStorage(CacheManager cacheManager) {
-    IPipelineStorage delegate = new PipelineStorageImpl();
+    IPipelineStorage delegate = new PipelineStorageImpl(stores);
     return pipelineCacheEnabled ? new CachedPipelineStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IDatasetMetadataStorage datasetStorage(CacheManager cacheManager) {
     IDatasetMetadataStorage delegate = new DatasetMetadataStorage(
-        () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
+        stores.gson(CouchDbStores.DATA_LAKE_DB_NAME),
         DatasetMetadata.class
     );
     return datasetMetadataCacheEnabled ? new CachedDatasetMetadataStorage(delegate, cacheManager) : delegate;
@@ -195,53 +197,51 @@ public class StorageApiConfiguration {
 
   @Bean
   public IRoleStorage roleStorage(CacheManager cacheManager) {
-    IRoleStorage delegate = new RoleStorageImpl();
+    IRoleStorage delegate = new RoleStorageImpl(stores);
     return roleCacheEnabled ? new CachedRoleStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IUserGroupStorage userGroupStorage(CacheManager cacheManager) {
-    IUserGroupStorage delegate = new UserGroupStorageImpl();
+    IUserGroupStorage delegate = new UserGroupStorageImpl(stores);
     return userGroupCacheEnabled ? new CachedUserGroupStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IPrivilegeStorage privilegeStorage(CacheManager cacheManager) {
-    IPrivilegeStorage delegate = new PrivilegeStorageImpl();
+    IPrivilegeStorage delegate = new PrivilegeStorageImpl(stores);
     return privilegeCacheEnabled ? new CachedPrivilegeStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IUserStorage userStorage(CacheManager cacheManager) {
-    IUserStorage delegate = new UserStorage();
+    IUserStorage delegate = new UserStorage(stores);
     return userCacheEnabled ? new CachedUserStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IAdapterStorage adapterDescriptionStorage() {
-    return new AdapterDescriptionStorageImpl();
+    return new AdapterDescriptionStorageImpl(stores);
   }
 
   @Bean
   public IGenericStorage genericStorage() {
-    return new GenericStorageImpl();
+    return new GenericStorageImpl(stores);
   }
 
-  // The legacy image store opens its database connection in the constructor.
   @Bean
-  @Lazy
   public IImageStorage imageStorage() {
-    return new ImageStorageImpl();
+    return new ImageStorageImpl(stores);
   }
 
   @Bean
   public IPipelineElementTemplateStorage pipelineElementTemplateStorage() {
-    return new PipelineElementTemplateStorageImpl();
+    return new PipelineElementTemplateStorageImpl(stores);
   }
 
   @Bean
   public IPipelineCanvasMetadataStorage pipelineCanvasMetadataStorage() {
-    return new PipelineCanvasMetadataStorageImpl();
+    return new PipelineCanvasMetadataStorageImpl(stores);
   }
 
   @Bean
@@ -256,56 +256,56 @@ public class StorageApiConfiguration {
 
   @Bean
   public IDataProcessorStorage dataProcessorStorage() {
-    return new DataProcessorStorageImpl();
+    return new DataProcessorStorageImpl(stores);
   }
 
   @Bean
   public IDataSinkStorage dataSinkStorage() {
-    return new DataSinkStorageImpl();
+    return new DataSinkStorageImpl(stores);
   }
 
   @Bean
   public IDataStreamStorage dataStreamStorage() {
-    return new DataStreamStorageImpl();
+    return new DataStreamStorageImpl(stores);
   }
 
   @Bean
   public IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage() {
-    return new PasswordRecoveryTokenStorageImpl();
+    return new PasswordRecoveryTokenStorageImpl(stores);
   }
 
   @Bean
   public IUserActivationTokenStorage userActivationTokenStorage() {
-    return new UserActivationTokenStorageImpl();
+    return new UserActivationTokenStorageImpl(stores);
   }
 
   @Bean
   public IRefreshTokenStorage refreshTokenStorage() {
-    return new RefreshTokenStorageImpl();
+    return new RefreshTokenStorageImpl(stores);
   }
 
   @Bean
   public IExtensionsServiceStorage extensionsServiceStorage() {
-    return new ExtensionsServiceStorageImpl();
+    return new ExtensionsServiceStorageImpl(stores);
   }
 
   @Bean
   public IExtensionsServiceConfigurationStorage extensionsServiceConfigurationStorage() {
-    return new ExtensionsServiceConfigurationStorageImpl();
+    return new ExtensionsServiceConfigurationStorageImpl(stores);
   }
 
   @Bean
   public ICompactPipelineTemplateStorage pipelineTemplateStorage() {
-    return new CompactPipelineTemplateStorageImpl();
+    return new CompactPipelineTemplateStorageImpl(stores);
   }
 
   @Bean
   public ICertificateStorage certificateStorage() {
-    return new CertificateStorageImpl();
+    return new CertificateStorageImpl(stores);
   }
 
   @Bean
   public ITransformationScriptTemplateStorage transformationScriptTemplateStorage() {
-    return new TransformationScriptTemplateStorageImpl();
+    return new TransformationScriptTemplateStorageImpl(stores);
   }
 }

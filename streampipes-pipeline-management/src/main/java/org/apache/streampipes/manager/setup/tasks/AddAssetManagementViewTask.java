@@ -18,14 +18,9 @@
 
 package org.apache.streampipes.manager.setup.tasks;
 
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.DesignDocument;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
+import org.apache.streampipes.couchdb.client.design.DesignDocument;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
 
 public class AddAssetManagementViewTask implements InstallationTask {
   public static final String DESIGN_DOCUMENT = "_design/assets";
@@ -33,16 +28,15 @@ public class AddAssetManagementViewTask implements InstallationTask {
   public static final String VIEW_NAME = "all-assets";
   public static final String MAP_FUNCTION = "function(doc) { if(doc.appDocType === 'asset-management') { emit(doc._id, doc); } }";
 
+  private final CouchDbStores stores;
+
+  public AddAssetManagementViewTask(CouchDbStores stores) {
+    this.stores = stores;
+  }
+
   @Override
   public void execute() {
-    DesignDocument dataLakeDoc = prepareDocument(DESIGN_DOCUMENT);
-    Map<String, DesignDocument.MapReduce> views = new HashMap<>();
-
-    DesignDocument.MapReduce byNameFn = new DesignDocument.MapReduce();
-    byNameFn.setMap(MAP_FUNCTION);
-
-    views.put(VIEW_NAME, byNameFn);
-    dataLakeDoc.setViews(views);
-    Utils.getCouchDbClient("genericstorage", true).design().synchronizeWithDb(dataLakeDoc);
+    stores.database(GenericCouchDbConstants.DB_NAME).design()
+        .sync(DesignDocument.named(DESIGN_DOCUMENT).withView(VIEW_NAME, MAP_FUNCTION));
   }
 }

@@ -40,7 +40,7 @@ rebase:
 
 .PHONY: reformat-all
 reformat-all:
-	poetry run pyupgrade --py38 --keep-runtime-typing
+	poetry run pyupgrade --py311-plus --keep-runtime-typing
 	poetry run autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes tests
 	poetry run isort . --settings-file pyproject.toml
 	poetry run black --line-length=120 streampipes tests

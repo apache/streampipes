@@ -35,7 +35,10 @@ import {
     SpLogEntry,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
-import { PipelineElementUnion } from '../editor/model/editor.model';
+import {
+    LivePreviewState,
+    PipelineElementUnion,
+} from '../editor/model/editor.model';
 import {
     CurrentUserService,
     DialogService,
@@ -114,7 +117,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     autoRefresh = false;
     metricsInfo: Record<string, SpMetricsEntry> = {};
     logInfo: Record<string, SpLogEntry[]> = {};
-    previewModeActive = false;
+    previewState: LivePreviewState = 'off';
     pipelineNotFound = false;
 
     currentUser$: Subscription;
@@ -272,7 +275,6 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     }
 
     toggleLivePreview(): void {
-        this.previewModeActive = !this.previewModeActive;
         this.pipelinePreviewComponent?.toggleLivePreview();
     }
 

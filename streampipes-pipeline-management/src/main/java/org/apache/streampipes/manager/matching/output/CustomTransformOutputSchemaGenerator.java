@@ -36,11 +36,15 @@ import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Set;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CustomTransformOutputSchemaGenerator.class);
 
   private final ISpServiceDiscovery serviceDiscovery;
   private final DataProcessorInvocation dataProcessorInvocation;
@@ -117,23 +121,25 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
     }
 
     if (!response.isSuccess()) {
-      var cause = new IOException("Could not compute output schema, status code: " + response.statusCode());
       if (isUnavailableStatus(response.statusCode())) {
+        var cause = new IOException("Could not compute output schema, status code: " + response.statusCode());
         throw new OutputSchemaUnavailableException(dataProcessorInvocation.getAppId(), cause);
       }
-      throw new IllegalStateException(cause);
+      // The extension is reachable but cannot compute a schema yet, e.g. while the element is not
+      // fully configured in the pipeline editor. Keep the pipeline editable with an empty schema.
+      LOG.warn("Could not compute output schema for {}, status code: {}",
+          dataProcessorInvocation.getAppId(), response.statusCode());
+      return new EventSchema();
     }
 
     try {
       var eventSchema = JacksonSerializer
           .getObjectMapper()
           .readValue(response.responseBody(), EventSchema.class);
-      if (eventSchema == null) {
-        throw new IllegalStateException("The extension returned no output schema");
-      }
-      return eventSchema;
+      return eventSchema != null ? eventSchema : new EventSchema();
     } catch (IOException | JsonSyntaxException e) {
-      throw new IllegalStateException("The extension returned an invalid output schema", e);
+      LOG.warn("The extension {} returned an invalid output schema", dataProcessorInvocation.getAppId(), e);
+      return new EventSchema();
     }
   }
 

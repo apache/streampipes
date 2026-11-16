@@ -47,6 +47,11 @@
             <groupId>org.apache.pulsar</groupId>
             <artifactId>pulsar-client</artifactId>
         </dependency>
+        <!-- pulsar-client 5.x references classes from pulsar-client-admin-api (e.g. TopicDomain) without declaring it -->
+        <dependency>
+            <groupId>org.apache.pulsar</groupId>
+            <artifactId>pulsar-client-admin-api</artifactId>
+        </dependency>
 
         <!-- dependency convergence -->
 

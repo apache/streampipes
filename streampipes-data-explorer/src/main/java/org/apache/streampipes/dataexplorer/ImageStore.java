@@ -20,15 +20,15 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.couchdb.client.Attachments;
+import org.apache.streampipes.couchdb.client.CouchServer;
+import org.apache.streampipes.couchdb.client.DatabaseOptions;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 
 import org.apache.commons.codec.binary.Base64;
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -37,23 +37,30 @@ public class ImageStore {
   private static final String DB_NAME = "images";
 
   private final List<EventProperty> imageProperties;
-  private final CouchDbClient couchDbClient;
+  private final CouchServer couchServer;
+  private final Attachments attachments;
 
   public ImageStore(DatasetMetadata measure,
                     Environment environment) {
-    this.couchDbClient = new CouchDbClient(from(environment));
+    this(measure, from(environment));
+  }
+
+  ImageStore(DatasetMetadata measure,
+             CouchServer couchServer) {
+    this.couchServer = couchServer;
+    var database = couchServer.database(DB_NAME, DatabaseOptions.createIfMissing());
+    database.ensureExists();
+    this.attachments = database.attachments();
     this.imageProperties = ImageStoreUtils.getImageProperties(measure);
   }
 
-  private static CouchDbProperties from(Environment env) {
-    String couchDbProtocol = env.getCouchDbProtocol().getValueOrDefault();
-    String couchDbHost = env.getCouchDbHost().getValueOrDefault();
-    int couchDbPort = env.getCouchDbPort().getValueOrDefault();
-    String username = env.getCouchDbUsername().getValueOrDefault();
-    String password = env.getCouchDbPassword().getValueOrDefault();
-
-    return new CouchDbProperties(DB_NAME, true, couchDbProtocol,
-        couchDbHost, couchDbPort, username, password);
+  private static CouchServer from(Environment env) {
+    return CouchServer.builder()
+        .url(env.getCouchDbProtocol().getValueOrDefault(),
+            env.getCouchDbHost().getValueOrDefault(),
+            env.getCouchDbPort().getValueOrDefault())
+        .credentials(env.getCouchDbUsername().getValueOrDefault(), env.getCouchDbPassword().getValueOrDefault())
+        .build();
   }
 
   public void onEvent(Event event) throws SpRuntimeException {
@@ -69,16 +76,10 @@ public class ImageStore {
 
   public void storeImage(byte[] imageBytes,
                          String imageDocId) {
-    this.couchDbClient.saveAttachment(
-        new ByteArrayInputStream(imageBytes),
-        imageDocId,
-        "image/jpeg",
-        imageDocId,
-        null);
-
+    this.attachments.put(imageDocId, null, imageDocId, "image/jpeg", imageBytes);
   }
 
   public void close() throws IOException {
-    this.couchDbClient.close();
+    this.couchServer.close();
   }
 }

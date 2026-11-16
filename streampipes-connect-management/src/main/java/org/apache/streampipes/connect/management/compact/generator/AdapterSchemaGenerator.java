@@ -76,15 +76,14 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
     var schemaDef = compactAdapter.schema();
 
     if (schemaDef != null) {
-      adapterDescription.getDataStream()
-                        .getEventSchema()
-                        .getEventProperties()
-                        .forEach(ep -> {
-                          if (schemaDef.containsKey(ep.getRuntimeName())) {
-                            var compactPropertyDef = schemaDef.get(ep.getRuntimeName());
-                            enricher.enrich(ep, compactPropertyDef);
-                          }
-                        });
+      var eventProperties = adapterDescription.getDataStream()
+                                              .getEventSchema()
+                                              .getEventProperties();
+      for (var ep : eventProperties) {
+        if (schemaDef.containsKey(ep.getRuntimeName())) {
+          enricher.enrich(ep, schemaDef.get(ep.getRuntimeName()));
+        }
+      }
     }
   }
 
