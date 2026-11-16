@@ -296,7 +296,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
            .equals(name)) {
         return p;
       } else if (p.getStaticPropertyType() == StaticPropertyType.StaticPropertyGroup) {
-        return getStaticPropertyByName(((StaticPropertyGroup) p).getStaticProperties(), name);
+        StaticProperty inGroup = getStaticPropertyByName(((StaticPropertyGroup) p).getStaticProperties(), name);
+        if (inGroup != null) {
+          return inGroup;
+        }
       } else if (p.getStaticPropertyType() == StaticPropertyType.StaticPropertyAlternatives) {
         StaticProperty tmp = getStaticPropertyFromSelectedAlternative((StaticPropertyAlternatives) p);
         if (tmp != null) {
@@ -316,8 +319,8 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
              .stream()
              .filter(StaticPropertyAlternative::getSelected)
              .findFirst()
-             .get()
-             .getStaticProperty();
+             .map(StaticPropertyAlternative::getStaticProperty)
+             .orElse(null);
   }
 
   @Override
