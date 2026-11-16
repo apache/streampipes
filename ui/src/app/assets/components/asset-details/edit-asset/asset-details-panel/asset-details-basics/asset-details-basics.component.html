@@ -107,6 +107,17 @@
         </sp-split-section>
     }
 
+    <sp-split-section [level]="2" [title]="'Image' | translate">
+        <sp-asset-image
+            [asset]="asset"
+            [editMode]="editMode"
+            [assetModelId]="assetModel.elementId"
+            [pendingImage]="pendingImage"
+            (imageChanged)="imageChanged.emit($event)"
+        >
+        </sp-asset-image>
+    </sp-split-section>
+
     <sp-asset-details-links
         [asset]="asset"
         [assetModel]="assetModel"

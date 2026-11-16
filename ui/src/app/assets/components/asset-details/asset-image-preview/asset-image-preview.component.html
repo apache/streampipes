@@ -1,0 +1,72 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+@if (hasImage || showPlaceholder) {
+    <div class="asset-image-preview">
+        @if (imageUrl(); as url) {
+            <button
+                type="button"
+                class="asset-image-thumbnail"
+                data-cy="asset-image-thumbnail"
+                [attr.aria-label]="'View asset image' | translate"
+                (click)="openViewer()"
+            >
+                <img [src]="url" [alt]="'Asset image' | translate" />
+            </button>
+        } @else {
+            <div
+                class="asset-image-thumbnail asset-image-placeholder"
+                data-cy="asset-image-placeholder"
+                [attr.aria-label]="
+                    (hasImage ? 'Asset image' : 'No asset image') | translate
+                "
+            >
+                <mat-icon>{{
+                    loadFailed() ? 'broken_image' : 'image'
+                }}</mat-icon>
+            </div>
+        }
+        <ng-content></ng-content>
+    </div>
+}
+
+<div
+    #imageViewer
+    popover="auto"
+    class="asset-image-viewer"
+    data-cy="asset-image-viewer"
+    (click)="closeViewer()"
+>
+    @if (imageUrl(); as url) {
+        <img
+            class="asset-image-viewer-image"
+            [src]="url"
+            [alt]="'Asset image' | translate"
+            (click)="$event.stopPropagation()"
+        />
+        <button
+            type="button"
+            class="asset-image-viewer-close"
+            data-cy="asset-image-viewer-close"
+            [attr.aria-label]="'Close image viewer' | translate"
+            (click)="closeViewer(); $event.stopPropagation()"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+    }
+</div>

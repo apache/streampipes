@@ -101,6 +101,7 @@
                     <ng-template spTableActions let-element>
                         <button
                             mat-menu-item
+                            [attr.data-cy]="'show-asset-' + element.assetName"
                             (click)="goToDetailsView(element)"
                         >
                             <mat-icon>visibility</mat-icon>
