@@ -21,15 +21,14 @@ from streampipes.model.container.summary_resource_container import (
     SummaryResourceContainer,
 )
 from streampipes.model.resource.pipeline import PipelineSummary
-from streampipes.model.resource.resource import Resource
 
 __all__ = ["Pipelines"]
 
 
-class Pipelines(SummaryResourceContainer):
+class Pipelines(SummaryResourceContainer[PipelineSummary]):
     """Collection of pipeline summaries."""
 
     @classmethod
-    def _resource_cls(cls) -> type[Resource]:
+    def _resource_cls(cls) -> type[PipelineSummary]:
         """Return the contained pipeline resource type."""
         return PipelineSummary

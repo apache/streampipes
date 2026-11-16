@@ -30,6 +30,10 @@ import org.apache.streampipes.storage.api.system.ICertificateStorage;
 
 import org.springframework.security.core.Authentication;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
   private final ICertificateStorage certificateStorage;
@@ -63,6 +67,18 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
         .toList();
 
     return new ResourceSummaryDto<>(adapters, adapters.size());
+  }
+
+  public List<String> getReadableAdapterIds(Authentication auth, Collection<String> elementIds) {
+    if (elementIds.isEmpty()) {
+      return List.of();
+    }
+    var requestedIds = new HashSet<>(elementIds);
+    return db.findAll().stream()
+        .filter(adapter -> adapter != null && requestedIds.contains(adapter.getElementId()))
+        .filter(adapter -> canReadAdapter(auth, adapter))
+        .map(AdapterDescription::getElementId)
+        .toList();
   }
 
   /**

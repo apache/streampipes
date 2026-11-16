@@ -18,7 +18,7 @@
 import logging
 from collections.abc import AsyncIterator
 
-from confluent_kafka import Consumer as KafkaConnection  # type: ignore
+from confluent_kafka import Consumer as KafkaConnection
 
 from streampipes.functions.broker import Consumer
 from streampipes.functions.broker.kafka.kafka_message_fetcher import KafkaMessageFetcher

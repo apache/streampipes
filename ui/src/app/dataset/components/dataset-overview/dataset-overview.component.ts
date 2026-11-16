@@ -73,8 +73,6 @@ import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { UserRole } from '../../../core/auth/user-role.enum';
 import { CsvImportDialogComponent } from '../../dialog/csv-import-dialog/csv-import-dialog.component';
 import {
-    FlexDirective,
-    FlexOrderDirective,
     LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
@@ -98,7 +96,6 @@ import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-ov
         DatePipe,
         LayoutDirective,
         LayoutAlignDirective,
-        FlexDirective,
         MatIconButton,
         MatTooltip,
         MatIcon,
@@ -111,7 +108,6 @@ import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-ov
         MatCellDef,
         MatCell,
         SpSpinnerComponent,
-        FlexOrderDirective,
         NgStyle,
         StyleDirective,
         MatMenuItem,

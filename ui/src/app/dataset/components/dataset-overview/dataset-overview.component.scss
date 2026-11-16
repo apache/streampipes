@@ -19,3 +19,16 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+// Keep row sizing static: fxFlex reads parent wrapping styles once per cell.
+.dataset-retention-cell {
+    display: flex;
+    box-sizing: border-box;
+}
+
+.dataset-retention-content {
+    display: flex;
+    flex: 1 1 0%;
+    align-items: center;
+    box-sizing: border-box;
+}

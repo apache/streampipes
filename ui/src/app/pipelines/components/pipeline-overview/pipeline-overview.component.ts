@@ -56,11 +56,6 @@ import {
     SpTableMultiActionOption,
 } from '@streampipes/shared-ui';
 import { Subscription } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -84,9 +79,6 @@ import { getPipelineStatus, PipelineStatus } from './pipeline-status';
         MatSortHeader,
         MatCellDef,
         MatCell,
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         MatTooltip,
         MatIconButton,
         MatIcon,

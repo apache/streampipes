@@ -74,7 +74,7 @@ def create_data_stream(
 
     event_schema = EventSchema(
         event_properties=[
-            EventProperty(  # type: ignore
+            EventProperty(
                 label="timestamp",
                 runtime_name="timestamp",
                 semantic_type="http://schema.org/DateTime",
@@ -83,7 +83,7 @@ def create_data_stream(
             )
         ]
         + [
-            EventProperty(  # type: ignore
+            EventProperty(
                 label=attribute_name,
                 runtime_name=attribute_name,
                 runtime_type=f"http://www.w3.org/2001/XMLSchema#{attribute_type}",

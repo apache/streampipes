@@ -66,7 +66,7 @@
     "echarts-simple-transform": "^1.0.0",
     "file-saver": "2.0.5",
     "gridstack": "^12.6.0",
-    "katex": "^0.16.47",
+    "katex": "^0.18.2",
     "leaflet": "1.9.3",
     "lodash.clonedeep": "^4.5.0",
     "maplibre-gl": "^6.16.0",
@@ -121,5 +121,11 @@
     "prettier": "3.9.6",
     "typescript": "6.0.3",
     "vitest": "^4.1.12"
+  },
+  "overrides": {
+    "monaco-editor": {
+      "dompurify": "^3.4.17"
+    },
+    "minimatch@>=7 <11.0.1": "^11.0.8"
   }
 }
