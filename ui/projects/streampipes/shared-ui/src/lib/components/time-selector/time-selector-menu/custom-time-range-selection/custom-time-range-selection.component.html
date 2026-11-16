@@ -16,8 +16,8 @@
 ~
 -->
 
-<div fxLayout="column" fxFlex="100" class="w-100">
-    <div fxLayout="column" fxFlex="100" class="mt-10">
+<div class="w-100 flex-col flex-100">
+    <div class="mt-10 flex-col flex-100">
         <mat-card style="width: 100%">
             <mat-calendar
                 [(selected)]="currentDateRange"
@@ -27,16 +27,16 @@
         </mat-card>
 
         @if (enableTimePicker) {
-            <div fxLayout="column" class="mt-10 mr-5">
-                <div fxLayout="row" fxLayoutGap="10px">
-                    <div fxFlex="30">
+            <div class="mt-10 mr-5 flex-col">
+                <div class="flex-row gap-sm">
+                    <div class="date-label">
                         <span
                             class="time-selector"
                             data-cy="time-selector-start-date"
                             >{{ currentStartDate }}</span
                         >
                     </div>
-                    <div fxFlex>
+                    <div class="flex-1">
                         <input
                             matNativeControl
                             data-cy="time-selector-start-time"
@@ -50,15 +50,15 @@
                         />
                     </div>
                 </div>
-                <div fxLayout="row" fxLayoutGap="10px" class="mt-10">
-                    <div fxFlex="30">
+                <div class="mt-10 flex-row gap-sm">
+                    <div class="date-label">
                         <span
                             class="time-selector"
                             data-cy="time-selector-end-date"
                             >{{ currentEndDate }}</span
                         >
                     </div>
-                    <div fxFlex>
+                    <div class="flex-1">
                         <input
                             matNativeControl
                             data-cy="time-selector-end-time"
@@ -76,12 +76,12 @@
         }
     </div>
     @if (!enableTimePicker) {
-        <div fxLayout="row" class="mt-10 date-preview">
+        <div class="mt-10 date-preview flex-row">
             {{ dateRangeString }}
         </div>
     }
     @if (maxDateRangeError) {
-        <div fxLayout="row" class="mt-5 max-date-range-error">
+        <div class="mt-5 max-date-range-error flex-row">
             {{
                 labels.maxDayRangeErrorLabel.replace(
                     '${this.maxDayRange}',
@@ -90,7 +90,7 @@
             }}
         </div>
     }
-    <div fxLayout="row" fxLayoutAlign="end center" class="mt-10">
+    <div class="mt-10 flex-row justify-end items-center">
         <ng-content> </ng-content>
         @if (enableTimePicker) {
             <button

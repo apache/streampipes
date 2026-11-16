@@ -17,10 +17,10 @@
   -->
 
 <sp-feature-card-meta-section [label]="'Lifecycle' | translate">
-    <div fxLayout="row" fxLayoutGap="0.75rem">
+    <div class="flex-row gap-md">
         @if (creationTimestamp) {
             <mat-icon class="feature-card-meta-icon">create</mat-icon>
-            <div fxLayout="column">
+            <div class="flex-col">
                 <span class="feature-card-meta-field-label">{{
                     'Created' | translate
                 }}</span>
@@ -30,7 +30,7 @@
             </div>
         }
         <mat-icon class="feature-card-meta-icon">update</mat-icon>
-        <div fxLayout="column">
+        <div class="flex-col">
             <span class="feature-card-meta-field-label">Last modified</span>
             <span class="feature-card-meta-field-value">
                 {{ (lastModifiedTimestamp | date: 'short') || '—' }}

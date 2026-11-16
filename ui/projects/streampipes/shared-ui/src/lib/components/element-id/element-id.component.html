@@ -17,18 +17,13 @@
   -->
 
 <div
-    class="element-id mt-xs mb-xs p-xs"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-    fxLayoutGap="var(--space-2xs)"
+    class="element-id mt-xs mb-xs p-xs flex-row justify-center items-center gap-2xs"
 >
-    <span class="element-id-text" fxLayout="row" fxLayoutAlign="start center"
+    <span class="element-id-text flex-row items-center"
         >{{ label }}&nbsp;<b>{{ value }}</b></span
     >
     <button
-        class="element-id-copy-button"
-        fxLayout="row"
-        fxLayoutAlign="center center"
+        class="element-id-copy-button flex-row justify-center items-center"
         mat-icon-button
         [cdkCopyToClipboard]="value"
         [matTooltip]="'Copy' | translate"

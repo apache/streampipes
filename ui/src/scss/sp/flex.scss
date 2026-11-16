@@ -21,8 +21,8 @@
 // The mapping and the behavioural differences are documented in DESIGN.md ("Layout").
 //
 // Not covered here on purpose:
-// - Percentage splits (fxFlex="30"): write `flex: 1 1 30%; max-width: 30%` in the
-//   component SCSS, or use CSS grid (`grid-template-columns: 3fr 7fr`).
+// - Percentage splits (fxFlex="30"): a named class in the component SCSS with
+//   `flex: 1 1 30%; max-width: 30%`, or CSS grid (`grid-template-columns: 3fr 7fr`).
 // - Breakpoint variants (fxLayout.lt-md, fxFlex.gt-md): use a @media query in the
 //   component SCSS.
 

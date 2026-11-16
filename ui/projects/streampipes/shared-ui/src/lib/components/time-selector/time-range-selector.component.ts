@@ -44,11 +44,6 @@ import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-select
 import { TimeSelectorLabel } from './time-selector.model';
 import { differenceInMilliseconds, isSameDay } from 'date-fns';
 import { DataExplorerRefreshIntervalSettingsComponent } from './refresh-interval-settings/refresh-interval-settings.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -61,9 +56,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         MatIconButton,
         MatButton,
         MatMenuTrigger,

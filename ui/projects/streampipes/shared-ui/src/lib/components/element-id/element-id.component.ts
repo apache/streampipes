@@ -22,11 +22,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-element-id',
@@ -34,9 +29,6 @@ import {
     styleUrls: ['./element-id.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         CdkCopyToClipboard,
         MatIcon,
         MatIconButton,

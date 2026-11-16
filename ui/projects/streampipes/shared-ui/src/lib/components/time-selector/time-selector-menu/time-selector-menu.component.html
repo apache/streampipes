@@ -18,13 +18,13 @@
 
 @if (labels) {
     <div class="menu-content" (click)="$event.stopPropagation()">
-        <div fxLayout="column" fxLayoutGap="10px">
-            <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
-                <div fxLayout="column" fxFlex="50" fxLayoutGap="10px">
+        <div class="flex-col gap-sm">
+            <div class="flex-row gap-sm flex-100">
+                <div class="menu-column flex-col gap-sm">
                     <div class="filter-header">
                         {{ labels.quickSelectionLabel }}
                     </div>
-                    <div fxLayout="column" fxLayoutGap="10px" fxFlex="100">
+                    <div class="flex-col gap-sm flex-100">
                         @for (
                             quickSelection of quickSelections;
                             track quickSelection
@@ -55,7 +55,7 @@
                         }
                     </div>
                 </div>
-                <div fxLayout="column" fxFlex="50">
+                <div class="menu-column flex-col">
                     <div class="filter-header">{{ labels.customLabel }}</div>
                     <sp-custom-time-range-selection
                         #timeRangeSelection

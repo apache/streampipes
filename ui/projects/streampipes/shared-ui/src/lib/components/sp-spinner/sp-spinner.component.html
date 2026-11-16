@@ -17,10 +17,12 @@
   -->
 
 <div
-    [fxLayout]="layout"
-    [fxLayoutAlign]="align"
-    [fxLayoutGap]="text ? gap : '0px'"
     class="sp-spinner"
+    [class.flex-row]="layout === 'row'"
+    [class.flex-col]="layout !== 'row'"
+    [style.justify-content]="justifyContent"
+    [style.align-items]="alignItems"
+    [style.gap]="text ? gap : null"
 >
     <mat-spinner
         color="accent"

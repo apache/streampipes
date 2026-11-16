@@ -16,37 +16,18 @@
 ~
 -->
 
-<div
-    fxLayout="row"
-    fxFlex="100"
-    fxLayoutAlign="start center"
-    class="filter-section"
->
-    <div
-        fxFlex="50"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        fxLayoutGap="10px"
-    >
-        <div
-            class="filter-header"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            fxFlex="100"
-        >
+<div class="filter-section flex-row items-center flex-100">
+    <div class="filter-half flex-row items-center gap-sm">
+        <div class="filter-header flex-row items-center flex-100">
             @if (selectedItems.length !== allItems.length) {
-                <div fxLayoutAlign="center center" class="active-filters mr-5">
+                <div
+                    class="active-filters mr-5 flex-row justify-center items-center"
+                >
                     <i class="material-icons fs-icon">filter_alt</i>
                 </div>
             }
             <span>{{ title | translate }}</span>
-            <div
-                fxLayout="row"
-                fxLayoutAlign="end center"
-                fxLayoutGap="5px"
-                class="mr-10"
-                fxFlex
-            >
+            <div class="mr-10 flex-row justify-end items-center gap-2xs flex-1">
                 <button
                     mat-button
                     mat-flat-button
@@ -69,11 +50,8 @@
         </div>
     </div>
     <div
-        fxFlex="50"
-        class="filter-selection"
-        fxLayout="column"
+        class="filter-half filter-selection flex-col justify-end items-center"
         (click)="$event.stopPropagation()"
-        fxLayoutAlign="end center"
     >
         <ng-content> </ng-content>
     </div>

@@ -29,7 +29,6 @@ import { DialogRef } from '../base-dialog/dialog-ref';
 import { ExportConfig } from './model/export-config.model';
 import { DataDownloadDialogModel } from './model/data-download-dialog.model';
 import { DataExportService } from './services/data-export.service';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { SelectDataComponent } from './components/select-data/select-data.component';
 import { SelectFormatComponent } from './components/select-format/select-format.component';
 import { DownloadComponent } from './components/download/download.component';
@@ -38,10 +37,6 @@ import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SplitSectionComponent } from '../../components/split-section/split-section.component';
 import { SpLabelComponent } from '../../components/sp-label/sp-label.component';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-data-download-dialog',
@@ -50,7 +45,6 @@ import {
     changeDetection: ChangeDetectionStrategy.Eager,
     providers: [DataExportService],
     imports: [
-        FlexDirective,
         MatStepper,
         MatStep,
         SelectDataComponent,
@@ -62,8 +56,6 @@ import {
         TranslatePipe,
         SplitSectionComponent,
         SpLabelComponent,
-        LayoutDirective,
-        LayoutGapDirective,
     ],
 })
 export class DataDownloadDialogComponent implements OnInit {

@@ -64,12 +64,6 @@ import { SpTableCardDirective } from './sp-actions/sp-table-card.directive';
 import { SpOverviewCardGridComponent } from '../overview-card/overview-card-grid.component';
 import { LocalStorageService } from '../../services/local-storage-settings.service';
 import { FeatureCardService } from '../feature-card-host/feature-card.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -151,14 +145,12 @@ const CARD_ASSET_CONTEXT_LIMIT = 2;
     styleUrls: ['./sp-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         MatTable,
         MatColumnDef,
         MatHeaderCellDef,
         MatHeaderCell,
         MatCellDef,
         MatCell,
-        LayoutAlignDirective,
         MatIconButton,
         MatButton,
         MatTooltip,
@@ -181,10 +173,8 @@ const CARD_ASSET_CONTEXT_LIMIT = 2;
         MatRowDef,
         MatRow,
         MatNoDataRow,
-        FlexDirective,
         MatPaginator,
         TranslatePipe,
-        LayoutGapDirective,
         SpLabelComponent,
         SpOverviewCardGridComponent,
     ],

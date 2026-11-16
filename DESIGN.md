@@ -269,7 +269,7 @@ migrate a whole component when you touch it.
 | --------------------------------- | ---------------------------------------------------- |
 | `fxLayout="row"` / `"column"`     | `flex-row` / `flex-col`                              |
 | `fxLayout="row wrap"`             | `flex-row flex-wrap`                                 |
-| `fxLayoutAlign="start center"`    | `justify-start items-center` (main, then cross axis) |
+| `fxLayoutAlign="start center"`    | `items-center` (`justify-start` is the default)      |
 | `fxLayoutAlign="space-between …"` | `justify-between`, likewise `-around`, `-evenly`     |
 | `fxLayoutGap="…"`                 | `gap-2xs` … `gap-xl` (the `--space-*` tokens)        |
 | `fxFlex`                          | `flex-1`                                             |
@@ -280,8 +280,15 @@ migrate a whole component when you touch it.
 | `[fxLayout]="cond ? 'row' : …"`   | `[class.flex-row]="cond" [class.flex-col]="!cond"`   |
 
 Percentage splits (`fxFlex="30"`) and breakpoint variants (`fxLayout.lt-md`) have no
-utility class. Put them in the component SCSS: CSS grid for column splits, a `@media`
-query for breakpoints.
+utility class. Put them in the component SCSS: a named class with the exact equivalent
+(`flex: 1 1 30%; max-width: 30%`) or CSS grid for column splits, a `@media` query for
+breakpoints. Bound values (`[fxLayout]="…"`) become `[class.*]` bindings, or `[style.*]`
+when the value comes from an input.
+
+ngx-layout wrote inline styles, which beat any component stylesheet; utility classes do
+not. Where component SCSS on the same element sets `display`, `flex*`, `align-*`,
+`justify-content` or `gap`, the component rule now wins. Keep one source: either drop the
+conflicting component rule or drop the utility class.
 
 The classes are not exact copies of the directives. Check these when migrating:
 

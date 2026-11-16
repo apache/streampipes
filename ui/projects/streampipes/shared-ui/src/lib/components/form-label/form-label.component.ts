@@ -22,12 +22,7 @@ import {
     OnInit,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
@@ -35,13 +30,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     templateUrl: './form-label.component.html',
     styleUrls: ['./form-label.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        NgStyle,
-        StyleDirective,
-        MatTooltip,
-    ],
+    imports: [NgStyle, MatTooltip],
 })
 export class FormLabelComponent implements OnInit {
     @Input()
