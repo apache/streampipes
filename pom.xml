@@ -93,7 +93,7 @@
         <slack-api.version>1.4.0</slack-api.version>
         <springdoc.version>3.2.0</springdoc.version>
         <swagger.version>2.2.42</swagger.version>
-        <tsfile.version>2.4.0</tsfile.version>
+        <tsfile.version>2.5.0</tsfile.version>
         <xz.version>1.12</xz.version>
 
         <!-- streampipes-maven-plugin -->
