@@ -36,6 +36,7 @@
                     #fileInput
                     type="file"
                     accept="image/jpeg,image/png"
+                    data-cy="asset-image-file-input"
                     hidden
                     (change)="handleFileInput($event.target.files)"
                 />
@@ -68,6 +69,7 @@
         <button
             mat-flat-button
             color="accent"
+            data-cy="asset-image-import"
             (click)="store()"
             [disabled]="!selectedUploadFile"
         >

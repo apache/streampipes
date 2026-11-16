@@ -27,6 +27,7 @@
             color="accent"
             type="button"
             class="asset-image-upload"
+            data-cy="asset-image-upload"
             (click)="openImageUploadDialog()"
             [disabled]="!editMode"
         >
@@ -45,6 +46,7 @@
                     <button
                         type="button"
                         class="asset-image-remove"
+                        data-cy="asset-image-remove"
                         [attr.aria-label]="'Remove image' | translate"
                         (click)="openImageRemovalDialog($event)"
                     >
