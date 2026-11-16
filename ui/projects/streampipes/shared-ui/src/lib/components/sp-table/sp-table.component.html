@@ -415,7 +415,7 @@
             [attr.tabindex]="rowsClickable ? 0 : null"
             (keydown.enter)="activateRow($event, row)"
             (keydown.space)="activateRow($event, row)"
-            [ngClass]="rowsClickable ? 'cursor-pointer' : ''"
+            [class.cursor-pointer]="rowsClickable"
         ></tr>
 
         <tr class="mat-row" *matNoDataRow>
@@ -459,7 +459,7 @@
 </ng-template>
 
 <ng-template #actionsCell let-element>
-    <div fxLayoutAlign="end center">
+    <div class="table-row-actions">
         @if (featureCardId) {
             <button
                 [matTooltip]="'Preview' | translate"
@@ -471,21 +471,13 @@
         }
         <button
             mat-icon-button
-            [matMenuTriggerFor]="menu"
+            [matMenuTriggerFor]="rowActionsMenu"
+            [matMenuTriggerData]="{ element: element }"
             (click)="$event.stopPropagation()"
             [attr.data-cy]="'more-options'"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
-        <mat-menu #menu="matMenu" class="sp-table-actions-menu">
-            <ng-container
-                *ngTemplateOutlet="
-                    actionsTemplate;
-                    context: { $implicit: element }
-                "
-            >
-            </ng-container>
-        </mat-menu>
     </div>
 </ng-template>
 
@@ -572,3 +564,12 @@
         </div>
     }
 </ng-template>
+
+<!-- Instantiate action components only for the row whose menu is open. -->
+<mat-menu #rowActionsMenu="matMenu" class="sp-table-actions-menu">
+    <ng-template matMenuContent let-element="element">
+        <ng-container
+            *ngTemplateOutlet="actionsTemplate; context: { $implicit: element }"
+        ></ng-container>
+    </ng-template>
+</mat-menu>
