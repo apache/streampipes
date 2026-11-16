@@ -58,10 +58,12 @@
                 [dataSource]="dataSource"
                 [columns]="displayedColumns"
                 resourceIdKey="elementId"
-                [showSelectionCheckboxes]="writeAccess"
+                [showSelectionCheckboxes]="true"
                 [showMultiActionsExecuteButton]="true"
                 [multiActionOptions]="
-                    writeAccess ? bulkDatasetActionOptions : []
+                    writeAccess
+                        ? bulkDatasetActionOptions
+                        : readOnlyDatasetActionOptions
                 "
                 (multiActionsExecute)="executeSelectedDatasetAction($event)"
                 [nameSearchConfig]="{
