@@ -259,6 +259,39 @@ and the content interval reduces to `--space-md` without changing DOM order.
 status, identifiers, and actions belong in its action area; route names belong
 in the tab row; section titles belong in `sp-split-section`.
 
+### Flex Utilities
+
+Arrange elements with the flex utility classes in `ui/src/scss/sp/flex.scss`. The
+`@ngbracket/ngx-layout` directives are being phased out: do not introduce them, and
+migrate a whole component when you touch it.
+
+| Directive                         | Utility classes                                      |
+| --------------------------------- | ---------------------------------------------------- |
+| `fxLayout="row"` / `"column"`     | `flex-row` / `flex-col`                              |
+| `fxLayout="row wrap"`             | `flex-row flex-wrap`                                 |
+| `fxLayoutAlign="start center"`    | `justify-start items-center` (main, then cross axis) |
+| `fxLayoutAlign="space-between …"` | `justify-between`, likewise `-around`, `-evenly`     |
+| `fxLayoutGap="…"`                 | `gap-2xs` … `gap-xl` (the `--space-*` tokens)        |
+| `fxFlex`                          | `flex-1`                                             |
+| `fxFlex="100"`                    | `flex-100`                                           |
+| `fxFlex="auto"` / `"none"`        | `flex-auto` / `flex-none`                            |
+| `fxFlexFill`                      | `flex-fill`                                          |
+| `fxFlexAlign="center"`            | `self-center`, likewise `-start`, `-end`, `-stretch` |
+| `[fxLayout]="cond ? 'row' : …"`   | `[class.flex-row]="cond" [class.flex-col]="!cond"`   |
+
+Percentage splits (`fxFlex="30"`) and breakpoint variants (`fxLayout.lt-md`) have no
+utility class. Put them in the component SCSS: CSS grid for column splits, a `@media`
+query for breakpoints.
+
+The classes are not exact copies of the directives. Check these when migrating:
+
+- `fxLayoutAlign` without `fxLayout` still produced a flex row; add `flex-row`.
+- `fxLayoutGap` put a margin on every child except the last; `gap-*` uses CSS `gap`.
+  Remove child margins that were compensating, and pick the nearest token instead of
+  copying pixel values.
+- Many `fxFlex="100"` items do nothing in their context. Migrate them one to one first;
+  remove redundant classes in a separate pass.
+
 ## Elevation & Depth
 
 The system is tonal and structural by default. Most hierarchy comes from
