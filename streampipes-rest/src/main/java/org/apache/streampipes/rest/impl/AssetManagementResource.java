@@ -159,7 +159,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
-  public ResponseEntity<Void> delete(@PathVariable("id") String elementId) throws IOException {
+  public ResponseEntity<Void> delete(@PathVariable("id") String elementId) {
     var asset = assetResourceManager.find(elementId);
     assetResourceManager.delete(elementId);
     imageManager.deleteAssetImages(asset);
@@ -169,7 +169,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   @ExceptionHandler({FileNotFoundException.class, NoSuchFileException.class})
   public ResponseEntity<Void> imageNotFound(IOException exception) {
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage(), exception);
+    return notFound();
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

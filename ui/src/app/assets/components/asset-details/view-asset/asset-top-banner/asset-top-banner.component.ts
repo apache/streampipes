@@ -35,7 +35,7 @@ import {
 import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels.component';
 import { SingleMarkerMapComponent } from '../../../../../core-ui/single-marker-map/single-marker-map.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ViewAssetImagesComponent } from '../view-asset-images/view-asset-images.component';
+import { AssetImagePreviewComponent } from '../../asset-image-preview/asset-image-preview.component';
 
 @Component({
     selector: 'sp-asset-top-banner',
@@ -47,7 +47,7 @@ import { ViewAssetImagesComponent } from '../view-asset-images/view-asset-images
         SpLabelComponent,
         ViewAssetLabelsComponent,
         SingleMarkerMapComponent,
-        ViewAssetImagesComponent,
+        AssetImagePreviewComponent,
         TranslatePipe,
     ],
 })

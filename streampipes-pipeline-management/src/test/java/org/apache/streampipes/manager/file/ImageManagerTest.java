@@ -80,7 +80,6 @@ class ImageManagerTest {
     UUID.fromString(root.getImageId());
     UUID.fromString(child.getImageId());
     assertNotEquals(root.getImageId(), child.getImageId());
-    assertEquals("png", child.getFiletype());
     assertEquals("root image", Files.readString(manager.getImage("document", "root", root.getImageId()).toPath()));
     assertEquals("child image", Files.readString(manager.getImage("document", "child", child.getImageId()).toPath()));
     assertEquals("generic file", Files.readString(directory.resolve("factory.PNG")));
@@ -123,7 +122,6 @@ class ImageManagerTest {
     var previousId = child.getImageId();
     manager.deleteImage("document", "child", previousId);
     assertNull(child.getImageId());
-    assertNull(child.getFiletype());
     assertFalse(Files.exists(directory.resolve("images").resolve(previousId)));
     manager.storeImage("document", "child", "factory.png", content("new"));
     assertNotEquals(previousId, child.getImageId());
@@ -132,7 +130,6 @@ class ImageManagerTest {
   @Test
   void canRemoveAReferenceWhenItsPhysicalFileIsMissing() throws Exception {
     child.setImageId(UUID.randomUUID().toString());
-    child.setFiletype("png");
     manager.deleteImage("document", "child", child.getImageId());
     assertNull(child.getImageId());
     verify(assets).updateElement(root);
@@ -144,6 +141,26 @@ class ImageManagerTest {
     manager.storeImage("document", "child", "child.png", content("child"));
     manager.deleteAssetImages(root);
     assertFalse(Files.exists(directory.resolve("images").resolve(root.getImageId())));
+    assertFalse(Files.exists(directory.resolve("images").resolve(child.getImageId())));
+  }
+
+  @Test
+  void skipsReferencesThatAreNotImageIdsAndStillCleansUpTheRest() throws Exception {
+    manager.storeImage("document", "child", "child.png", content("child"));
+    var outside = Files.writeString(directory.resolve("outside.png"), "keep");
+    root.setImageId("../outside.png");
+    manager.deleteAssetImages(root);
+    assertTrue(Files.exists(outside));
+    assertFalse(Files.exists(directory.resolve("images").resolve(child.getImageId())));
+  }
+
+  @Test
+  void continuesWhenAnImageFileCannotBeRemoved() throws Exception {
+    manager.storeImage("document", "child", "child.png", content("child"));
+    var blockedId = UUID.randomUUID().toString();
+    Files.createDirectories(directory.resolve("images").resolve(blockedId).resolve("not-empty"));
+    root.setImageId(blockedId);
+    manager.deleteAssetImages(root);
     assertFalse(Files.exists(directory.resolve("images").resolve(child.getImageId())));
   }
 

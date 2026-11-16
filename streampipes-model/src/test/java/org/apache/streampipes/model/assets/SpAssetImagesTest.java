@@ -35,11 +35,8 @@ class SpAssetImagesTest {
     root.getAssets().add(child);
     child.getAssets().add(grandchild);
     root.setImageId("root-image");
-    root.setFiletype("png");
     child.setImageId("child-image");
-    child.setFiletype("jpeg");
     grandchild.setImageId("grandchild-image");
-    grandchild.setFiletype("jpg");
 
     var mapper = new ObjectMapper();
     var fromRest = mapper.readValue(mapper.writeValueAsString(root), SpAssetModel.class);
@@ -47,12 +44,9 @@ class SpAssetImagesTest {
     var fromStorage = gson.fromJson(gson.toJson(fromRest), SpAssetModel.class);
 
     assertEquals("root-image", fromStorage.getImageId());
-    assertEquals("png", fromStorage.getFiletype());
     var restoredChild = fromStorage.getAssets().getFirst();
     assertEquals("child-image", restoredChild.getImageId());
-    assertEquals("jpeg", restoredChild.getFiletype());
     assertEquals("grandchild-image", restoredChild.getAssets().getFirst().getImageId());
-    assertEquals("jpg", restoredChild.getAssets().getFirst().getFiletype());
     restoredChild.setImageId(null);
     assertEquals("root-image", fromStorage.getImageId());
     assertNull(new SpAsset().getImageId());

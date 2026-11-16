@@ -23,6 +23,9 @@ import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,6 +36,8 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public class ImageManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ImageManager.class);
 
   private final IAssetStorage assetStorage;
   private final FileHandler imageHandler;
@@ -57,7 +62,6 @@ public class ImageManager {
     var imageId = UUID.randomUUID().toString();
     imageHandler.storeFile(imageId, content);
     asset.setImageId(imageId);
-    asset.setFiletype(extension);
     try {
       assetStorage.updateElement(model);
     } catch (RuntimeException e) {
@@ -76,24 +80,45 @@ public class ImageManager {
     var model = requireModel(elementId);
     var asset = requireImage(model, assetId, imageId);
     asset.setImageId(null);
-    asset.setFiletype(null);
     assetStorage.updateElement(model);
     Files.deleteIfExists(imageHandler.getFile(imageId).toPath());
     return requireModel(elementId);
   }
 
-  public void deleteAssetImages(SpAsset asset) throws IOException {
+  /**
+   * Removes the image files of an asset and all of its sub-assets. Called after the asset
+   * document was deleted, so it is best-effort: a reference that is not a generated image id
+   * is skipped (never resolved to a path) and a file that cannot be removed is logged, so the
+   * remaining files are still cleaned up and the caller's delete is not reported as failed.
+   */
+  public void deleteAssetImages(SpAsset asset) {
     if (asset == null) {
       return;
     }
-    if (asset.getImageId() != null) {
-      UUID.fromString(asset.getImageId());
-      Files.deleteIfExists(imageHandler.getFile(asset.getImageId()).toPath());
+    var imageId = asset.getImageId();
+    if (imageId != null) {
+      if (isImageId(imageId)) {
+        try {
+          Files.deleteIfExists(imageHandler.getFile(imageId).toPath());
+        } catch (IOException e) {
+          LOG.warn("Could not delete image {} of asset {}", imageId, asset.getAssetId(), e);
+        }
+      } else {
+        LOG.warn("Skipping image reference of asset {} that is not an image id", asset.getAssetId());
+      }
     }
     if (asset.getAssets() != null) {
       for (var child : asset.getAssets()) {
         deleteAssetImages(child);
       }
+    }
+  }
+
+  private boolean isImageId(String imageId) {
+    try {
+      return UUID.fromString(imageId).toString().equals(imageId);
+    } catch (IllegalArgumentException e) {
+      return false;
     }
   }
 

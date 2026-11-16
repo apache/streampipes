@@ -232,7 +232,6 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
             assetDescription: '',
             assetLinks: [],
             imageId: undefined,
-            filetype: undefined,
             assetId: this.idGeneratorService.generate(6),
             elementId: this.idGeneratorService.generate(24),
             appDocType: 'asset-management',

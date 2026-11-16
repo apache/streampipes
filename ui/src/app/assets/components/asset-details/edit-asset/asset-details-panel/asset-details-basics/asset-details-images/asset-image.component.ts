@@ -18,34 +18,29 @@
 
 import {
     ChangeDetectionStrategy,
-    EventEmitter,
     Component,
-    ElementRef,
+    EventEmitter,
     Input,
-    OnChanges,
-    OnDestroy,
     Output,
-    ViewChild,
     inject,
 } from '@angular/core';
+import { SpAsset } from '@streampipes/platform-services';
 import {
-    AssetManagementService,
-    SpAsset,
-} from '@streampipes/platform-services';
-import { FormFieldComponent } from '@streampipes/shared-ui';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    DialogService,
-    PanelType,
     ConfirmDialogAction,
     ConfirmDialogComponent,
+    DialogService,
+    FormFieldComponent,
+    PanelType,
 } from '@streampipes/shared-ui';
-import { AssetImageUploadDialogComponent } from './asset-image-upload/asset-image-upload-dialog.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { AssetImageUploadDialogComponent } from './asset-image-upload/asset-image-upload-dialog.component';
+import {
+    AssetImagePreviewComponent,
+    assetHasImage,
+} from '../../../../asset-image-preview/asset-image-preview.component';
 
 export interface AssetImageChange {
     asset: SpAsset;
@@ -55,12 +50,17 @@ export interface AssetImageChange {
 @Component({
     selector: 'sp-asset-image',
     templateUrl: './asset-image.component.html',
-    styleUrl: './asset-image.component.scss',
+    styleUrls: ['./asset-image.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormFieldComponent, MatButton, MatIcon, TranslatePipe],
+    imports: [
+        FormFieldComponent,
+        MatButton,
+        MatIcon,
+        TranslatePipe,
+        AssetImagePreviewComponent,
+    ],
 })
-export class AssetImageComponent implements OnChanges, OnDestroy {
-    private assetService = inject(AssetManagementService);
+export class AssetImageComponent {
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private dialog = inject(MatDialog);
@@ -81,59 +81,7 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
     imageChanged = new EventEmitter<AssetImageChange>();
 
     get hasImage(): boolean {
-        return this.pendingImage !== undefined
-            ? this.pendingImage !== null
-            : !!this.asset.imageId;
-    }
-
-    imageUrl: string | undefined;
-
-    @ViewChild('imageViewer')
-    private imageViewer?: ElementRef<HTMLElement>;
-
-    private loadGeneration = 0;
-
-    ngOnChanges(): void {
-        this.refreshImage();
-    }
-
-    ngOnDestroy(): void {
-        this.loadGeneration++;
-        this.closeImageViewer();
-        this.clearImageUrl();
-    }
-
-    refreshImage(): void {
-        const generation = ++this.loadGeneration;
-        this.closeImageViewer();
-        this.clearImageUrl();
-
-        if (!this.hasImage) {
-            return;
-        }
-
-        if (this.pendingImage) {
-            this.imageUrl = URL.createObjectURL(this.pendingImage);
-            return;
-        }
-
-        this.assetService
-            .getAssetImage(
-                this.assetModelId,
-                this.asset.imageId,
-                this.asset.assetId,
-            )
-            .pipe(
-                map(blob => URL.createObjectURL(blob)),
-                catchError(() => of(undefined)),
-            )
-            .subscribe(url => {
-                if (generation !== this.loadGeneration) {
-                    if (url) URL.revokeObjectURL(url);
-                    return;
-                }
-                this.imageUrl = url;
-            });
+        return assetHasImage(this.asset, this.pendingImage);
     }
 
     openImageUploadDialog(): void {
@@ -163,35 +111,6 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
         }
     }
 
-    private uploadImageForAsset(asset: SpAsset): void {
-        const dialogRef = this.dialogService.open(
-            AssetImageUploadDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translateService.instant('Upload image'),
-                width: '40vw',
-            },
-        );
-
-        dialogRef.afterClosed().subscribe((uploadedFile: File) => {
-            if (!uploadedFile) {
-                return;
-            }
-
-            this.imageChanged.emit({ asset, file: uploadedFile });
-        });
-    }
-
-    private clearImageUrl(): void {
-        if (this.imageUrl) URL.revokeObjectURL(this.imageUrl);
-        this.imageUrl = undefined;
-    }
-
-    private closeImageViewer(): void {
-        const viewer = this.imageViewer?.nativeElement;
-        if (viewer?.matches(':popover-open')) viewer.hidePopover();
-    }
-
     openImageRemovalDialog(event: MouseEvent): void {
         event.stopPropagation();
         const asset = this.asset;
@@ -215,5 +134,24 @@ export class AssetImageComponent implements OnChanges, OnDestroy {
                     this.imageChanged.emit({ asset, file: null });
                 }
             });
+    }
+
+    private uploadImageForAsset(asset: SpAsset): void {
+        const dialogRef = this.dialogService.open(
+            AssetImageUploadDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Upload image'),
+                width: '40vw',
+            },
+        );
+
+        dialogRef.afterClosed().subscribe((uploadedFile: File) => {
+            if (!uploadedFile) {
+                return;
+            }
+
+            this.imageChanged.emit({ asset, file: uploadedFile });
+        });
     }
 }

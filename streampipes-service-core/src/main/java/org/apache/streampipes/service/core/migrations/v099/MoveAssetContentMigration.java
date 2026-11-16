@@ -51,7 +51,6 @@ public class MoveAssetContentMigration implements Migration {
       "assetType",
       "assetLinks",
       "imageId",
-      "filetype",
       "assetSite",
       "assets",
       "_id",
