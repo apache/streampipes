@@ -1,0 +1,14 @@
+{
+  "name": "upgrade_pressure",
+  "appId": "org.apache.streampipes.connect.iiot.adapters.simulator.machine",
+  "configuration": [
+    {"wait-time-ms": "1000"},
+    {"selected-simulator-option": "pressure"}
+  ],
+  "schema": {
+    "timestamp": {"label": "Timestamp", "propertyScope": "header", "semanticType": "http://schema.org/DateTime"},
+    "sensorId": {"label": "Sensor ID", "propertyScope": "dimension"},
+    "pressure": {"label": "Pressure", "propertyScope": "measurement", "semanticType": "http://schema.org/Number"}
+  },
+  "createOptions": {"persist": true, "start": true}
+}
