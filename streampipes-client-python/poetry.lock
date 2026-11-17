@@ -3453,14 +3453,14 @@ files = [
 
 [[package]]
 name = "pyupgrade"
-version = "3.21.2"
+version = "3.22.0"
 description = "A tool to automatically upgrade syntax for newer versions."
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.11"
 groups = ["dev"]
 files = [
-    {file = "pyupgrade-3.21.2-py2.py3-none-any.whl", hash = "sha256:2ac7b95cbd176475041e4dfe8ef81298bd4654a244f957167bd68af37d52be9f"},
-    {file = "pyupgrade-3.21.2.tar.gz", hash = "sha256:1a361bea39deda78d1460f65d9dd548d3a36ff8171d2482298539b9dc11c9c06"},
+    {file = "pyupgrade-3.22.0-py2.py3-none-any.whl", hash = "sha256:98c87952345cca4dec6589436b9c1e4b2e8c09617f41aa1582fb448728201024"},
+    {file = "pyupgrade-3.22.0.tar.gz", hash = "sha256:6889a7be7f0d0ea3119789bc50086a008a91ed6c46005a030f8928b501550425"},
 ]
 
 [package.dependencies]
@@ -4601,4 +4601,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11.5"
-content-hash = "0344ab55e67454f6b52e2d970b33d70db9fa7b2ca814e93b2f73c01e1ffaaed3"
+content-hash = "e13017664f42bed9629936e75d481e8b22b42328d45ec0367ace003da3773b50"
