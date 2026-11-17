@@ -53,7 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Runs the client on {@link HttpClient5Transport} against CouchDB 3.3.1. Enable with
+ * Runs the client on {@link HttpClient5Transport} against CouchDB 3.5.3. Enable with
  * {@code -Dstreampipes.couchdb.integration=true}.
  */
 @EnabledIfSystemProperty(named = "streampipes.couchdb.integration", matches = "true")
@@ -64,7 +64,7 @@ public class HttpClient5TransportIntegrationTest {
 
   @BeforeAll
   public static void startCouchDb() {
-    couchDb = new GenericContainer<>("couchdb:3.3.1")
+    couchDb = new GenericContainer<>("couchdb:3.5.3")
         .withEnv("COUCHDB_USER", "admin")
         .withEnv("COUCHDB_PASSWORD", "admin")
         .withExposedPorts(5984)
