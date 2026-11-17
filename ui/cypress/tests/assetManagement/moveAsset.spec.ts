@@ -67,6 +67,7 @@ describe('Move assets between hierarchies', () => {
                     assetSite: original.assetSite,
                     assetType: original.assetType,
                     assets: original.assets,
+                    imageId: original.imageId,
                     labelIds: original.labelIds,
                 });
             });
