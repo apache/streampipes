@@ -42,7 +42,7 @@ public class DatasetMetadataApi extends AbstractTypedClientApi<DatasetMetadata>
   @Override
   @ExposedToScripts
   public Optional<DatasetMetadata> getByDatasetName(String datasetName) {
-    return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName));
+    return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName), NOT_FOUND_OR_FORBIDDEN);
   }
 
   @Override
