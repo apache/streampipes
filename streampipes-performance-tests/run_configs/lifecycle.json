@@ -1,0 +1,36 @@
+{
+  "target": "streampipes",
+  "output_directory": "../results/framework",
+  "cases": [
+    {
+      "id": "adapter-start-stop",
+      "type": "streampipes.adapter_start_stop",
+      "parameters": {
+        "number_of_adapters": [
+          1
+        ],
+        "wait_time_ms": [
+          1000
+        ],
+        "cycles": [
+          3
+        ]
+      }
+    },
+    {
+      "id": "pipeline-start-stop",
+      "type": "streampipes.pipeline_start_stop",
+      "parameters": {
+        "number_of_pipelines": [
+          1
+        ],
+        "cycles": [
+          3
+        ],
+        "wait_time_ms": [
+          1000
+        ]
+      }
+    }
+  ]
+}

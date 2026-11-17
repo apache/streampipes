@@ -1,0 +1,32 @@
+{
+  "target": "streampipes",
+  "output_directory": "../results/framework",
+  "cases": [
+    {
+      "id": "adapter-ingestion",
+      "type": "streampipes.adapter_ingestion",
+      "parameters": {
+        "number_of_adapters": [
+          1
+        ],
+        "wait_time_ms": [
+          1000
+        ],
+        "transformation": [
+          {
+            "label": "Pass-through",
+            "script": "function transform(event, out, ctx) { out.collect(event); }"
+          },
+          {
+            "label": "Arithmetic conversion",
+            "script": "function transform(event, out, ctx) {\n  const field = event.value !== undefined ? 'value' : 'mass_flow';\n  event[field] = event[field] * 1.8 + 32.0;\n  out.collect(event);\n}"
+          },
+          {
+            "label": "CPU work (1000 iterations)",
+            "script": "function transform(event, out, ctx) {\n  const field = event.value !== undefined ? 'value' : 'mass_flow';\n  let value = event[field];\n  for (let i = 0; i < 1000; i++) {\n    value = Math.sin(value) + Math.sqrt(Math.abs(value) + 1.0);\n  }\n  event[field] = value;\n  out.collect(event);\n}"
+          }
+        ]
+      }
+    }
+  ]
+}
