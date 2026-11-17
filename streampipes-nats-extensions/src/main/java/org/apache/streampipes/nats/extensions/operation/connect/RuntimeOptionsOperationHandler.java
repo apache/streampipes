@@ -101,7 +101,7 @@ public class RuntimeOptionsOperationHandler implements ExtensionBrokerOperationH
       return new ExtensionServiceBrokerResponseEnvelope(
           request.getRequestId(),
           ExtensionBrokerResponseFactory.HTTP_STATUS_BAD_REQUEST,
-          objectMapper.writeValueAsString(e),
+          objectMapper.writeValueAsString(e.toSerializable()),
           new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
       );
     } catch (SpRuntimeException e) {
