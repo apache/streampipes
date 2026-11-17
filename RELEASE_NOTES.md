@@ -27,12 +27,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Highlights ✨
 * **Audit logging** for resources, settings, charts, dashboards, datasets and assets, with export and retention configuration
-* **All-new harmonized design** across the platform** with a consistent color scheme, typography, icons and layout
+* **All-new harmonized design** across the platform with a consistent color scheme, typography, icons and layout
 * **Datasets as a first-class view** with details view, CSV import with preview and progress tracking, metrics and multi-dataset download
 * **Harmonized resource workflows** for creating, starting and managing adapters, pipelines, charts, dashboards and assets, plus "create from existing" for all resources
+* **Extended chart options**: harmonized and extended visualization options, coloring modes for grouped time series, Excel-like table filters and configurable column order, nested filters, an improved query builder, collapsible dashboard panels and vector maps
+* **OPC-UA improvements**: extended extension object support (arrays and structs), new OPC-UA Events adapter, auto-generated client certificates, certificate expiry notifications and configurable subscription modes
+* **Asset management**: custom fields, images, locations, and restructuring of the asset hierarchy
+* **Adapter script transformations** in JavaScript, sandboxed, with access to the StreamPipes client and manual upload of sample events
+* **New connectors**: WinCC archived alarm adapter, MSSQL CDC and pull-based MSSQL streaming adapters, Camel Kamelets with Azure sinks
 * **Broker-based core-extension communication mode** and NATS as the default broker everywhere
-* **New connectors**: OPC-UA Events adapter, WinCC archived alarm adapter, MSSQL CDC and pull-based MSSQL streaming adapters, Camel Kamelets with Azure sinks
-* **Sandboxed script execution** for adapter event transformation scripts
+* **Performance**: storage cache, faster event serialization, batched dataset writes, and faster pipeline start/stop and overview rendering
 * **Platform upgrade** to Java 25, Spring Boot 4 and Angular 22
 
 ### Enhancement 🌟
