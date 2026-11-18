@@ -16,22 +16,40 @@
  *
  */
 
-import { EventEmitter, Injectable, inject } from '@angular/core';
+import { EventEmitter, Injectable, OnDestroy, inject } from '@angular/core';
 import { ExportConfig } from '../model/export-config.model';
 import {
     DatalakeQueryParameters,
     DatalakeRestService,
     DataViewQueryGeneratorService,
 } from '@streampipes/platform-services';
-import { HttpEventType } from '@angular/common/http';
+import {
+    HttpErrorResponse,
+    HttpEvent,
+    HttpEventType,
+} from '@angular/common/http';
 import { DataDownloadDialogModel } from '../model/data-download-dialog.model';
-import { DownloadProgress } from '../model/download-progress.model';
+import {
+    DownloadProgress,
+    FailedDownload,
+} from '../model/download-progress.model';
 import { FileNameService } from './file-name.service';
+import {
+    catchError,
+    concatMap,
+    EMPTY,
+    from,
+    Observable,
+    Subscription,
+    tap,
+} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root',
-})
-export class DataExportService {
+/**
+ * Holds the state of one download run. Provide it at the dialog level so that
+ * each dialog owns its run and closing the dialog cancels it.
+ */
+@Injectable()
+export class DataExportService implements OnDestroy {
     dataLakeRestService = inject(DatalakeRestService);
     dataViewQueryGeneratorService = inject(DataViewQueryGeneratorService);
     fileNameService = inject(FileNameService);
@@ -39,16 +57,149 @@ export class DataExportService {
     public updateDownloadProgress: EventEmitter<DownloadProgress> =
         new EventEmitter();
 
-    public downloadData(
+    private activeDownload?: Subscription;
+    private lastProgress?: DownloadProgress;
+
+    /**
+     * Downloads each measurement as a separate file, one after another,
+     * applying the same export configuration to all of them.
+     */
+    public downloadMeasurements(
         exportConfig: ExportConfig,
         dataDownloadDialogModel: DataDownloadDialogModel,
+        measurements: string[],
     ) {
-        let downloadRequest;
+        this.cancelDownload();
 
+        const totalFiles = measurements.length;
+        const failedDownloads: FailedDownload[] = [];
+        let completedFiles = 0;
+        let downloadedMBs = 0;
+
+        this.activeDownload = from(measurements)
+            .pipe(
+                concatMap(measurement => {
+                    const measurementExportConfig = this.forMeasurement(
+                        exportConfig,
+                        measurement,
+                    );
+                    downloadedMBs = 0;
+                    this.emitProgress({
+                        downloadedMBs,
+                        finished: false,
+                        totalFiles,
+                        completedFiles,
+                        currentMeasurement: measurement,
+                    });
+                    return this.makeDownloadRequest(
+                        measurementExportConfig,
+                        dataDownloadDialogModel,
+                    ).pipe(
+                        tap(event => {
+                            if (
+                                event.type === HttpEventType.DownloadProgress ||
+                                event.type === HttpEventType.Response
+                            ) {
+                                downloadedMBs = this.toMBs(
+                                    event.type === HttpEventType.Response
+                                        ? (event.body?.size ?? 0)
+                                        : event.loaded,
+                                );
+                            }
+                            if (event.type === HttpEventType.DownloadProgress) {
+                                this.emitProgress({
+                                    downloadedMBs,
+                                    finished: false,
+                                    totalFiles,
+                                    completedFiles,
+                                    currentMeasurement: measurement,
+                                });
+                            }
+                            if (event.type === HttpEventType.Response) {
+                                this.createFile(
+                                    event.body,
+                                    measurementExportConfig,
+                                );
+                                completedFiles++;
+                            }
+                        }),
+                        catchError(error => {
+                            failedDownloads.push({
+                                measurement,
+                                reason: this.describeError(error),
+                            });
+                            return EMPTY;
+                        }),
+                    );
+                }),
+            )
+            .subscribe({
+                complete: () => {
+                    this.activeDownload = undefined;
+                    this.emitProgress({
+                        downloadedMBs,
+                        finished: true,
+                        totalFiles,
+                        completedFiles,
+                        failedDownloads,
+                    });
+                },
+            });
+    }
+
+    public cancelDownload(): void {
+        if (!this.activeDownload) {
+            return;
+        }
+        this.activeDownload.unsubscribe();
+        this.activeDownload = undefined;
+        this.emitProgress({
+            ...this.lastProgress,
+            finished: false,
+            cancelled: true,
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.activeDownload?.unsubscribe();
+        this.activeDownload = undefined;
+    }
+
+    private describeError(error: unknown): string {
+        if (error instanceof HttpErrorResponse) {
+            return error.status
+                ? `HTTP ${error.status}${error.statusText ? ' ' + error.statusText : ''}`
+                : error.message;
+        }
+        return error instanceof Error ? error.message : String(error);
+    }
+
+    private emitProgress(progress: DownloadProgress): void {
+        this.lastProgress = progress;
+        this.updateDownloadProgress.emit(progress);
+    }
+
+    private forMeasurement(
+        exportConfig: ExportConfig,
+        measurement: string,
+    ): ExportConfig {
+        return {
+            ...exportConfig,
+            dataExportConfig: {
+                ...exportConfig.dataExportConfig,
+                measurement,
+            },
+        };
+    }
+
+    private makeDownloadRequest(
+        exportConfig: ExportConfig,
+        dataDownloadDialogModel: DataDownloadDialogModel,
+    ): Observable<HttpEvent<Blob>> {
         if (
             exportConfig.dataExportConfig.dataRangeConfiguration === 'visible'
         ) {
-            downloadRequest = this.dataLakeRestService.downloadQueriedData(
+            return this.dataLakeRestService.downloadQueriedData(
                 exportConfig.dataExportConfig.measurement,
                 exportConfig.formatExportConfig,
                 exportConfig.dataExportConfig.missingValueBehaviour,
@@ -56,50 +207,31 @@ export class DataExportService {
                     exportConfig,
                     dataDownloadDialogModel,
                 ),
-            );
-        } else {
-            // case for 'all' and 'customInverval'
-            let startTime,
-                endTime = undefined;
-            if (
-                exportConfig.dataExportConfig.dataRangeConfiguration ===
-                'customInterval'
-            ) {
-                startTime =
-                    exportConfig.dataExportConfig.dateRange.startDate.getTime();
-                endTime =
-                    exportConfig.dataExportConfig.dateRange.endDate.getTime();
-            }
-            downloadRequest = this.dataLakeRestService.downloadRawData(
-                exportConfig.dataExportConfig.measurement,
-                exportConfig.formatExportConfig,
-                exportConfig.dataExportConfig.missingValueBehaviour,
-                startTime,
-                endTime,
-            );
+            ) as Observable<HttpEvent<Blob>>;
         }
 
-        downloadRequest.subscribe(event => {
-            let downloadProgress: DownloadProgress;
-            // progress
-            if (event.type === HttpEventType.DownloadProgress) {
-                downloadProgress = {
-                    downloadedMBs: event.loaded / 1024 / 1014,
-                    finished: false,
-                };
-                this.updateDownloadProgress.emit(downloadProgress);
-            }
+        // case for 'all' and 'customInterval'
+        let startTime: number | undefined;
+        let endTime: number | undefined;
+        if (
+            exportConfig.dataExportConfig.dataRangeConfiguration ===
+            'customInterval'
+        ) {
+            startTime =
+                exportConfig.dataExportConfig.dateRange.startDate.getTime();
+            endTime = exportConfig.dataExportConfig.dateRange.endDate.getTime();
+        }
+        return this.dataLakeRestService.downloadRawData(
+            exportConfig.dataExportConfig.measurement,
+            exportConfig.formatExportConfig,
+            exportConfig.dataExportConfig.missingValueBehaviour,
+            startTime,
+            endTime,
+        ) as Observable<HttpEvent<Blob>>;
+    }
 
-            // finished
-            if (event.type === HttpEventType.Response) {
-                this.createFile(event.body, exportConfig);
-                downloadProgress = {
-                    downloadedMBs: event.loaded / 1024 / 1014,
-                    finished: true,
-                };
-                this.updateDownloadProgress.emit(downloadProgress);
-            }
-        });
+    private toMBs(bytes: number): number {
+        return bytes / 1024 / 1024;
     }
 
     private generateQueryRequest(
@@ -128,8 +260,8 @@ export class DataExportService {
      */
     private createFile(data, exportConfig: ExportConfig) {
         const a = document.createElement('a');
+        a.style.display = 'none';
         document.body.appendChild(a);
-        a.style.display = 'display: none';
 
         const name = this.fileNameService.generateName(
             exportConfig,
@@ -141,6 +273,8 @@ export class DataExportService {
         a.href = url;
         a.download = name;
         a.click();
-        window.URL.revokeObjectURL(url);
+        a.remove();
+        // Revoking synchronously can abort the download in some browsers.
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
     }
 }

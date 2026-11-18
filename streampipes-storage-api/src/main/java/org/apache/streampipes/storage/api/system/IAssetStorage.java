@@ -21,4 +21,5 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IAssetStorage extends CRUDStorage<SpAssetModel> {
+
 }

@@ -65,7 +65,7 @@ public class StoredFormatCompatibilityIntegrationTest {
 
   @BeforeAll
   public static void startCouchDb() {
-    couchDb = new GenericContainer<>("couchdb:3.3.1")
+    couchDb = new GenericContainer<>("couchdb:3.5.3")
         .withEnv("COUCHDB_USER", USER)
         .withEnv("COUCHDB_PASSWORD", PASSWORD)
         .withExposedPorts(5984)

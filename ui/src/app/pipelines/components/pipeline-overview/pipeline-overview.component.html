@@ -49,7 +49,7 @@
         </th>
         <td mat-cell *matCellDef="let pipeline">
             <div>
-                <div fxLayout="row" fxLayoutAlign="start center" fxFlex="150px">
+                <div class="pipeline-status-content">
                     @let status = getStatus(pipeline);
                     <sp-status-label
                         [tone]="status.tone"
@@ -108,7 +108,7 @@
     <ng-container matColumnDef="start">
         <th mat-header-cell *matHeaderCellDef>{{ 'Start' | translate }}</th>
         <td mat-cell *matCellDef="let pipeline">
-            <div fxLayoutAlign="start start">
+            <div class="pipeline-start-content">
                 @if (!pipeline.running) {
                     <button
                         color="accent"
@@ -161,7 +161,7 @@
             {{ 'Name' | translate }}
         </th>
         <td mat-cell class="pipeline-name-cell" *matCellDef="let pipeline">
-            <div fxLayout="column" fxLayoutAlign="start start">
+            <div class="pipeline-name-content">
                 <span class="text-sm" data-cy="pipeline-name-cell">{{
                     pipeline.name
                 }}</span>

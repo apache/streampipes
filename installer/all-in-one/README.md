@@ -86,7 +86,7 @@ data is discarded; drop `--rm` to keep the container and start it again later wi
 
 | Process | Origin | Port (inside the container) |
 | --- | --- | --- |
-| CouchDB | `couchdb:3.4.3`, the base image | 5984 |
+| CouchDB | `couchdb:3.5.3`, the base image | 5984 |
 | InfluxDB | `influxdb:2.6` binaries and setup entrypoint | 8086 |
 | NATS | `nats` server binary, token authentication enabled | 4222 |
 | StreamPipes core | `streampipes-core.jar` built by Maven, exploded into layers like the `backend` image | 8030 |
@@ -94,8 +94,7 @@ data is discarded; drop `--rm` to keep the container and start it again later wi
 | UI | the production build of `ui/` served by nginx | **80** (the only exposed port) |
 | Demo seed | `bin/seed-demo.py`, runs once per start and builds the scenario above | - |
 
-The InfluxDB and NATS images are the ones `../compose/docker-compose.yml` uses; CouchDB is 3.4.x because
-the 3.3.1 image is built on a Debian release that no longer receives packages. The StreamPipes parts are
+The CouchDB, InfluxDB and NATS versions match `../compose/docker-compose.yml`. The StreamPipes parts are
 the same artifacts the component images are built from, so the demo always matches the commit it was
 built from. `supervisord`
 starts and watches the processes (`supervisord.conf`); the start scripts in `bin/` wait for their

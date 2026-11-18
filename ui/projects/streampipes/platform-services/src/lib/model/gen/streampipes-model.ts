@@ -3970,6 +3970,7 @@ export class SpAsset {
     assetSite: AssetSite;
     assetType: AssetType;
     assets: SpAsset[];
+    imageId: string;
     labelIds: string[];
 
     static fromData(data: SpAsset, target?: SpAsset): SpAsset {
@@ -3989,6 +3990,7 @@ export class SpAsset {
         instance.assetSite = AssetSite.fromData(data.assetSite);
         instance.assetType = AssetType.fromData(data.assetType);
         instance.assets = __getCopyArrayFn(SpAsset.fromData)(data.assets);
+        instance.imageId = data.imageId;
         instance.labelIds = __getCopyArrayFn(__identity<string>())(
             data.labelIds,
         );

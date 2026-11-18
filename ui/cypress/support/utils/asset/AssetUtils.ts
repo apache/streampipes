@@ -349,6 +349,73 @@ export class AssetUtils {
         AssetBtns.createAssetBtn().should('be.visible');
     }
 
+    /** A 1x1 PNG, so the spec needs no binary fixture. */
+    private static readonly TEST_IMAGE_PNG =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+    public static showAsset(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.showAssetBtn(assetName).should('be.visible').click();
+        cy.location('hash', { timeout: 10000 }).should('include', '/view');
+    }
+
+    /** Selects an image in the upload dialog. It is stored when the asset is saved. */
+    public static uploadImage(fileName = 'asset-image.png') {
+        AssetBtns.uploadImageBtn().should('be.enabled').click();
+        // The file input is hidden behind a styled form field, as in the other upload dialogs.
+        AssetBtns.imageFileInput().selectFile(
+            {
+                contents: Cypress.Buffer.from(
+                    AssetUtils.TEST_IMAGE_PNG,
+                    'base64',
+                ),
+                fileName,
+                mimeType: 'image/png',
+            },
+            { force: true },
+        );
+        AssetBtns.importImageBtn().should('be.enabled').click();
+        AssetBtns.importImageBtn().should('not.exist');
+    }
+
+    public static removeImage() {
+        AssetBtns.removeImageBtn().should('be.visible').click();
+        cy.dataCy('confirm-delete').click();
+        AssetBtns.imageThumbnail().should('not.exist');
+    }
+
+    public static checkImageShown() {
+        AssetBtns.imageThumbnail()
+            .should('be.visible')
+            .find('img')
+            .should($img => {
+                expect(
+                    ($img[0] as HTMLImageElement).naturalWidth,
+                    'loaded image width',
+                ).to.be.greaterThan(0);
+            });
+    }
+
+    public static openAndCloseImageViewer() {
+        AssetBtns.imageThumbnail().click();
+        AssetBtns.imageViewer().should('be.visible');
+        AssetBtns.closeImageViewerBtn().click();
+        AssetBtns.imageViewer().should('not.be.visible');
+    }
+
+    public static checkStoredImage(assetName: string, hasImage: boolean) {
+        AssetUtils.getStoredAssets().then(assets => {
+            const asset = assets.find(a => a.assetName === assetName);
+            expect(asset, `stored asset ${assetName}`).to.not.equal(undefined);
+            const imageId = asset?.imageId ?? null;
+            if (hasImage) {
+                expect(imageId, 'stored image id').to.be.a('string');
+            } else {
+                expect(imageId, 'stored image id').to.equal(null);
+            }
+        });
+    }
+
     public static deleteAsset(assetName: string) {
         GeneralUtils.openMenuForRow(assetName);
         AssetBtns.deleteAssetBtn(assetName).click();

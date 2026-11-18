@@ -50,7 +50,7 @@ public class ImageStoreRoundTripIntegrationTest {
 
   @Test
   public void storedImageIsReadByTheImageStorage() throws IOException {
-    try (var couchDb = new GenericContainer<>("couchdb:3.3.1")
+    try (var couchDb = new GenericContainer<>("couchdb:3.5.3")
         .withEnv("COUCHDB_USER", "admin")
         .withEnv("COUCHDB_PASSWORD", "admin")
         .withExposedPorts(5984)

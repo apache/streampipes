@@ -34,9 +34,15 @@ public class FileHandler {
   Logger logger = LoggerFactory.getLogger(FileHandler.class);
 
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
+  private final String subdirectory;
 
   public FileHandler(ISpCoreConfigurationStorage coreConfigurationStorage) {
+    this(coreConfigurationStorage, "");
+  }
+
+  public FileHandler(ISpCoreConfigurationStorage coreConfigurationStorage, String subdirectory) {
     this.coreConfigurationStorage = coreConfigurationStorage;
+    this.subdirectory = subdirectory;
   }
 
   public void storeFile(String filename, InputStream fileInputStream) throws IOException {
@@ -76,7 +82,6 @@ public class FileHandler {
   }
 
   private String makeFileLocation() {
-    return coreConfigurationStorage.get().getFilesDir()
-        + File.separator;
+    return new File(coreConfigurationStorage.get().getFilesDir(), subdirectory).getPath();
   }
 }

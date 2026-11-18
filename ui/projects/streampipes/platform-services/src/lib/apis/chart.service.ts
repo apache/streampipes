@@ -123,15 +123,6 @@ export class ChartService {
         return `${this.baseUrl}/api/v3/datalake/dashboard/widgets`;
     }
 
-    getPersistedDataStream(
-        pipelineId: string,
-        measureName: string,
-    ): Observable<DatasetMetadata> {
-        return this.http
-            .get(`${this.persistedDataStreamsUrl}/${pipelineId}/${measureName}`)
-            .pipe(map(response => DatasetMetadata.fromData(response as any)));
-    }
-
     getAllPersistedDataStreams(): Observable<DatasetMetadata[]> {
         return this.http.get(this.persistedDataStreamsUrl).pipe(
             map(response => {

@@ -19,6 +19,7 @@
 import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/export-config.model';
 import { ChartUtils } from './chart/ChartUtils';
 import { ChartBtns } from './chart/ChartBtns';
+import { DataDownloadDialogBtns } from './DataDownloadDialogBtns';
 import { FileNameService } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/services/file-name.service';
 import { CsvFormatExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/format-export-config.model';
 
@@ -91,5 +92,32 @@ export class DataDownloadDialogUtils {
                 });
             },
         );
+    }
+
+    /**
+     * Continues through the dialog with the preselected settings
+     * and starts the download.
+     */
+    public static downloadWithDefaultSettings() {
+        DataDownloadDialogBtns.nextBtn().click();
+        DataDownloadDialogBtns.downloadBtn().click();
+    }
+
+    public static expectDownloadedFile(
+        exportConfig: ExportConfig,
+        expectedContent: string[],
+    ) {
+        const fileName = new FileNameService().generateName(
+            exportConfig,
+            new Date(),
+        );
+        const downloadsFolder = Cypress.config('downloadsFolder');
+        cy.readFile(`${downloadsFolder}/${fileName}`, {
+            timeout: 30000,
+        }).then((content: string) => {
+            expectedContent.forEach(expected => {
+                expect(content).to.contain(expected);
+            });
+        });
     }
 }

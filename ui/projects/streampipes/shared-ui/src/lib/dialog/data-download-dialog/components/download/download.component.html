@@ -16,10 +16,37 @@
 ~
 -->
 <ng-template matStepLabel>{{ 'Download' | translate }}</ng-template>
-<sp-download-status
-    [downloading]="!downloadProgress.finished"
-    [finished]="downloadProgress.finished"
-    [downloadedMBs]="downloadProgress.downloadedMBs"
-    [cancelable]="true"
-    (downloadCancelled)="cancelDownload()"
-/>
+@if (multipleFiles && downloading) {
+    <p class="text-center" data-cy="download-file-progress">
+        {{ fileProgressText }}
+    </p>
+}
+@if (downloadProgress.cancelled) {
+    <p class="text-center" data-cy="download-cancelled">
+        {{ cancelledText }}
+    </p>
+} @else {
+    <sp-download-status
+        [downloading]="downloading"
+        [finished]="downloadProgress.finished && !failedDownloads.length"
+        [failed]="allFailed"
+        [errorMessage]="'Download failed' | translate"
+        [downloadedMBs]="downloadProgress.downloadedMBs"
+        [cancelable]="true"
+        (downloadCancelled)="cancelDownload()"
+    />
+}
+@if (downloadProgress.finished && failedDownloads.length) {
+    <p
+        class="text-center download-partial-error"
+        role="alert"
+        data-cy="download-file-errors"
+    >
+        {{ partialFailureText }}
+    </p>
+}
+@if (downloadProgress.finished && multipleFiles && !allFailed) {
+    <p class="text-center" data-cy="download-file-summary">
+        {{ summaryText }}
+    </p>
+}
