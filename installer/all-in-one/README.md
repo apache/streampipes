@@ -20,7 +20,7 @@
 A single Docker image that runs the complete Apache StreamPipes platform in one container and
 seeds a demo scenario on first start, so you see live machine data without connecting any hardware.
 
-**Current version:** 0.99.0-SNAPSHOT
+**Current version:** 1.0.0-SNAPSHOT
 
 > **NOTE**: This image is made for trying StreamPipes out on a laptop, demos and workshops. It
 > runs every service in one container and keeps its data in the container. For anything you want
@@ -33,7 +33,7 @@ docker run --rm -p 80:80 apachestreampipes/all-in-one:dev
 ```
 
 Tags: `dev` follows the latest build of the `dev` branch, `latest` the newest release, and version tags
-(`0.99.0-SNAPSHOT` for development builds, `0.99.0` for releases) pin a specific build.
+(`1.0.0-SNAPSHOT` for development builds, `1.0.0` for releases) pin a specific build.
 
 1. Open [http://localhost](http://localhost). While the services boot (about a minute) the UI shows a
    progress screen that moves on by itself.
@@ -155,7 +155,7 @@ docker build \
   --build-context core=streampipes-service-core/target \
   --build-context extensions=streampipes-extensions/streampipes-extensions-all-iiot/target \
   --build-context ui=ui/dist/streampipes/ui/browser \
-  -t apachestreampipes/all-in-one:0.99.0-SNAPSHOT installer/all-in-one
+  -t apachestreampipes/all-in-one:1.0.0-SNAPSHOT installer/all-in-one
 ```
 
 Named build contexts need BuildKit (Docker 23 or newer, or `docker buildx build`). Build arguments:
