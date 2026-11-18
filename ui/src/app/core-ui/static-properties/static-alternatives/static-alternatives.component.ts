@@ -21,8 +21,6 @@ import {
     Component,
     Input,
     OnInit,
-    OnChanges,
-    SimpleChanges,
     TemplateRef,
     inject,
     ChangeDetectionStrategy,
@@ -63,7 +61,7 @@ export type AlternativeRenderCtx = {
 })
 export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>
-    implements OnInit, OnChanges
+    implements OnInit
 {
     private changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -73,22 +71,12 @@ export class StaticAlternativesComponent
     @Input({ required: true })
     renderStaticProperty!: TemplateRef<AlternativeRenderCtx>;
 
+    // dependentStaticPropertyIds: Map<string, boolean> = new Map<
+    //     string,
+    //     boolean
+    // >();
+
     completedAlternativeConfigurations: ConfigurationInfo[] = [];
-    childCompletedConfigurations: ConfigurationInfo[] = [];
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes['completedConfigurations']) {
-            this.updateChildConfigurations();
-        }
-    }
-
-    private updateChildConfigurations() {
-        this.childCompletedConfigurations =
-            this.staticPropertyUtils.mergeCompletedConfigurations(
-                this.completedConfigurations,
-                this.completedAlternativeConfigurations,
-            );
-    }
 
     ngOnInit() {
         this.staticProperty.alternatives.forEach(al => {
@@ -99,7 +87,6 @@ export class StaticAlternativesComponent
                 });
             }
         });
-        this.updateChildConfigurations();
         if (!this.staticProperty.alternatives.some(a => a.selected)) {
             this.staticProperty.alternatives[0].selected = true;
             this.checkFireCompleted(this.staticProperty.alternatives[0]);
@@ -113,7 +100,7 @@ export class StaticAlternativesComponent
         return {
             child: alternative.staticProperty!,
             index,
-            completedConfigurations: this.childCompletedConfigurations,
+            completedConfigurations: this.completedAlternativeConfigurations,
             onCompleted: ev => this.handleConfigurationUpdate(ev),
         };
     }
@@ -124,7 +111,6 @@ export class StaticAlternativesComponent
                 alternative.elementId === event.value.elementId;
             this.checkFireCompleted(alternative);
         });
-        this.applyCompletedConfiguration(this.alternativeCompleted());
         this.changeDetectorRef.detectChanges();
     }
 
@@ -133,8 +119,14 @@ export class StaticAlternativesComponent
             configurationInfo,
             this.completedAlternativeConfigurations,
         );
-        this.updateChildConfigurations();
-        this.applyCompletedConfiguration(this.alternativeCompleted());
+        if (this.alternativeCompleted()) {
+            this.completedAlternativeConfigurations = [
+                ...this.completedAlternativeConfigurations,
+            ];
+            this.applyCompletedConfiguration(true);
+        } else {
+            this.applyCompletedConfiguration(false);
+        }
     }
 
     checkFireCompleted(alternative: StaticPropertyAlternative) {
@@ -144,18 +136,22 @@ export class StaticAlternativesComponent
     }
 
     alternativeCompleted(): boolean {
-        const selected = this.staticProperty.alternatives.find(
-            al => al.selected,
-        );
         return (
-            !!selected &&
-            (selected.staticProperty === null ||
-                this.completedAlternativeConfigurations.some(
-                    c =>
-                        c.staticPropertyInternalName ===
-                            selected.staticProperty.internalName &&
-                        c.configured,
-                ))
+            this.staticProperty.alternatives.find(al => {
+                if (al.selected && al.staticProperty === null) {
+                    return true;
+                } else {
+                    if (al.staticProperty === null) {
+                        return false;
+                    } else {
+                        return this.completedAlternativeConfigurations.find(
+                            c =>
+                                c.staticPropertyInternalName ===
+                                al.staticProperty.internalName,
+                        ).configured;
+                    }
+                }
+            }) !== undefined
         );
     }
 }

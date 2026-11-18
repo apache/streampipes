@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.GenericP
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.assets.PlcAdapterAssetResolver;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -51,7 +50,7 @@ public class AdapterConfigurationProvider {
     var appId = getAdapterAppId(driver);
     var adapterBuilder = AdapterConfigurationBuilder.create(
             appId,
-            3,
+            2,
             () -> new GenericPlc4xAdapter(driver, connectionManager)
         )
         .withLocales(Locales.EN)
@@ -81,9 +80,7 @@ public class AdapterConfigurationProvider {
             optionMetadata
         )));
     adapterBuilder
-        .requiredStaticProperty(PlcTagConfiguration.make(
-            StaticProperties.codeStaticProperty(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE),
-            protocolMetadata.isPresent(), driver.getProtocolCode()));
+        .requiredCodeblock(Labels.withId(PLC_CODE_BLOCK), CodeLanguage.None, CODE_TEMPLATE);
 
     return adapterBuilder.buildConfiguration();
   }

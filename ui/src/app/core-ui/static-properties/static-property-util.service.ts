@@ -56,20 +56,6 @@ export class StaticPropertyUtilService {
             });
     }
 
-    public mergeCompletedConfigurations(
-        parent: ConfigurationInfo[] = [],
-        local: ConfigurationInfo[] = [],
-    ): ConfigurationInfo[] {
-        return Array.from(
-            new Map(
-                [...parent, ...local].map(config => [
-                    config.staticPropertyInternalName,
-                    { ...config },
-                ]),
-            ).values(),
-        );
-    }
-
     public allDependenciesSatisfied(
         dependsOn: string[],
         completedConfigs: ConfigurationInfo[],
