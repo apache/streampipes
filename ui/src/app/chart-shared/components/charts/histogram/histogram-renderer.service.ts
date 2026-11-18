@@ -19,16 +19,20 @@
 import { BarSeriesOption, EChartsOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
 import { FieldUpdateInfo } from '../../../models/field-update.model';
+import { NumberFormatOptions } from '../../../services/formatting';
+import { ResultLabelService } from '../../../services/result-label.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer<
     HistogramChartWidgetModel,
     BarSeriesOption
 > {
+    private resultLabelService = inject(ResultLabelService);
+
     addAdditionalConfigs(
         option: EChartsOption,
         widgetConfig?: HistogramChartWidgetModel,
@@ -37,7 +41,14 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
             return;
         }
 
-        const decimals = this.getDecimals(widgetConfig);
+        const valueFormat = this.getNumberFormat(
+            widgetConfig,
+            this.getSelectedField(widgetConfig),
+        );
+        const countFormat: NumberFormatOptions = {
+            ...valueFormat,
+            integer: true,
+        };
         const tooltip =
             !Array.isArray(option.tooltip) && option.tooltip
                 ? option.tooltip
@@ -45,11 +56,34 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
         option.tooltip = {
             ...tooltip,
             valueFormatter: (value: unknown) =>
-                this.formatNumber(value, decimals),
+                this.formatNumber(value, countFormat),
         };
 
-        this.applyAxisLabelFormatting(option.xAxis, decimals);
-        this.applyAxisLabelFormatting(option.yAxis, decimals);
+        this.applyAxisLabelFormatting(
+            option.xAxis,
+            this.getAxisNumberFormat(
+                widgetConfig,
+                this.getSelectedField(widgetConfig),
+            ),
+        );
+        this.applyAxisLabelFormatting(option.yAxis, countFormat);
+        this.hideLegendForSingleSeries(option);
+    }
+
+    /** A histogram of one field has nothing to select in a legend. */
+    private hideLegendForSingleSeries(option: EChartsOption): void {
+        const seriesCount = Array.isArray(option.series)
+            ? option.series.length
+            : option.series
+              ? 1
+              : 0;
+        if (seriesCount <= 1) {
+            const legend =
+                !Array.isArray(option.legend) && option.legend
+                    ? option.legend
+                    : {};
+            option.legend = { ...legend, show: false };
+        }
     }
 
     public handleUpdatedFields(
@@ -108,32 +142,30 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
     }
 
     getDefaultSeriesName(widgetConfig: HistogramChartWidgetModel): string {
-        return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
+        const field = this.getSelectedField(widgetConfig);
+        const queryConfig =
+            widgetConfig.dataConfig.sourceConfigs[field.sourceIndex]
+                ?.queryConfig;
+        return queryConfig
+            ? this.resultLabelService.resolveLabel(queryConfig, field)
+            : field.fullDbName;
     }
 
     private applyAxisLabelFormatting(
         axis: EChartsOption['xAxis'] | EChartsOption['yAxis'] | undefined,
-        decimals: number | undefined,
+        numberFormat: NumberFormatOptions,
     ): void {
         if (!axis) {
             return;
         }
 
-        if (Array.isArray(axis)) {
-            axis.forEach(a => {
-                (a as any).axisLabel = {
-                    ...(a as any).axisLabel,
-                    formatter: (value: number | string) =>
-                        this.formatNumber(value, decimals),
-                };
-            });
-            return;
-        }
-
-        (axis as any).axisLabel = {
-            ...(axis as any).axisLabel,
-            formatter: (value: number | string) =>
-                this.formatNumber(value, decimals),
-        };
+        const axes = Array.isArray(axis) ? axis : [axis];
+        axes.forEach(a => {
+            (a as any).axisLabel = {
+                ...(a as any).axisLabel,
+                formatter: (value: number | string) =>
+                    this.formatNumber(value, numberFormat),
+            };
+        });
     }
 }

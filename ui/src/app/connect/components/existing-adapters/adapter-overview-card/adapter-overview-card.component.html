@@ -1,0 +1,110 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-overview-card
+    [title]="adapter().name"
+    [description]="adapter().description"
+    [titleClickable]="true"
+    [accentColor]="accentColor()"
+    (titleClick)="showDetails.emit()"
+    data-cy="adapter-overview-card"
+>
+    @if (iconUrl(); as icon) {
+        <img cardIcon class="adapter-icon" [src]="icon" alt="" />
+    }
+
+    <sp-overview-card-facts>
+        <div spOverviewCardFact [label]="'Status' | translate">
+            <sp-status-label
+                [tone]="statusTone()"
+                [label]="
+                    (adapter().running ? 'Running' : 'Stopped') | translate
+                "
+                data-cy="adapter-card-status"
+            ></sp-status-label>
+        </div>
+        <div spOverviewCardFact [label]="'Messages' | translate">
+            <span
+                [matTooltip]="'Messages sent since last start' | translate"
+                data-cy="adapter-card-messages"
+                >{{ messageCount() }}</span
+            >
+        </div>
+        <div spOverviewCardFact [label]="'Last message' | translate">
+            <span
+                [matTooltip]="exactLastMessage()"
+                data-cy="adapter-card-last-message"
+                >{{ lastMessage() ?? ('n/a' | translate) }}</span
+            >
+        </div>
+    </sp-overview-card-facts>
+    <ng-content select="[cardSelect]" ngProjectAs="[cardSelect]"></ng-content>
+    <ng-content
+        select="[cardAssetContext]"
+        ngProjectAs="[cardAssetContext]"
+    ></ng-content>
+
+    @if (operationInProgress()) {
+        <div
+            cardFooter
+            class="operation-in-progress"
+            data-cy="adapter-operation-in-progress-spinner"
+        >
+            <sp-spinner [diameter]="20"></sp-spinner>
+        </div>
+    } @else if (adapter().running) {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            data-cy="adapter-card-stop"
+            (click)="stopAdapter.emit()"
+        >
+            <mat-icon aria-hidden="true">stop</mat-icon>
+            <span>{{ 'Stop' | translate }}</span>
+        </button>
+    } @else {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            data-cy="adapter-card-start"
+            (click)="startAdapter.emit()"
+        >
+            <mat-icon aria-hidden="true">play_arrow</mat-icon>
+            <span>{{ 'Start' | translate }}</span>
+        </button>
+    }
+    <button
+        cardFooter
+        type="button"
+        mat-flat-button
+        class="btn-tertiary"
+        data-cy="adapter-card-edit"
+        (click)="editAdapter.emit()"
+    >
+        <mat-icon aria-hidden="true">edit</mat-icon>
+        <span>{{ 'Edit' | translate }}</span>
+    </button>
+    <ng-content
+        select="[cardFooterActions]"
+        ngProjectAs="[cardFooterActions]"
+    ></ng-content>
+</sp-overview-card>

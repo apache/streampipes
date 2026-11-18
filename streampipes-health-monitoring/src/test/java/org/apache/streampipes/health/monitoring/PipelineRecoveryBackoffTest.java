@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -77,6 +78,26 @@ public class PipelineRecoveryBackoffTest {
   }
 
   @Test
+  public void serviceBecomingAvailableAllowsImmediateRecoveryAttempt() {
+    var generation = new AtomicLong();
+    var recoveryBackoff = new PipelineRecoveryBackoff(
+        Clock.fixed(Instant.EPOCH, ZoneOffset.UTC),
+        PipelineRecoveryBackoff.DEFAULT_INITIAL_DELAY,
+        PipelineRecoveryBackoff.DEFAULT_MAX_DELAY,
+        generation::get
+    );
+    recoveryBackoff.recordFailure("pipeline", "instance");
+    assertFalse(recoveryBackoff.isAttemptDue("pipeline", "instance"));
+
+    generation.incrementAndGet();
+
+    assertTrue(recoveryBackoff.isAttemptDue("pipeline", "instance"));
+    // A further failure after the service came back is subject to the backoff again.
+    recoveryBackoff.recordFailure("pipeline", "instance");
+    assertFalse(recoveryBackoff.isAttemptDue("pipeline", "instance"));
+  }
+
+  @Test
   public void inactiveInstancesAreRemoved() {
     var recoveryBackoff = recoveryBackoff();
     recoveryBackoff.recordFailure("pipeline", "active");
@@ -94,7 +115,8 @@ public class PipelineRecoveryBackoffTest {
     return new PipelineRecoveryBackoff(
         Clock.fixed(Instant.EPOCH, ZoneOffset.UTC),
         PipelineRecoveryBackoff.DEFAULT_INITIAL_DELAY,
-        PipelineRecoveryBackoff.DEFAULT_MAX_DELAY
+        PipelineRecoveryBackoff.DEFAULT_MAX_DELAY,
+        () -> 0L
     );
   }
 }

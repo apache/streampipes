@@ -21,6 +21,415 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+# [UNRELEASED]
+
+## What's Changed
+
+### Highlights ✨
+* **Audit logging** for resources, settings, charts, dashboards, datasets and assets, with export and retention configuration
+* **All-new harmonized design** across the platform with a consistent color scheme, typography, icons and layout
+* **Datasets as a first-class view** with details view, CSV import with preview and progress tracking, metrics and multi-dataset download
+* **Harmonized resource workflows** for creating, starting and managing adapters, pipelines, charts, dashboards and assets, plus "create from existing" for all resources
+* **Extended chart options**: harmonized and extended visualization options, coloring modes for grouped time series, Excel-like table filters and configurable column order, nested filters, an improved query builder, collapsible dashboard panels and vector maps
+* **OPC-UA improvements**: extended extension object support (arrays and structs), new OPC-UA Events adapter, auto-generated client certificates, certificate expiry notifications and configurable subscription modes
+* **Asset management**: custom fields, images, locations, and restructuring of the asset hierarchy
+* **Adapter script transformations** in JavaScript, sandboxed, with access to the StreamPipes client and manual upload of sample events
+* **New connectors**: WinCC archived alarm adapter, MSSQL CDC and pull-based MSSQL streaming adapters, Camel Kamelets with Azure sinks
+* **Broker-based core-extension communication mode** and NATS as the default broker everywhere
+* **Performance**: storage cache, faster event serialization, batched dataset writes, and faster pipeline start/stop and overview rendering
+* **Platform upgrade** to Java 25, Spring Boot 4 and Angular 22
+
+### Enhancement 🌟
+* [[#3795](https://github.com/apache/streampipes/pull/3795)]: Add load balancer for extension services
+* [[#3796](https://github.com/apache/streampipes/pull/3796)]: Add SpRateLimiter and SpMemoryManager
+* [[#3891](https://github.com/apache/streampipes/pull/3891)]: Add more descriptive sidebar
+* [[#3895](https://github.com/apache/streampipes/pull/3895)]: TLS support for MQTT data sink
+* [[#3906](https://github.com/apache/streampipes/pull/3906)]: Resource owners can manage permissions
+* [[#3916](https://github.com/apache/streampipes/pull/3916)]: Harmonize layout in configuration view, add pagination to tables
+* [[#3924](https://github.com/apache/streampipes/pull/3924)]: Extend options to configure inner panel and labels
+* [[#3934](https://github.com/apache/streampipes/pull/3934)]: Replace the fusesource MQTT library with the HiveMQ client
+* [[#3941](https://github.com/apache/streampipes/pull/3941)]: Add permission support to assets
+* [[#3942](https://github.com/apache/streampipes/pull/3942)]: Add connection test to export provider
+* [[#3945](https://github.com/apache/streampipes/pull/3945)]: Improve logging and add manual trigger for data lake retention
+* [[#3946](https://github.com/apache/streampipes/pull/3946)]: Improve permission handling
+* [[#3947](https://github.com/apache/streampipes/pull/3947)]: Migrate data stream name in existing pipelines when updating an adapter
+* [[#3962](https://github.com/apache/streampipes/pull/3962)]: Enhance the filter behavior for labels and types on resources
+* [[#3991](https://github.com/apache/streampipes/pull/3991)]: Ask to save when creating a new chart
+* [[#4011](https://github.com/apache/streampipes/pull/4011)]: Improve widget handling in dashboard
+* [[#4013](https://github.com/apache/streampipes/pull/4013)]: Extend capabilities of machine data simulator
+* [[#4015](https://github.com/apache/streampipes/pull/4015)]: Make datasets a first class UI view
+* [[#4026](https://github.com/apache/streampipes/pull/4026)]: Support vector maps in addition to tile servers
+* [[#4027](https://github.com/apache/streampipes/pull/4027)]: Harmonize font sizes
+* [[#4028](https://github.com/apache/streampipes/pull/4028)]: Harmonize layout across all screens
+* [[#4033](https://github.com/apache/streampipes/pull/4033)]: Introduce script-based event transformation for complex data handling in Connect
+* [[#4037](https://github.com/apache/streampipes/pull/4037)]: Improve asset view, add custom fields
+* [[#4039](https://github.com/apache/streampipes/pull/4039)]: Refactor Prometheus endpoints to a new naming convention
+* [[#4044](https://github.com/apache/streampipes/pull/4044)]: Show OPC-UA certificate info in asset view
+* [[#4046](https://github.com/apache/streampipes/pull/4046)]: Remember pagination settings
+* [[#4047](https://github.com/apache/streampipes/pull/4047)]: Write data to the data lake from the Java client
+* [[#4049](https://github.com/apache/streampipes/pull/4049)]: Add sorting to sites and label configuration
+* [[#4051](https://github.com/apache/streampipes/pull/4051)]: Enable chart renaming (as alias) in dashboard
+* [[#4054](https://github.com/apache/streampipes/pull/4054)]: Add feature cards for better preview of resources
+* [[#4063](https://github.com/apache/streampipes/pull/4063)]: Improve entry page
+* [[#4073](https://github.com/apache/streampipes/pull/4073)]: Reduce loading time for dataset counts
+* [[#4079](https://github.com/apache/streampipes/pull/4079)]: Harmonize pipeline editor design
+* [[#4096](https://github.com/apache/streampipes/pull/4096)]: Improve health checks
+* [[#4098](https://github.com/apache/streampipes/pull/4098)]: Modify transformation script signature
+* [[#4099](https://github.com/apache/streampipes/pull/4099)]: Add dataset permissions
+* [[#4100](https://github.com/apache/streampipes/pull/4100)]: Send email notifications for expired OPC-UA certificates
+* [[#4125](https://github.com/apache/streampipes/pull/4125)]: Support deletion in TypeScript dataset API
+* [[#4128](https://github.com/apache/streampipes/pull/4128)]: Apply user configuration changes to event schemas with a schema diff service
+* [[#4129](https://github.com/apache/streampipes/pull/4129)]: Add method to get dataset by name to StreamPipes client
+* [[#4130](https://github.com/apache/streampipes/pull/4130)]: Add bearer token authentication options to HTTP stream protocol
+* [[#4141](https://github.com/apache/streampipes/pull/4141)]: Allow manual upload of sample event for adapter schema
+* [[#4142](https://github.com/apache/streampipes/pull/4142)]: Support inline `//` comments in PLC4X S7 advanced configuration
+* [[#4160](https://github.com/apache/streampipes/pull/4160)]: Add environment variable to require minimum OPC-UA pull frequency
+* [[#4181](https://github.com/apache/streampipes/pull/4181)]: Add Polish language support
+* [[#4186](https://github.com/apache/streampipes/pull/4186)]: Add persistent state support for StreamPipes functions
+* [[#4189](https://github.com/apache/streampipes/pull/4189)]: Add support for nested filters in data explorer
+* [[#4191](https://github.com/apache/streampipes/pull/4191)]: Add multi-select actions
+* [[#4196](https://github.com/apache/streampipes/pull/4196)]: Add feature card to adapter page
+* [[#4201](https://github.com/apache/streampipes/pull/4201)]: Replace ngx-codemirror with Monaco editor
+* [[#4205](https://github.com/apache/streampipes/pull/4205)]: Make OAuth userinfo request optional
+* [[#4207](https://github.com/apache/streampipes/pull/4207)]: Add data preview table
+* [[#4211](https://github.com/apache/streampipes/pull/4211)]: Improve indicator widget
+* [[#4214](https://github.com/apache/streampipes/pull/4214)]: Integrate Camel Kamelets, add Azure sinks
+* [[#4231](https://github.com/apache/streampipes/pull/4231)]: Support refresh tokens
+* [[#4240](https://github.com/apache/streampipes/pull/4240)]: Add Excel-like filters to table widget
+* [[#4242](https://github.com/apache/streampipes/pull/4242)]: Support broker-based core-extension communication mode
+* [[#4248](https://github.com/apache/streampipes/pull/4248)]: Add asset infos to resource table
+* [[#4254](https://github.com/apache/streampipes/pull/4254)]: Add CSV dataset import with preview
+* [[#4269](https://github.com/apache/streampipes/pull/4269)]: Improve StreamPipesFunction monitoring
+* [[#4271](https://github.com/apache/streampipes/pull/4271)]: Add shortcuts and edit/delete buttons in pipeline panel
+* [[#4274](https://github.com/apache/streampipes/pull/4274)]: Redesign auto aggregation for client limits
+* [[#4276](https://github.com/apache/streampipes/pull/4276)]: Improve dashboard appearance
+* [[#4284](https://github.com/apache/streampipes/pull/4284)]: Improve dark theme
+* [[#4290](https://github.com/apache/streampipes/pull/4290)]: Add split button
+* [[#4291](https://github.com/apache/streampipes/pull/4291)]: Improve chart types
+* [[#4301](https://github.com/apache/streampipes/pull/4301)]: Add sandbox policy to GraalVM script execution
+* [[#4307](https://github.com/apache/streampipes/pull/4307)]: Extend OPC-UA extension object support
+* [[#4325](https://github.com/apache/streampipes/pull/4325)]: Improve schema preview dimension indicators
+* [[#4342](https://github.com/apache/streampipes/pull/4342)]: Add StreamPipes client to JavaScript transformation context
+* [[#4343](https://github.com/apache/streampipes/pull/4343)]: Improve convenience for event transformation scripts
+* [[#4360](https://github.com/apache/streampipes/pull/4360)]: Sandbox execution of untrusted Groovy code
+* [[#4368](https://github.com/apache/streampipes/pull/4368)]: Automatic handling of data stream changes in Python client
+* [[#4369](https://github.com/apache/streampipes/pull/4369)]: Auto-generate OPC-UA client certificate if not configured
+* [[#4370](https://github.com/apache/streampipes/pull/4370)]: Improve map rendering for multiple assets
+* [[#4383](https://github.com/apache/streampipes/pull/4383)]: Support timestamp with time zone in PostgreSQL sink
+* [[#4390](https://github.com/apache/streampipes/pull/4390)]: Improve data stream identification in pipeline editor
+* [[#4391](https://github.com/apache/streampipes/pull/4391)]: Add shortcuts to help menu
+* [[#4406](https://github.com/apache/streampipes/pull/4406)]: Make dashboard panel collapsible
+* [[#4411](https://github.com/apache/streampipes/pull/4411)]: Allow configurable column ordering in table chart
+* [[#4417](https://github.com/apache/streampipes/pull/4417)]: Improve OPC-UA adapter tree and error handling
+* [[#4420](https://github.com/apache/streampipes/pull/4420)]: Add deletion endpoint for function state
+* [[#4434](https://github.com/apache/streampipes/pull/4434)]: Add OPC-UA Events adapter
+* [[#4443](https://github.com/apache/streampipes/pull/4443)]: Add WinCC archived alarm adapter
+* [[#4449](https://github.com/apache/streampipes/pull/4449)]: Warn on incompatible dataset schema changes affecting measurements in pipelines
+* [[#4452](https://github.com/apache/streampipes/pull/4452)]: Add MSSQL CDC connector
+* [[#4453](https://github.com/apache/streampipes/pull/4453)]: Update language files, add sorting option
+* [[#4486](https://github.com/apache/streampipes/pull/4486)]: Add fallback for missing OPC-UA events in schema editor
+* [[#4487](https://github.com/apache/streampipes/pull/4487)]: Workflow consistency for dashboards
+* [[#4488](https://github.com/apache/streampipes/pull/4488)]: Extend client API with methods for plain JSON retrieval and update
+* [[#4502](https://github.com/apache/streampipes/pull/4502)]: Improve export dialog
+* [[#4511](https://github.com/apache/streampipes/pull/4511)]: Add segment index to alarm archive config
+* [[#4514](https://github.com/apache/streampipes/pull/4514)]: Add option to ignore last modified timestamp in alarm archive adapter
+* [[#4522](https://github.com/apache/streampipes/pull/4522)]: Add larger page size options to shared resource tables
+* [[#4527](https://github.com/apache/streampipes/pull/4527)]: Harmonize resource creation workflow for charts
+* [[#4541](https://github.com/apache/streampipes/pull/4541)]: Introduce summary DTO for resource overview
+* [[#4546](https://github.com/apache/streampipes/pull/4546)]: Add event publisher that broadcasts changes of a data stream
+* [[#4549](https://github.com/apache/streampipes/pull/4549)]: Add coloring modes to time series chart in grouping mode
+* [[#4551](https://github.com/apache/streampipes/pull/4551)]: Improve loading time of overview tables
+* [[#4553](https://github.com/apache/streampipes/pull/4553)]: Improve chart selection in dashboard
+* [[#4554](https://github.com/apache/streampipes/pull/4554)]: Enable search in overview tables
+* [[#4555](https://github.com/apache/streampipes/pull/4555)]: Improve home screen loading behaviour
+* [[#4556](https://github.com/apache/streampipes/pull/4556)]: Support filtering of datasets in chart view
+* [[#4557](https://github.com/apache/streampipes/pull/4557)]: Improve chart query builder
+* [[#4561](https://github.com/apache/streampipes/pull/4561)]: Extend visualization options
+* [[#4587](https://github.com/apache/streampipes/pull/4587)]: Display field data types in adapter details page
+* [[#4588](https://github.com/apache/streampipes/pull/4588)]: Introduce storage cache
+* [[#4590](https://github.com/apache/streampipes/pull/4590)]: Harmonize resource creation workflow for assets
+* [[#4592](https://github.com/apache/streampipes/pull/4592)]: Add details view for datasets
+* [[#4605](https://github.com/apache/streampipes/pull/4605)]: Allow reordering and restructuring of assets in asset view edit mode
+* [[#4629](https://github.com/apache/streampipes/pull/4629)]: Add last updated time to dashboard kiosk, improve performance
+* [[#4637](https://github.com/apache/streampipes/pull/4637)]: Move dataset count display into dataset overview
+* [[#4643](https://github.com/apache/streampipes/pull/4643)]: Add validation and naming warnings for property field names in adapter schema configuration
+* [[#4646](https://github.com/apache/streampipes/pull/4646)]: Refactor asset link table
+* [[#4656](https://github.com/apache/streampipes/pull/4656)]: Optimize adapter start and stop lifecycle
+* [[#4659](https://github.com/apache/streampipes/pull/4659)]: Extend OPC-UA subscription mode configuration
+* [[#4667](https://github.com/apache/streampipes/pull/4667)]: Allow registration of new health checks
+* [[#4676](https://github.com/apache/streampipes/pull/4676)]: Extend email error hints
+* [[#4681](https://github.com/apache/streampipes/pull/4681)]: Improve error messages shown for runtime-resolvable static properties
+* [[#4685](https://github.com/apache/streampipes/pull/4685)]: Improve query performance of latest event queries
+* [[#4700](https://github.com/apache/streampipes/pull/4700)]: Add running instance dialog for registered services
+* [[#4703](https://github.com/apache/streampipes/pull/4703)]: Improve dataset details and feature card views
+* [[#4707](https://github.com/apache/streampipes/pull/4707)]: Harmonize resource creation workflow for Connect
+* [[#4708](https://github.com/apache/streampipes/pull/4708)]: Harmonize resource creation workflow for pipelines
+* [[#4709](https://github.com/apache/streampipes/pull/4709)]: Make asset tree scrollable in asset edit mode
+* [[#4717](https://github.com/apache/streampipes/pull/4717)]: Add alert banner for asset links
+* [[#4720](https://github.com/apache/streampipes/pull/4720)]: Add shared search select component
+* [[#4722](https://github.com/apache/streampipes/pull/4722)]: Add CSV import progress tracking
+* [[#4743](https://github.com/apache/streampipes/pull/4743)]: Keep selection after executing multi-select action
+* [[#4767](https://github.com/apache/streampipes/pull/4767)]: Unify adapter and data stream lifecycle handling
+* [[#4774](https://github.com/apache/streampipes/pull/4774)]: Add Python 3.14 support for Python client
+* [[#4784](https://github.com/apache/streampipes/pull/4784)]: Add Shift key navigation
+* [[#4787](https://github.com/apache/streampipes/pull/4787)]: Harmonize adapter start workflow
+* [[#4797](https://github.com/apache/streampipes/pull/4797)]: Add adapter and pipeline support to Python client
+* [[#4822](https://github.com/apache/streampipes/pull/4822)]: Add pull-based MSSQL streaming adapter
+* [[#4825](https://github.com/apache/streampipes/pull/4825)]: Support external HTTP requests in client
+* [[#4830](https://github.com/apache/streampipes/pull/4830)]: Show asset location in the asset overview
+* [[#4842](https://github.com/apache/streampipes/pull/4842)]: Show the certificate subject in the certificate list
+* [[#4849](https://github.com/apache/streampipes/pull/4849)]: Support multiple Kafka bootstrap servers
+* [[#4852](https://github.com/apache/streampipes/pull/4852)]: Add message key configuration to Kafka sink
+* [[#4854](https://github.com/apache/streampipes/pull/4854)]: Add custom fields for sub-assets
+* [[#4877](https://github.com/apache/streampipes/pull/4877)]: Add design guidelines and improve basic view structure
+* [[#4878](https://github.com/apache/streampipes/pull/4878)]: Support configurable decimal separator in CSV parser
+* [[#4884](https://github.com/apache/streampipes/pull/4884)]: Make dataset selection searchable
+* [[#4902](https://github.com/apache/streampipes/pull/4902)]: Align permissions menu label and show element name in dialog
+* [[#4903](https://github.com/apache/streampipes/pull/4903)]: Harmonize pipeline start workflow
+* [[#4904](https://github.com/apache/streampipes/pull/4904)]: Harmonize detail view design
+* [[#4905](https://github.com/apache/streampipes/pull/4905)]: Add "create from existing" for all resources
+* [[#4918](https://github.com/apache/streampipes/pull/4918)]: Add asset hierarchy move action
+* [[#4921](https://github.com/apache/streampipes/pull/4921)]: Add script to generate environment variables
+* [[#4931](https://github.com/apache/streampipes/pull/4931)]: Add configurable system notification displayed on all pages (including kiosk mode)
+* [[#4944](https://github.com/apache/streampipes/pull/4944)]: Add runtime benchmark, improve runtime event handling
+* [[#4948](https://github.com/apache/streampipes/pull/4948)]: Improve event serialization performance
+* [[#4949](https://github.com/apache/streampipes/pull/4949)]: Extend dataset query capabilities of the Python dataset API
+* [[#4997](https://github.com/apache/streampipes/pull/4997)]: Add image upload for assets
+* [[#5024](https://github.com/apache/streampipes/pull/5024)]: Improve pipeline start and stop performance
+* [[#5033](https://github.com/apache/streampipes/pull/5033)]: Improve dataset query handling
+* [[#5036](https://github.com/apache/streampipes/pull/5036)]: Batch dataset writes on a shared Influx client
+* [[#5038](https://github.com/apache/streampipes/pull/5038)]: Add audit logging
+* [[#5068](https://github.com/apache/streampipes/pull/5068)]: Add multi-select actions to datasets
+* [[#5073](https://github.com/apache/streampipes/pull/5073)]: Improve resilience of NATS transport mode
+* [[#5095](https://github.com/apache/streampipes/pull/5095)]: Add export feature to audit logs
+* [[#5096](https://github.com/apache/streampipes/pull/5096)]: Let UI check for updates and show update notification
+* [[#5097](https://github.com/apache/streampipes/pull/5097)]: Add retention configuration for audit logs
+* [[#5098](https://github.com/apache/streampipes/pull/5098)]: Add silent period parameter to MS Teams sink configuration
+* [[#5108](https://github.com/apache/streampipes/pull/5108)]: Add audit logging pipeline
+* [[#5116](https://github.com/apache/streampipes/pull/5116)]: Add asset audit events
+* [[#5117](https://github.com/apache/streampipes/pull/5117)]: Add charts to audit log
+* [[#5118](https://github.com/apache/streampipes/pull/5118)]: Add dashboard audit events
+* [[#5119](https://github.com/apache/streampipes/pull/5119)]: Add datasets to audit log
+* [[#5120](https://github.com/apache/streampipes/pull/5120)]: Audit settings changes
+* [[#5135](https://github.com/apache/streampipes/pull/5135)]: Add all-in-one installer with demo data
+* [[#5141](https://github.com/apache/streampipes/pull/5141)]: Extend machine data simulator with manufacturing-related simulations
+* [[#5143](https://github.com/apache/streampipes/pull/5143)]: Harmonize chart options for more consistent layout
+* [[#5154](https://github.com/apache/streampipes/pull/5154)]: Improve handling of generic storage documents for imports and exports
+* [[#5168](https://github.com/apache/streampipes/pull/5168)]: Make startup recovery more robust
+* [[#5169](https://github.com/apache/streampipes/pull/5169)]: Show project SBOM in help
+* [[#5182](https://github.com/apache/streampipes/pull/5182)]: Add a StreamPipes CouchDB client to replace LightCouch
+* [[#5198](https://github.com/apache/streampipes/pull/5198)]: Support structured logging configurations
+* [[#5199](https://github.com/apache/streampipes/pull/5199)]: Make Parquet sink work on Java 25 and support HDFS URIs
+* [[#5208](https://github.com/apache/streampipes/pull/5208)]: Add card layout to overview tables
+* [[#5228](https://github.com/apache/streampipes/pull/5228)]: Replace QUDT with an in-house measurement unit catalog
+* [[#5245](https://github.com/apache/streampipes/pull/5245)]: Improve pipeline preview
+* [[#5254](https://github.com/apache/streampipes/pull/5254)]: Make dataset fields searchable during chart creation and editing
+* [[#5268](https://github.com/apache/streampipes/pull/5268)]: Support download of multiple datasets
+* [[#5276](https://github.com/apache/streampipes/pull/5276)]: Improve overview rendering performance
+* [[#5277](https://github.com/apache/streampipes/pull/5277)]: Extend OpenAPI documentation
+
+
+### Bug fixes 🧰
+* [[#3892](https://github.com/apache/streampipes/pull/3892)]: Avoid sending events twice in adapter sink
+* [[#3953](https://github.com/apache/streampipes/pull/3953)]: Various minor improvements and bug fixes
+* [[#3954](https://github.com/apache/streampipes/pull/3954)]: Fix various layout bugs
+* [[#3955](https://github.com/apache/streampipes/pull/3955)]: Use asset storage for default asset migration
+* [[#3959](https://github.com/apache/streampipes/pull/3959)]: Update default roles and privileges
+* [[#3961](https://github.com/apache/streampipes/pull/3961)]: Align UI views with dashboard and data explorer permissions
+* [[#3963](https://github.com/apache/streampipes/pull/3963)]: Connect admins can see live preview
+* [[#3964](https://github.com/apache/streampipes/pull/3964)]: Connect admins can upload files
+* [[#3965](https://github.com/apache/streampipes/pull/3965)]: Align UI permissions for assets and sites
+* [[#3969](https://github.com/apache/streampipes/pull/3969)]: Fix missing previously used labels in label selection
+* [[#3970](https://github.com/apache/streampipes/pull/3970)]: Properly handle deleted labels in asset view
+* [[#3973](https://github.com/apache/streampipes/pull/3973)]: Fix title width in data explorer
+* [[#3990](https://github.com/apache/streampipes/pull/3990)]: Correct type checking error for HTTP headers in Python client
+* [[#4019](https://github.com/apache/streampipes/pull/4019)]: Use data view element id when removing charts from dashboard
+* [[#4034](https://github.com/apache/streampipes/pull/4034)]: Fix incorrect pagination in data lake and pipelines
+* [[#4035](https://github.com/apache/streampipes/pull/4035)]: Handle missing event schema in Python client `DataLakeMeasure`
+* [[#4058](https://github.com/apache/streampipes/pull/4058)]: Convert double timestamp value from Influx to long
+* [[#4071](https://github.com/apache/streampipes/pull/4071)]: Fix migration issues when importing exported resources
+* [[#4094](https://github.com/apache/streampipes/pull/4094)]: Fix migration request deserialization problem
+* [[#4102](https://github.com/apache/streampipes/pull/4102)]: Increase precision for correction value transformation migration
+* [[#4109](https://github.com/apache/streampipes/pull/4109)]: Add migration to remove GeoJSON format
+* [[#4115](https://github.com/apache/streampipes/pull/4115)]: Improve error handling in pipeline elements
+* [[#4122](https://github.com/apache/streampipes/pull/4122)]: Cancel file replay when adapter is stopped
+* [[#4124](https://github.com/apache/streampipes/pull/4124)]: Add missing warnings for adapter configuration changes during edit
+* [[#4126](https://github.com/apache/streampipes/pull/4126)]: Improve usability for assets and add translations to icon bar
+* [[#4132](https://github.com/apache/streampipes/pull/4132)]: Ensure that only one get sample request is triggered
+* [[#4134](https://github.com/apache/streampipes/pull/4134)]: Add origin type for add timestamp rule migration
+* [[#4138](https://github.com/apache/streampipes/pull/4138)]: Updating MQTT adapter can leave orphaned consumer thread
+* [[#4147](https://github.com/apache/streampipes/pull/4147)]: Fix adapter creation tour for event transform script step
+* [[#4148](https://github.com/apache/streampipes/pull/4148)]: Improve the workflow for the Connect tutorial
+* [[#4158](https://github.com/apache/streampipes/pull/4158)]: Enable MQTT reconnect logging and resubscribe after outages
+* [[#4163](https://github.com/apache/streampipes/pull/4163)]: Add random suffix to persist pipeline ID to avoid conflicts
+* [[#4178](https://github.com/apache/streampipes/pull/4178)]: Support abstract data types in OPC-UA adapter
+* [[#4180](https://github.com/apache/streampipes/pull/4180)]: Don't fail on unknown properties in data import
+* [[#4198](https://github.com/apache/streampipes/pull/4198)]: Use numpy for row conversion in Python client to avoid float timestamps
+* [[#4203](https://github.com/apache/streampipes/pull/4203)]: Fix 502 bad gateway after OAuth login
+* [[#4212](https://github.com/apache/streampipes/pull/4212)]: Properly handle optional static properties
+* [[#4225](https://github.com/apache/streampipes/pull/4225)]: Remember page settings after logout
+* [[#4249](https://github.com/apache/streampipes/pull/4249)]: Accept full and shorthand propertyScope values in compact adapters
+* [[#4272](https://github.com/apache/streampipes/pull/4272)]: Add cancel navigation option to unsaved changes warning for charts and dashboards
+* [[#4275](https://github.com/apache/streampipes/pull/4275)]: Remove Maven deploy skip from connectors-iiot module
+* [[#4282](https://github.com/apache/streampipes/pull/4282)]: Honor env values in getValueOrResolve
+* [[#4283](https://github.com/apache/streampipes/pull/4283)]: Add missing service id to adapter description
+* [[#4292](https://github.com/apache/streampipes/pull/4292)]: Properly parse float64 values before writing to database
+* [[#4305](https://github.com/apache/streampipes/pull/4305)]: Resolve Python client dependency issues for Python 3.13 support
+* [[#4336](https://github.com/apache/streampipes/pull/4336)]: Show names in delete confirmation dialogs
+* [[#4341](https://github.com/apache/streampipes/pull/4341)]: Pin CSV import actions to bottom
+* [[#4356](https://github.com/apache/streampipes/pull/4356)]: Normalize OPC-UA unsigned values
+* [[#4359](https://github.com/apache/streampipes/pull/4359)]: Reload filters for updated assets
+* [[#4366](https://github.com/apache/streampipes/pull/4366)]: Enforce raw Unix timestamp validation for file replay adapter
+* [[#4381](https://github.com/apache/streampipes/pull/4381)]: Add missing event grounding modification in debug mode
+* [[#4389](https://github.com/apache/streampipes/pull/4389)]: Auto refresh assets after adding newly created resources
+* [[#4398](https://github.com/apache/streampipes/pull/4398)]: Encode URI components in data lake REST requests
+* [[#4408](https://github.com/apache/streampipes/pull/4408)]: Fix CSV export issues
+* [[#4410](https://github.com/apache/streampipes/pull/4410)]: Make table chart header sticky
+* [[#4412](https://github.com/apache/streampipes/pull/4412)]: Allow float values as dimension
+* [[#4413](https://github.com/apache/streampipes/pull/4413)]: Improve OPC-UA adapter error logging
+* [[#4419](https://github.com/apache/streampipes/pull/4419)]: Asset filters are not applied to datasets
+* [[#4422](https://github.com/apache/streampipes/pull/4422)]: Use StreamPipes client for fetching permissions
+* [[#4424](https://github.com/apache/streampipes/pull/4424)]: Fix filter transmission
+* [[#4427](https://github.com/apache/streampipes/pull/4427)]: Add NATS token to function output collector
+* [[#4431](https://github.com/apache/streampipes/pull/4431)]: Dashboards do not use full width on large screens
+* [[#4450](https://github.com/apache/streampipes/pull/4450)]: Change behavior of context menu on overview page
+* [[#4460](https://github.com/apache/streampipes/pull/4460)]: Avoid migration of adapters with existing transformation config
+* [[#4465](https://github.com/apache/streampipes/pull/4465)]: Preserve adapter transformation config with empty script
+* [[#4480](https://github.com/apache/streampipes/pull/4480)]: Reset endpoint fails when pipeline has missing health status
+* [[#4483](https://github.com/apache/streampipes/pull/4483)]: Chart settings not correctly migrated after event schema changes
+* [[#4484](https://github.com/apache/streampipes/pull/4484)]: Fix extraction of OneOf static properties in compact pipeline generation
+* [[#4500](https://github.com/apache/streampipes/pull/4500)]: Fix color mapping in gauge chart
+* [[#4503](https://github.com/apache/streampipes/pull/4503)]: Make display name of gauge optional
+* [[#4504](https://github.com/apache/streampipes/pull/4504)]: Add StreamPipes logging for KafkaPublishSink errors
+* [[#4507](https://github.com/apache/streampipes/pull/4507)]: Properly convert arrays in JS script transformer
+* [[#4508](https://github.com/apache/streampipes/pull/4508)]: Allow array access in script evaluator
+* [[#4515](https://github.com/apache/streampipes/pull/4515)]: Improve file watcher process for circular logs
+* [[#4519](https://github.com/apache/streampipes/pull/4519)]: Restore Prometheus actuator endpoint
+* [[#4521](https://github.com/apache/streampipes/pull/4521)]: Fix form fields and translations in profile dialogs
+* [[#4529](https://github.com/apache/streampipes/pull/4529)]: Fixes for new dashboard workflow
+* [[#4530](https://github.com/apache/streampipes/pull/4530)]: Fix sidebar extraction in Maven plugin
+* [[#4536](https://github.com/apache/streampipes/pull/4536)]: Use Prometheus collector bridge
+* [[#4538](https://github.com/apache/streampipes/pull/4538)]: Prevent duplicate dataset assignment to assets
+* [[#4540](https://github.com/apache/streampipes/pull/4540)]: Use correct element id for deeply cloned widgets
+* [[#4548](https://github.com/apache/streampipes/pull/4548)]: Improve cleanup of stale connections
+* [[#4559](https://github.com/apache/streampipes/pull/4559)]: Assets do not consider dependencies on labels and sites
+* [[#4560](https://github.com/apache/streampipes/pull/4560)]: Fix pipeline id in "start all pipelines" and retention serialization
+* [[#4562](https://github.com/apache/streampipes/pull/4562)]: Imported assets are not visible until manual page refresh
+* [[#4572](https://github.com/apache/streampipes/pull/4572)]: Improve retry of failed PLC connections
+* [[#4580](https://github.com/apache/streampipes/pull/4580)]: Check asset links for null values before sorting
+* [[#4581](https://github.com/apache/streampipes/pull/4581)]: Compact adapter conversion does not set script active
+* [[#4582](https://github.com/apache/streampipes/pull/4582)]: Improve chart selection loading
+* [[#4583](https://github.com/apache/streampipes/pull/4583)]: Improve performance of charts
+* [[#4615](https://github.com/apache/streampipes/pull/4615)]: Restore dashboard public link option
+* [[#4616](https://github.com/apache/streampipes/pull/4616)]: Ensure correct escaping and quoting of string values in CSV export
+* [[#4619](https://github.com/apache/streampipes/pull/4619)]: Properly read charts from import manifests
+* [[#4621](https://github.com/apache/streampipes/pull/4621)]: Health check restarts adapter during stopping process
+* [[#4622](https://github.com/apache/streampipes/pull/4622)]: Properly clean up subscriptions in kiosk mode
+* [[#4630](https://github.com/apache/streampipes/pull/4630)]: Ignore unknown fields in ImportGenerator
+* [[#4634](https://github.com/apache/streampipes/pull/4634)]: Split chart request refresh strategies
+* [[#4645](https://github.com/apache/streampipes/pull/4645)]: Add missing sorting to adapter and dataset columns
+* [[#4648](https://github.com/apache/streampipes/pull/4648)]: PLC4X cache recovery after failed read execution
+* [[#4652](https://github.com/apache/streampipes/pull/4652)]: Align script template access handling
+* [[#4657](https://github.com/apache/streampipes/pull/4657)]: Reduce logging for time series storage and adapter preprocessing
+* [[#4670](https://github.com/apache/streampipes/pull/4670)]: Make transformation script endpoint backwards compatible
+* [[#4682](https://github.com/apache/streampipes/pull/4682)]: Asset filter is not applied when resources are grouped
+* [[#4686](https://github.com/apache/streampipes/pull/4686)]: Improve asset creation and editing workflow
+* [[#4688](https://github.com/apache/streampipes/pull/4688)]: Confirm changes dialog is shown twice when navigating from asset edit mode to another page
+* [[#4689](https://github.com/apache/streampipes/pull/4689)]: Kiosk mode does not show data for logged out users
+* [[#4696](https://github.com/apache/streampipes/pull/4696)]: Improve handling of runtime-resolved configurations
+* [[#4701](https://github.com/apache/streampipes/pull/4701)]: Avoid TLS upgrade when explicitly setting mail protocol to SMTP
+* [[#4702](https://github.com/apache/streampipes/pull/4702)]: File adapter string parsing fails for quoted delimiter
+* [[#4710](https://github.com/apache/streampipes/pull/4710)]: Avoid action menu item line break
+* [[#4712](https://github.com/apache/streampipes/pull/4712)]: Improve handling of existing tables in PostgreSQL sink
+* [[#4719](https://github.com/apache/streampipes/pull/4719)]: Clean up adapter and pipeline lifecycle
+* [[#4723](https://github.com/apache/streampipes/pull/4723)]: Improve timeout handling of OPC-UA adapter
+* [[#4726](https://github.com/apache/streampipes/pull/4726)]: Can't delete code in JavaScript evaluator
+* [[#4739](https://github.com/apache/streampipes/pull/4739)]: Remove max retries from health check
+* [[#4753](https://github.com/apache/streampipes/pull/4753)]: Adding nested objects in the adapter script transformation causes an error
+* [[#4761](https://github.com/apache/streampipes/pull/4761)]: Fix adapter script migration for file stream adapter
+* [[#4762](https://github.com/apache/streampipes/pull/4762)]: Adapters without a name can be created
+* [[#4769](https://github.com/apache/streampipes/pull/4769)]: Fix sorting of asset links in table view
+* [[#4779](https://github.com/apache/streampipes/pull/4779)]: Fix broken table layout of header divider
+* [[#4780](https://github.com/apache/streampipes/pull/4780)]: Use shared trust list manager for OPC-UA adapters
+* [[#4782](https://github.com/apache/streampipes/pull/4782)]: Preserve missing values in preprocessing
+* [[#4788](https://github.com/apache/streampipes/pull/4788)]: Polish split button styling
+* [[#4790](https://github.com/apache/streampipes/pull/4790)]: Harmonize spinner status labels
+* [[#4794](https://github.com/apache/streampipes/pull/4794)]: Preserve asset filter state after editing resources
+* [[#4831](https://github.com/apache/streampipes/pull/4831)]: Ignore keyboard shortcuts while using Connect script editor
+* [[#4836](https://github.com/apache/streampipes/pull/4836)]: Filter is cached between users
+* [[#4848](https://github.com/apache/streampipes/pull/4848)]: Render localized shortcut help
+* [[#4851](https://github.com/apache/streampipes/pull/4851)]: Fix CSV imports for existing double columns
+* [[#4869](https://github.com/apache/streampipes/pull/4869)]: Rename and migrate asset link names
+* [[#4874](https://github.com/apache/streampipes/pull/4874)]: Count events in datasets with array fields
+* [[#4892](https://github.com/apache/streampipes/pull/4892)]: Restore icon spacing in Material buttons
+* [[#4893](https://github.com/apache/streampipes/pull/4893)]: Fix vertical scrolling in asset edit view
+* [[#4894](https://github.com/apache/streampipes/pull/4894)]: Assign pipeline datasets to the same asset
+* [[#4924](https://github.com/apache/streampipes/pull/4924)]: Return empty result for unavailable data lake measures
+* [[#4929](https://github.com/apache/streampipes/pull/4929)]: Show home asset map also if locations are invalid
+* [[#4936](https://github.com/apache/streampipes/pull/4936)]: ClassCastException in DataLakeSink
+* [[#4941](https://github.com/apache/streampipes/pull/4941)]: Add missing timestamp to persist pipeline option
+* [[#4946](https://github.com/apache/streampipes/pull/4946)]: Keep stored script preview on adapter edit
+* [[#5026](https://github.com/apache/streampipes/pull/5026)]: Expand tree data nodes with child nodes
+* [[#5037](https://github.com/apache/streampipes/pull/5037)]: Fix CSV import preview and stuck jobs
+* [[#5050](https://github.com/apache/streampipes/pull/5050)]: Add correct selector in time series storage
+* [[#5051](https://github.com/apache/streampipes/pull/5051)]: Update state after adapter template import
+* [[#5065](https://github.com/apache/streampipes/pull/5065)]: Close sample connection of NATS adapter after schema guess
+* [[#5071](https://github.com/apache/streampipes/pull/5071)]: Charts in dashboards ignore missing values by default
+* [[#5083](https://github.com/apache/streampipes/pull/5083)]: Clear system notification on reset
+* [[#5084](https://github.com/apache/streampipes/pull/5084)]: Remove duplicate bean from OAuth config
+* [[#5085](https://github.com/apache/streampipes/pull/5085)]: Ignore disabled account flag for OAuth authentication
+* [[#5086](https://github.com/apache/streampipes/pull/5086)]: Restore service health after reconnect
+* [[#5088](https://github.com/apache/streampipes/pull/5088)]: Store the typed value of password service configurations
+* [[#5091](https://github.com/apache/streampipes/pull/5091)]: Add naming option for persist dataset in adapters
+* [[#5127](https://github.com/apache/streampipes/pull/5127)]: Skip duplicate asset link types during import
+* [[#5170](https://github.com/apache/streampipes/pull/5170)]: Avoid frozen tables in group mode
+* [[#5181](https://github.com/apache/streampipes/pull/5181)]: Preserve pipelines on extension outages
+* [[#5192](https://github.com/apache/streampipes/pull/5192)]: Keep output schema fallback for unconfigured elements
+* [[#5197](https://github.com/apache/streampipes/pull/5197)]: Missing icons and documentation during extension migration
+* [[#5246](https://github.com/apache/streampipes/pull/5246)]: Show full time in table visualization
+* [[#5248](https://github.com/apache/streampipes/pull/5248)]: Write only the value in the OPC-UA sink
+* [[#5253](https://github.com/apache/streampipes/pull/5253)]: Last event in dataset overview is missing when searching
+* [[#5257](https://github.com/apache/streampipes/pull/5257)]: Pipeline ownership mismatch after import
+* [[#5278](https://github.com/apache/streampipes/pull/5278)]: Fix OAuth lifecycle
+* [[#5282](https://github.com/apache/streampipes/pull/5282)]: Find a static property after a top-level group, and skip alternatives without a selection
+* [[#5295](https://github.com/apache/streampipes/pull/5295)]: Escape identifiers consistently in InfluxQL queries
+
+
+### Dependency updates 📦
+* [[#4985](https://github.com/apache/streampipes/pull/4985)]: Raise Java language level to 25
+* [[#4136](https://github.com/apache/streampipes/pull/4136)]: Bump Spring Boot to v4 ([#5212](https://github.com/apache/streampipes/pull/5212): v4.1.2)
+* [[#4166](https://github.com/apache/streampipes/pull/4166)]: Bump Angular to v20 and migrate to standalone components ([#4458](https://github.com/apache/streampipes/pull/4458): v21, [#4932](https://github.com/apache/streampipes/pull/4932): v22, [#5164](https://github.com/apache/streampipes/pull/5164): v22.2)
+* [[#4402](https://github.com/apache/streampipes/pull/4402)]: Migrate Python client from Pydantic v1 to v2
+* [[#4001](https://github.com/apache/streampipes/pull/4001)]: Update Testcontainers to 2.0.2
+* [[#4926](https://github.com/apache/streampipes/pull/4926)]: Bump Camel to 4.22.0
+* [[#5094](https://github.com/apache/streampipes/pull/5094)]: Bump Eclipse Milo to 1.1.8
+* [[#5279](https://github.com/apache/streampipes/pull/5279)]: Bump CouchDB to 3.5.3
+* [[#5229](https://github.com/apache/streampipes/pull/5229)], [[#5230](https://github.com/apache/streampipes/pull/5230)]: Remove opencsv, commons-collections, type-parser, jgrapht, commons-text and commons-pool2
+
+
+### Breaking Change 💣
+* **Java 25 required** ([#4985](https://github.com/apache/streampipes/pull/4985)): StreamPipes is now compiled for Java 25. Custom extensions built on the SDK must target Java 25.
+* **Spring Boot 4** ([#4136](https://github.com/apache/streampipes/pull/4136)): Custom extension services that depend on Spring APIs need to be updated.
+* **Upgrade path** ([#4232](https://github.com/apache/streampipes/pull/4232)): Migrations for versions 0.97.0 and older were removed. Installations running a version older than 0.98.0 must first upgrade to 0.98.0 before upgrading to this release.
+* **NATS is the default broker** ([#3908](https://github.com/apache/streampipes/pull/3908), [#5029](https://github.com/apache/streampipes/pull/5029)): The root `docker-compose.yml` uses NATS, and the compiled default of `SP_PRIORITIZED_PROTOCOL` changed from `kafka` to `nats`. Set the variable explicitly if you rely on Kafka.
+* **JMS protocol removed** ([#4242](https://github.com/apache/streampipes/pull/4242)): Users of the JMS protocol need to switch to another supported protocol.
+* **Flink wrapper removed** ([#3910](https://github.com/apache/streampipes/pull/3910)): The deprecated Flink-based wrapper has been removed.
+* **NetIO and IO-Link IFM adapters removed** ([#3905](https://github.com/apache/streampipes/pull/3905)): These MQTT-based adapters were deprecated in 0.98.0 and have now been removed.
+* **`StreamPipesDataProcessor` and `StreamPipesDataSink` removed** ([#3995](https://github.com/apache/streampipes/pull/3995)): Migrate custom processors and sinks to `IStreamPipesDataProcessor` and `IStreamPipesDataSink`.
+* **Adapter type field removed** ([#4010](https://github.com/apache/streampipes/pull/4010)): The deprecated `adapterType` field was removed from the adapter description.
+* **Internal notifications removed** ([#4335](https://github.com/apache/streampipes/pull/4335)): The notifications view and the internal notification sink were removed. A migration removes the sink from existing pipelines.
+* **Groovy removed from adapter script transformation** ([#4653](https://github.com/apache/streampipes/pull/4653)): Existing adapters that use Groovy scripts no longer work and must be migrated to JavaScript.
+* **MS Teams sink uses Power Automate workflows** ([#4684](https://github.com/apache/streampipes/pull/4684)): Microsoft retired Office 365 connector webhooks, so existing sinks must be reconfigured with a Power Automate workflow URL.
+* **Obsolete asset user role removed** ([#4233](https://github.com/apache/streampipes/pull/4233)).
+
+
+### Deprecation ⚠️
+* [[#4327](https://github.com/apache/streampipes/pull/4327)]: Multi-source chart editing is deprecated. Existing multi-source charts still render but can no longer be edited and should be migrated manually.
+* [[#4691](https://github.com/apache/streampipes/pull/4691)]: Deprecate legacy PLC4X S7 and Modbus adapters
+* [[#4693](https://github.com/apache/streampipes/pull/4693)]: Deprecate the StreamPipes CLI
+* [[#4039](https://github.com/apache/streampipes/pull/4039)]: Legacy Prometheus endpoints are marked with a `_LEGACY` suffix and deprecated
+* [[#4833](https://github.com/apache/streampipes/pull/4833)], [[#5031](https://github.com/apache/streampipes/pull/5031)]: The data lake measure API in the Java, Python and Go clients is deprecated in favor of the new dataset API and will be removed in the release after 0.99.0
+
 # [0.98.0]
 
 ## What's Changed

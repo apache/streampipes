@@ -69,6 +69,32 @@ export class PipelineStyleService {
         }
     }
 
+    updateConnectedConnectorStylesAsError(pipelineElementDomId: string) {
+        const jsplumbBridge =
+            this.jsplumbFactoryService.getJsplumbBridge(false);
+        const pipelineElement = this.byId(pipelineElementDomId);
+        const sourceConnections = jsplumbBridge.getConnections({
+            source: pipelineElement,
+        });
+        const targetConnections = jsplumbBridge.getConnections({
+            target: pipelineElement,
+        });
+        const connections = [
+            ...(Array.isArray(sourceConnections)
+                ? sourceConnections
+                : Object.values(sourceConnections)),
+            ...(Array.isArray(targetConnections)
+                ? targetConnections
+                : Object.values(targetConnections)),
+        ];
+        const connectorStyle =
+            this.jsPlumbConfigService.getConnectorStyleError();
+
+        connections.forEach(connection => {
+            connection.setPaintStyle(connectorStyle);
+        });
+    }
+
     getConnectorStyleConfig(status: EdgeValidationStatus) {
         if (status.validationStatusType === 'COMPLETE') {
             return this.jsPlumbConfigService.getConnectorStyleSuccess();

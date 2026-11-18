@@ -38,10 +38,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -50,16 +52,45 @@ public class PipelinePreview {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelinePreview.class);
 
+  /**
+   * How long a preview stays alive without an attached result stream: after it was created,
+   * and each time a result stream reaches its maximum duration. The client re-attaches within
+   * this time while the preview is open; otherwise the preview is released.
+   */
+  static final Duration STREAM_ATTACH_GRACE_PERIOD = Duration.ofSeconds(30);
+
+  /**
+   * Maximum lifetime of a preview, also while a client stays attached, so that a forgotten
+   * open editor does not keep temporary pipeline elements running.
+   */
+  static final Duration MAX_PREVIEW_DURATION = Duration.ofMinutes(5);
+
   private final SpResourceManager resourceManager;
+  private final Duration streamAttachGracePeriod;
+  private final Duration maxPreviewDuration;
 
   public PipelinePreview(SpResourceManager resourceManager) {
+    this(resourceManager, STREAM_ATTACH_GRACE_PERIOD, MAX_PREVIEW_DURATION);
+  }
+
+  PipelinePreview(SpResourceManager resourceManager,
+                  Duration streamAttachGracePeriod) {
+    this(resourceManager, streamAttachGracePeriod, MAX_PREVIEW_DURATION);
+  }
+
+  PipelinePreview(SpResourceManager resourceManager,
+                  Duration streamAttachGracePeriod,
+                  Duration maxPreviewDuration) {
     this.resourceManager = resourceManager;
+    this.streamAttachGracePeriod = streamAttachGracePeriod;
+    this.maxPreviewDuration = maxPreviewDuration;
   }
 
   public PipelinePreviewModel initiatePreview(Pipeline pipeline,
                                               ExtensionServiceRequestManager requestManager) {
     String previewId = generatePreviewId();
     var elementIdMappings = new HashMap<String, String>();
+    var elementErrors = new HashMap<String, String>();
     pipeline.setActions(new ArrayList<>());
     List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
         new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager)
@@ -68,20 +99,75 @@ public class PipelinePreview {
     );
 
     rewriteElementIds(pipelineElements, elementIdMappings);
-    invokeGraphs(filter(pipelineElements), requestManager);
-    storeGraphs(previewId, pipelineElements);
+    var failedInvocations = invokeGraphs(filter(pipelineElements), requestManager);
+    reportFailures(failedInvocations, elementIdMappings, elementErrors);
+    storeGraphs(previewId, elementsToTrack(pipelineElements, failedInvocations));
+    limitLifetime(previewId, requestManager);
 
-    LOG.info("Preview pipeline {} started", previewId);
+    LOG.info("Preview pipeline {} started ({} element(s) failed)", previewId, failedInvocations.size());
 
-    return makePreviewModel(previewId, elementIdMappings);
+    return makePreviewModel(previewId, elementIdMappings, elementErrors);
   }
 
+  /**
+   * Stops a preview and detaches its temporary pipeline elements. Safe to call more than once:
+   * an explicit stop request and the end of the preview stream may both trigger it.
+   */
   public void deletePreview(String previewId,
                             ExtensionServiceRequestManager requestManager) {
-    List<NamedStreamPipesEntity> graphs = ActivePipelinePreviews.INSTANCE.getInvocationGraphs(previewId);
-    detachGraphs(filter(graphs), requestManager);
-    deleteGraphs(previewId);
-    LOG.info("Preview pipeline {} stopped", previewId);
+    ActivePipelinePreviews.INSTANCE.removePreview(previewId).ifPresent(graphs -> {
+      detachGraphs(filter(graphs), requestManager);
+      LOG.info("Preview pipeline {} stopped", previewId);
+    });
+  }
+
+  public boolean isActive(String previewId) {
+    return ActivePipelinePreviews.INSTANCE.isActive(previewId);
+  }
+
+  /**
+   * A result stream is attached; the preview now lives until the client disconnects, stops it
+   * or lets the stream expire without re-attaching.
+   */
+  public void onStreamAttached(String previewId) {
+    ActivePipelinePreviews.INSTANCE.cancelScheduledRelease(previewId);
+  }
+
+  /**
+   * The result stream reached its maximum duration. The preview keeps running for the grace
+   * period so that an open client can re-attach without restarting the pipeline elements.
+   */
+  public void onStreamExpired(String previewId,
+                              ExtensionServiceRequestManager requestManager) {
+    if (isActive(previewId)) {
+      releaseUnlessStreamAttaches(previewId, requestManager);
+    }
+  }
+
+  /**
+   * Releases the preview if no result stream attaches within the grace period, and in any case
+   * once it reaches its maximum duration.
+   */
+  void limitLifetime(String previewId,
+                     ExtensionServiceRequestManager requestManager) {
+    releaseUnlessStreamAttaches(previewId, requestManager);
+    ActivePipelinePreviews.INSTANCE.limitLifetime(
+        previewId,
+        maxPreviewDuration,
+        () -> {
+          LOG.info("Preview pipeline {} reached its maximum duration of {}", previewId, maxPreviewDuration);
+          deletePreview(previewId, requestManager);
+        }
+    );
+  }
+
+  private void releaseUnlessStreamAttaches(String previewId,
+                                           ExtensionServiceRequestManager requestManager) {
+    ActivePipelinePreviews.INSTANCE.scheduleRelease(
+        previewId,
+        streamAttachGracePeriod,
+        () -> deletePreview(previewId, requestManager)
+    );
   }
 
   public Map<String, SpDataStream> getPipelineElementPreviewStreams(String previewId) throws IllegalArgumentException {
@@ -89,6 +175,7 @@ public class PipelinePreview {
     return ActivePipelinePreviews
         .INSTANCE
         .getInvocationGraphs(previewId)
+        .orElseThrow(() -> new IllegalArgumentException("No active preview with id " + previewId))
         .stream()
         .filter(this::isProcessorOrStream)
         .collect(Collectors.toMap(
@@ -146,16 +233,78 @@ public class PipelinePreview {
         );
   }
 
-  private void invokeGraphs(List<InvocableStreamPipesEntity> graphs,
-                            ExtensionServiceRequestManager requestManager) {
+  /**
+   * Why an element could not be started for the preview.
+   *
+   * @param requestSent whether the invocation request may have reached an extensions service. A failed
+   *                    request can still have started the element there (e.g. after a timeout), so such
+   *                    an element must be detached when the preview stops.
+   */
+  record InvocationFailure(String message, boolean requestSent) {
+  }
+
+  /**
+   * Invokes the given elements, one by one, so that a failure of one element does not leave
+   * the elements invoked before it untracked.
+   *
+   * @return failures keyed by the (preview) element id of each element that could not be started
+   */
+  private Map<String, InvocationFailure> invokeGraphs(List<InvocableStreamPipesEntity> graphs,
+                                                      ExtensionServiceRequestManager requestManager) {
+    var failures = new HashMap<String, InvocationFailure>();
     graphs.forEach(g -> {
+      SpServiceRegistration service;
       try {
-        var service = findSelectedService(g);
-        g.setSelectedEndpointUrl(service.getServiceUrl());
-        g.setSelectedServiceId(service.getSvcId());
-        new InvokeExtensionRequest(requestManager, resourceManager).execute(g, null);
+        service = findSelectedService(g);
       } catch (NoServiceEndpointsAvailableException e) {
         LOG.warn("No endpoint found for pipeline element {}", g.getAppId());
+        failures.put(g.getElementId(), new InvocationFailure(
+            "No extensions service providing " + g.getAppId() + " is available", false));
+        return;
+      } catch (RuntimeException e) {
+        LOG.warn("Could not select an extensions service for pipeline element {}", g.getAppId(), e);
+        failures.put(g.getElementId(), new InvocationFailure(
+            "Could not select an extensions service: " + e.getMessage(), false));
+        return;
+      }
+      g.setSelectedEndpointUrl(service.getServiceUrl());
+      g.setSelectedServiceId(service.getSvcId());
+      try {
+        var status = new InvokeExtensionRequest(requestManager, resourceManager).execute(g, null);
+        if (!status.isSuccess()) {
+          failures.put(g.getElementId(), new InvocationFailure(Objects.requireNonNullElse(
+              status.getOptionalMessage(), "The extensions service rejected the invocation"), true));
+        }
+      } catch (RuntimeException e) {
+        LOG.warn("Could not invoke pipeline element {} for preview", g.getAppId(), e);
+        failures.put(g.getElementId(), new InvocationFailure(
+            Objects.requireNonNullElse(e.getMessage(), "The invocation failed"), true));
+      }
+    });
+    return failures;
+  }
+
+  /**
+   * The elements a preview keeps track of, i.e. that are consumed by the preview stream and
+   * detached when the preview stops. Only elements whose invocation request was never sent are
+   * left out; every element that may be running is detached.
+   */
+  static List<NamedStreamPipesEntity> elementsToTrack(List<NamedStreamPipesEntity> pipelineElements,
+                                                      Map<String, InvocationFailure> failedInvocations) {
+    return pipelineElements.stream()
+        .filter(pe -> {
+          var failure = failedInvocations.get(pe.getElementId());
+          return failure == null || failure.requestSent();
+        })
+        .toList();
+  }
+
+  private void reportFailures(Map<String, InvocationFailure> failedInvocations,
+                              Map<String, String> elementIdMappings,
+                              Map<String, String> elementErrors) {
+    elementIdMappings.forEach((originalElementId, previewElementId) -> {
+      if (failedInvocations.containsKey(previewElementId)) {
+        elementErrors.put(originalElementId, failedInvocations.get(previewElementId).message());
       }
     });
   }
@@ -165,10 +314,6 @@ public class PipelinePreview {
     graphs.forEach(g -> {
       new DetachExtensionRequest(requestManager, resourceManager).execute(g, null);
     });
-  }
-
-  private void deleteGraphs(String previewId) {
-    ActivePipelinePreviews.INSTANCE.removePreview(previewId);
   }
 
   private void storeGraphs(
@@ -185,11 +330,14 @@ public class PipelinePreview {
 
   private PipelinePreviewModel makePreviewModel(
       String previewId,
-      Map<String, String> elementIdMappings
+      Map<String, String> elementIdMappings,
+      Map<String, String> elementErrors
   ) {
     PipelinePreviewModel previewModel = new PipelinePreviewModel();
     previewModel.setPreviewId(previewId);
     previewModel.setElementIdMappings(elementIdMappings);
+    previewModel.setElementErrors(elementErrors);
+    previewModel.setMaxDurationMillis(maxPreviewDuration.toMillis());
 
     return previewModel;
   }

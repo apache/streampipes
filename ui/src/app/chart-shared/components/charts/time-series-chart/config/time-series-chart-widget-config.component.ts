@@ -16,8 +16,9 @@
  *
  */
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
+import { ChartPaletteService } from '../../../../services/chart-palette.service';
 import {
     TimeSeriesChartVisConfig,
     TimeSeriesChartWidgetModel,
@@ -49,23 +50,12 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
     TimeSeriesChartWidgetModel,
     TimeSeriesChartVisConfig
 > {
-    presetColors: string[] = [
-        '#39B54A',
-        '#1B1464',
-        '#f44336',
-        '#FFEB3B',
-        '#000000',
-        '#433BFF',
-        '#FF00E4',
-        '#FD8B00',
-        '#FD8B00',
-        '#00FFD5',
-        '#581845',
-        '#767676',
-        '#4300BF',
-        '#6699D4',
-        '#D466A1',
-    ];
+    private paletteService = inject(ChartPaletteService);
+
+    /** New fields take their colour from the chart palette, in order. */
+    get presetColors(): string[] {
+        return this.paletteService.colors();
+    }
 
     numericPlusBooleanFields: DataExplorerField[] = [];
 
@@ -97,7 +87,9 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         this.numericPlusBooleanFields.forEach((field, index) => {
             const name = field.fullDbName + field.sourceIndex;
             if (!(name in currentColors)) {
-                currentColors[name] = this.presetColors[lenBefore + index];
+                currentColors[name] = this.paletteService.color(
+                    lenBefore + index,
+                );
                 currentNames[name] = field.fullDbName;
                 currentTypes[name] = 'lines';
                 currentAxis[name] = 'left';
@@ -135,7 +127,7 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         config.chosenColor = this.getConfigOrDefault(
             config.chosenColor,
             this.numericPlusBooleanFields,
-            (field, index) => this.presetColors[index],
+            (field, index) => this.paletteService.color(index),
         );
         config.displayName = this.getConfigOrDefault(
             config.displayName,

@@ -38,6 +38,10 @@ export class DataType {
         );
     }
 
+    public static isIntegerType(datatype: string): boolean {
+        return datatype === DataType.INTEGER || datatype === DataType.LONG;
+    }
+
     public static isBooleanType(datatype: string): boolean {
         return datatype === DataType.BOOLEAN;
     }

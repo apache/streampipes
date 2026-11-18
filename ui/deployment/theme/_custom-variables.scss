@@ -44,11 +44,28 @@
     --color-toolbar-icon: var(--color-secondary);
     --color-toolbar-icon-hover: var(--color-secondary-dark);
     --color-toolbar-icon-selected: var(--color-secondary-dark);
+
+    // Categorical palette for chart series (grouped time series, pie slices,
+    // status values). Ordered by assignment: the first group gets chart-1.
+    // Deliberately avoids the semantic success/warning/error hues.
+    --color-chart-1: #4f81bd;
+    --color-chart-2: #f28e2b;
+    --color-chart-3: #7b61ff;
+    --color-chart-4: #2a9d8f;
+    --color-chart-5: #e9c46a;
+    --color-chart-6: #c77dff;
+    --color-chart-7: #577590;
+    --color-chart-8: #f4a261;
+    --color-chart-9: #43aa8b;
+    --color-chart-10: #bc5090;
 }
 
 .dark-mode {
     --color-primary: var(--color-primary-dark);
     --color-secondary: var(--color-secondary-dark);
+    --color-chart-1: #6ea0e0;
+    --color-chart-7: #8da4bf;
+    --color-chart-10: #d67ab1;
     --color-menubar-text-menu-group: #120c47;
     --color-navigation-bg: #123b28;
     --color-navigation-hover: #185236;

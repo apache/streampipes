@@ -53,9 +53,12 @@ import {
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
-import { firstValueFrom, from, Observable, of } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EMPTY, firstValueFrom, from, Observable, of } from 'rxjs';
 import {
+    catchError,
     concatMap,
+    filter,
     finalize,
     map,
     shareReplay,
@@ -105,6 +108,7 @@ export class SpAssetDetailsComponent
     private router = inject(Router);
     private assetBrowserService = inject(SpAssetBrowserService);
     private dialog = inject(MatDialog);
+    private snackBar = inject(MatSnackBar);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private permissionsService = inject(PermissionsService);
@@ -115,6 +119,8 @@ export class SpAssetDetailsComponent
     private initialGeneratedAssetId?: string;
     private initialGeneratedElementId?: string;
     private pendingConfirmLeaveDialog?: Observable<boolean>;
+    pendingImages = new Map<SpAsset, File | null>();
+    private removedAssets: SpAsset[] = [];
     @ViewChild(SpAssetSelectionPanelComponent)
     assetSelectionPanel: SpAssetSelectionPanelComponent;
 
@@ -188,66 +194,97 @@ export class SpAssetDetailsComponent
                 },
             );
 
+            // Pending edits and image changes are saved first, because a successful move
+            // leaves the page without asking. Each stage reports its own failure; the
+            // page's asset is only changed by the save, never by the move itself.
             dialogRef
                 .afterClosed()
-                .subscribe((result: MoveAssetDialogResult | undefined) => {
-                    if (!result) {
-                        return;
-                    }
-
-                    if (result.destination === 'top-level') {
-                        this.promoteSubAsset(assetToMove);
-                        return;
-                    }
-
-                    const assetWasMoved = moveAssetToParent(
-                        result.targetAsset,
-                        result.targetParentAssetId,
-                        assetToMove,
-                        result.removeMovedAssetSite,
-                    );
-                    if (
-                        !assetWasMoved ||
-                        !removeAssetFromParent(this.asset, assetToMove.assetId)
-                    ) {
-                        return;
-                    }
-
-                    this.applySelectedAsset({
-                        asset: this.asset,
-                        rootNode: true,
-                    });
-                    this.assetSelectionPanel.rerenderTree();
-                    this.assetService
-                        .updateAsset(result.targetAsset)
-                        .pipe(
-                            concatMap(() =>
-                                this.assetService.updateAsset(this.asset),
+                .pipe(
+                    filter(
+                        (result): result is MoveAssetDialogResult => !!result,
+                    ),
+                    switchMap(result =>
+                        from(this.saveAssetChanges()).pipe(
+                            catchError(() =>
+                                this.moveFailed(
+                                    this.translateService.instant(
+                                        'The asset could not be saved, so the sub-asset was not moved.',
+                                    ),
+                                ),
                             ),
-                        )
-                        .subscribe(() => {
-                            this.originalAsset =
-                                this.normalizeAssetForComparison(this.asset);
-                            this.assetBrowserService.refreshBrowserAssetData();
-                            this.router.navigate(['assets'], {
-                                state: { omitConfirm: true },
-                            });
+                            switchMap(() =>
+                                this.persistMove(result, assetToMove),
+                            ),
+                            catchError(() =>
+                                this.moveFailed(
+                                    this.translateService.instant(
+                                        'The sub-asset could not be moved. Parts of the move may already be saved, so check the affected assets.',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                )
+                .subscribe(moved => {
+                    if (moved) {
+                        this.assetBrowserService.refreshBrowserAssetData();
+                        this.router.navigate(['assets'], {
+                            state: { omitConfirm: true },
                         });
+                    }
                 });
         });
     }
 
-    promoteSubAsset(assetToPromote: SpAsset): void {
+    /**
+     * Saves the move on copies of the affected assets, so a failed request leaves the asset
+     * shown on this page as it is. Emits false when the move does not apply.
+     */
+    private persistMove(
+        result: MoveAssetDialogResult,
+        assetToMove: SpAsset,
+    ): Observable<boolean> {
+        const sourceAsset: SpAssetModel = structuredClone(this.asset);
+        if (result.destination === 'top-level') {
+            return this.persistPromotion(sourceAsset, assetToMove);
+        }
+
+        const assetWasMoved = moveAssetToParent(
+            result.targetAsset,
+            result.targetParentAssetId,
+            structuredClone(assetToMove),
+            result.removeMovedAssetSite,
+        );
+        if (
+            !assetWasMoved ||
+            !removeAssetFromParent(sourceAsset, assetToMove.assetId)
+        ) {
+            return of(false);
+        }
+
+        return this.assetService.updateAsset(result.targetAsset).pipe(
+            concatMap(() => this.assetService.updateAsset(sourceAsset)),
+            map(() => true),
+        );
+    }
+
+    private persistPromotion(
+        sourceAsset: SpAssetModel,
+        assetToPromote: SpAsset,
+    ): Observable<boolean> {
         const formerParent = this.findParentAsset(
-            this.asset,
+            sourceAsset,
             assetToPromote.assetId,
         );
-        if (!formerParent) {
-            return;
+        if (
+            !formerParent ||
+            !removeAssetFromParent(sourceAsset, assetToPromote.assetId)
+        ) {
+            return of(false);
         }
 
         const promotedAsset: SpAssetModel = {
-            ...assetToPromote,
+            ...structuredClone(assetToPromote),
             assetType: formerParent.assetType,
             assetSite: formerParent.assetSite,
             elementId: this.idGeneratorService.generate(24),
@@ -256,27 +293,15 @@ export class SpAssetDetailsComponent
             rev: undefined,
         };
 
-        if (!removeAssetFromParent(this.asset, assetToPromote.assetId)) {
-            return;
-        }
+        return this.assetService.createAsset(promotedAsset).pipe(
+            concatMap(() => this.assetService.updateAsset(sourceAsset)),
+            map(() => true),
+        );
+    }
 
-        this.applySelectedAsset({
-            asset: this.asset,
-            rootNode: true,
-        });
-        this.assetSelectionPanel.rerenderTree();
-        this.assetService
-            .createAsset(promotedAsset)
-            .pipe(concatMap(() => this.assetService.updateAsset(this.asset)))
-            .subscribe(() => {
-                this.originalAsset = this.normalizeAssetForComparison(
-                    this.asset,
-                );
-                this.assetBrowserService.refreshBrowserAssetData();
-                this.router.navigate(['assets'], {
-                    state: { omitConfirm: true },
-                });
-            });
+    private moveFailed(message: string): Observable<never> {
+        this.snackBar.open(message, this.translateService.instant('Close'));
+        return EMPTY;
     }
 
     private findParentAsset(
@@ -314,8 +339,8 @@ export class SpAssetDetailsComponent
                                   tap(savedAsset => {
                                       Object.assign(
                                           this.asset,
-                                          savedAsset ??
-                                              this.makeAssetResource(resource),
+                                          this.makeAssetResource(resource),
+                                          savedAsset,
                                       );
                                       this.isNewAsset = false;
                                   }),
@@ -409,7 +434,8 @@ export class SpAssetDetailsComponent
     setShouldShowConfirm(): boolean {
         return (
             this.pendingManageAssetResult !== undefined ||
-            this.hasAssetChanged()
+            this.hasAssetChanged() ||
+            this.pendingImages.size > 0
         );
     }
 
@@ -440,14 +466,84 @@ export class SpAssetDetailsComponent
 
     private async saveAssetChanges(): Promise<void> {
         this.cleanupEmpty();
-        if (this.isNewAsset) {
-            await firstValueFrom(this.assetService.createAsset(this.asset));
-            this.isNewAsset = false;
-        } else {
-            await firstValueFrom(this.assetService.updateAsset(this.asset));
+        for (const removed of this.removedAssets) {
+            await this.deleteRemovedAssetImages(removed);
+        }
+        this.removedAssets = [];
+        const saved = await firstValueFrom(
+            this.isNewAsset
+                ? this.assetService.createAsset(this.asset)
+                : this.assetService.updateAsset(this.asset),
+        );
+        this.isNewAsset = false;
+        this.asset.elementId = saved.elementId;
+        this.asset.rev = saved.rev;
+
+        for (const [asset, file] of this.pendingImages) {
+            if (!this.containsAsset(this.asset, asset)) {
+                this.pendingImages.delete(asset);
+                continue;
+            }
+            if (asset.imageId) {
+                const updated = await firstValueFrom(
+                    this.assetService.deleteAssetImage(
+                        this.asset.elementId,
+                        asset.imageId,
+                        asset.assetId,
+                    ),
+                );
+                this.asset.rev = updated.rev;
+                asset.imageId = undefined;
+            }
+            if (file) {
+                const updated = await firstValueFrom(
+                    this.assetService.uploadAssetImage(
+                        this.asset.elementId,
+                        asset.assetId,
+                        file,
+                    ),
+                );
+                const savedAsset = this.findAssetById(updated, asset.assetId);
+                asset.imageId = savedAsset.imageId;
+                this.asset.rev = updated.rev;
+            }
+            this.pendingImages.delete(asset);
         }
         await this.savePendingManageAssetChanges();
         this.originalAsset = this.normalizeAssetForComparison(this.asset);
+    }
+
+    private containsAsset(root: SpAsset, asset: SpAsset): boolean {
+        return (
+            root === asset ||
+            (root.assets ?? []).some(child => this.containsAsset(child, asset))
+        );
+    }
+
+    private findAssetById(root: SpAsset, assetId: string): SpAsset | undefined {
+        if (root.assetId === assetId) return root;
+        for (const child of root.assets ?? []) {
+            const found = this.findAssetById(child, assetId);
+            if (found) return found;
+        }
+        return undefined;
+    }
+
+    private async deleteRemovedAssetImages(asset: SpAsset): Promise<void> {
+        if (asset.imageId) {
+            const updated = await firstValueFrom(
+                this.assetService.deleteAssetImage(
+                    this.asset.elementId,
+                    asset.imageId,
+                    asset.assetId,
+                ),
+            );
+            this.asset.rev = updated.rev;
+            asset.imageId = undefined;
+        }
+        for (const child of asset.assets ?? [])
+            await this.deleteRemovedAssetImages(child);
+        this.pendingImages.delete(asset);
     }
 
     private async savePendingManageAssetChanges(): Promise<void> {
@@ -520,5 +616,17 @@ export class SpAssetDetailsComponent
         }
 
         asset.assets?.forEach(child => this.cleanupEmptyCustomFields(child));
+    }
+
+    handleImageChanged(change: { asset: SpAsset; file: File | null }): void {
+        if (change.file === null && !change.asset.imageId) {
+            this.pendingImages.delete(change.asset);
+        } else {
+            this.pendingImages.set(change.asset, change.file);
+        }
+    }
+
+    handleAssetRemoved(asset: SpAsset): void {
+        this.removedAssets.push(asset);
     }
 }

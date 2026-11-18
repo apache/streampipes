@@ -41,6 +41,7 @@ services:
       - backend:/root/.streampipes
     logging: *default-logging
     restart: unless-stopped
+    stop_grace_period: 60s
     networks:
       spnet:
 
@@ -61,7 +62,7 @@ services:
       spnet:
 
   couchdb:
-    image: couchdb:3.3.1
+    image: couchdb:3.5.3
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=${SP_COUCHDB_PASSWORD:?Run the Compose configure helper first}
@@ -108,6 +109,7 @@ services:
       - SP_ENCRYPTION_PASSCODE=${SP_ENCRYPTION_PASSCODE:?Run the Compose configure helper first}
     logging: *default-logging
     restart: unless-stopped
+    stop_grace_period: 60s
     networks:
       spnet:
 

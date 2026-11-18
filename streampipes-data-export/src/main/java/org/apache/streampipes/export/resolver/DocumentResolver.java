@@ -21,9 +21,9 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.ResourceDeletionManager;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.lightcouch.DocumentConflictException;
 
 public interface DocumentResolver<T> {
 
@@ -36,7 +36,7 @@ public interface DocumentResolver<T> {
   ExportItem convert(T document);
 
   void writeDocument(String document, AssetExportConfiguration config)
-      throws JsonProcessingException, DocumentConflictException;
+      throws JsonProcessingException, StorageConflictException;
 
   T deserializeDocument(String document) throws JsonProcessingException;
 

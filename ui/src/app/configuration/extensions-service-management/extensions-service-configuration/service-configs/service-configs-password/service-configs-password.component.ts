@@ -73,12 +73,21 @@ export class ServiceConfigsPasswordComponent {
         this.hide = true;
     }
 
+    /**
+     * Clears the placeholder when the field gets focus. The stored value is
+     * left untouched: only typing changes it, so focusing the field and
+     * saving does not wipe an existing secret.
+     */
     changePw() {
-        if (this.password == hiddenPasswordString) {
-            this.password = this.password.replace(hiddenPasswordString, '');
+        if (this.password === hiddenPasswordString) {
+            this.password = '';
         }
-        this.configuration.value = this.password;
         this.show = true;
+    }
+
+    onPasswordChange(value: string) {
+        this.password = value;
+        this.configuration.value = value;
     }
 
     addCssClass() {

@@ -15,28 +15,38 @@
 ~  limitations under the License.
 ~
 -->
-<div fxFlex="100">
-    <ng-template matStepLabel>{{ 'Download' | translate }}</ng-template>
-    @if (!downloadProgress.finished) {
-        <div fxLayout="column" fxLayoutAlign="center center" class="mt-35">
-            <mat-spinner [diameter]="30" color="accent"></mat-spinner>
-            @if (downloadProgress.downloadedMBs !== undefined) {
-                <label
-                    >{{
-                        downloadProgress.downloadedMBs | number: '1.0-2'
-                    }}
-                    Mb</label
-                >
-            }
-            <button mat-button class="btn-warn" (click)="cancelDownload()">
-                {{ 'Cancel' | translate }}
-            </button>
-        </div>
-    }
-    @if (downloadProgress.finished) {
-        <div fxLayout="column" fxLayoutAlign="center center">
-            <mat-icon class="icon-check">check</mat-icon>
-            <h5>{{ 'Download successful' | translate }}</h5>
-        </div>
-    }
-</div>
+<ng-template matStepLabel>{{ 'Download' | translate }}</ng-template>
+@if (multipleFiles && downloading) {
+    <p class="text-center" data-cy="download-file-progress">
+        {{ fileProgressText }}
+    </p>
+}
+@if (downloadProgress.cancelled) {
+    <p class="text-center" data-cy="download-cancelled">
+        {{ cancelledText }}
+    </p>
+} @else {
+    <sp-download-status
+        [downloading]="downloading"
+        [finished]="downloadProgress.finished && !failedDownloads.length"
+        [failed]="allFailed"
+        [errorMessage]="'Download failed' | translate"
+        [downloadedMBs]="downloadProgress.downloadedMBs"
+        [cancelable]="true"
+        (downloadCancelled)="cancelDownload()"
+    />
+}
+@if (downloadProgress.finished && failedDownloads.length) {
+    <p
+        class="text-center download-partial-error"
+        role="alert"
+        data-cy="download-file-errors"
+    >
+        {{ partialFailureText }}
+    </p>
+}
+@if (downloadProgress.finished && multipleFiles && !allFailed) {
+    <p class="text-center" data-cy="download-file-summary">
+        {{ summaryText }}
+    </p>
+}

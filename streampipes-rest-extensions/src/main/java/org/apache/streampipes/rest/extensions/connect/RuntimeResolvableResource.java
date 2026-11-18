@@ -62,7 +62,7 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
       LOG.warn("Error when fetching runtime configurations: {}", e.getMessage());
       return ResponseEntity
           .status(HttpStatus.BAD_REQUEST)
-          .body(e);
+          .body(e.toSerializable());
     }
   }
 }

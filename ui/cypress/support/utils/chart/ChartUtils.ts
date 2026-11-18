@@ -631,19 +631,36 @@ export class ChartUtils {
     public static validateFilterOptions(
         expectedFilterOptions: ('=' | '<' | '<=' | '>=' | '>' | '!=')[],
     ) {
-        cy.dataCy('design-panel-data-settings-filter-operator')
-            .click()
-            .dataCy('operator-', {}, true)
-            .should('have.length', expectedFilterOptions.length);
+        // Selecting an operator updates the table before its closing animation
+        // necessarily finishes. Wait for the old panel before reopening it.
+        cy.dataCy('operator-', {}, true).should('not.exist');
+        cy.dataCy('design-panel-data-settings-filter-operator').click();
+        cy.dataCy('design-panel-data-settings-filter-operator').should(
+            'have.attr',
+            'aria-expanded',
+            'true',
+        );
+        cy.dataCy('operator-', {}, true).should(
+            'have.length',
+            expectedFilterOptions.length,
+        );
 
         expectedFilterOptions.forEach(option => {
             const escapedOption = option.replace(/([=<>!])/g, '\\$1');
             cy.dataCy('operator-' + escapedOption).should('be.visible');
         });
 
-        cy.dataCy('design-panel-data-settings-filter-operator').click({
-            force: true,
-        });
+        // Reselect the current option to close the panel without changing the filter.
+        cy.dataCy('operator-', {}, true)
+            .filter('[aria-selected="true"]')
+            .should('have.length', 1)
+            .click();
+        cy.dataCy('design-panel-data-settings-filter-operator').should(
+            'have.attr',
+            'aria-expanded',
+            'false',
+        );
+        cy.dataCy('operator-', {}, true).should('not.exist');
     }
 
     public static validateAutoCompleteOptions(options: string[]) {

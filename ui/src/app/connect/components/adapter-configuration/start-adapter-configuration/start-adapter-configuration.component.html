@@ -247,6 +247,28 @@
                         <sp-form-field
                             class="mt-md"
                             [level]="3"
+                            [label]="'Dataset name' | translate"
+                            [description]="
+                                'Leave blank to use the adapter name.'
+                                    | translate
+                            "
+                        >
+                            <mat-form-field>
+                                <input
+                                    matInput
+                                    [(ngModel)]="dataLakeDatasetName"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    [placeholder]="adapterDescription.name"
+                                    [attr.aria-label]="
+                                        'Dataset name' | translate
+                                    "
+                                    data-cy="sp-store-in-datalake-dataset-name"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        <sp-form-field
+                            class="mt-md"
+                            [level]="3"
                             [label]="'Select Time Field' | translate"
                         >
                             <mat-form-field color="accent">

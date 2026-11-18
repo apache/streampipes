@@ -21,6 +21,7 @@ import {
     inject,
     OnDestroy,
     OnInit,
+    signal,
     ViewChild,
     ChangeDetectionStrategy,
 } from '@angular/core';
@@ -55,8 +56,10 @@ import {
     SpLabelComponent,
     SpPageHeaderComponent,
     SpSpinnerComponent,
+    SpStatusLabelComponent,
     SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableCardDirective,
     SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
@@ -68,7 +71,7 @@ import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-start
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
-import { Subscription } from 'rxjs';
+import { interval, of, Subscription, switchMap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -78,9 +81,9 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
+import { AdapterOverviewCardComponent } from './adapter-overview-card/adapter-overview-card.component';
 import { MatMenuItem } from '@angular/material/menu';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -105,10 +108,13 @@ import { AsyncPipe, DatePipe } from '@angular/common';
         MatSortHeader,
         MatCellDef,
         MatCell,
-        AdapterStatusLightComponent,
+        SpStatusLabelComponent,
         SpSpinnerComponent,
         SpLabelComponent,
         SpTableActionsDirective,
+        SpTableCardDirective,
+        AdapterOverviewCardComponent,
+        NgTemplateOutlet,
         MatMenuItem,
         DatePipe,
         TranslatePipe,
@@ -148,7 +154,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         { value: 'stop', label: 'Stop selected', icon: 'stop' },
     ];
 
+    readonly currentTime = signal(Date.now());
+
     assetFilter$: Subscription;
+    currentTime$: Subscription;
     user$: Subscription;
     currentFilterIds: Set<string> = new Set<string>();
 
@@ -191,6 +200,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.currentTime$ = interval(30000).subscribe(() =>
+            this.currentTime.set(Date.now()),
+        );
         this.assetFilterService.applyAssetLinkType('adapter');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
@@ -307,13 +319,23 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    getMonitoringInfos(adapters: AdapterSummaryDto[]): void {
+    getMonitoringInfos(adapters: AdapterSummaryDto[], refresh = false): void {
         const filteredElementIds = adapters.map(adapter => adapter.elementId);
 
-        this.adapterMonitoringService
-            .getMetricsInfoForAdapters(filteredElementIds)
+        const refresh$ = refresh
+            ? this.adapterMonitoringService.triggerMonitoringUpdate()
+            : of(undefined);
+        refresh$
+            .pipe(
+                switchMap(() =>
+                    this.adapterMonitoringService.getCollectedMetricsInfoForAdapters(
+                        filteredElementIds,
+                    ),
+                ),
+            )
             .subscribe(metrics => {
                 this.adapterMetrics = metrics;
+                this.currentTime.set(Date.now());
                 this.dataSource.data = [...this.filteredAdapters];
             });
     }
@@ -449,13 +471,13 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    getAdaptersRunning(): void {
+    getAdaptersRunning(refreshMetrics = false): void {
         this.adapterService.getAdapterSummary().subscribe(adapterSummary => {
             this.existingAdapters = adapterSummary.resources;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
             this.applyAdapterFilters(this.currentFilterIds);
             this.operationInProgressAdapterId = undefined;
-            this.getMonitoringInfos(this.existingAdapters);
+            this.getMonitoringInfos(this.existingAdapters, refreshMetrics);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
             });
@@ -487,5 +509,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.user$?.unsubscribe();
         this.assetFilter$?.unsubscribe();
+        this.currentTime$?.unsubscribe();
     }
 }

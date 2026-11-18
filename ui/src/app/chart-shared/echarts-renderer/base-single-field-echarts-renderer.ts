@@ -79,6 +79,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
             series,
             gridOptions,
             widgetConfig,
+            widgetSize,
         );
     }
 
@@ -170,6 +171,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         series: S[],
         gridOptions: GridOptions,
         widgetConfig: T,
+        widgetSize: WidgetSize,
     ) {
         if (series.length > 1) {
             this.echartsUtilsService.addSeriesTitles(
@@ -180,7 +182,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         }
         options.dataset = dataset;
         options.series = series;
-        this.addAdditionalConfigs(options, widgetConfig);
+        this.addAdditionalConfigs(options, widgetConfig, widgetSize);
     }
 
     showAxes(): boolean {
@@ -192,6 +194,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
     abstract addAdditionalConfigs(
         option: EChartsOption,
         widgetConfig?: T,
+        widgetSize?: WidgetSize,
     ): void;
 
     abstract addSeriesItem(

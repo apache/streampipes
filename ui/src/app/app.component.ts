@@ -22,6 +22,7 @@ import {
     inject,
     ChangeDetectionStrategy,
 } from '@angular/core';
+import { UiUpdateService } from '@streampipes/shared-ui';
 import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { Title } from '@angular/platform-browser';
@@ -37,6 +38,7 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
     imports: [LoadingBarModule, RouterOutlet],
 })
 export class AppComponent implements OnInit {
+    private readonly uiUpdateService = inject(UiUpdateService);
     private titleService = inject(Title);
     private appConstants = inject(AppConstants);
     private translate = inject(TranslateService);
@@ -58,6 +60,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.uiUpdateService.start();
         this.titleService.setTitle(this.appConstants.APP_TITLE);
     }
 

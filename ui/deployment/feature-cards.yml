@@ -25,6 +25,10 @@
   componentPath: './dashboard/components/dashboard-feature-card/dashboard-feature-card.component'
   componentName: DashboardFeatureCardComponent
   moduleName: spDashboard
+- id: dataset
+  componentPath: './dataset/components/dataset-feature-card/dataset-feature-card.component'
+  componentName: DatasetFeatureCardComponent
+  moduleName: spDatasets
 - id: measurement
   componentPath: './dataset/components/dataset-feature-card/dataset-feature-card.component'
   componentName: DatasetFeatureCardComponent

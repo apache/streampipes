@@ -17,7 +17,7 @@
  * under the License.
  */
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-09-18 15:38:44.
+// Generated using typescript-generator version 3.2.1263 on 2026-11-08 22:30:44.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1153,6 +1153,7 @@ export class CorrectionValueTransformationRuleDescription extends ValueTransform
 
 export class CreateOptions {
     persist: boolean;
+    persistDatasetName: string;
     start: boolean;
 
     static fromData(
@@ -1164,6 +1165,7 @@ export class CreateOptions {
         }
         const instance = target || new CreateOptions();
         instance.persist = data.persist;
+        instance.persistDatasetName = data.persistDatasetName;
         instance.start = data.start;
         return instance;
     }
@@ -1991,6 +1993,7 @@ export class ExportConfig {
 export class ExportConfiguration {
     assetExportConfiguration: AssetExportConfiguration[];
     genericStorageAppDocTypes: ExportItem[];
+    genericStorageDocuments: ExportItem[];
 
     static fromData(
         data: ExportConfiguration,
@@ -2006,11 +2009,15 @@ export class ExportConfiguration {
         instance.genericStorageAppDocTypes = __getCopyArrayFn(
             ExportItem.fromData,
         )(data.genericStorageAppDocTypes);
+        instance.genericStorageDocuments = __getCopyArrayFn(
+            ExportItem.fromData,
+        )(data.genericStorageDocuments);
         return instance;
     }
 }
 
 export class ExportItem {
+    category: string;
     label: string;
     resourceId: string;
     selected: boolean;
@@ -2020,6 +2027,7 @@ export class ExportItem {
             return data;
         }
         const instance = target || new ExportItem();
+        instance.category = data.category;
         instance.label = data.label;
         instance.resourceId = data.resourceId;
         instance.selected = data.selected;
@@ -3236,7 +3244,9 @@ export class PipelinePlaceholders {
 }
 
 export class PipelinePreviewModel {
+    elementErrors: { [index: string]: string };
     elementIdMappings: { [index: string]: string };
+    maxDurationMillis: number;
     previewId: string;
 
     static fromData(
@@ -3247,9 +3257,13 @@ export class PipelinePreviewModel {
             return data;
         }
         const instance = target || new PipelinePreviewModel();
+        instance.elementErrors = __getCopyObjectFn(__identity<string>())(
+            data.elementErrors,
+        );
         instance.elementIdMappings = __getCopyObjectFn(__identity<string>())(
             data.elementIdMappings,
         );
+        instance.maxDurationMillis = data.maxDurationMillis;
         instance.previewId = data.previewId;
         return instance;
     }
@@ -3308,6 +3322,7 @@ export class PipelineUpdateInfo {
     pipelineId: string;
     pipelineName: string;
     validationInfos: { [index: string]: PipelineElementValidationInfo[] };
+    validationUnavailable: boolean;
 
     static fromData(
         data: PipelineUpdateInfo,
@@ -3327,6 +3342,7 @@ export class PipelineUpdateInfo {
         instance.validationInfos = __getCopyObjectFn(
             __getCopyArrayFn(PipelineElementValidationInfo.fromData),
         )(data.validationInfos);
+        instance.validationUnavailable = data.validationUnavailable;
         return instance;
     }
 }
@@ -3954,6 +3970,7 @@ export class SpAsset {
     assetSite: AssetSite;
     assetType: AssetType;
     assets: SpAsset[];
+    imageId: string;
     labelIds: string[];
 
     static fromData(data: SpAsset, target?: SpAsset): SpAsset {
@@ -3973,6 +3990,7 @@ export class SpAsset {
         instance.assetSite = AssetSite.fromData(data.assetSite);
         instance.assetType = AssetType.fromData(data.assetType);
         instance.assets = __getCopyArrayFn(SpAsset.fromData)(data.assets);
+        instance.imageId = data.imageId;
         instance.labelIds = __getCopyArrayFn(__identity<string>())(
             data.labelIds,
         );

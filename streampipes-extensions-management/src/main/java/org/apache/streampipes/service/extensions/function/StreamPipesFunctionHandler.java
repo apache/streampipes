@@ -28,6 +28,9 @@ import org.apache.streampipes.model.function.FunctionShutdownResult;
 import org.apache.streampipes.model.function.FunctionsShutdownResponse;
 import org.apache.streampipes.sdk.builder.stream.DataStreamConfiguration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,6 +41,8 @@ import java.util.stream.Collectors;
 public enum StreamPipesFunctionHandler {
 
   INSTANCE;
+
+  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesFunctionHandler.class);
 
   private final Map<String, IStreamPipesFunctionDeclarer> runningInstances;
 
@@ -95,11 +100,24 @@ public enum StreamPipesFunctionHandler {
     });
   }
 
+  /**
+   * Discards every function and collects its registered state. A function whose stop hook
+   * fails is logged and skipped; the other functions are still discarded and their state is
+   * still returned, since this is the only path that persists it on shutdown.
+   */
   public FunctionsShutdownResponse shutdownFunctionsAndGetState() {
     var shutdownResults = new ArrayList<FunctionShutdownResult>();
     this.runningInstances.forEach((key, value) -> {
-      value.discardRuntime();
-      shutdownResults.add(new FunctionShutdownResult(key, value.getRegisteredStatePayload().orElse(null)));
+      try {
+        value.discardRuntime();
+      } catch (RuntimeException e) {
+        LOG.warn("Function {} threw an exception while stopping, its state is persisted anyway", key, e);
+      }
+      try {
+        shutdownResults.add(new FunctionShutdownResult(key, value.getRegisteredStatePayload().orElse(null)));
+      } catch (RuntimeException e) {
+        LOG.warn("Could not read the state of function {}", key, e);
+      }
     });
     this.runningInstances.clear();
 

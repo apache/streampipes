@@ -62,6 +62,7 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -81,15 +82,22 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   private ExtensionBrokerRequestReceiver extensionBrokerRequestReceiver;
   private ExtensionServiceTransportMode extensionTransportMode = ExtensionServiceTransportMode.HTTP;
   private boolean natsBrokerReceiverActive = false;
-  private SpServiceRegistration currentServiceRegistration;
+  private volatile SpServiceRegistration currentServiceRegistration;
 
   public void init() {
-    SpServiceDefinition serviceDef = provideServiceDefinition();
-    init(serviceDef);
+    startService(this::provideServiceDefinition);
   }
 
   public void init(SpServiceDefinition serviceDef) {
-    try {
+    startService(() -> serviceDef);
+  }
+
+  private void startService(Supplier<SpServiceDefinition> serviceDefSupplier) {
+    var serviceDefinition = new AtomicReference<SpServiceDefinition>();
+
+    startStreamPipesService(this.getClass(), () -> {
+      SpServiceDefinition serviceDef = serviceDefSupplier.get();
+      serviceDefinition.set(serviceDef);
       BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(serviceDef.getDefaultPort());
       String serviceId = serviceDef.getServiceGroup() + "-" + AUTO_GENERATED_SERVICE_ID;
       serviceDef.setServiceId(serviceId);
@@ -100,14 +108,12 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           GraalJsScriptEngine::new
       ));
 
-      startExtensionsService(this.getClass(), serviceDef, networkingConfig);
-      ServiceLoadDataReportGenerator.getInstance().initialize();
+      registerExtensionsService(serviceDef, networkingConfig);
+      return networkingConfig;
+    });
 
-    } catch (UnknownHostException e) {
-      LOG.error(
-          "Could not auto-resolve host address - "
-              + "please manually provide the hostname using the SP_HOST environment variable");
-    }
+    this.afterServiceRegistered(serviceDefinition.get(), this.currentServiceRegistration);
+    ServiceLoadDataReportGenerator.getInstance().initialize();
   }
 
   protected void registerTransformationEngines(List<Supplier<TransformationEngine>> transformationEngines) {
@@ -116,11 +122,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   public void afterServiceRegistered(SpServiceDefinition serviceDef,
                                      SpServiceRegistration serviceReg) {
-    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-
-    // register all migrations at StreamPipes Core
-    var migrationConfigs = serviceDef.getMigrators().stream().map(IModelMigrator::config).toList();
-    new CoreRequestSubmitter().submitMigrationRequest(client, migrationConfigs, serviceId(), serviceReg);
+    registerMigrations(serviceDef, serviceReg);
 
     // initialize all function instances
     StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
@@ -129,6 +131,16 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    this.startStreamPipesService(serviceClass, () -> {
+      registerExtensionsService(serviceDef, networkingConfig);
+      return networkingConfig;
+    });
+
+    this.afterServiceRegistered(serviceDef, this.currentServiceRegistration);
+  }
+
+  private void registerExtensionsService(SpServiceDefinition serviceDef,
+                                         BaseNetworkingConfig networkingConfig) {
     this.extensionTransportMode = ExtensionServiceTransportMode.from(
         Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
     );
@@ -143,7 +155,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           Environments.getEnvironment()
               .getExtensionRequestTopicPrefix()
               .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX),
-          this::onNatsReconnect
+          () -> onNatsReconnect(serviceDef)
       );
     } else {
       LOG.info("Starting Extension Service on HTTP Mode");
@@ -168,12 +180,6 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     registerService(req);
 
     this.registerConfigs(serviceDef.getServiceGroup(), serviceDef.getServiceName(), serviceDef.getKvConfigs());
-    this.startStreamPipesService(
-        serviceClass,
-        networkingConfig
-    );
-
-    this.afterServiceRegistered(serviceDef, req);
   }
 
   private void registerService(SpServiceRegistration serviceRegistration) {
@@ -181,7 +187,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     new CoreRequestSubmitter().submitRegistrationRequest(client, serviceRegistration);
   }
 
-  private void onNatsReconnect() {
+  private void onNatsReconnect(SpServiceDefinition serviceDef) {
     var registration = this.currentServiceRegistration;
     if (registration == null) {
       LOG.warn("NATS reconnect detected but service registration is not available yet");
@@ -190,10 +196,23 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
     try {
       LOG.info("NATS reconnect detected - refreshing service registration for {}", registration.getSvcId());
-      registerService(registration);
+      refreshServiceRegistration(serviceDef, registration);
     } catch (Exception e) {
       LOG.warn("Could not refresh service registration after NATS reconnect", e);
     }
+  }
+
+  void refreshServiceRegistration(SpServiceDefinition serviceDef, SpServiceRegistration registration) {
+    registerService(registration);
+    // Registration resets readiness. Complete the migration handshake again, but
+    // do not initialize function instances that are already running.
+    registerMigrations(serviceDef, registration);
+  }
+
+  private void registerMigrations(SpServiceDefinition serviceDef, SpServiceRegistration registration) {
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    var migrationConfigs = serviceDef.getMigrators().stream().map(IModelMigrator::config).toList();
+    new CoreRequestSubmitter().submitMigrationRequest(client, migrationConfigs, registration.getSvcId(), registration);
   }
 
   protected Set<SpServiceTag> getServiceTags(Set<ExtensionItemDescription> extensions) {
@@ -244,13 +263,31 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     client.adminApi().registerServiceConfiguration(serviceConfiguration);
   }
 
+  /**
+   * The web server is already stopped when this runs, and the broker receiver is closed
+   * first, so no further requests from the core can arrive. Running pipeline elements,
+   * adapters and functions are therefore stopped locally. The core keeps their state as
+   * running and re-attaches once this service registers again.
+   */
   @PreDestroy
   public void onExit() {
     if (extensionBrokerRequestReceiver != null) {
       extensionBrokerRequestReceiver.stop();
     }
-    new ExtensionsServiceShutdownHandler().onShutdown();
-    deregisterService(DeclarersSingleton.getInstance().getServiceId());
+    List<ExtensionServiceShutdownHook> additionalHooks;
+    try {
+      additionalHooks = getAdditionalShutdownHooks();
+    } catch (RuntimeException e) {
+      LOG.warn("Could not collect additional shutdown hooks, continuing without them", e);
+      additionalHooks = List.of();
+    }
+    new ExtensionsServiceShutdownHandler(additionalHooks).onShutdown();
+    ServiceLoadDataReportGenerator.getInstance().shutdown();
+    try {
+      deregisterService(DeclarersSingleton.getInstance().getServiceId());
+    } catch (RuntimeException e) {
+      LOG.warn("Could not deregister service at core (core might already be down): {}", e.getMessage());
+    }
   }
 
   public String serviceId() {
@@ -258,6 +295,14 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   }
 
   protected List<ExtensionBrokerOperationHandler> getAdditionalBrokerOperationHandlers() {
+    return List.of();
+  }
+
+  /**
+   * Override to stop instances this service runs outside the standard pipeline element,
+   * adapter and function registries. Hooks run after those registries are cleaned up.
+   */
+  protected List<ExtensionServiceShutdownHook> getAdditionalShutdownHooks() {
     return List.of();
   }
 

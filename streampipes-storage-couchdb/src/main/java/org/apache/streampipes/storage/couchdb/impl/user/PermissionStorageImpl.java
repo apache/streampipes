@@ -19,8 +19,8 @@ package org.apache.streampipes.storage.couchdb.impl.user;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.Set;
@@ -28,29 +28,23 @@ import java.util.stream.Collectors;
 
 public class PermissionStorageImpl extends DefaultViewCrudStorage<Permission> implements IPermissionStorage {
 
-  public PermissionStorageImpl(String viewName) {
-    super(Utils::getCouchDbUserClient, Permission.class, viewName);
+  public PermissionStorageImpl(CouchDbStores stores, String viewName) {
+    super(stores.principal(CouchDbStores.USER_DB_NAME), Permission.class, viewName);
   }
 
   public Set<String> getObjectPermissions(List<String> principalSids) {
-    List<Permission> objectInstanceSids = couchDbClientSupplier
-        .get()
-        .view("users/userpermissions")
+    List<Permission> objectInstanceSids = view("users/userpermissions", Permission.class)
         .keys(principalSids)
-        .includeDocs(true)
-        .query(Permission.class);
+        .docs();
 
     return toPermissionSet(objectInstanceSids);
   }
 
   public List<Permission> getUserPermissionsForObject(String objectInstanceId) {
 
-    return couchDbClientSupplier
-        .get()
-        .view("users/objectpermissions")
+    return view("users/objectpermissions", Permission.class)
         .key(objectInstanceId)
-        .includeDocs(true)
-        .query(Permission.class);
+        .docs();
   }
 
   private Set<String> toPermissionSet(List<Permission> permissions) {

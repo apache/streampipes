@@ -29,10 +29,20 @@ public class ExportConfiguration {
 
   private List<AssetExportConfiguration> assetExportConfiguration;
   private List<ExportItem> genericStorageAppDocTypes;
+  private List<ExportItem> genericStorageDocuments;
 
   public ExportConfiguration() {
     this.assetExportConfiguration = new ArrayList<>();
     this.genericStorageAppDocTypes = new ArrayList<>();
+    this.genericStorageDocuments = new ArrayList<>();
+  }
+
+  public List<ExportItem> getGenericStorageDocuments() {
+    return genericStorageDocuments;
+  }
+
+  public void setGenericStorageDocuments(List<ExportItem> genericStorageDocuments) {
+    this.genericStorageDocuments = genericStorageDocuments;
   }
 
   public List<AssetExportConfiguration> getAssetExportConfiguration() {

@@ -1,0 +1,135 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-overview-card
+    [title]="dataset().name"
+    [titleClickable]="true"
+    [reserveDescription]="false"
+    [accentColor]="accentColor()"
+    (titleClick)="showDetails.emit()"
+    data-cy="dataset-overview-card"
+>
+    @if (icon(); as moduleIcon) {
+        <mat-icon cardIcon aria-hidden="true">{{ moduleIcon }}</mat-icon>
+    }
+
+    <sp-overview-card-facts>
+        <div spOverviewCardFact [label]="'Last event' | translate">
+            @if (lastEventLoading()) {
+                <sp-spinner
+                    [diameter]="16"
+                    data-cy="dataset-card-last-event-loading"
+                ></sp-spinner>
+            } @else {
+                <span
+                    [matTooltip]="exactLastEvent()"
+                    [matTooltipDisabled]="!exactLastEvent()"
+                    data-cy="dataset-card-last-event"
+                    >{{ lastEventText() ?? ('n/a' | translate) }}</span
+                >
+            }
+        </div>
+        <div
+            spOverviewCardFact
+            [label]="
+                (dataset().pipelines.length > 1 ? 'Pipelines' : 'Pipeline')
+                    | translate
+            "
+        >
+            @if (dataset().pipelines.length) {
+                <span
+                    class="fact-text"
+                    [matTooltip]="dataset().pipelines.join(', ')"
+                    data-cy="dataset-card-pipelines"
+                    >{{ dataset().pipelines[0] }}
+                    @if (dataset().pipelines.length > 1) {
+                        <span class="fact-more"
+                            >+{{ dataset().pipelines.length - 1 }}</span
+                        >
+                    }
+                </span>
+            } @else {
+                <span data-cy="dataset-card-no-pipelines">{{
+                    'None' | translate
+                }}</span>
+            }
+        </div>
+        <div spOverviewCardFact [label]="'Retention' | translate">
+            @if (dataset().retentionConfigured) {
+                <button
+                    type="button"
+                    class="retention-link"
+                    [matTooltip]="
+                        ('Open Retention Log' | translate) +
+                        (lastExport() ? ' • ' + lastExport() : '')
+                    "
+                    data-cy="dataset-card-retention-log"
+                    (click)="showRetentionLog.emit()"
+                >
+                    @if (dataset().lastRetentionStatus === false) {
+                        <mat-icon
+                            class="retention-failed"
+                            data-cy="dataset-card-retention-failed"
+                            [attr.aria-label]="'Failed' | translate"
+                            >error</mat-icon
+                        >
+                    }
+                    <span>{{ 'Active' | translate }}</span>
+                </button>
+            } @else {
+                <span data-cy="dataset-card-retention-off">{{
+                    'Off' | translate
+                }}</span>
+            }
+        </div>
+    </sp-overview-card-facts>
+    <ng-content select="[cardSelect]" ngProjectAs="[cardSelect]"></ng-content>
+    <ng-content
+        select="[cardAssetContext]"
+        ngProjectAs="[cardAssetContext]"
+    ></ng-content>
+
+    <button
+        cardFooter
+        type="button"
+        mat-flat-button
+        class="btn-tertiary"
+        data-cy="dataset-card-download"
+        (click)="download.emit()"
+    >
+        <mat-icon aria-hidden="true">download</mat-icon>
+        <span>{{ 'Download' | translate }}</span>
+    </button>
+    @if (canConfigureRetention()) {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            data-cy="dataset-card-retention"
+            (click)="configureRetention.emit()"
+        >
+            <mat-icon aria-hidden="true">history</mat-icon>
+            <span>{{ 'Retention' | translate }}</span>
+        </button>
+    }
+    <ng-content
+        select="[cardFooterActions]"
+        ngProjectAs="[cardFooterActions]"
+    ></ng-content>
+</sp-overview-card>

@@ -23,17 +23,21 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import {
+    CurrentUserService,
     SpBasicViewComponent,
     SpBreadcrumbService,
     SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatTab, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { LoginSettingsService } from '../login/services/login-settings.service';
 import { InfoTabComponent } from './components/info/info.component';
 import { DocumentationTabComponent } from './components/documentation/documentation.component';
 import { ShortcutsTabComponent } from './components/shortcuts/shortcuts.component';
+import { SbomTabComponent } from './components/sbom/sbom.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
+export type HelpTabId = 'info' | 'documentation' | 'sbom' | 'shortcuts';
 
 @Component({
     selector: 'sp-help',
@@ -47,42 +51,59 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
         LayoutDirective,
         MatTabGroup,
         MatTab,
+        MatTabLabel,
         TranslatePipe,
         InfoTabComponent,
         DocumentationTabComponent,
         ShortcutsTabComponent,
+        SbomTabComponent,
     ],
 })
 export class HelpComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private loginSettingsService = inject(LoginSettingsService);
+    private currentUserService = inject(CurrentUserService);
     private translateService = inject(TranslateService);
 
+    tabs: HelpTabId[] = [];
     selectedIndex = 0;
     documentationLink = '';
     showDocumentationTab = false;
+    /** The SBOM tab is only shown to administrators; the files themselves are public. */
+    showSbomTab = false;
 
-    get shortcutsTabIndex(): number {
-        return this.showDocumentationTab ? 2 : 1;
+    get selectedTab(): HelpTabId | undefined {
+        return this.tabs[this.selectedIndex];
     }
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
             { label: this.translateService.instant('Help') },
         ]);
+        this.showSbomTab = this.currentUserService.hasRole('ROLE_ADMIN');
+        this.rebuildTabs();
         this.loginSettingsService.getSettings().subscribe(res => {
             this.documentationLink = res.linkSettings?.documentationUrl || '';
             this.showDocumentationTab =
                 !!res.linkSettings?.showDocumentationLinkInProfileMenu &&
                 !!this.documentationLink;
-
-            if (this.selectedIndex > this.shortcutsTabIndex) {
-                this.selectedIndex = this.shortcutsTabIndex;
-            }
+            this.rebuildTabs();
         });
     }
 
     selectedIndexChange(index: number) {
         this.selectedIndex = index;
+    }
+
+    private rebuildTabs(): void {
+        const current = this.selectedTab;
+        this.tabs = [
+            'info',
+            ...(this.showDocumentationTab ? (['documentation'] as const) : []),
+            ...(this.showSbomTab ? (['sbom'] as const) : []),
+            'shortcuts',
+        ];
+        const index = current ? this.tabs.indexOf(current) : -1;
+        this.selectedIndex = index >= 0 ? index : 0;
     }
 }

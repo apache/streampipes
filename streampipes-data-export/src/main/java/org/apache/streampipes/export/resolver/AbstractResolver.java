@@ -62,10 +62,14 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
   public String getSerializedDocument(String resourceId) throws JsonProcessingException, ElementNotFoundException {
     var document = findDocument(resourceId);
     if (document != null) {
-      return getObjectMapper().writeValueAsString(modifyDocumentForExport(document));
+      return serializeDocument(modifyDocumentForExport(document));
     } else {
       throw new ElementNotFoundException("Could not find element with resource id " + resourceId);
     }
+  }
+
+  public String serializeDocument(T document) throws JsonProcessingException {
+    return getObjectMapper().writeValueAsString(document);
   }
 
   protected void overrideProtocol(EventGrounding grounding) {

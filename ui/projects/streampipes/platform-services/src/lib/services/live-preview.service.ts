@@ -28,11 +28,15 @@ export class LivePreviewService {
 
     convert(event: HttpDownloadProgressEvent) {
         const { partialText } = event;
-        if (partialText) {
-            const chunks = partialText.split('\n');
-            return JSON.parse(chunks[chunks.length - 2]);
-        } else {
+        if (!partialText) {
             return undefined;
         }
+        const end = partialText.lastIndexOf('\n');
+        if (end < 0) {
+            return undefined;
+        }
+        const start = partialText.lastIndexOf('\n', end - 1) + 1;
+        const line = partialText.slice(start, end);
+        return line.trim() ? JSON.parse(line) : undefined;
     }
 }

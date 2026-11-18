@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.manager.matching.output;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceOperationResult;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
@@ -29,12 +31,19 @@ import org.apache.streampipes.user.management.encryption.SecretEncryptionManager
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CustomTransformOutputSchemaGeneratorTest {
 
@@ -63,6 +72,96 @@ class CustomTransformOutputSchemaGeneratorTest {
 
     assertEquals(encryptedValue, secretProperty.getValue());
     assertTrue(secretProperty.getEncrypted());
+  }
+
+  @Test
+  void throwsWhenTheExtensionCannotComputeTheOutputSchema() {
+    var invocation = invocation();
+    var generator = new CustomTransformOutputSchemaGenerator(
+        mock(ISpServiceDiscovery.class),
+        new CustomTransformOutputStrategy(),
+        invocation,
+        mock(ExtensionServiceRequestManager.class)
+    );
+
+    var exception = assertThrows(OutputSchemaUnavailableException.class,
+        () -> generator.buildFromOneStream(null));
+
+    assertEquals(invocation.getAppId(), exception.getAppId());
+  }
+
+  @Test
+  void returnsEmptySchemaWhenTheExtensionReturnsAnErrorResponse() throws IOException {
+    var invocation = invocation();
+    var serviceDiscovery = mock(ISpServiceDiscovery.class);
+    var requestManager = mock(ExtensionServiceRequestManager.class);
+    when(serviceDiscovery.getService(anyString(), eq(true), anyList())).thenReturn(List.of(service()));
+    when(requestManager.request(any())).thenReturn(new ExtensionServiceOperationResult(500, null));
+    var generator = new CustomTransformOutputSchemaGenerator(
+        serviceDiscovery,
+        new CustomTransformOutputStrategy(),
+        invocation,
+        requestManager
+    );
+
+    var schema = generator.buildFromOneStream(null).k;
+
+    assertTrue(schema.getEventProperties().isEmpty());
+  }
+
+  @Test
+  void treatsGatewayUnavailableResponsesAsOutputSchemaUnavailable() throws IOException {
+    var invocation = invocation();
+    var serviceDiscovery = mock(ISpServiceDiscovery.class);
+    var requestManager = mock(ExtensionServiceRequestManager.class);
+    when(serviceDiscovery.getService(anyString(), eq(true), anyList())).thenReturn(List.of(service()));
+    when(requestManager.request(any())).thenReturn(new ExtensionServiceOperationResult(503, null));
+    var generator = new CustomTransformOutputSchemaGenerator(
+        serviceDiscovery,
+        new CustomTransformOutputStrategy(),
+        invocation,
+        requestManager
+    );
+
+    var exception = assertThrows(OutputSchemaUnavailableException.class,
+        () -> generator.buildFromOneStream(null));
+
+    assertEquals(invocation.getAppId(), exception.getAppId());
+  }
+
+  @Test
+  void returnsEmptySchemaWhenTheExtensionReturnsAnInvalidSchema() throws IOException {
+    var invocation = invocation();
+    var serviceDiscovery = mock(ISpServiceDiscovery.class);
+    var requestManager = mock(ExtensionServiceRequestManager.class);
+    when(serviceDiscovery.getService(anyString(), eq(true), anyList())).thenReturn(List.of(service()));
+    when(requestManager.request(any())).thenReturn(new ExtensionServiceOperationResult(
+        200, "not-an-event-schema".getBytes(StandardCharsets.UTF_8)));
+    var generator = new CustomTransformOutputSchemaGenerator(
+        serviceDiscovery,
+        new CustomTransformOutputStrategy(),
+        invocation,
+        requestManager
+    );
+
+    var schema = generator.buildFromOneStream(null).k;
+
+    assertTrue(schema.getEventProperties().isEmpty());
+  }
+
+  private DataProcessorInvocation invocation() {
+    var invocation = new DataProcessorInvocation();
+    invocation.setAppId("org.apache.streampipes.test.processor");
+    invocation.setStaticProperties(List.of());
+    return invocation;
+  }
+
+  private SpServiceRegistration service() {
+    var service = new SpServiceRegistration();
+    service.setHost("localhost");
+    service.setPort(8080);
+    service.setSvcId("test-service");
+    return service;
   }
 
   private SecretStaticProperty makeSecretProperty(String value,

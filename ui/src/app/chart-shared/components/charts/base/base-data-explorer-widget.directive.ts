@@ -140,6 +140,26 @@ export abstract class BaseDataExplorerWidgetDirective<
     protected fieldUpdateService = inject(SpFieldUpdateService);
     public fieldService = inject(ChartFieldProviderService);
 
+    /**
+     * Fields stored in a chart configuration may predate newer field
+     * characteristics (such as the integer flag); the field list derived from
+     * the current schema is the authoritative description.
+     */
+    protected resolveField(
+        field: DataExplorerField | undefined,
+    ): DataExplorerField | undefined {
+        if (!field) {
+            return undefined;
+        }
+        return (
+            this.fieldProvider?.allFields.find(
+                candidate =>
+                    candidate.fullDbName === field.fullDbName &&
+                    candidate.sourceIndex === field.sourceIndex,
+            ) ?? field
+        );
+    }
+
     ngOnInit(): void {
         this.currentWidth = this.initialSize.width;
         this.currentHeight = this.initialSize.height;

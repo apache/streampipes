@@ -20,6 +20,8 @@ import { inject, Injectable } from '@angular/core';
 import { SpLabel } from '../model/labels/labels.model';
 import { Observable } from 'rxjs';
 import { GenericStorageService } from './generic-storage.service';
+import { AssetManagementService } from './asset-management.service';
+import { SpAsset } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -29,25 +31,24 @@ export class LabelsService {
     appDocType = 'sp-labels';
 
     private genericStorageService = inject(GenericStorageService);
+    private assetManagementService = inject(AssetManagementService);
 
     getAllLabels(): Observable<SpLabel[]> {
         return this.genericStorageService.getAllDocuments(this.appDocType);
     }
 
     getLabelsInUse(): Observable<string[]> {
-        return this.genericStorageService
-            .getAllDocuments('asset-management')
-            .pipe(map(docs => this.extractLabelIds(docs)));
+        return this.assetManagementService
+            .getAllAssets()
+            .pipe(map(assets => this.extractLabelIds(assets)));
     }
 
-    extractLabelIds(assets: any): string[] {
+    extractLabelIds(assets: SpAsset[]): string[] {
         const allLabelIds = new Set<string>();
 
-        const extractLabelsFromAsset = (asset: any) => {
+        const extractLabelsFromAsset = (asset: SpAsset) => {
             if (asset.labelIds) {
-                asset.labelIds.forEach((labelId: any) =>
-                    allLabelIds.add(labelId),
-                );
+                asset.labelIds.forEach(labelId => allLabelIds.add(labelId));
             }
             if (asset.assets) {
                 asset.assets.forEach((subasset: any) =>

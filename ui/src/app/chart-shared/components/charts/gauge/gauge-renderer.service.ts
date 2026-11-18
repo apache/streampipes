@@ -32,10 +32,15 @@ import { WidgetSize } from '../../../models/dataset.model';
 import { EchartsBasicOptionsGeneratorService } from '../../../echarts-renderer/echarts-basic-options-generator.service';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
 import { ResultLabelService } from '../../../services/result-label.service';
+import {
+    ChartNumberFormatService,
+    NumberFormatOptions,
+} from '../../../services/formatting';
 
 @Injectable({ providedIn: 'root' })
 export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetModel> {
     protected fieldUpdateService = inject(SpFieldUpdateService);
+    protected numberFormatService = inject(ChartNumberFormatService);
     protected echartsBaseOptionsGenerator = inject(
         EchartsBasicOptionsGeneratorService,
     );
@@ -45,7 +50,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         seriesName: string,
         selectedField: DataExplorerField,
         value: number,
-        decimals: number | undefined,
+        numberFormat: NumberFormatOptions,
         widgetConfig: GaugeWidgetModel,
         widgetSize: WidgetSize,
         gaugeLayout: GaugeLayout,
@@ -84,7 +89,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
                 show: true,
                 valueAnimation: false,
                 formatter: (currentValue: number) =>
-                    this.formatNumber(currentValue, decimals),
+                    this.formatNumber(currentValue, numberFormat),
                 fontSize: 14 * clamp,
                 offsetCenter: [0, gaugeLayout.detailOffsetY],
             },
@@ -140,10 +145,11 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         );
         const appearanceConfig =
             widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig;
-        const decimals = this.normalizeDecimals(
-            appearanceConfig.numberFormat?.decimals,
-        );
         const selectedField = this.getSelectedField(widgetConfig);
+        const numberFormat = this.numberFormatService.resolveOptions(
+            appearanceConfig,
+            selectedField,
+        );
         const sourceIndex = selectedField.sourceIndex;
         const dataSeries = queryResult[sourceIndex].allDataSeries[0];
         const columnIndex = dataSeries.headers.indexOf(
@@ -166,13 +172,20 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         );
 
         Object.assign(option, {
-            toolbox: {
-                ...toolbox,
-                left: 10,
-                right: 'auto',
-                top: 4,
-                show: showToolbox,
-            },
+            toolbox: widgetSize.toolboxOverlay
+                ? {
+                      ...toolbox,
+                      ...this.echartsBaseOptionsGenerator.overlayToolboxPlacement(
+                          4,
+                      ),
+                  }
+                : {
+                      ...toolbox,
+                      left: 10,
+                      right: 'auto',
+                      top: 4,
+                      show: showToolbox,
+                  },
             legend: {
                 ...legend,
                 show: showLegend,
@@ -181,7 +194,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
                 '',
                 selectedField,
                 data,
-                decimals,
+                numberFormat,
                 widgetConfig,
                 widgetSize,
                 gaugeLayout,
@@ -191,25 +204,11 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         return option;
     }
 
-    private formatNumber(value: number, decimals?: number): string {
-        if (decimals === undefined) {
-            return String(value);
-        }
-
-        return value.toFixed(decimals);
-    }
-
-    private normalizeDecimals(decimals: unknown): number | undefined {
-        if (decimals === null || decimals === undefined || decimals === '') {
-            return undefined;
-        }
-
-        const parsedValue = Number(decimals);
-        if (!Number.isFinite(parsedValue)) {
-            return undefined;
-        }
-
-        return Math.min(10, Math.max(0, Math.round(parsedValue)));
+    private formatNumber(
+        value: number,
+        numberFormat: NumberFormatOptions,
+    ): string {
+        return this.numberFormatService.format(value, numberFormat);
     }
 
     private makeGaugeLayout(

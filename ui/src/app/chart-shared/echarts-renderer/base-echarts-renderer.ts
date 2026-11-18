@@ -21,6 +21,7 @@ import {
     WidgetEchartsAppearanceConfig,
 } from '../models/dataview-dashboard.model';
 import {
+    DataExplorerField,
     DataExplorerWidgetModel,
     SpQueryResult,
 } from '@streampipes/platform-services';
@@ -39,6 +40,11 @@ import { EchartsDatasetUtilsService } from './echarts-dataset-utils.service';
 import { ChartColorizationService } from '../services/chart-colorization.service';
 import { SpFieldUpdateService } from '../services/field-update.service';
 import { FieldUpdateInfo } from '../models/field-update.model';
+import {
+    ChartNumberFormatService,
+    ChartTimeFormatService,
+    NumberFormatOptions,
+} from '../services/formatting';
 
 export abstract class SpBaseEchartsRenderer<
     T extends DataExplorerWidgetModel,
@@ -57,6 +63,8 @@ export abstract class SpBaseEchartsRenderer<
     protected echartsUtilsService = inject(EchartsUtilsService);
     protected colorizationService = inject(ChartColorizationService);
     protected fieldUpdateService = inject(SpFieldUpdateService);
+    protected numberFormatService = inject(ChartNumberFormatService);
+    protected timeFormatService = inject(ChartTimeFormatService);
 
     public render(
         spQueryResult: SpQueryResult[],
@@ -66,6 +74,7 @@ export abstract class SpBaseEchartsRenderer<
         const options = this.basicOptionsGeneratorService.makeBaseConfig(
             widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig,
             this.getAdditionalToolboxItems(),
+            widgetSize.toolboxOverlay,
         );
         const datasets = this.datasetGeneratorService.toDataset(
             spQueryResult,
@@ -103,38 +112,60 @@ export abstract class SpBaseEchartsRenderer<
         return {};
     }
 
-    protected getDecimals(widgetConfig: T): number | undefined {
-        const appearanceConfig =
-            widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig;
-        return this.normalizeDecimals(appearanceConfig?.numberFormat?.decimals);
+    /**
+     * Number formatting rules of the chart, optionally narrowed to one field
+     * so that integer fields and counts are rendered without fraction digits.
+     */
+    protected getNumberFormat(
+        widgetConfig: T,
+        field?: DataExplorerField,
+    ): NumberFormatOptions {
+        return this.numberFormatService.resolveOptions(
+            widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig,
+            field ? this.resolveField(widgetConfig, field) : undefined,
+        );
     }
 
-    protected formatNumber(value: unknown, decimals?: number): string {
-        const numericValue = typeof value === 'number' ? value : Number(value);
-        if (Number.isFinite(numericValue) && decimals !== undefined) {
-            const normalizedDecimals = this.normalizeDecimals(decimals);
-            if (normalizedDecimals !== undefined) {
-                return numericValue.toFixed(normalizedDecimals);
-            }
-        }
-
-        if (value === null || value === undefined) {
-            return '';
-        }
-
-        return String(value);
+    /**
+     * Axis ticks are nice numbers chosen by ECharts, so they use automatic
+     * formatting even when the chart fixes the decimals of its values.
+     */
+    protected getAxisNumberFormat(
+        widgetConfig: T,
+        field?: DataExplorerField,
+    ): NumberFormatOptions {
+        const { raw, integer } = this.getNumberFormat(widgetConfig, field);
+        return { raw, integer };
     }
 
-    private normalizeDecimals(decimals: unknown): number | undefined {
-        if (decimals === null || decimals === undefined || decimals === '') {
-            return undefined;
+    /**
+     * Fields stored in a chart configuration may predate newer field
+     * characteristics (such as the integer flag), so they are looked up in
+     * the field list derived from the current schema.
+     */
+    private resolveField(
+        widgetConfig: T,
+        field: DataExplorerField,
+    ): DataExplorerField {
+        const sourceConfigs = widgetConfig.dataConfig?.sourceConfigs;
+        if (!sourceConfigs) {
+            return field;
         }
+        return (
+            this.fieldProvider
+                .generateFieldLists(sourceConfigs)
+                .allFields.find(
+                    candidate =>
+                        candidate.fullDbName === field.fullDbName &&
+                        candidate.sourceIndex === field.sourceIndex,
+                ) ?? field
+        );
+    }
 
-        const parsedValue = Number(decimals);
-        if (!Number.isFinite(parsedValue)) {
-            return undefined;
-        }
-
-        return Math.min(10, Math.max(0, Math.round(parsedValue)));
+    protected formatNumber(
+        value: unknown,
+        options: NumberFormatOptions = {},
+    ): string {
+        return this.numberFormatService.format(value, options);
     }
 }

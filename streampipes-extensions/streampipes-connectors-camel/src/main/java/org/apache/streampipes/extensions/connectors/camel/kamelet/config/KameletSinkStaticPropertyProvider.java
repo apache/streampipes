@@ -194,7 +194,8 @@ public class KameletSinkStaticPropertyProvider {
         Labels.from(
             ADVANCED_TRANSFORM_STEPS_KEY,
             "Transform Steps (YAML)",
-            "Provide a Camel YAML steps fragment that runs before the message is sent to the Kamelet."
+            "Use setBody, setHeader or removeHeader; string constant or simple ${body}/${body[field]} only. "
+                + "Camel control headers and other Camel DSL constructs are not supported."
         ),
         CodeLanguage.None,
         """

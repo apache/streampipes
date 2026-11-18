@@ -19,9 +19,10 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.units.UnitProvider;
+import org.apache.streampipes.units.catalog.UnitCatalog;
+import org.apache.streampipes.units.model.MeasurementUnit;
+import org.apache.streampipes.units.model.QuantityKind;
 
-import com.github.jqudt.Unit;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,25 +36,25 @@ import java.util.List;
 @RequestMapping("/api/v2/units")
 public class OntologyMeasurementUnit extends AbstractRestResource {
 
+  private final UnitCatalog catalog = UnitCatalog.builtIn();
+
   @GetMapping(path = "/instances", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<Unit>> getAllUnits() {
-    return ok(UnitProvider
-        .INSTANCE
-        .getAvailableUnits());
+  public ResponseEntity<List<MeasurementUnit>> getAllUnits() {
+    return ok(catalog.getUnits());
   }
 
   @GetMapping(path = "/types", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<Unit>> getAllUnitTypes() {
-    return ok(UnitProvider
-        .INSTANCE
-        .getAvailableUnitTypes());
+  public ResponseEntity<List<QuantityKind>> getAllUnitTypes() {
+    return ok(catalog.getQuantityKinds());
   }
 
   @GetMapping(path = "/instances/{resourceId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Unit> getUnit(@PathVariable("resourceId") String resourceUri) {
-    return ok(UnitProvider
-        .INSTANCE
-        .getUnit(resourceUri));
+  public ResponseEntity<?> getUnit(@PathVariable("resourceId") String resourceUri) {
+    var unit = catalog.find(resourceUri);
+    if (unit.isPresent()) {
+      return ok(unit.get());
+    }
+    return notFound();
   }
 
 }

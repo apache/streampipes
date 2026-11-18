@@ -47,9 +47,8 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.model.staticproperty.StaticPropertyType;
+import org.apache.streampipes.model.util.SimpleTypeParser;
 import org.apache.streampipes.sdk.utils.Datatypes;
-
-import com.github.drapostolos.typeparser.TypeParser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,12 +60,9 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     implements IParameterExtractor {
 
   protected T sepaElement;
-  private final TypeParser typeParser;
 
   public AbstractParameterExtractor(T sepaElement) {
     this.sepaElement = sepaElement;
-    this.typeParser = TypeParser.newBuilder()
-                                .build();
   }
 
   @Override
@@ -102,13 +98,13 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     String value = singleValueParameter(internalName, String.class);
 
     if (comparePropertyRuntimeType(targetType, Datatypes.Integer)) {
-      return typeParser.parse(value, Integer.class);
+      return SimpleTypeParser.parse(value, Integer.class);
     } else if (comparePropertyRuntimeType(targetType, Datatypes.Float)) {
-      return typeParser.parse(value, Float.class);
+      return SimpleTypeParser.parse(value, Float.class);
     } else if (comparePropertyRuntimeType(targetType, Datatypes.Double)) {
-      return typeParser.parse(value, Double.class);
+      return SimpleTypeParser.parse(value, Double.class);
     } else if (comparePropertyRuntimeType(targetType, Datatypes.Boolean)) {
-      return typeParser.parse(value, Boolean.class);
+      return SimpleTypeParser.parse(value, Boolean.class);
     } else {
       return value;
     }
@@ -116,7 +112,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
   @Override
   public <V> V singleValueParameter(String internalName, Class<V> targetClass) {
-    return typeParser.parse(getStaticPropertyByName(internalName, FreeTextStaticProperty.class)
+    return SimpleTypeParser.parse(getStaticPropertyByName(internalName, FreeTextStaticProperty.class)
                                 .getValue(), targetClass);
   }
 
@@ -156,7 +152,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
       String internalName, Class<V> targetClass,
       Class<T> oneOfStaticProperty
   ) {
-    return typeParser.parse(getStaticPropertyByName(internalName, oneOfStaticProperty)
+    return SimpleTypeParser.parse(getStaticPropertyByName(internalName, oneOfStaticProperty)
                                 .getOptions()
                                 .stream()
                                 .filter(Option::isSelected)
@@ -172,7 +168,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
   @Override
   public <V> V selectedSingleValueInternalName(String internalName, Class<V> targetClass) {
-    return typeParser.parse(getStaticPropertyByName(internalName, OneOfStaticProperty.class)
+    return SimpleTypeParser.parse(getStaticPropertyByName(internalName, OneOfStaticProperty.class)
                                 .getOptions()
                                 .stream()
                                 .filter(Option::isSelected)
@@ -230,7 +226,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .stream()
         .map(sp -> (FreeTextStaticProperty) sp)
         .map(FreeTextStaticProperty::getValue)
-        .map(v -> typeParser.parse(v, targetClass))
+        .map(v -> SimpleTypeParser.parse(v, targetClass))
         .collect(Collectors.toList());
   }
 
@@ -241,7 +237,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .stream()
         .filter(Option::isSelected)
         .map(Option::getName)
-        .map(o -> typeParser.parse(o, targetClass))
+        .map(o -> SimpleTypeParser.parse(o, targetClass))
         .collect(Collectors.toList());
   }
 
@@ -252,7 +248,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
         .stream()
         .filter(Option::isSelected)
         .map(Option::getInternalName)
-        .map(o -> typeParser.parse(o, targetClass))
+        .map(o -> SimpleTypeParser.parse(o, targetClass))
         .collect(Collectors.toList());
   }
 
@@ -274,7 +270,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
 
     return runtimeResolvableTreeInputStaticProperty.getSelectedNodesInternalNames()
                                                    .stream()
-                                                   .map(node -> typeParser.parse(node, targetClass))
+                                                   .map(node -> SimpleTypeParser.parse(node, targetClass))
                                                    .toList();
   }
 
@@ -300,7 +296,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
            .equals(name)) {
         return p;
       } else if (p.getStaticPropertyType() == StaticPropertyType.StaticPropertyGroup) {
-        return getStaticPropertyByName(((StaticPropertyGroup) p).getStaticProperties(), name);
+        StaticProperty inGroup = getStaticPropertyByName(((StaticPropertyGroup) p).getStaticProperties(), name);
+        if (inGroup != null) {
+          return inGroup;
+        }
       } else if (p.getStaticPropertyType() == StaticPropertyType.StaticPropertyAlternatives) {
         StaticProperty tmp = getStaticPropertyFromSelectedAlternative((StaticPropertyAlternatives) p);
         if (tmp != null) {
@@ -320,8 +319,8 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
              .stream()
              .filter(StaticPropertyAlternative::getSelected)
              .findFirst()
-             .get()
-             .getStaticProperty();
+             .map(StaticPropertyAlternative::getStaticProperty)
+             .orElse(null);
   }
 
   @Override

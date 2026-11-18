@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.couchdb.client.CouchServer;
+import org.apache.streampipes.couchdb.client.DatabaseOptions;
+import org.apache.streampipes.couchdb.client.design.DesignDocument;
+import org.apache.streampipes.couchdb.client.exception.CouchDbException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 import static org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants.DB_NAME;
 import static org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants.DESIGN_DOC_NAME;
@@ -32,53 +33,30 @@ public class CouchDbViewGenerator {
 
   private static final Logger LOG = LoggerFactory.getLogger(CouchDbViewGenerator.class);
 
+  private static final String APP_DOC_TYPE_MAP =
+      "function (doc) {\nif (doc._id) {\nemit([doc.appDocType, doc._id], 1)\n}\n}";
+
+  private final CouchServer server;
+
+  public CouchDbViewGenerator(CouchServer server) {
+    this.server = server;
+  }
+
   public void createGenericDatabaseIfNotExists() {
     LOG.info("Checking if generic database {} exists...", DB_NAME);
 
     try {
-      int status =
-          Utils.append(
-                  Request.Put(Utils.getDatabaseRoute(DB_NAME)))
-              .execute()
-              .returnResponse()
-              .getStatusLine()
-              .getStatusCode();
-
-      if (status == HttpStatus.SC_CREATED) {
+      var database = server.database(DB_NAME, DatabaseOptions.existing());
+      if (database.create()) {
         LOG.info("Database {} successfully created", DB_NAME);
-        createViews();
-      } else if (status == HttpStatus.SC_PRECONDITION_FAILED) {
-        LOG.info("Database {} already present", DB_NAME);
+        LOG.info("Initializing database views...");
+        database.design().sync(DesignDocument.named(DESIGN_DOC_NAME).withView(DESIGN_DOC_NAME, APP_DOC_TYPE_MAP));
+        LOG.info("View {} successfully created", DESIGN_DOC_NAME);
       } else {
-        LOG.warn("Status code {} from CouchDB - something went wrong during install!", status);
+        LOG.info("Database {} already present", DB_NAME);
       }
-    } catch (IOException e) {
+    } catch (CouchDbException e) {
       LOG.error("Could not connect to CouchDB storage", e);
-    }
-  }
-
-  private void createViews() throws IOException {
-    LOG.info("Initializing database views...");
-
-    String viewContent = "{\n"
-        + "\"views\": {\n"
-        + "\"appDocType\": {\n"
-        + "\"map\": \"function (doc) {\\nif (doc._id) {\\nemit([doc.appDocType, doc._id], 1)\\n}\\n}\"\n"
-        + "}\n"
-        + "},\n"
-        + "\"language\": \"javascript\"\n"
-        + "}";
-
-    int status = Utils.putRequest(Utils.getDatabaseRoute(DB_NAME) + "/_design/" + DESIGN_DOC_NAME, viewContent)
-        .execute()
-        .returnResponse()
-        .getStatusLine()
-        .getStatusCode();
-
-    if (status == HttpStatus.SC_CREATED) {
-      LOG.info("View {} successfully created", DESIGN_DOC_NAME);
-    } else {
-      LOG.warn("Status code {} from CouchDB - something went wrong during view generation!", status);
     }
   }
 }

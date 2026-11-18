@@ -1,0 +1,70 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+    height: 100%;
+    min-width: 0;
+}
+
+.notifications-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-xs);
+    background: transparent;
+    color: var(--mat-sys-on-surface);
+    cursor: pointer;
+    font: inherit;
+}
+
+.notifications-link:hover:not(:disabled) {
+    text-decoration: underline;
+}
+
+.notifications-link:disabled {
+    cursor: default;
+}
+
+.notifications-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.notifications-link mat-icon,
+.invalid-message mat-icon {
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 1.125rem;
+}
+
+.notifications-link mat-icon {
+    color: var(--color-warning);
+}
+
+.invalid-message {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin: 0;
+    color: var(--mat-sys-error);
+    font-size: var(--font-size-xs);
+}

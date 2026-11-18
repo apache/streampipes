@@ -101,19 +101,48 @@ describe('ServiceConfigsPasswordComponent', () => {
         expect(component.password).toBe('*****');
     });
 
-    it(`should click button`, async () => {
+    it('should clear the placeholder on focus', async () => {
         const changePasswordSpy = vi.spyOn(component, 'changePw');
 
-        const input = fixture.debugElement.nativeElement.querySelector('input');
-        input.click();
+        const input: HTMLInputElement =
+            fixture.debugElement.nativeElement.querySelector('input');
+        input.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
         await fixture.whenStable();
 
         expect(changePasswordSpy).toHaveBeenCalled();
-        const bannerDe: DebugElement = fixture.debugElement;
+        expect(component.password).toBe('');
+        const inputDe: DebugElement = fixture.debugElement.query(
+            By.css('input'),
+        );
+        expect(inputDe.nativeElement.value).toBe('');
+    });
 
-        const inputDe = bannerDe.query(By.css('input'));
-        const inputValue: HTMLElement = inputDe.nativeElement;
+    it('should store what is typed after focusing the field', async () => {
+        const input: HTMLInputElement =
+            fixture.debugElement.nativeElement.querySelector('input');
+        input.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(inputValue.textContent).toBe('');
+        input.value = 'new-secret';
+        input.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.configuration.value).toBe('new-secret');
+    });
+
+    it('should keep the stored value when the field is only clicked', async () => {
+        component.configuration.value = 'stored-secret';
+        const input: HTMLInputElement =
+            fixture.debugElement.nativeElement.querySelector('input');
+        // A mouse click focuses the field and then clicks it.
+        input.dispatchEvent(new Event('focus'));
+        input.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.configuration.value).toBe('stored-secret');
     });
 });

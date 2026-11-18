@@ -19,8 +19,8 @@ package org.apache.streampipes.storage.couchdb.impl.pipeline;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,8 +29,8 @@ public class DataProcessorStorageImpl extends DefaultCrudStorage<DataProcessorDe
     implements IDataProcessorStorage {
 
 
-  public DataProcessorStorageImpl() {
-    super(Utils::getCouchDbDataProcessorDescriptionClient, DataProcessorDescription.class);
+  public DataProcessorStorageImpl(CouchDbStores stores) {
+    super(stores.gson("data-processor"), DataProcessorDescription.class);
   }
 
   @Override

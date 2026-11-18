@@ -10,7 +10,7 @@ rules; the Java/Maven build commands there do not apply here.
 - Poetry manages the environment: `poetry install --with dev` (add `docs,stubs,deployment`
   for everything). Install the hook once: `poetry run pre-commit install`
   (`.pre-commit-config.yaml`).
-- Python 3.8 compatibility is enforced (`pyupgrade --py38`).
+- Python 3.11.5 compatibility is enforced (`pyupgrade --py311-plus`).
 
 ## Gates (all enforced in CI and by the pre-commit hook)
 

@@ -1,0 +1,117 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-overview-card
+    [title]="chart().name"
+    [titleClickable]="true"
+    [reserveDescription]="false"
+    [accentColor]="accentColor()"
+    (titleClick)="openChart.emit()"
+    data-cy="chart-overview-card"
+>
+    <mat-icon cardIcon aria-hidden="true">{{ chart().chartTypeIcon }}</mat-icon>
+
+    <sp-overview-card-facts>
+        <div spOverviewCardFact [label]="'Type' | translate">
+            <span
+                class="fact-text"
+                [matTooltip]="chart().chartTypeName"
+                data-cy="chart-card-type"
+                >{{ chart().chartTypeName }}</span
+            >
+        </div>
+        <div spOverviewCardFact [label]="'Dataset' | translate">
+            <span
+                class="fact-text"
+                [matTooltip]="chart().datasetName ?? ''"
+                [matTooltipDisabled]="!chart().datasetName"
+                data-cy="chart-card-dataset"
+                >{{ chart().datasetName ?? ('n/a' | translate) }}</span
+            >
+        </div>
+        <div spOverviewCardFact [label]="'Last modified' | translate">
+            <span data-cy="chart-card-last-modified">{{
+                chart().lastModifiedLabel
+            }}</span>
+        </div>
+    </sp-overview-card-facts>
+    @if (chart().showLegacyWarning) {
+        <p
+            class="chart-warning"
+            [matTooltip]="
+                'This chart is outdated and must be migrated.' | translate
+            "
+            data-cy="chart-card-legacy-warning"
+        >
+            <mat-icon aria-hidden="true">warning</mat-icon>
+            <span>{{
+                'This chart is outdated and must be migrated.' | translate
+            }}</span>
+        </p>
+    }
+    @if (chart().showRequiresAttentionWarning) {
+        <p
+            class="chart-warning"
+            [matTooltip]="
+                'This chart requires attention because the dataset schema changed.'
+                    | translate
+            "
+            data-cy="chart-card-attention-warning"
+        >
+            <mat-icon aria-hidden="true">sync_problem</mat-icon>
+            <span>{{
+                'This chart requires attention because the dataset schema changed.'
+                    | translate
+            }}</span>
+        </p>
+    }
+    <ng-content select="[cardSelect]" ngProjectAs="[cardSelect]"></ng-content>
+    <ng-content
+        select="[cardAssetContext]"
+        ngProjectAs="[cardAssetContext]"
+    ></ng-content>
+
+    <button
+        cardFooter
+        type="button"
+        mat-flat-button
+        class="btn-tertiary"
+        data-cy="chart-card-show"
+        (click)="showChart.emit()"
+    >
+        <mat-icon aria-hidden="true">visibility</mat-icon>
+        <span>{{ 'Show' | translate }}</span>
+    </button>
+    @if (canEdit()) {
+        <button
+            cardFooter
+            type="button"
+            mat-flat-button
+            class="btn-tertiary"
+            data-cy="chart-card-edit"
+            (click)="editChart.emit()"
+        >
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+    }
+    <ng-content
+        select="[cardFooterActions]"
+        ngProjectAs="[cardFooterActions]"
+    ></ng-content>
+</sp-overview-card>

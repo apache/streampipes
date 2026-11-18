@@ -1,0 +1,406 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<section
+    class="live-preview-panel"
+    [style.height.px]="height()"
+    aria-labelledby="sp-live-preview-title"
+    data-cy="sp-live-preview-panel"
+>
+    <div
+        class="live-preview-panel__resize"
+        role="separator"
+        tabindex="0"
+        aria-orientation="horizontal"
+        [attr.aria-label]="'Resize live preview' | translate"
+        [attr.aria-valuenow]="height()"
+        (pointerdown)="startResize($event)"
+        (keydown)="resizeWithKeyboard($event)"
+    ></div>
+    <header
+        class="live-preview-panel__header"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="0.5rem"
+    >
+        <h2 id="sp-live-preview-title" class="live-preview-panel__title">
+            {{ 'Live preview' | translate }}
+        </h2>
+        @if (store.secondsLeft() !== undefined) {
+            <span
+                class="live-preview-panel__meta"
+                data-cy="sp-live-preview-time-left"
+                [textContent]="
+                    'Stops in {{time}}'
+                        | translate
+                            : { time: formatTimeLeft(store.secondsLeft()) }
+                "
+            ></span>
+        }
+        @if (store.paused()) {
+            <span class="live-preview-panel__meta">{{
+                'Updates paused' | translate
+            }}</span>
+        }
+        <span fxFlex></span>
+        <button
+            mat-icon-button
+            type="button"
+            [attr.aria-label]="'Close live preview' | translate"
+            [matTooltip]="'Close live preview' | translate"
+            (click)="closePanel.emit()"
+            data-cy="sp-live-preview-close"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    @if (!store.active()) {
+        <div
+            class="live-preview-panel__starting"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+        >
+            @if (starting()) {
+                <sp-spinner
+                    [diameter]="24"
+                    [text]="('Starting live preview' | translate) + '...'"
+                ></sp-spinner>
+            }
+        </div>
+    } @else {
+        <div class="live-preview-panel__body">
+            <ul
+                class="live-preview-panel__list"
+                [attr.aria-label]="'Previewed elements' | translate"
+            >
+                @for (element of store.elements(); track element.elementId) {
+                    <li>
+                        <button
+                            type="button"
+                            class="live-preview-panel__row"
+                            [class.live-preview-panel__row--selected]="
+                                element.elementId === store.selectedElementId()
+                            "
+                            [attr.aria-current]="
+                                element.elementId === store.selectedElementId()
+                                    ? 'true'
+                                    : null
+                            "
+                            (click)="store.select(element.elementId)"
+                            [attr.data-cy]="
+                                'sp-live-preview-row-' +
+                                element.name.toLowerCase().replaceAll(' ', '_')
+                            "
+                        >
+                            <span
+                                fxLayout="row"
+                                fxLayoutAlign="start center"
+                                fxLayoutGap="0.375rem"
+                            >
+                                <span
+                                    [class]="
+                                        'live-preview-dot live-preview-dot--' +
+                                        dotStatus(element)
+                                    "
+                                    aria-hidden="true"
+                                ></span>
+                                <span class="live-preview-panel__row-name">{{
+                                    element.name
+                                }}</span>
+                            </span>
+                            <span class="live-preview-panel__row-summary">{{
+                                rowSummary(element)
+                            }}</span>
+                        </button>
+                    </li>
+                }
+            </ul>
+
+            <div class="live-preview-panel__detail" aria-live="off">
+                @if (detail(); as detail) {
+                    <div
+                        class="live-preview-panel__detail-header"
+                        fxLayout="row wrap"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="0.5rem"
+                    >
+                        <span class="live-preview-panel__detail-name">{{
+                            detail.element.name
+                        }}</span>
+                        <span class="live-preview-panel__meta">{{
+                            typeLabel(detail.element)
+                        }}</span>
+                        <span fxFlex></span>
+                        @if (
+                            detail.showOutput &&
+                            store.status(detail.element.elementId) !== 'error'
+                        ) {
+                            <mat-button-toggle-group
+                                hideSingleSelectionIndicator
+                                [value]="view()"
+                                (change)="view.set($event.value)"
+                                [attr.aria-label]="'View' | translate"
+                            >
+                                <mat-button-toggle value="latest">{{
+                                    'Latest event' | translate
+                                }}</mat-button-toggle>
+                                <mat-button-toggle value="history">{{
+                                    'History' | translate
+                                }}</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        }
+                        <button
+                            mat-icon-button
+                            type="button"
+                            [attr.aria-label]="
+                                (store.paused()
+                                    ? 'Resume updates'
+                                    : 'Pause updates'
+                                ) | translate
+                            "
+                            [matTooltip]="
+                                (store.paused()
+                                    ? 'Resume updates'
+                                    : 'Pause updates'
+                                ) | translate
+                            "
+                            [attr.aria-pressed]="store.paused()"
+                            (click)="togglePaused()"
+                        >
+                            <mat-icon>{{
+                                store.paused() ? 'play_arrow' : 'pause'
+                            }}</mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
+                            type="button"
+                            [attr.aria-label]="'Copy event as JSON' | translate"
+                            [matTooltip]="'Copy event as JSON' | translate"
+                            (click)="copyAsJson()"
+                        >
+                            <mat-icon>content_copy</mat-icon>
+                        </button>
+                    </div>
+
+                    @switch (store.status(detail.element.elementId)) {
+                        @case ('error') {
+                            <div
+                                class="live-preview-panel__message live-preview-panel__message--error"
+                                role="alert"
+                            >
+                                <b>{{
+                                    "This element couldn't be started"
+                                        | translate
+                                }}</b>
+                                <div>{{ detail.element.error }}</div>
+                            </div>
+                        }
+                        @case ('waiting') {
+                            <div
+                                class="live-preview-panel__message live-preview-panel__message--waiting"
+                            >
+                                {{
+                                    'No events yet. This element has not emitted any events since the preview started.'
+                                        | translate
+                                }}
+                            </div>
+                        }
+                        @case (undefined) {
+                            <div class="live-preview-panel__message">
+                                {{
+                                    'Sinks have no output. This is the data the sink receives.'
+                                        | translate
+                                }}
+                            </div>
+                        }
+                    }
+
+                    @if (
+                        view() === 'history' &&
+                        store.status(detail.element.elementId) !== 'error'
+                    ) {
+                        <table class="live-preview-panel__table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        {{ 'Received' | translate }}
+                                    </th>
+                                    @for (
+                                        field of history().fields;
+                                        track field.runtimeName
+                                    ) {
+                                        <th scope="col">
+                                            {{ field.runtimeName }}
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (
+                                    row of history().rows;
+                                    track row.receivedAt
+                                ) {
+                                    <tr>
+                                        <td class="live-preview-panel__value">
+                                            {{
+                                                formatReceivedAt(row.receivedAt)
+                                            }}
+                                        </td>
+                                        @for (
+                                            value of row.values;
+                                            track $index
+                                        ) {
+                                            <td
+                                                class="live-preview-panel__value"
+                                            >
+                                                {{ value }}
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    } @else if (
+                        store.status(detail.element.elementId) !== 'error' &&
+                        detail.rows.length > 0
+                    ) {
+                        <table
+                            class="live-preview-panel__table"
+                            data-cy="sp-live-preview-detail-table"
+                        >
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        {{ 'Field' | translate }}
+                                    </th>
+                                    @for (
+                                        input of detail.inputs;
+                                        track input.elementId
+                                    ) {
+                                        <th scope="col">
+                                            {{ 'Input' | translate }}
+                                            @if (detail.inputs.length > 1) {
+                                                <span
+                                                    class="live-preview-panel__meta"
+                                                    >{{ input.name }}</span
+                                                >
+                                            }
+                                        </th>
+                                    }
+                                    @if (detail.showOutput) {
+                                        <th scope="col">
+                                            {{ 'Output' | translate }}
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (row of detail.rows; track row.field) {
+                                    <tr>
+                                        <th
+                                            scope="row"
+                                            class="live-preview-panel__field"
+                                        >
+                                            {{ row.field }}
+                                        </th>
+                                        @for (
+                                            value of row.inputs;
+                                            track $index
+                                        ) {
+                                            <td
+                                                class="live-preview-panel__value"
+                                            >
+                                                {{ value }}
+                                            </td>
+                                        }
+                                        @if (detail.showOutput) {
+                                            <td
+                                                class="live-preview-panel__value"
+                                                [class.live-preview-panel__value--behind]="
+                                                    detail.outputBehind
+                                                "
+                                            >
+                                                <span
+                                                    [class.live-preview-panel__changed]="
+                                                        row.changed
+                                                    "
+                                                    [attr.data-cy]="
+                                                        row.changed
+                                                            ? 'sp-live-preview-changed-value'
+                                                            : null
+                                                    "
+                                                    >{{ row.output }}</span
+                                                >
+                                                @if (row.changed) {
+                                                    <span
+                                                        class="cdk-visually-hidden"
+                                                        >{{
+                                                            'changed by this element'
+                                                                | translate
+                                                        }}</span
+                                                    >
+                                                }
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @if (detail.outputBehind) {
+                            <p
+                                class="live-preview-panel__caption"
+                                data-cy="sp-live-preview-output-behind"
+                                [textContent]="
+                                    'The latest input did not produce an output. The output shows the last event this element emitted {{seconds}} s ago.'
+                                        | translate
+                                            : {
+                                                  seconds:
+                                                      detail.outputAgeSeconds,
+                                              }
+                                "
+                            ></p>
+                        } @else if (
+                            detail.hasOutput &&
+                            detail.inputs.length > 0 &&
+                            !detail.inputMatchesOutput
+                        ) {
+                            <p class="live-preview-panel__caption">
+                                {{
+                                    'Input and output show the latest event of each and may not belong to the same event.'
+                                        | translate
+                                }}
+                            </p>
+                        } @else if (detail.inputMatchesOutput) {
+                            <p class="live-preview-panel__caption">
+                                {{
+                                    'Highlighted values were changed by this element.'
+                                        | translate
+                                }}
+                            </p>
+                        }
+                    }
+                } @else {
+                    <p class="live-preview-panel__caption">
+                        {{ 'Select an element to see its data.' | translate }}
+                    </p>
+                }
+            </div>
+        </div>
+    }
+</section>

@@ -22,9 +22,23 @@ import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 
 import java.util.Map;
+import java.util.Set;
 
+/**
+ * @param activeExtensionInstances instance health per reachable extension service
+ * @param unreachableServiceIds registered services that did not answer the health request;
+ *                              the state of their instances is unknown, not empty
+ */
 public record HealthCheckData(ResourceProvider resourceProvider,
                               ActiveResources activeResources,
                               Map<String, ActiveCoreInstances> activeCoreInstances,
-                              Map<String, ExtensionInstanceHealth> activeExtensionInstances) {
+                              Map<String, ExtensionInstanceHealth> activeExtensionInstances,
+                              Set<String> unreachableServiceIds) {
+
+  public HealthCheckData(ResourceProvider resourceProvider,
+                         ActiveResources activeResources,
+                         Map<String, ActiveCoreInstances> activeCoreInstances,
+                         Map<String, ExtensionInstanceHealth> activeExtensionInstances) {
+    this(resourceProvider, activeResources, activeCoreInstances, activeExtensionInstances, Set.of());
+  }
 }

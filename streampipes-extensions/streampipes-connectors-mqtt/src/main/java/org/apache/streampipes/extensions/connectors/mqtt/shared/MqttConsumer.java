@@ -22,12 +22,17 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient;
-import com.hivemq.client.mqtt.mqtt3.message.connect.connack.Mqtt3ConnAck;
+import com.hivemq.client.mqtt.mqtt3.message.connect.Mqtt3Connect;
 import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish;
+import com.hivemq.client.mqtt.mqtt3.message.subscribe.Mqtt3Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CountDownLatch;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MqttConsumer extends MqttBase {
@@ -38,9 +43,16 @@ public class MqttConsumer extends MqttBase {
     private final InternalEventProcessor<byte[]> eventProcessor;
     private final AtomicBoolean running;
     private Mqtt3AsyncClient client;
+    private AtomicBoolean reconnectAllowed = new AtomicBoolean(false);
+    private final Duration startupTimeout;
 
     public MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer) {
+        this(mqttConfig, consumer, Duration.ofSeconds(30));
+    }
+
+    MqttConsumer(MqttConfig mqttConfig, InternalEventProcessor<byte[]> consumer, Duration startupTimeout) {
         super(mqttConfig);
+        this.startupTimeout = startupTimeout;
         this.eventProcessor = consumer;
         this.running = new AtomicBoolean(false);
     }
@@ -50,32 +62,41 @@ public class MqttConsumer extends MqttBase {
      *
      * @throws AdapterException when the connection or subscription fails
      */
-    public void start() throws AdapterException {
+    public synchronized void start() throws AdapterException {
         if (!this.running.compareAndSet(false, true)) {
             return;
         }
         try {
-            this.client = connectClient();
+            var allowReconnect = new AtomicBoolean(false);
+            this.reconnectAllowed = allowReconnect;
+            this.client = setupMqttClient(allowReconnect::get);
+            await(this.client.connect(Mqtt3Connect.builder().keepAlive(KEEP_ALIVE_SECONDS).build()), "connect");
             subscribeToTopic(this.client);
+            allowReconnect.set(true);
         } catch (InterruptedException e) {
-            this.running.set(false);
+            stop();
             Thread.currentThread().interrupt();
             throw new AdapterException("Interrupted while starting MQTT consumer", e);
         } catch (AdapterException e) {
-            this.running.set(false);
+            stop();
             throw e;
+        } catch (Exception e) {
+            stop();
+            throw new AdapterException("Failed to start MQTT consumer", e);
         }
     }
 
     /**
      * Stops the MQTT consumer and disconnects from the broker.
      */
-    public void stop() {
+    public synchronized void stop() {
         this.running.set(false);
+        this.reconnectAllowed.set(false);
         if (this.client == null) {
             return;
         }
         disconnectSafely();
+        this.client = null;
     }
 
     private void handleMessage(Mqtt3Publish publish) {
@@ -93,55 +114,27 @@ public class MqttConsumer extends MqttBase {
     }
 
 
-    private Mqtt3AsyncClient connectClient() throws AdapterException, InterruptedException {
+    private <T> T await(CompletableFuture<T> operation, String phase)
+            throws AdapterException, InterruptedException {
         try {
-            var mqttClient = super.setupMqttClient();
-            mqttClient.connectWith()
-                      .keepAlive(KEEP_ALIVE_SECONDS)
-                      .send()
-                      .whenComplete(this::logConnect)
-                      .get();
-            return mqttClient;
-        } catch (InterruptedException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new AdapterException("Error while connecting to MQTT broker", e);
-        }
-    }
-
-    private void logConnect(Mqtt3ConnAck cAck, Throwable throwable) {
-        if (throwable != null) {
-            LOG.error("MQTT connection failed", throwable);
-        } else {
-            LOG.info("MQTT connection established");
+            return operation.get(startupTimeout.toMillis(), TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            throw new AdapterException("Timed out waiting for MQTT " + phase, e);
+        } catch (ExecutionException e) {
+            throw new AdapterException("MQTT " + phase + " failed", e.getCause());
+        } finally {
+            if (!operation.isDone()) {
+                operation.cancel(true);
+            }
         }
     }
 
     private void subscribeToTopic(Mqtt3AsyncClient client) throws AdapterException, InterruptedException {
-        CountDownLatch subscribed = new CountDownLatch(1);
-        client.subscribeWith()
-              .topicFilter(super.mqttConfig.getTopic())
-              .qos(MqttQos.AT_LEAST_ONCE)
-              .callback(this::handleMessage)
-              .send()
-              .whenComplete((subAck, throwable) -> {
-                  logSubscribe(throwable);
-                  subscribed.countDown();
-              });
-        try {
-            subscribed.await();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw e;
-        }
-    }
-
-    private void logSubscribe(Throwable throwable) {
-        if (throwable != null) {
-            LOG.error("MQTT subscribe failed", throwable);
-        } else {
-            LOG.info("Successfully subscribed to topic {}", super.mqttConfig.getTopic());
-        }
+        var subscription = Mqtt3Subscribe.builder()
+                .topicFilter(super.mqttConfig.getTopic())
+                .qos(MqttQos.AT_LEAST_ONCE)
+                .build();
+        await(client.subscribe(subscription, this::handleMessage), "subscription");
     }
 
     private void processPayload(byte[] payload) throws InterruptedException{
@@ -150,7 +143,7 @@ public class MqttConsumer extends MqttBase {
 
     private void disconnectSafely() {
         try {
-            this.client.disconnect().whenComplete((result, throwable) -> {
+            this.client.disconnect().orTimeout(5, TimeUnit.SECONDS).whenComplete((result, throwable) -> {
                 if (throwable != null) {
                     LOG.error("Error disconnecting from MQTT", throwable);
                 }

@@ -33,11 +33,6 @@ import {
     MatColumnDef,
     MatHeaderCell,
     MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatTable,
     MatTableDataSource,
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
@@ -45,8 +40,6 @@ import {
     DatasetMetadata,
     DatalakeRestService,
     DatasetSummaryDto,
-    ExportProviderService,
-    ExportProviderSettings,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -62,11 +55,11 @@ import {
     SpAssetBrowserService,
     SpBasicViewComponent,
     SpBreadcrumbService,
-    SplitSectionComponent,
     SpPageHeaderComponent,
     SpSpinnerComponent,
     SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableCardDirective,
     SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
@@ -74,17 +67,12 @@ import {
 import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
 import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog/data-retention-dialog.component';
-import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
-import { DeleteExportProviderComponent } from '../../dialog/delete-export-provider/delete-export-provider-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { UserRole } from '../../../core/auth/user-role.enum';
 import { CsvImportDialogComponent } from '../../dialog/csv-import-dialog/csv-import-dialog.component';
 import {
-    FlexDirective,
-    FlexOrderDirective,
     LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
@@ -92,11 +80,12 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
 import { DatasetLastEventLabelComponent } from './dataset-last-event-label/dataset-last-event-label.component';
+import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-overview-card.component';
 
 @Component({
     selector: 'sp-dataset-overview',
@@ -107,7 +96,6 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         DatePipe,
         LayoutDirective,
         LayoutAlignDirective,
-        FlexDirective,
         MatIconButton,
         MatTooltip,
         MatIcon,
@@ -120,24 +108,20 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         MatCellDef,
         MatCell,
         SpSpinnerComponent,
-        FlexOrderDirective,
         NgStyle,
         StyleDirective,
         MatMenuItem,
         MatButton,
-        MatTable,
-        MatHeaderRowDef,
-        MatHeaderRow,
-        MatRowDef,
-        MatRow,
         TranslatePipe,
         SpTableComponent,
         SpBasicViewComponent,
         SpPageHeaderComponent,
         SpTableActionsDirective,
+        SpTableCardDirective,
         DatasetLastEventLabelComponent,
+        DatasetOverviewCardComponent,
         AsyncPipe,
-        SplitSectionComponent,
+        NgTemplateOutlet,
     ],
 })
 export class DatasetOverviewComponent
@@ -151,7 +135,6 @@ export class DatasetOverviewComponent
     private datasetRestService = inject(DatalakeRestService);
     private dialogService = inject(DialogService);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
@@ -163,16 +146,19 @@ export class DatasetOverviewComponent
         new MatTableDataSource([]);
     availableDatasets: DatasetOverviewEntry[] = [];
     filteredDatasets: DatasetOverviewEntry[] = [];
-    availableExportProvider: ExportProviderSettings[] = [];
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'dataset',
         resourceIdKey: 'elementId',
     };
 
-    dataSourceExport: MatTableDataSource<ExportProviderSettings> =
-        new MatTableDataSource([]);
+    readonly downloadDatasetActionOption: SpTableMultiActionOption = {
+        value: 'download',
+        label: this.translateService.instant('Download selected'),
+        icon: 'download',
+    };
 
     readonly bulkDatasetActionOptions: SpTableMultiActionOption[] = [
+        this.downloadDatasetActionOption,
         {
             value: 'truncate',
             label: this.translateService.instant('Truncate selected'),
@@ -185,9 +171,19 @@ export class DatasetOverviewComponent
         },
     ];
 
+    readonly readOnlyDatasetActionOptions: SpTableMultiActionOption[] = [
+        this.downloadDatasetActionOption,
+    ];
+
     executeSelectedDatasetAction(
         event: SpTableMultiActionExecuteEvent<DatasetOverviewEntry>,
     ): void {
+        if (event.action === 'download' && event.selectedRows.length) {
+            this.openMultiDownloadDialog(
+                event.selectedRows.map(dataset => dataset.name),
+            );
+            return;
+        }
         if (
             !this.writeAccess ||
             !event.selectedRows.length ||
@@ -234,15 +230,6 @@ export class DatasetOverviewComponent
         'actions',
     ];
 
-    displayedColumnsExport: string[] = [
-        'providertype',
-        'endpoint',
-        'bucket',
-        'editExportProvider',
-        'delete',
-        'test',
-    ];
-
     private localStorageService = inject(LocalStorageService);
 
     pageSize = this.localStorageService.get('paginator-page-size', 10);
@@ -250,6 +237,7 @@ export class DatasetOverviewComponent
     isAdmin = false;
     writeAccess = false;
     assetFilter$: Subscription;
+    private tableSubscriptions = new Subscription();
     currentTime = Date.now();
     currentFilterIds: Set<string> = new Set<string>();
 
@@ -277,7 +265,6 @@ export class DatasetOverviewComponent
             { label: 'Datasets' },
         ]);
         this.loadAvailableDatasets();
-        this.loadAvailableExportProvider();
         const currentUser = this.currentUserService.getCurrentUser();
         this.isAdmin = currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
         this.writeAccess =
@@ -289,25 +276,22 @@ export class DatasetOverviewComponent
         this.paginator = this.spTable.paginator;
         this.dataSource.sort = this.sort;
 
-        this.spTable.paginator.page.subscribe(event => {
-            this.pageIndex = event.pageIndex;
-            this.pageSize = event.pageSize;
-            this.receiveLastEventTimes(this.pageIndex);
-        });
+        this.tableSubscriptions.add(
+            this.spTable.paginator.page.subscribe(event => {
+                this.pageIndex = event.pageIndex;
+                this.pageSize = event.pageSize;
+            }),
+        );
+        this.tableSubscriptions.add(
+            this.dataSource.connect().subscribe(datasets => {
+                this.receiveLastEventTimes(datasets);
+            }),
+        );
     }
 
     ngOnDestroy(): void {
         this.assetFilter$?.unsubscribe();
-    }
-
-    loadAvailableExportProvider(): void {
-        this.availableExportProvider = [];
-        this.exportProviderRestService
-            .getAllExportProviders()
-            .subscribe(allExportProviders => {
-                this.availableExportProvider = allExportProviders;
-                this.dataSourceExport.data = this.availableExportProvider;
-            });
+        this.tableSubscriptions.unsubscribe();
     }
 
     loadAvailableDatasets(): void {
@@ -340,7 +324,6 @@ export class DatasetOverviewComponent
 
         this.dataSource.data = this.filteredDatasets;
         this.updatePaginatorAfterFiltering();
-        this.receiveLastEventTimes(this.pageIndex);
 
         setTimeout(() => {
             this.dataSource.paginator = this.paginator;
@@ -361,22 +344,6 @@ export class DatasetOverviewComponent
             this.pageIndex = maxPageIndex;
             this.paginator.pageIndex = maxPageIndex;
         }
-    }
-
-    createExportProvider(provider: ExportProviderSettings | null): void {
-        const dialogRef: DialogRef<ExportProviderComponent> =
-            this.dialogService.open(ExportProviderComponent, {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translateService.instant('New Export Provider'),
-                width: '50vw',
-                data: {
-                    provider: provider,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(() => {
-            this.loadAvailableExportProvider();
-        });
     }
 
     truncateDataset(datasetName: string): void {
@@ -417,43 +384,6 @@ export class DatasetOverviewComponent
         });
     }
 
-    deleteExportProvider(providerId: string): void {
-        const dialogRef: DialogRef<DeleteExportProviderComponent> =
-            this.dialogService.open(DeleteExportProviderComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: this.translateService.instant('Delete Export Provider'),
-                width: '70vw',
-                data: {
-                    providerId: providerId,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.loadAvailableExportProvider();
-            }
-        });
-    }
-    testExportProvider(providerId: string): void {
-        const dialogRef: DialogRef<ExportProviderConnectionTestComponent> =
-            this.dialogService.open(ExportProviderConnectionTestComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: this.translateService.instant(
-                    'Test Export Provider Connection',
-                ),
-                width: '70vw',
-                data: {
-                    providerId: providerId,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                this.loadAvailableExportProvider();
-            }
-        });
-    }
-
     openDownloadDialog(datasetName: string): void {
         this.dialogService.open(DataDownloadDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
@@ -462,6 +392,19 @@ export class DatasetOverviewComponent
             data: {
                 dataDownloadDialogModel: {
                     measureName: datasetName,
+                },
+            },
+        });
+    }
+
+    openMultiDownloadDialog(datasetNames: string[]): void {
+        this.dialogService.open(DataDownloadDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Download data'),
+            width: '50vw',
+            data: {
+                dataDownloadDialogModel: {
+                    measureNames: datasetNames,
                 },
             },
         });
@@ -507,14 +450,12 @@ export class DatasetOverviewComponent
         this.pageSize = event.pageSize;
     }
 
-    receiveLastEventTimes(pageIndex: number): void {
-        const start = pageIndex * this.pageSize;
-        const end = start + this.pageSize;
-        const datasets = this.filteredDatasets
-            .slice(start, end)
-            .filter(dataset => dataset.lastEvent === null);
-        if (datasets.length > 0) {
-            this.queryLastEventTimes(datasets);
+    receiveLastEventTimes(datasets: DatasetOverviewEntry[]): void {
+        const unloadedDatasets = datasets.filter(
+            dataset => dataset.lastEvent === null && !dataset.lastEventLoading,
+        );
+        if (unloadedDatasets.length > 0) {
+            this.queryLastEventTimes(unloadedDatasets);
         }
     }
     showPermissionsDialog(element: DatasetOverviewEntry): void {

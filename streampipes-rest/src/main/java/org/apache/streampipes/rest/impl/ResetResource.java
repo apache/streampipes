@@ -108,6 +108,8 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
       templateStorage.deleteElementById(template.getElementId());
     }
 
+    resetManagement.clearAuditLog();
+
     var message = Notifications.success("Reset of system successfully performed");
     return ok(message);
   }

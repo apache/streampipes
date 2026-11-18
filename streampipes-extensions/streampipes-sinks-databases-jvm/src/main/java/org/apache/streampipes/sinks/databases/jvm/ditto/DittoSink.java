@@ -33,26 +33,35 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import org.eclipse.ditto.client.DisconnectedDittoClient;
 import org.eclipse.ditto.client.DittoClient;
 import org.eclipse.ditto.client.DittoClients;
 import org.eclipse.ditto.client.configuration.BasicAuthenticationConfiguration;
 import org.eclipse.ditto.client.configuration.MessagingConfiguration;
 import org.eclipse.ditto.client.configuration.WebSocketMessagingConfiguration;
 import org.eclipse.ditto.client.messaging.AuthenticationProviders;
-import org.eclipse.ditto.client.messaging.internal.WebSocketMessagingProvider;
+import org.eclipse.ditto.client.messaging.MessagingProvider;
+import org.eclipse.ditto.client.messaging.MessagingProviders;
 import org.eclipse.ditto.client.twin.TwinThingHandle;
-import org.eclipse.ditto.model.things.Feature;
-import org.eclipse.ditto.model.things.Features;
-import org.eclipse.ditto.model.things.Thing;
-import org.eclipse.ditto.model.things.ThingId;
-import org.eclipse.ditto.signals.commands.things.exceptions.ThingNotAccessibleException;
+import org.eclipse.ditto.things.model.Feature;
+import org.eclipse.ditto.things.model.Thing;
+import org.eclipse.ditto.things.model.ThingId;
+import org.eclipse.ditto.things.model.signals.commands.exceptions.ThingNotAccessibleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class DittoSink implements IStreamPipesDataSink {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DittoSink.class);
+
+  private static final long REQUEST_TIMEOUT_SECONDS = 30;
 
   private static final String DITTO_API_ENDPOINT_KEY = "dittoApiEndpointKey";
   private static final String DITTO_USER_KEY = "dittoUserKey";
@@ -63,8 +72,9 @@ public class DittoSink implements IStreamPipesDataSink {
 
   private static final String SELECTED_FIELDS_KEY = "selectedFieldsKey";
 
+  private DisconnectedDittoClient disconnectedClient;
   private DittoClient client;
-  private String thingId;
+  private ThingId thingId;
   private String featureId;
 
   private List<String> selectedFields;
@@ -101,48 +111,60 @@ public class DittoSink implements IStreamPipesDataSink {
     String dittoUser = extractor.textParameter(DITTO_USER_KEY);
     String dittoPassword = extractor.secretValue(DITTO_PASSWORD_KEY);
 
-    this.thingId = extractor.textParameter(DITTO_THING_ID_KEY);
+    this.thingId = ThingId.of(extractor.textParameter(DITTO_THING_ID_KEY));
     this.featureId = extractor.textParameter(DITTO_FEATURE_ID_KEY);
     this.selectedFields = extractor.mappingPropertyValues(SELECTED_FIELDS_KEY);
 
     MessagingConfiguration configuration = WebSocketMessagingConfiguration.newBuilder()
         .endpoint(dittoApiEndpoint)
         .build();
-    WebSocketMessagingProvider provider = WebSocketMessagingProvider.newInstance(configuration,
-                                                                                 AuthenticationProviders
-            .basic(BasicAuthenticationConfiguration.newBuilder()
-                .username(dittoUser)
-                .password(dittoPassword)
-                .build()),
-                                                                                 Executors.newFixedThreadPool(4));
-    this.client = DittoClients.newInstance(provider);
+    MessagingProvider provider = MessagingProviders.webSocket(
+        configuration,
+        AuthenticationProviders.basic(BasicAuthenticationConfiguration.newBuilder()
+            .username(dittoUser)
+            .password(dittoPassword)
+            .build())
+    );
+    this.disconnectedClient = DittoClients.newInstance(provider);
+    this.client = await(disconnectedClient.connect());
 
-    TwinThingHandle twinHandle = client.twin().forId(ThingId.of(thingId));
+    TwinThingHandle twinHandle = client.twin().forId(thingId);
+    Thing thing = retrieveOrCreateThing(twinHandle);
 
+    boolean featurePresent = thing.getFeatures()
+        .flatMap(features -> features.getFeature(featureId))
+        .isPresent();
+    if (!featurePresent) {
+      LOG.info("Feature {} not present on thing {}, adding feature", featureId, thingId);
+      await(twinHandle.putFeature(Feature.newBuilder().withId(featureId).build()));
+    }
+  }
+
+  private Thing retrieveOrCreateThing(TwinThingHandle twinHandle) {
     try {
-      twinHandle.retrieve().get();
-    } catch (ExecutionException e) {
+      return await(twinHandle.retrieve());
+    } catch (SpRuntimeException e) {
       if (e.getCause() instanceof ThingNotAccessibleException) {
-        try {
-          client.twin().create(Thing.newBuilder().setId(ThingId.of(this.thingId)).setFeature(featureId).build()).get();
-        } catch (InterruptedException | ExecutionException ex) {
-          throw new SpRuntimeException(ex);
-        }
+        LOG.info("Thing {} does not exist, creating thing", thingId);
+        return await(client.twin().create(Thing.newBuilder()
+            .setId(thingId)
+            .setFeature(featureId)
+            .build()));
       }
-    } catch (InterruptedException e) {
-      throw new SpRuntimeException(e);
+      throw e;
     }
+  }
 
-    boolean present;
+  private <T> T await(CompletionStage<T> stage) {
     try {
-      present = twinHandle.retrieve().get().getFeatures().map(features -> features.getFeature(
-          featureId)).isPresent();
-    } catch (InterruptedException | ExecutionException e) {
+      return stage.toCompletableFuture().get(REQUEST_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       throw new SpRuntimeException(e);
-    }
-    if (!present) {
-      System.out.println("feature not present, adding feature...");
-      twinHandle.setFeatures(Features.newBuilder().set(Feature.newBuilder().withId(featureId).build()).build());
+    } catch (ExecutionException e) {
+      throw new SpRuntimeException(e.getCause());
+    } catch (TimeoutException e) {
+      throw new SpRuntimeException(e);
     }
   }
 
@@ -151,18 +173,18 @@ public class DittoSink implements IStreamPipesDataSink {
     Event reducedEvent = event.getSubset(selectedFields);
 
     Map<String, Object> raw = reducedEvent.getRaw();
-    for (String key : raw.keySet()) {
-      try {
-        client.twin().forId(ThingId.of(this.thingId)).forFeature(this.featureId).putProperty(key,
-            String.valueOf(raw.get(key))).get();
-      } catch (InterruptedException | ExecutionException e) {
-        throw new SpRuntimeException(e);
-      }
+    var featureHandle = client.twin().forId(thingId).forFeature(featureId);
+    for (Map.Entry<String, Object> entry : raw.entrySet()) {
+      await(featureHandle.putProperty(entry.getKey(), String.valueOf(entry.getValue())));
     }
   }
 
   @Override
   public void onPipelineStopped() {
-    this.client.destroy();
+    if (this.client != null) {
+      this.client.destroy();
+    } else if (this.disconnectedClient != null) {
+      this.disconnectedClient.destroy();
+    }
   }
 }

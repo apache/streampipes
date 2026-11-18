@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.audit.api;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,8 +35,18 @@ public interface AuditService extends AutoCloseable {
   <T extends AuditDetails> void record(AuditEventDefinition<T> definition, AuditOutcome outcome,
                                       String actor, String resourceId, T details);
 
+
+  default void clear() {
+    throw new IllegalStateException("Audit clearing unavailable");
+  }
+
   default AuditPage query(AuditQuery query) {
     throw new IllegalStateException("Audit reading unavailable");
+  }
+
+  default void export(AuditQuery query, AuditExportConfiguration configuration, OutputStream outputStream)
+      throws IOException {
+    throw new IllegalStateException("Audit exporting unavailable");
   }
 
   default Optional<AuditEntryDetails> find(UUID eventId, String locator) {
@@ -54,6 +66,11 @@ public interface AuditService extends AutoCloseable {
       @Override
       public <T extends AuditDetails> void record(AuditEventDefinition<T> definition, AuditOutcome outcome,
                                                   String actor, String resourceId, T details) {
+        // Explicitly disabled for deployments without audit configuration and legacy constructors.
+      }
+
+      @Override
+      public void clear() {
         // Explicitly disabled for deployments without audit configuration and legacy constructors.
       }
     };

@@ -689,6 +689,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getAuditRetentionSchedulerCron() {
+    return new StringEnvironmentVariable(Envs.SP_AUDIT_RETENTION_SCHEDULER_CRON);
+  }
+
+  @Override
   public IntEnvironmentVariable getAuditShutdownTimeoutSeconds() {
     return new IntEnvironmentVariable(Envs.SP_AUDIT_SHUTDOWN_TIMEOUT_SECONDS);
   }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 
+import org.apache.streampipes.audit.events.dashboard.DashboardAuditReporter;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
@@ -51,10 +52,12 @@ import java.util.Objects;
 @RequestMapping("/api/v3/datalake/dashboard")
 public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
+  private final DashboardAuditReporter dashboardAudit;
   private final IPermissionStorage permissionStorage;
   private final DashboardResourceManager dashboardResourceManager;
 
   public DataLakeDashboardResource(SpResourceManager resourceManager) {
+    this.dashboardAudit = new DashboardAuditReporter(resourceManager.getAuditService());
     this.permissionStorage = resourceManager.managePermissions().getDb();
     this.dashboardResourceManager = resourceManager.manageDashboards();
   }
@@ -103,6 +106,7 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
   public ResponseEntity<DashboardModel> modifyDashboard(@RequestBody DashboardModel dashboardModel) {
     dashboardResourceManager.update(dashboardModel);
+    dashboardAudit.edited(getAuthenticatedUserSid(), dashboardModel.getElementId());
     return ok(dashboardResourceManager.find(dashboardModel.getElementId()));
   }
 
@@ -110,6 +114,7 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardId, 'WRITE')")
   public ResponseEntity<Void> deleteDashboard(@PathVariable("dashboardId") String dashboardId) {
     dashboardResourceManager.delete(dashboardId);
+    dashboardAudit.deleted(getAuthenticatedUserSid(), dashboardId);
     return ok();
   }
 
@@ -117,6 +122,7 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<DashboardModel> createDashboard(@RequestBody DashboardModel dashboardModel) {
     var response = dashboardResourceManager.create(dashboardModel, getAuthenticatedUserSid());
+    dashboardAudit.created(getAuthenticatedUserSid(), response.getElementId());
     return ok(response);
   }
 

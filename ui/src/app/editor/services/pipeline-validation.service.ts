@@ -36,8 +36,9 @@ import { Connection } from '@jsplumb/browser-ui';
 export class PipelineValidationService {
     private jsplumbFactoryService = inject(JsplumbFactoryService);
 
-    errorMessages: any = [];
+    errorMessages: UserErrorMessage[] = [];
     pipelineValid = false;
+    private remoteValidationError?: UserErrorMessage;
 
     availableErrorMessages: UserErrorMessage[] = [
         new UserErrorMessage(
@@ -71,6 +72,9 @@ export class PipelineValidationService {
         previewConfig: boolean,
         pm?: PipelineModificationMessage,
     ) {
+        if (pm) {
+            this.remoteValidationError = undefined;
+        }
         const jsplumbBridge =
             this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
         const streamInAssembly = this.isStreamInAssembly(rawPipelineModel);
@@ -112,15 +116,32 @@ export class PipelineValidationService {
             this.errorMessages.push(this.availableErrorMessages[5]);
         }
 
+        if (this.remoteValidationError) {
+            this.errorMessages.push(this.remoteValidationError);
+        }
+
         this.pipelineValid =
             streamInAssembly &&
             actionInAssembly &&
             allElementsConnected &&
             onlyOnePipelineCreated &&
             allElementsConfigured &&
-            (pm ? pm.pipelineValid : true);
+            (pm ? pm.pipelineValid : true) &&
+            !this.remoteValidationError;
 
         return this.pipelineValid;
+    }
+
+    reportRemoteValidationError(title: string, content: string): void {
+        const previousRemoteValidationError = this.remoteValidationError;
+        this.remoteValidationError = new UserErrorMessage(title, content);
+        this.errorMessages = [
+            ...this.errorMessages.filter(
+                error => error !== previousRemoteValidationError,
+            ),
+            this.remoteValidationError,
+        ];
+        this.pipelineValid = false;
     }
 
     isEmptyPipeline(rawPipelineModel) {

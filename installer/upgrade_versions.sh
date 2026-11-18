@@ -30,6 +30,11 @@ FILES=(
   "./k8s/Chart.yaml"
   "./k8s/Chart.yaml"
   "./k8s/README.md"
+  # all-in-one
+  "./all-in-one/Dockerfile"
+  "./all-in-one/README.md"
+  # root README (try-it-out command)
+  "../README.md"
 )
 
 if [ "$#" -gt 1 ]; then

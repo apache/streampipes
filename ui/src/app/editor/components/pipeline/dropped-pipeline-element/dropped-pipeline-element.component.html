@@ -62,12 +62,18 @@
         [pipelineElement]="pipelineElementConfig.payload"
     ></sp-pipeline-element>
 </div>
-<div
-    class="editor-pe-info"
-    [ngClass]="'pe-info-' + pipelineElementConfig.type"
-    matTooltip="{{ pipelineElementConfig.payload.name }}"
->
-    {{ pipelineElementConfig.payload.name }}
+<div class="editor-pe-caption">
+    <div
+        class="editor-pe-info"
+        [ngClass]="'pe-info-' + pipelineElementConfig.type"
+        matTooltip="{{ pipelineElementConfig.payload.name }}"
+    >
+        {{ pipelineElementConfig.payload.name }}
+    </div>
+    <sp-live-preview-badge
+        [elementId]="pipelineElementConfig.payload.elementId"
+        [elementName]="pipelineElementConfig.payload.name"
+    ></sp-live-preview-badge>
 </div>
 @if (metricsInfo) {
     <sp-pipeline-element-statistics
@@ -99,16 +105,4 @@
         "
     >
     </sp-pipeline-element-options>
-}
-@if (
-    previewModeActive &&
-    pipelinePreview.elementIdMappings[
-        pipelineElementConfig.payload.elementId
-    ] !== undefined
-) {
-    <sp-pipeline-element-preview
-        [pipelinePreview]="pipelinePreview"
-        [elementId]="pipelineElementConfig.payload.elementId"
-    >
-    </sp-pipeline-element-preview>
 }

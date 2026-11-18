@@ -259,4 +259,40 @@ export class PipelineBtns {
     public static pipelineNameCells() {
         return cy.dataCy('pipeline-name-cell', { timeout: 10000 });
     }
+
+    public static livePreviewToggle() {
+        return cy.dataCy('sp-editor-toggle-live-preview');
+    }
+
+    public static livePreviewPanel() {
+        return cy.dataCy('sp-live-preview-panel', { timeout: 30000 });
+    }
+
+    public static livePreviewClose() {
+        return cy.dataCy('sp-live-preview-close');
+    }
+
+    /**
+     * Status badge below a pipeline element on the canvas, identified by the element name
+     * in lower case with underscores, e.g. 'field_renamer'.
+     */
+    public static livePreviewBadge(elementName: string) {
+        return cy.dataCy(`sp-live-preview-badge-${elementName}`, {
+            timeout: 30000,
+        });
+    }
+
+    /** Row of a pipeline element in the live preview panel's element list. */
+    public static livePreviewRow(elementName: string) {
+        return cy.dataCy(`sp-live-preview-row-${elementName}`);
+    }
+
+    public static livePreviewDetailTable() {
+        return cy.dataCy('sp-live-preview-detail-table', { timeout: 30000 });
+    }
+
+    /** Output values the selected element changed compared to its input. */
+    public static livePreviewChangedValues() {
+        return cy.dataCy('sp-live-preview-changed-value', { timeout: 30000 });
+    }
 }

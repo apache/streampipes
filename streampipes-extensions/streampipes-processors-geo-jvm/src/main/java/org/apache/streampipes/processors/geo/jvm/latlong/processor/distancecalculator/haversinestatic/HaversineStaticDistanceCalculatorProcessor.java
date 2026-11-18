@@ -38,10 +38,9 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.units.StandardUnits;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
-
-import java.net.URI;
 
 public class HaversineStaticDistanceCalculatorProcessor implements IStreamPipesDataProcessor {
 
@@ -87,8 +86,7 @@ public class HaversineStaticDistanceCalculatorProcessor implements IStreamPipesD
                                                                                 DISTANCE_RUNTIME_NAME
                                                                             )
                                                                             .semanticType(SO.NUMBER)
-                                                                            .measurementUnit(URI.create(
-                                                                                "http://qudt.org/vocab/unit#Kilometer"))
+                                                                            .measurementUnit(StandardUnits.KILOMETER)
                                                                             .build())
                                 )
                                 .build()

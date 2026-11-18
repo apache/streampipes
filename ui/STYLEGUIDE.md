@@ -162,6 +162,91 @@ In some views it might make sense to organize the layout based on panels.
 Use level to control the size of the section header and margins.
 In views with enough space, we use level=2. In dialogs and in dense layouts, we use level=3.
 
+#### Status
+
+Use `sp-status-label` for the state of a resource, such as running or stopped. Hide
+the text where space is tight, for example in table cells: the label then becomes
+the tooltip and accessible name of the symbol. Use `sp-label` for values such as
+counts, and for tags such as asset labels, which have no state.
+
+```html
+<sp-status-label tone="success" [label]="A"></sp-status-label>
+<sp-status-label
+  tone="success"
+  [label]="A"
+  [showLabel]="false"
+></sp-status-label>
+```
+
+#### Overview cards
+
+Use `sp-overview-card` for card views of overview pages. The shell provides the
+title, description and surface; feature cards project their own icon, content and
+actions. Unused slots collapse. The icon sits beside the title on the right. All
+actions live in the footer: labelled `cardFooter` actions on the left, icon-only
+`cardFooterActions` such as the preview and the action menu on the right. Use
+`titleClickable` and `titleClick` when the title opens the resource, like a table
+row does. Pass the module colour as `accentColor`. On hover and keyboard focus,
+the card tints its border and icon and colours the title, without a shadow. A
+checkbox in the `cardSelect` slot sits before the title; while it is checked, the
+card shows a primary border and tint like a selected table row.
+
+```html
+<sp-overview-card [title]="A" [description]="B">
+  <img cardIcon alt="" />
+  <sp-overview-card-facts>
+    <div spOverviewCardFact [label]="E">
+      <sp-status-label tone="success" [label]="C"></sp-status-label>
+    </div>
+  </sp-overview-card-facts>
+  <ng-container cardAssetContext></ng-container>
+  <button cardFooter type="button" mat-flat-button class="btn-tertiary">
+    <mat-icon aria-hidden="true">edit</mat-icon>
+    <span>D</span>
+  </button>
+  <button cardFooterActions mat-icon-button>
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</sp-overview-card>
+```
+
+To add a card view to an `sp-table`, declare a `spTableCard` template. It adds the
+cards toggle and renders the current page in an `sp-overview-card-grid`. Its
+`actions`, `assetContext` and `selection` context values are the table's cell
+templates, so the feature card link, the action menu and multi-select stay the
+same in every view. The selection checkbox only renders with
+`showSelectionCheckboxes`; the selection and its toolbar are shared by all view
+modes. On cards, the
+asset context stays on one line and summarizes further entries as `+N`. Set
+`rememberViewMode` on overview pages to keep the chosen view mode and grouping in
+local storage. The setting is shared, so cards chosen on one overview page also
+open the others in cards; a table that lacks the mode shows its list.
+
+```html
+<ng-template
+  spTableCard
+  let-row
+  let-actions="actions"
+  let-assetContext="assetContext"
+  let-select="selection"
+>
+  <sp-overview-card [title]="row.name">
+    <ng-container
+      cardSelect
+      *ngTemplateOutlet="select; context: { $implicit: row }"
+    ></ng-container>
+    <ng-container
+      cardFooterActions
+      *ngTemplateOutlet="actions; context: { $implicit: row }"
+    ></ng-container>
+    <ng-container
+      cardAssetContext
+      *ngTemplateOutlet="assetContext; context: { $implicit: row }"
+    ></ng-container>
+  </sp-overview-card>
+</ng-template>
+```
+
 #### Buttons
 
 Buttons are defined as follows:
@@ -179,6 +264,7 @@ There are different forms of buttons that we can use:
 
 - Primary buttons are rendered when no other CSS classes are applied. Primary buttons serve to identify an action.
 - Secondary buttons are applied with the `btn-secondary` css class (for legacy reasons, also `mat-basic` is possible)
+- Tertiary buttons are applied with the `btn-tertiary` css class. They are transparent until hovered. Use them for actions that repeat many times on a page, such as card footers, where tinted buttons would compete with the content.
 - Warning/Error buttons are applied with the `btn-warn` css class.
 
 Smaller buttons can be applied with the `small-button` css class. Use small buttons only in dense layouts.

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest;
 
+import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.model.configuration.SystemNotificationConfig;
@@ -40,10 +41,12 @@ import static org.mockito.Mockito.when;
 class ResetManagementTest {
 
   private final ISpCoreConfigurationStorage configStorage = mock(ISpCoreConfigurationStorage.class);
+  private final AuditService auditService = mock(AuditService.class);
 
   ResetManagement newResetManagement(SpCoreConfiguration storedConfig) {
     var resourceManager = mock(SpResourceManager.class);
     when(resourceManager.getCoreConfigurationStorage()).thenReturn(configStorage);
+    when(resourceManager.getAuditService()).thenReturn(auditService);
     when(configStorage.get()).thenReturn(storedConfig);
     return new ResetManagement(null, null, null, null, null, resourceManager, null, null);
   }
@@ -78,5 +81,12 @@ class ResetManagementTest {
   void testDisableSystemNotification_noGeneralConfig_storesNothing() {
     newResetManagement(new SpCoreConfiguration()).disableSystemNotification();
     verify(configStorage, never()).updateElement(any());
+  }
+
+  @Test
+  void testClearAuditLog_clearsPersistedAuditEvents() {
+    newResetManagement(null).clearAuditLog();
+
+    verify(auditService).clear();
   }
 }

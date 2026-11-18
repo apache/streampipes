@@ -33,6 +33,7 @@ public class PipelineUpdateInfo {
   private String pipelineName;
   private boolean canAutoMigrate;
   private String migrationInfo;
+  private boolean validationUnavailable;
   private Map<String, List<PipelineElementValidationInfo>> validationInfos;
   private List<ChartSchemaUpdateInfo> chartSchemaUpdateInfos;
 
@@ -71,6 +72,14 @@ public class PipelineUpdateInfo {
 
   public void setMigrationInfo(String migrationInfo) {
     this.migrationInfo = migrationInfo;
+  }
+
+  public boolean isValidationUnavailable() {
+    return validationUnavailable;
+  }
+
+  public void setValidationUnavailable(boolean validationUnavailable) {
+    this.validationUnavailable = validationUnavailable;
   }
 
   public Map<String, List<PipelineElementValidationInfo>> getValidationInfos() {

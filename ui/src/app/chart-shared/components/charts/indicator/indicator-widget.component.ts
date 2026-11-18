@@ -44,6 +44,7 @@ import {
     IndicatorAppearanceConfig,
     IndicatorChartWidgetModel,
 } from './model/indicator-chart-widget.model';
+import { ChartNumberFormatService } from '../../../services/formatting';
 
 @Component({
     selector: 'sp-data-explorer-indicator-widget',
@@ -71,6 +72,7 @@ export class IndicatorWidgetComponent
     private latestData: SpQueryResult[] = [];
     private readonly locale = inject(LOCALE_ID);
     private readonly translateService = inject(TranslateService);
+    private readonly numberFormatService = inject(ChartNumberFormatService);
 
     ngOnInit(): void {
         super.ngOnInit();
@@ -452,9 +454,15 @@ export class IndicatorWidgetComponent
 
     private formatValue(value: unknown): string {
         if (typeof value === 'number') {
-            return new Intl.NumberFormat(this.locale, {
-                maximumFractionDigits: 3,
-            }).format(value);
+            return this.numberFormatService.format(
+                value,
+                this.numberFormatService.resolveOptions(
+                    this.appearanceConfig,
+                    this.resolveField(
+                        this.dataExplorerWidget.visualizationConfig.valueField,
+                    ),
+                ),
+            );
         }
 
         if (typeof value === 'boolean') {

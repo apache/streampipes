@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.commons.exceptions;
 
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
+
 public class SpConfigurationException extends Exception {
 
   /**
@@ -46,5 +50,36 @@ public class SpConfigurationException extends Exception {
    */
   public SpConfigurationException(String message, Throwable cause) {
     super(message, cause);
+  }
+
+  /**
+   * A copy of this exception that any JSON mapper can serialize: the same message and stack trace, and each cause
+   * replaced by a plain {@link Exception} carrying the cause's class name and message.
+   *
+   * <p>An extension service sends this exception to the core when resolving runtime options fails. Serialized as it
+   * is, a cause such as {@link java.security.cert.CertPathValidatorException} - in the chain of every TLS connection
+   * to a server with an untrusted certificate - holds a {@code sun.security} certificate path that Jackson cannot
+   * access on current JDKs. The whole response then fails and the UI shows only "An unknown error has occurred"
+   * instead of the adapter's message.</p>
+   *
+   * @return a copy safe to serialize
+   */
+  public SpConfigurationException toSerializable() {
+    var copy = new SpConfigurationException(getMessage(),
+        plainCopy(getCause(), Collections.newSetFromMap(new IdentityHashMap<>())));
+    copy.setStackTrace(getStackTrace());
+    return copy;
+  }
+
+  private static Exception plainCopy(Throwable cause, Set<Throwable> seen) {
+    if (cause == null || !seen.add(cause)) {
+      return null;
+    }
+    var message = cause.getMessage() == null
+        ? cause.getClass().getName()
+        : cause.getClass().getName() + ": " + cause.getMessage();
+    var copy = new Exception(message, plainCopy(cause.getCause(), seen));
+    copy.setStackTrace(cause.getStackTrace());
+    return copy;
   }
 }

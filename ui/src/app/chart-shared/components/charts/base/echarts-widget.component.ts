@@ -30,7 +30,7 @@ import {
 import { SpEchartsRenderer } from '../../../models/dataview-dashboard.model';
 import { BaseDataExplorerWidgetDirective } from './base-data-explorer-widget.directive';
 import { ECharts } from 'echarts/core';
-import { EChartsOption } from 'echarts';
+import { EChartsOption, ToolboxComponentOption } from 'echarts';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ResizeEchartsService } from '../../../services/resize-echarts.service';
@@ -69,6 +69,7 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     renderSubject$: Subscription;
     resizeEcharts$: Subscription;
     renderer: SpEchartsRenderer<T>;
+    toolboxHovered = false;
 
     resizeEchartsService = inject(ResizeEchartsService);
 
@@ -121,30 +122,36 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
             this.showInvalidConfiguration = false;
             const effectiveWidgetConfig =
                 this.getWidgetConfigWithDashboardOverrides();
-            this.option = {
+            const option: EChartsOption = {
                 ...this.renderer.render(spQueryResult, effectiveWidgetConfig, {
                     width: this.currentWidth,
                     height: this.currentHeight,
+                    toolboxOverlay: this.usesHoverToolbox,
                 }),
             };
             if (this.dashboardChartOverrides?.hideToolbox) {
-                const toolbox = this.option['toolbox'];
+                const toolbox = option.toolbox;
                 if (toolbox) {
                     (Array.isArray(toolbox) ? toolbox : [toolbox]).forEach(
                         tb => (tb.show = false),
                     );
                 }
+            } else if (this.usesHoverToolbox) {
+                option.toolbox = this.makeHoverToolbox(
+                    option.toolbox,
+                    this.toolboxHovered,
+                );
             }
             if (this.kioskMode) {
                 ['toolbox', 'visualMap'].forEach(key => {
-                    const item = this.option[key];
+                    const item = option[key];
                     if (item) {
                         (Array.isArray(item) ? item : [item]).forEach(
                             obj => (obj.show = false),
                         );
                     }
                 });
-                Object.assign(this.option, {
+                Object.assign(option, {
                     grid: {
                         left: 60,
                         right: 60,
@@ -153,13 +160,57 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
                     },
                 });
             }
+            this.option = option;
         } else {
             this.showInvalidConfiguration = true;
         }
     }
 
+    /**
+     * On dashboards the toolbox is not part of the layout: the chart keeps
+     * the space, and the toolbox appears in the top right corner while the
+     * pointer is over the chart. The chart editor keeps it always visible.
+     */
+    setToolboxHovered(hovered: boolean): void {
+        this.toolboxHovered = hovered;
+        if (!this.usesHoverToolbox || !this.option || !this.eChartsInstance) {
+            return;
+        }
+        const toolbox = this.makeHoverToolbox(this.option.toolbox, hovered);
+        // Mutate the bound options instead of replacing them: a new options
+        // object makes ngx-echarts re-apply everything without merging.
+        this.option.toolbox = toolbox;
+        this.eChartsInstance.setOption({ toolbox });
+    }
+
+    private get usesHoverToolbox(): boolean {
+        return (
+            !this.dataViewMode &&
+            !this.kioskMode &&
+            !this.previewMode &&
+            !this.dashboardChartOverrides?.hideToolbox &&
+            this.dataExplorerWidget.baseAppearanceConfig?.chartAppearance
+                ?.showToolbox !== false
+        );
+    }
+
+    /**
+     * The rendered toolbox (features and overlay placement included) with
+     * its visibility set to the hover state.
+     */
+    private makeHoverToolbox(
+        toolbox: EChartsOption['toolbox'],
+        visible: boolean,
+    ): ToolboxComponentOption {
+        const rendered = Array.isArray(toolbox) ? toolbox[0] : toolbox;
+        return { ...rendered, show: visible };
+    }
+
     private getWidgetConfigWithDashboardOverrides(): T {
-        if (!this.dashboardChartOverrides?.hideToolbox) {
+        if (
+            !this.dashboardChartOverrides?.hideToolbox &&
+            !this.usesHoverToolbox
+        ) {
             return this.dataExplorerWidget;
         }
 

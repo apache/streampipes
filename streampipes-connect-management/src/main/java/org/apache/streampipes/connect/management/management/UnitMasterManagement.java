@@ -20,70 +20,52 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
-import org.apache.streampipes.units.UnitProvider;
+import org.apache.streampipes.units.UnknownMeasurementUnitException;
+import org.apache.streampipes.units.catalog.UnitCatalog;
+import org.apache.streampipes.units.model.MeasurementUnit;
 
-import com.github.jqudt.Unit;
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class UnitMasterManagement {
 
-  private static final Logger logger = LoggerFactory.getLogger(UnitMasterManagement.class);
-  private Gson gson;
+  private final Gson gson;
+  private final UnitCatalog catalog;
 
   public UnitMasterManagement() {
-    gson = new Gson();
+    this(UnitCatalog.builtIn());
+  }
+
+  public UnitMasterManagement(UnitCatalog catalog) {
+    this.gson = new Gson();
+    this.catalog = catalog;
   }
 
   public String getFittingUnits(UnitDescription unitDescription) throws AdapterException {
-    List<UnitDescription> unitDescriptionList = new LinkedList<>();
-    Unit unit;
-
     if (unitDescription.getResource() == null) {
       throw new AdapterException("The resource cannot be null");
     }
+
+    MeasurementUnit unit;
     try {
-      unit = UnitProvider.INSTANCE.getUnit(unitDescription.getResource());
-    } catch (IllegalStateException e) {
-      throw new AdapterException("Invalid URI: " + unitDescription.getResource());
-    }
-    List<Unit> units = UnitProvider.INSTANCE.getUnitsByType(unit.getType());
-
-
-    for (Iterator iter = units.iterator(); iter.hasNext(); ) {
-      Unit unitTmp = (Unit) iter.next();
-      try {
-        UnitDescription unitDescriptionTmp = new UnitDescription(unitTmp.getResource().toString(), unitTmp.getLabel());
-        unitDescriptionList.add(unitDescriptionTmp);
-      } catch (NullPointerException e) {
-        logger.error("Unit has no resource and/or Label");
-      }
+      unit = catalog.get(unitDescription.getResource());
+    } catch (UnknownMeasurementUnitException e) {
+      throw new AdapterException("Unknown measurement unit: " + unitDescription.getResource());
     }
 
-    return gson.toJson(unitDescriptionList);
+    var fittingUnits = toDescriptions(catalog.getUnitsOfKind(unit.type()));
+    return gson.toJson(fittingUnits);
   }
 
-  public List<UnitDescription> getAllUnitDescriptions(){
-    List<UnitDescription> unitDescriptionList = new LinkedList<>();
-
-    List<Unit> units = UnitProvider.INSTANCE.getAvailableUnits();
-
-    for (Unit unit : units) {
-      try {
-        UnitDescription unitDescriptionTmp =
-            new UnitDescription(unit.getResource().toString(), unit.getLabel());
-        unitDescriptionList.add(unitDescriptionTmp);
-      } catch (NullPointerException e) {
-        logger.error("Unit has no resource and/or Label");
-      }
-    }
-
-    return unitDescriptionList;
+  public List<UnitDescription> getAllUnitDescriptions() {
+    return toDescriptions(catalog.getUnits());
   }
 
+  private List<UnitDescription> toDescriptions(List<MeasurementUnit> units) {
+    return units
+        .stream()
+        .map(unit -> new UnitDescription(unit.resource().toString(), unit.label()))
+        .toList();
+  }
 }

@@ -19,15 +19,15 @@ package org.apache.streampipes.storage.couchdb.impl.explorer;
 
 import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class ChartStorageImpl extends DefaultCrudStorage<DataExplorerWidgetModel>
     implements IChartStorage {
 
-  public ChartStorageImpl() {
+  public ChartStorageImpl(CouchDbStores stores) {
     super(
-        () -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
+        stores.gson("dataexplorerwidget"),
         DataExplorerWidgetModel.class
     );
   }

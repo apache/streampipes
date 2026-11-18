@@ -16,8 +16,15 @@
  *
  */
 
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ChangeDetectionStrategy,
+    inject,
+} from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
+import { ChartNumberFormatService } from '../../../services/formatting';
+import { WidgetNumberAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { TrafficLightWidgetModel } from './model/traffic-light-widget.model';
 import {
     DataExplorerField,
@@ -61,6 +68,8 @@ export class TrafficLightWidgetComponent
     selectedUpperLimit: boolean;
     selectedThreshold: number;
     selectedToShowValue: boolean;
+
+    private readonly numberFormatService = inject(ChartNumberFormatService);
 
     activeClass = 'red';
     displayed_value: string;
@@ -265,7 +274,14 @@ export class TrafficLightWidgetComponent
             return '';
         }
 
-        return value.toFixed(2);
+        return this.numberFormatService.format(
+            value,
+            this.numberFormatService.resolveOptions(
+                this.dataExplorerWidget
+                    .baseAppearanceConfig as WidgetNumberAppearanceConfig,
+                this.resolveField(this.selectedFieldToObserve),
+            ),
+        );
     }
 
     private clamp(value: number, min: number, max: number): number {

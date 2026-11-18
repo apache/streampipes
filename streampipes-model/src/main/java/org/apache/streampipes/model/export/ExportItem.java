@@ -23,6 +23,7 @@ public class ExportItem {
   private String resourceId;
   private String label;
   private boolean selected;
+  private String category;
 
   public ExportItem() {
   }
@@ -31,6 +32,14 @@ public class ExportItem {
     this.resourceId = resourceId;
     this.label = label;
     this.selected = selected;
+  }
+
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
   }
 
   public String getResourceId() {

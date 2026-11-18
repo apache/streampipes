@@ -19,20 +19,18 @@
 package org.apache.streampipes.storage.couchdb.impl.core;
 
 import org.apache.streampipes.model.shared.api.Storable;
-
-import org.lightcouch.CouchDbClient;
+import org.apache.streampipes.storage.couchdb.CouchDbStore;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class DefaultViewCrudStorage<T extends Storable> extends DefaultCrudStorage<T> {
 
   protected final String viewName;
 
-  public DefaultViewCrudStorage(Supplier<CouchDbClient> couchDbClientSupplier,
+  public DefaultViewCrudStorage(CouchDbStore store,
                                 Class<T> clazz,
                                 String viewName) {
-    super(couchDbClientSupplier, clazz);
+    super(store, clazz);
     this.viewName = viewName;
   }
 

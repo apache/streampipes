@@ -19,7 +19,6 @@
 import { NgStyle } from '@angular/common';
 import {
     Component,
-    LOCALE_ID,
     OnInit,
     inject,
     ChangeDetectionStrategy,
@@ -42,10 +41,13 @@ import {
 import { ResultLabelService } from '../../../services/result-label.service';
 import {
     clampValue,
-    formatWidgetNumber,
     resolveResponsiveFontSize,
     scaleResponsiveValue,
 } from '../../../services/widget-render.utils';
+import {
+    ChartNumberFormatService,
+    ChartTimeFormatService,
+} from '../../../services/formatting';
 
 interface ValueCardView {
     id: string;
@@ -77,9 +79,10 @@ export class ValueCardWidgetComponent
 
     private hasReceivedData = false;
     private latestData: SpQueryResult[] = [];
-    private readonly locale = inject(LOCALE_ID);
     private readonly chartRegistry = inject(ChartRegistry);
     private readonly resultLabelService = inject(ResultLabelService);
+    private readonly numberFormatService = inject(ChartNumberFormatService);
+    private readonly timeFormatService = inject(ChartTimeFormatService);
 
     ngOnInit(): void {
         super.ngOnInit();
@@ -283,7 +286,7 @@ export class ValueCardWidgetComponent
             label: queryConfig
                 ? this.resultLabelService.resolveLabel(queryConfig, field)
                 : (field.runtimeName ?? field.fullDbName),
-            value: this.formatValue(firstRow[fieldIndex]),
+            value: this.formatValue(firstRow[fieldIndex], field),
         };
     }
 
@@ -292,16 +295,18 @@ export class ValueCardWidgetComponent
             ?.rows[0];
     }
 
-    private formatValue(value: unknown): string {
+    private formatValue(value: unknown, field: DataExplorerField): string {
         if (value === null || value === undefined || value === '') {
             return '-';
         }
 
         if (typeof value === 'number' && Number.isFinite(value)) {
-            return formatWidgetNumber(
+            return this.numberFormatService.format(
                 value,
-                this.locale,
-                this.appearanceConfig.numberFormat?.decimals,
+                this.numberFormatService.resolveOptions(
+                    this.appearanceConfig,
+                    this.resolveField(field),
+                ),
             );
         }
 
@@ -326,10 +331,19 @@ export class ValueCardWidgetComponent
             return undefined;
         }
 
-        return new Intl.DateTimeFormat(this.locale, {
-            dateStyle: 'medium',
-            timeStyle: 'medium',
-        }).format(new Date(firstTimestamp));
+        return this.timeFormatService.formatTimestamp(
+            firstTimestamp,
+            this.visibleTimeSpan,
+        );
+    }
+
+    /** The dashboard or chart time window, which decides how much date detail is shown. */
+    private get visibleTimeSpan(): number | undefined {
+        const settings = this.timeSettings;
+        return settings?.startTime !== undefined &&
+            settings?.endTime !== undefined
+            ? settings.endTime - settings.startTime
+            : undefined;
     }
 
     private getFirstTimestamp(queryResult: SpQueryResult): number | undefined {

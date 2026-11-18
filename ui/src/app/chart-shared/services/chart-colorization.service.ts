@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import {
     TimeSeriesChartVisConfig,
@@ -25,14 +25,33 @@ import {
 import { TagValue } from '../models/dataset.model';
 import { ColorMappingService } from './color-mapping.service';
 
+/** Where a grouped series sits among the series of its chart. */
+export interface SeriesPosition {
+    /** Index of the group (tag value) within the field's groups. */
+    groupIndex: number;
+    /** Number of groups of the field. */
+    groupCount: number;
+    /** Index of the field among the chart's plotted fields. */
+    fieldIndex: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ChartColorizationService {
-    constructor(private colorMappingService: ColorMappingService) {}
+    private colorMappingService = inject(ColorMappingService);
 
+    /**
+     * The colour of one series. Fields without grouping keep their configured
+     * colour. Grouped fields use the custom mapping when configured, otherwise
+     * the ordered chart palette: the n-th group gets the n-th palette colour,
+     * and further fields continue after the groups of the previous field, so
+     * every series of a chart is distinct and the same group keeps its colour
+     * across charts of the same dataset.
+     */
     makeColor(
         visualizationConfig: TimeSeriesChartVisConfig,
         field: DataExplorerField,
         tag?: TagValue,
+        position?: SeriesPosition,
     ): string {
         const fieldKey = field.fullDbName + field.sourceIndex;
         const baseColor = visualizationConfig.chosenColor[fieldKey];
@@ -51,13 +70,11 @@ export class ChartColorizationService {
         ) {
             return (
                 this.findMapping(fieldMappings, tag, groupKey)?.color ??
-                this.colorMappingService.getDefaultColor(groupKey)
+                this.paletteColor(groupKey, position)
             );
         }
 
-        return this.colorMappingService.getDefaultColor(
-            `${fieldKey}:${groupKey}`,
-        );
+        return this.paletteColor(groupKey, position);
     }
 
     findLabel(
@@ -79,6 +96,18 @@ export class ChartColorizationService {
         );
 
         return mapping?.label?.trim() ? mapping.label : undefined;
+    }
+
+    private paletteColor(
+        groupKey: string,
+        position: SeriesPosition | undefined,
+    ): string {
+        if (!position) {
+            return this.colorMappingService.getDefaultColor(groupKey);
+        }
+        return this.colorMappingService.getPaletteColor(
+            position.fieldIndex * position.groupCount + position.groupIndex,
+        );
     }
 
     private findMapping(

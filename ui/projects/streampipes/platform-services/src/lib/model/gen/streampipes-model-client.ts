@@ -247,9 +247,6 @@ export class UserAccount extends Principal {
     language: string;
     lastLoginAtMillis: number;
     password: string;
-    preferredDataProcessors: string[];
-    preferredDataSinks: string[];
-    preferredDataStreams: string[];
     provider: string;
     userApiTokens: UserApiToken[];
 
@@ -268,15 +265,6 @@ export class UserAccount extends Principal {
         instance.language = data.language;
         instance.lastLoginAtMillis = data.lastLoginAtMillis;
         instance.password = data.password;
-        instance.preferredDataProcessors = __getCopyArrayFn(
-            __identity<string>(),
-        )(data.preferredDataProcessors);
-        instance.preferredDataSinks = __getCopyArrayFn(__identity<string>())(
-            data.preferredDataSinks,
-        );
-        instance.preferredDataStreams = __getCopyArrayFn(__identity<string>())(
-            data.preferredDataStreams,
-        );
         instance.provider = data.provider;
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(
             data.userApiTokens,

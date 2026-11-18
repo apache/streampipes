@@ -43,7 +43,7 @@ services:
             spnet:
 
     couchdb:
-        image: couchdb:2.3.1
+        image: couchdb:3.5.3
         volumes:
             - couchdb:/opt/couchdb/data
         logging: *default-logging

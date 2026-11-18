@@ -111,6 +111,8 @@ export class AdapterStartedDialog implements OnInit {
      */
     @Input() saveInDataLake: boolean;
 
+    @Input() dataLakeDatasetName = '';
+
     /**
      * Timestamp field of event. Required when storing events in the data lake.
      */
@@ -441,14 +443,15 @@ export class AdapterStartedDialog implements OnInit {
             name: pipelineId,
         });
 
+        const datasetName = this.getDatasetName(adapter);
         const res = await lastValueFrom(
-            this.dataLakeService.getMeasurementByName(adapter.name),
+            this.dataLakeService.getMeasurementByName(datasetName),
         );
 
         linkageData.push({
             type: 'dataset',
             id: res.elementId,
-            name: adapter.name,
+            name: datasetName,
         });
     }
 
@@ -515,6 +518,7 @@ export class AdapterStartedDialog implements OnInit {
                             createOptions: {
                                 persist: false,
                                 start: true,
+                                persistDatasetName: undefined,
                             },
                         };
                         this.compactPipelineService.create(pipeline).subscribe(
@@ -544,7 +548,7 @@ export class AdapterStartedDialog implements OnInit {
     ): CompactPipelineElement[] {
         template[0].configuration.push(
             {
-                db_measurement: this.adapter.name,
+                db_measurement: this.getDatasetName(adapter),
             },
             {
                 timestamp_mapping: 's0::' + this.dataLakeTimestampField,
@@ -564,6 +568,10 @@ export class AdapterStartedDialog implements OnInit {
             output: undefined,
         });
         return template;
+    }
+
+    private getDatasetName(adapter: AdapterDescription): string {
+        return this.dataLakeDatasetName?.trim() || adapter.name;
     }
 
     private createPipelineId(): string {
