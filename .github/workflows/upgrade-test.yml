@@ -1,0 +1,73 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: StreamPipes upgrade test
+run-name: Upgrade 0.98.0 to ${{ inputs.target_branch }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: Branch to build and upgrade to
+        required: true
+        type: string
+        default: dev
+
+permissions:
+  contents: read
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out upgrade test
+        uses: actions/checkout@v7.0.1
+        with:
+          sparse-checkout: tools/upgrade-test
+          persist-credentials: false
+
+      - name: Check out candidate branch
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: refs/heads/${{ inputs.target_branch }}
+          path: candidate
+          persist-credentials: false
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: candidate/**/pom.xml
+
+      - name: Package candidate backend and IIoT extensions
+        working-directory: candidate
+        run: >-
+          mvn -B -ntp -pl streampipes-service-core,streampipes-extensions/streampipes-extensions-all-iiot
+          -am -DskipTests -Dmaven.javadoc.skip=true package
+
+      - name: Build candidate images
+        working-directory: candidate
+        run: |
+          docker build -t streampipes_backend:release-validation streampipes-service-core
+          docker build -t streampipes_pipeline-elements-all-iiot:release-validation streampipes-extensions/streampipes-extensions-all-iiot
+
+      - name: Test upgrade from 0.98.0
+        run: |
+          tools/upgrade-test/run.sh \
+            apachestreampipes/backend:0.98.0 streampipes_backend:release-validation \
+            apachestreampipes/extensions-all-iiot:0.98.0 streampipes_pipeline-elements-all-iiot:release-validation

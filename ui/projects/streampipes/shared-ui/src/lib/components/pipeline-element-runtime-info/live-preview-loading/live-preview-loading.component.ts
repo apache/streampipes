@@ -17,10 +17,6 @@
  */
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -29,11 +25,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './live-preview-loading.component.html',
     styleUrls: ['./live-preview-loading.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        MatProgressSpinner,
-        TranslatePipe,
-    ],
+    imports: [MatProgressSpinner, TranslatePipe],
 })
 export class LivePreviewLoadingComponent {}

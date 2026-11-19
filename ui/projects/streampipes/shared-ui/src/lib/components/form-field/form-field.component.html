@@ -17,13 +17,12 @@
   -->
 
 <div
-    class="form-field-outer"
-    fxLayout="column"
+    class="form-field-outer flex-col"
     [class.mb-xl]="level === 1"
     [class.mb-lg]="level === 2"
     [class.mb-sm]="level === 3"
 >
-    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+    <div class="flex-row items-center flex-100">
         <sp-form-label
             [level]="level"
             [label]="label"
@@ -31,7 +30,7 @@
             [tooltip]="tooltip"
         >
         </sp-form-label>
-        <span fxFlex></span>
+        <span class="flex-1"></span>
         <ng-content select="[form-field-actions]"></ng-content>
     </div>
 

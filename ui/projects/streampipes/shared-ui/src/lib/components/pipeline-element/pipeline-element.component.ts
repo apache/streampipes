@@ -31,14 +31,13 @@ import {
     SpDataStream,
 } from '@streampipes/platform-services';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-pipeline-element',
     templateUrl: './pipeline-element.component.html',
     styleUrls: ['./pipeline-element.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgClass, ClassDirective],
+    imports: [NgClass],
 })
 export class PipelineElementComponent {
     showImage: any;

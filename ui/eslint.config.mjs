@@ -106,6 +106,24 @@ export default defineConfig([
             ],
 
             '@angular-eslint/prefer-standalone': 'off',
+
+            // ngx-layout is being phased out; each warning is a component still to migrate.
+            // Switch to 'error' once the last import is gone.
+            'no-restricted-imports': [
+                'warn',
+                {
+                    patterns: [
+                        {
+                            group: [
+                                '@ngbracket/ngx-layout',
+                                '@ngbracket/ngx-layout/*',
+                            ],
+                            message:
+                                'Use the flex utility classes in src/scss/sp/flex.scss instead (see DESIGN.md "Layout").',
+                        },
+                    ],
+                },
+            ],
         },
     },
     {

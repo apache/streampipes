@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxLayout="column" class="mb-10">
+<div class="mb-10 flex-col">
     <mat-accordion>
         <mat-expansion-panel class="mat-expansion-panel mat-elevation-z0">
             <mat-expansion-panel-header>
@@ -28,7 +28,7 @@
                 >
             </mat-expansion-panel-header>
             @for (inputStream of inputStreams; track $index) {
-                <div fxLayout="column">
+                <div class="flex-col">
                     <div class="input-stream-name-outer">
                         <span class="input-stream-name">{{
                             inputStream.name

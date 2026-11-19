@@ -23,7 +23,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -34,13 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './basic-view.component.html',
     styleUrls: ['./basic-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        TranslatePipe,
-    ],
+    imports: [MatIconButton, MatTooltip, MatIcon, TranslatePipe],
 })
 export class SpBasicViewComponent {
     private router = inject(Router);

@@ -21,6 +21,11 @@
     min-width: 550px;
 }
 
+.menu-column {
+    flex: 1 1 50%;
+    max-width: 50%;
+}
+
 .filter-header {
     font-weight: bold;
     white-space: nowrap;

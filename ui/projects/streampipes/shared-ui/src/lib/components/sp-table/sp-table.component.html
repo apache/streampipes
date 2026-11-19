@@ -17,8 +17,7 @@
   -->
 
 <div
-    fxLayout="column"
-    class="table-outer"
+    class="table-outer flex-col"
     [class.no-border]="noBorder"
     [class.no-padding-top]="noToolbarBorderTop"
 >
@@ -27,18 +26,12 @@
         !showSelectionToolbar
     ) {
         <div
-            class="grouping-toolbar"
+            class="grouping-toolbar flex-row flex-wrap justify-between items-center content-center gap-md"
             [class.no-toolbar-border-top]="noToolbarBorderTop"
-            fxLayout="row wrap"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="12px"
         >
-            <div class="grouping-toolbar__spacer" fxFlex></div>
+            <div class="grouping-toolbar__spacer flex-1"></div>
             <div
-                class="grouping-toolbar__controls"
-                fxLayout="row wrap"
-                fxLayoutAlign="end center"
-                fxLayoutGap="12px"
+                class="grouping-toolbar__controls flex-row flex-wrap justify-end items-center content-center gap-md"
             >
                 @if (shouldShowNameSearch) {
                     <ng-container *ngTemplateOutlet="nameSearchField">
@@ -54,23 +47,15 @@
 
     @if (showSelectionToolbar) {
         <div
-            class="selection-toolbar"
+            class="selection-toolbar flex-row flex-wrap justify-between items-center content-center gap-sm"
             [class.no-toolbar-border-top]="noToolbarBorderTop"
             data-cy="sp-table-selection-toolbar"
-            fxLayout="row wrap"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="8px"
         >
             <div
-                class="selection-toolbar__left"
-                fxLayout="row wrap"
-                fxLayoutAlign="start center"
-                fxLayoutGap="8px"
+                class="selection-toolbar__left flex-row flex-wrap items-center content-center gap-sm"
             >
                 <div
-                    fxLayout="row wrap"
-                    fxLayoutAlign="start center"
-                    fxLayoutGap="4px"
+                    class="flex-row flex-wrap items-center content-center gap-2xs"
                 >
                     <button
                         mat-flat-button
@@ -96,10 +81,7 @@
 
                 @if (selectedRows.length && hasMultiActionsToolbarControls()) {
                     <div
-                        class="selection-toolbar__actions-inline"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        fxLayoutGap="5px"
+                        class="selection-toolbar__actions-inline flex-row items-center gap-2xs"
                     >
                         @if (hasBuiltInMultiActionSelect()) {
                             <mat-form-field class="form-field-small">
@@ -166,10 +148,7 @@
 
             @if (shouldShowGroupingControls || shouldShowNameSearch) {
                 <div
-                    class="selection-toolbar__right"
-                    fxLayout="row wrap"
-                    fxLayoutAlign="end center"
-                    fxLayoutGap="8px"
+                    class="selection-toolbar__right flex-row flex-wrap justify-end items-center content-center gap-sm"
                 >
                     @if (shouldShowNameSearch) {
                         <ng-container *ngTemplateOutlet="nameSearchField">
@@ -359,15 +338,10 @@
             >
                 @if (viewMode === 'grouped') {
                     <div
-                        class="grouped-table-header"
-                        fxLayout="row wrap"
-                        fxLayoutAlign="space-between center"
-                        fxLayoutGap="8px"
+                        class="grouped-table-header flex-row flex-wrap justify-between items-center content-center gap-sm"
                     >
                         <div
-                            fxLayout="row wrap"
-                            fxLayoutAlign="start center"
-                            fxLayoutGap="8px"
+                            class="flex-row flex-wrap items-center content-center gap-sm"
                         >
                             @if (group.color) {
                                 <sp-label
@@ -430,7 +404,9 @@
     </table>
 
     @if (showPaginator) {
-        <div fxFlex="100" fxLayoutAlign="end end" class="paginator-container">
+        <div
+            class="paginator-container flex-row justify-end items-end flex-100"
+        >
             <mat-paginator
                 #paginator
                 [pageSize]="pageSize()"
