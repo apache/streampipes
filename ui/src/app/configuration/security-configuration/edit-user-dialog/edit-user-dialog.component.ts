@@ -25,6 +25,7 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import {
+    SpRangeSelectionDirective,
     CurrentUserService,
     DialogRef,
     FormFieldComponent,
@@ -74,6 +75,7 @@ import { MatIcon } from '@angular/material/icon';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         SpAlertBannerComponent,

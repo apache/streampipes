@@ -36,9 +36,14 @@
                         </mat-form-field>
                     </sp-form-field>
                 </sp-split-section>
-                <sp-split-section [level]="3" [title]="'Roles' | translate">
+                <sp-split-section
+                    spRangeSelection
+                    [level]="3"
+                    [title]="'Roles' | translate"
+                >
                     @for (role of availableRoles$ | async; track role) {
                         <mat-checkbox
+                            spRangeSelectionItem
                             [value]="role.elementId"
                             [checked]="group.roles.indexOf(role.elementId) > -1"
                             (change)="changeRoleAssignment($event)"

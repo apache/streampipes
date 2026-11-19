@@ -34,6 +34,7 @@ import {
     Validators,
 } from '@angular/forms';
 import {
+    SpRangeSelectionDirective,
     DialogRef,
     FormFieldComponent,
     SplitSectionComponent,
@@ -59,6 +60,7 @@ import { MatIcon } from '@angular/material/icon';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         FormsModule,

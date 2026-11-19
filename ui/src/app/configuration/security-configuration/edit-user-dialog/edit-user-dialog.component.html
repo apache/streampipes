@@ -177,6 +177,7 @@
                     }
                     <sp-split-section
                         [level]="3"
+                        spRangeSelection
                         [title]="'Groups' | translate"
                     >
                         @if (availableGroups.length === 0) {
@@ -196,6 +197,7 @@
                                     isExternalProvider &&
                                     isExternallyManagedRoles
                                 "
+                                spRangeSelectionItem
                                 [value]="group.groupId"
                                 [checked]="
                                     user.groups.indexOf(group.groupId) > -1
@@ -207,9 +209,14 @@
                             </mat-checkbox>
                         }
                     </sp-split-section>
-                    <sp-split-section [level]="3" [title]="'Roles' | translate">
+                    <sp-split-section
+                        spRangeSelection
+                        [level]="3"
+                        [title]="'Roles' | translate"
+                    >
                         @for (role of availableRoles$ | async; track role) {
                             <mat-checkbox
+                                spRangeSelectionItem
                                 [value]="role.elementId"
                                 [disabled]="
                                     isExternalProvider &&

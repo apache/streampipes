@@ -20,6 +20,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import {
+    SpRangeSelectionDirective,
     SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
@@ -31,6 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./data-export-item.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         SplitSectionComponent,
         MatCheckbox,
         SpAlertBannerComponent,

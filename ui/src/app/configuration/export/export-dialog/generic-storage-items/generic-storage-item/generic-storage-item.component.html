@@ -30,6 +30,7 @@
         </div>
     } @else {
         <mat-checkbox
+            spRangeSelectionItem
             [checked]="exportItem.selected"
             (change)="removeItem.emit(exportItem.resourceId)"
         >

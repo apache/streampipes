@@ -24,6 +24,7 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import {
+    SpRangeSelectionDirective,
     DialogRef,
     SpAlertBannerComponent,
     SplitSectionComponent,
@@ -76,6 +77,7 @@ type AssetExportSectionKey =
     templateUrl: './data-export-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,

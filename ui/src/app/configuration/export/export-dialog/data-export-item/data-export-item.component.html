@@ -16,9 +16,10 @@
 ~
 -->
 
-<sp-split-section [level]="3" [title]="sectionTitle">
+<sp-split-section spRangeSelection [level]="3" [title]="sectionTitle">
     @for (exportItem of exportItems; track exportItem; let i = $index) {
         <mat-checkbox
+            spRangeSelectionItem
             [checked]="exportItem.selected"
             (change)="changeItem($event, i)"
         >
