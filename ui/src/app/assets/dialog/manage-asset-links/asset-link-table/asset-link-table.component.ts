@@ -22,9 +22,7 @@ import {
     EventEmitter,
     HostListener,
     Input,
-    OnChanges,
     Output,
-    SimpleChanges,
     ViewChild,
     ChangeDetectionStrategy,
 } from '@angular/core';
@@ -68,10 +66,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { LayoutGapDirective } from '@ngbracket/ngx-layout';
-import {
-    SpRangeSelectionDirective,
-    SpSpinnerComponent,
-} from '@streampipes/shared-ui';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 interface AssetLinkGroupHeaderRow {
     groupHeader: true;
@@ -92,7 +87,6 @@ type AssetLinkViewMode = 'grouped' | 'list';
     styleUrls: ['./asset-link-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
@@ -125,7 +119,7 @@ type AssetLinkViewMode = 'grouped' | 'list';
         TranslatePipe,
     ],
 })
-export class AssetLinkTableComponent implements OnChanges {
+export class AssetLinkTableComponent {
     @ViewChild('searchInput')
     searchInput?: ElementRef<HTMLInputElement>;
 
@@ -150,19 +144,8 @@ export class AssetLinkTableComponent implements OnChanges {
     viewMode: AssetLinkViewMode = 'grouped';
     sort: Sort = { active: 'resourceName', direction: 'asc' };
     collapsedGroupIds: Set<string> = new Set<string>();
-    renderedRows: AssetLinkTableRow[] = [];
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['resources'] || changes['assetLinkTypes']) {
-            this.rebuildRenderedRows();
-        }
-    }
-
-    private rebuildRenderedRows(): void {
-        this.renderedRows = this.buildRenderedRows();
-    }
-
-    private buildRenderedRows(): AssetLinkTableRow[] {
+    get renderedRows(): AssetLinkTableRow[] {
         const rows = this.filteredAndSortedResources;
 
         if (this.viewMode === 'list') {
@@ -234,11 +217,10 @@ export class AssetLinkTableComponent implements OnChanges {
 
     updateSearch(searchTerm: string): void {
         this.searchTerm = searchTerm;
-        this.rebuildRenderedRows();
     }
 
     clearSearch(): void {
-        this.updateSearch('');
+        this.searchTerm = '';
     }
 
     @HostListener('document:keydown', ['$event'])
@@ -255,7 +237,6 @@ export class AssetLinkTableComponent implements OnChanges {
 
     updateViewMode(viewMode: AssetLinkViewMode): void {
         this.viewMode = viewMode;
-        this.rebuildRenderedRows();
     }
 
     toggleGroup(groupId: string): void {
@@ -265,7 +246,6 @@ export class AssetLinkTableComponent implements OnChanges {
             this.collapsedGroupIds.add(groupId);
         }
         this.collapsedGroupIds = new Set(this.collapsedGroupIds);
-        this.rebuildRenderedRows();
     }
 
     isGroupCollapsed(groupId: string): boolean {
@@ -274,7 +254,6 @@ export class AssetLinkTableComponent implements OnChanges {
 
     updateSort(sort: Sort): void {
         this.sort = sort;
-        this.rebuildRenderedRows();
     }
 
     getLinkType(resource: AssetLinkResourceRow): AssetLinkType | undefined {

@@ -32,10 +32,7 @@ import {
 } from '@streampipes/platform-services';
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
-import {
-    SpRangeSelectionDirective,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -53,7 +50,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./field-selection-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SpRangeSelectionDirective,
         SplitSectionComponent,
         LayoutAlignDirective,
         FlexDirective,

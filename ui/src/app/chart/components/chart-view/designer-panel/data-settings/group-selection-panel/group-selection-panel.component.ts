@@ -30,10 +30,7 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import {
-    SpRangeSelectionDirective,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -45,7 +42,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './group-selection-panel.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SpRangeSelectionDirective,
         SplitSectionComponent,
         MatButton,
         LayoutDirective,

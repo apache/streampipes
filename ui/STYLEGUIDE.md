@@ -416,6 +416,9 @@ its checked state determines whether the range is selected or deselected. Ranges
 follow rendered order on the current page, skip disabled items and reset the anchor
 when the visible checkbox sequence changes.
 
+Enabled in Adapter, Pipeline and Data Lake overviews, account/group assignments,
+and application import/export checkbox lists.
+
 For other lists, import `SpRangeSelectionDirective`, add `spRangeSelection` to the
 container and `spRangeSelectionItem` to participating checkboxes. Leave header and
 setting checkboxes unmarked. An optional stable `[spRangeSelection]` context also

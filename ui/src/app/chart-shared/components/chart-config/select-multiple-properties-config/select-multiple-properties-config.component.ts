@@ -27,10 +27,7 @@ import {
 } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    SpRangeSelectionDirective,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -41,7 +38,6 @@ import { MatCheckbox } from '@angular/material/checkbox';
     styleUrls: ['./select-multiple-properties-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SpRangeSelectionDirective,
         SplitSectionComponent,
         MatButton,
         LayoutDirective,

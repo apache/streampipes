@@ -15,7 +15,7 @@
 ~ limitations under the License.
 ~
 -->
-<sp-split-section spRangeSelection [level]="3" [title]="'Group by' | translate">
+<sp-split-section [level]="3" [title]="'Group by' | translate">
     <div section-actions>
         <button
             mat-button
@@ -44,7 +44,6 @@
         ) {
             <div fxLayout="column">
                 <mat-checkbox
-                    spRangeSelectionItem
                     [(ngModel)]="groupByField.selected"
                     [attr.data-cy]="
                         'data-explorer-group-by-' + groupByField.runtimeName

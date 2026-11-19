@@ -34,17 +34,13 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    SpRangeSelectionDirective,
-    SpSpinnerComponent,
-} from '@streampipes/shared-ui';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SpRangeSelectionDirective,
         FlexDirective,
         LayoutDirective,
         LayoutGapDirective,
