@@ -16,15 +16,15 @@
   ~
   -->
 
-<div fxLayout="row" fxFlex="100">
-    <div fxFlex="30">
+<div class="flex-row flex-100">
+    <div class="property-name">
         <b>{{ property.runtimeName }}</b>
     </div>
-    <div fxFlex="55" fxLayout="column">
+    <div class="property-label flex-col">
         {{ property.label }}
         <small> {{ property.description }} </small>
     </div>
-    <div fxFlex="15">
+    <div class="property-type">
         {{ runtimeType }}
     </div>
 </div>

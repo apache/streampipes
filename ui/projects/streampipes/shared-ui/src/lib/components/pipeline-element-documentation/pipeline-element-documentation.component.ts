@@ -27,7 +27,6 @@ import { PipelineElementService } from '@streampipes/platform-services';
 import { Lexer, Parser } from 'marked';
 import { MarkdownComponent } from 'ngx-markdown';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -35,7 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './pipeline-element-documentation.component.html',
     styleUrls: ['./pipeline-element-documentation.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [MarkdownComponent, NgClass, ClassDirective, TranslatePipe],
+    imports: [MarkdownComponent, NgClass, TranslatePipe],
 })
 export class PipelineElementDocumentationComponent implements OnInit {
     private pipelineElementService = inject(PipelineElementService);

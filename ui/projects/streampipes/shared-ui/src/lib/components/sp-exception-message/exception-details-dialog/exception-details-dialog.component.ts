@@ -26,7 +26,6 @@ import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
 import { SpExceptionDetailsComponent } from '../exception-details/exception-details.component';
 import { MatDivider } from '@angular/material/divider';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -41,7 +40,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         SpExceptionDetailsComponent,
         MatDivider,
-        LayoutGapDirective,
         MatButton,
         TranslatePipe,
     ],

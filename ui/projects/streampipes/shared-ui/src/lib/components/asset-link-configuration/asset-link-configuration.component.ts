@@ -45,7 +45,6 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
 import { SpAlertBannerComponent } from '../alert-banner/alert-banner.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -61,7 +60,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIconButton,
         MatTreeNodeToggle,
         MatIcon,
-        LayoutAlignDirective,
         MatTreeNodeOutlet,
         MatTreeNode,
         SpAlertBannerComponent,

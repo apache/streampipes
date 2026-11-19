@@ -18,7 +18,6 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpDataStream } from '@streampipes/platform-services';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     MatAccordion,
     MatExpansionPanel,
@@ -36,7 +35,6 @@ import { SortByRuntimeNamePipe } from '../../pipes/sort-by-runtime-name.pipe';
     styleUrls: ['./input-schema-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         MatAccordion,
         MatExpansionPanel,
         MatExpansionPanelHeader,

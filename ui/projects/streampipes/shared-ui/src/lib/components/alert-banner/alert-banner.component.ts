@@ -25,13 +25,7 @@ import {
 } from '@angular/core';
 import { AlertType } from '@streampipes/platform-services';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIcon } from '@angular/material/icon';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -40,16 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './alert-banner.component.html',
     styleUrls: ['./alert-banner.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        NgClass,
-        ClassDirective,
-        MatIcon,
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [NgClass, MatIcon, MatButton, TranslatePipe],
 })
 export class SpAlertBannerComponent {
     @Input() type: AlertType = 'info';

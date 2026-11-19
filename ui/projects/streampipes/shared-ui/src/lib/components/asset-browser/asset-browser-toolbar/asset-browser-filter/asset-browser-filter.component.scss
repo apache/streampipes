@@ -36,6 +36,11 @@
     font-size: smaller;
 }
 
+.filter-half {
+    flex: 1 1 50%;
+    max-width: 50%;
+}
+
 .filter-selection {
     min-width: 300px;
 }

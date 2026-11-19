@@ -31,12 +31,6 @@ import {
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DialogRef } from '../base-dialog/dialog-ref';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { PipelineElementRuntimeInfoComponent } from '../../components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
 import { PipelineElementDocumentationComponent } from '../../components/pipeline-element-documentation/pipeline-element-documentation.component';
@@ -57,10 +51,6 @@ import { map } from 'rxjs';
     styleUrls: ['./pipeline-element-help.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         MatTabGroup,
         MatTab,
         PipelineElementRuntimeInfoComponent,

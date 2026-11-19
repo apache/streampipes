@@ -23,12 +23,6 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -37,14 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: 'asset-browser-filter-outer.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [MatButton, TranslatePipe],
 })
 export class AssetBrowserFilterOuterComponent {
     @Input()

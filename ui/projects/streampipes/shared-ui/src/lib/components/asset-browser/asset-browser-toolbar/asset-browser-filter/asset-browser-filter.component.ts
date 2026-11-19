@@ -29,11 +29,6 @@ import {
 import { AssetBrowserData, AssetFilter } from '../../asset-browser.model';
 import { Subscription } from 'rxjs';
 import { SpAssetBrowserService } from '../../asset-browser.service';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { AssetBrowserFilterAssetModelComponent } from './asset-browser-filter-asset-model/asset-browser-filter-asset-model.component';
 import { AssetBrowserFilterTypeComponent } from './asset-browser-filter-type/asset-browser-filter-type.component';
 import { AssetBrowserFilterSitesComponent } from './asset-browser-filter-sites/asset-browser-filter-sites.component';
@@ -50,14 +45,11 @@ import { MatIcon } from '@angular/material/icon';
     styleUrl: 'asset-browser-filter.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
         AssetBrowserFilterAssetModelComponent,
         AssetBrowserFilterTypeComponent,
         AssetBrowserFilterSitesComponent,
         AssetBrowserFilterLabelsComponent,
         MatDivider,
-        LayoutAlignDirective,
         MatButton,
         TranslatePipe,
         MatIconButton,

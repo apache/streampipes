@@ -16,18 +16,16 @@
   ~
   -->
 
-<div
-    fxFlex="100"
-    fxLayout="row"
-    fxLayoutGap="10px"
-    fxLayoutAlign="start start"
-    class="field-description-outer"
->
-    <div [fxFlex]="descriptionPanelWidth" fxLayout="column">
+<div class="field-description-outer flex-row items-start gap-sm flex-100">
+    <div
+        class="flex-col"
+        [style.flex]="'1 1 ' + descriptionPanelWidth + '%'"
+        [style.max-width.%]="descriptionPanelWidth"
+    >
         <div class="field-description-label">{{ label }}</div>
         <div class="field-description">{{ description }}</div>
     </div>
-    <div fxFlex fxLayoutAlign="start center">
+    <div class="flex-row items-center flex-1">
         <ng-content></ng-content>
     </div>
 </div>
