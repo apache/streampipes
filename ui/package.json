@@ -109,7 +109,7 @@
     "csv-string": "^4.1.1",
     "cypress": "^16.2.0",
     "cypress-multi-reporters": "^2.0.5",
-    "deepl-node": "^1.16.0",
+    "deepl-node": "^1.29.0",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.0.1",
     "husky": "^8.0.2",
