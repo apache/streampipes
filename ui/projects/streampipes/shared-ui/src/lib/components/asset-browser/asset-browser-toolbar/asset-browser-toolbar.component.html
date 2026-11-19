@@ -17,7 +17,7 @@
   -->
 
 @if (showAssetBrowser) {
-    <div fxLayoutAlign="end center">
+    <div class="flex-row justify-end items-center">
         <button
             mat-flat-button
             class="btn-secondary-outline btn-filter"
@@ -40,7 +40,7 @@
                 <span>{{ 'All assets' | translate }}</span>
             }
         </button>
-        <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
+        <mat-menu #menu="matMenu" class="large-menu">
             <sp-asset-browser-filter
                 (closeMenu)="closeMenu()"
                 [assetBrowserData]="assetBrowserData"

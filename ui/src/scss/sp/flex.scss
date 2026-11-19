@@ -1,0 +1,197 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+// Flex layout utilities. These replace the @ngbracket/ngx-layout directives
+// (fxLayout, fxLayoutAlign, fxLayoutGap, fxFlex), which are being phased out.
+// The mapping and the behavioural differences are documented in DESIGN.md ("Layout").
+//
+// Not covered here on purpose:
+// - Percentage splits (fxFlex="30"): a named class in the component SCSS with
+//   `flex: 1 1 30%; max-width: 30%`, or CSS grid (`grid-template-columns: 3fr 7fr`).
+// - Breakpoint variants (fxLayout.lt-md, fxFlex.gt-md): use a @media query in the
+//   component SCSS.
+
+// Containers (fxLayout). fxLayoutAlign without fxLayout also produced a flex row,
+// so such elements need .flex-row as well.
+
+.flex-row,
+.flex-col {
+    display: flex;
+    box-sizing: border-box;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+// fxLayout="row wrap"
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+// Main axis: first value of fxLayoutAlign.
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-around {
+    justify-content: space-around;
+}
+
+.justify-evenly {
+    justify-content: space-evenly;
+}
+
+// Cross axis: second value of fxLayoutAlign.
+
+.items-start {
+    align-items: flex-start;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+.items-stretch {
+    align-items: stretch;
+}
+
+.items-baseline {
+    align-items: baseline;
+}
+
+// Cross axis of wrapped lines. fxLayoutAlign also set align-content to its second
+// value; this only matters together with .flex-wrap.
+
+.content-start {
+    align-content: flex-start;
+}
+
+.content-center {
+    align-content: center;
+}
+
+.content-end {
+    align-content: flex-end;
+}
+
+// Spacing between items (fxLayoutGap). fxLayoutGap added a margin to every child
+// except the last one; CSS gap does not, so check children that bring their own margins.
+
+.gap-2xs {
+    gap: var(--space-2xs);
+}
+
+.gap-xs {
+    gap: var(--space-xs);
+}
+
+.gap-sm {
+    gap: var(--space-sm);
+}
+
+.gap-md {
+    gap: var(--space-md);
+}
+
+.gap-lg {
+    gap: var(--space-lg);
+}
+
+.gap-xl {
+    gap: var(--space-xl);
+}
+
+// Items (fxFlex).
+
+// fxFlex (no value): take the remaining space.
+.flex-1 {
+    flex: 1 1 0%;
+    box-sizing: border-box;
+}
+
+// fxFlex="100". Limited to the parent's main axis, as the directive did.
+.flex-100 {
+    flex: 1 1 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.flex-col > .flex-100 {
+    max-width: none;
+    max-height: 100%;
+}
+
+// fxFlex="auto"
+.flex-auto {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+}
+
+// fxFlex="none"
+.flex-none {
+    flex: 0 0 auto;
+}
+
+// fxFlexFill
+.flex-fill {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+// Single-item cross-axis alignment (fxFlexAlign).
+
+.self-start {
+    align-self: flex-start;
+}
+
+.self-center {
+    align-self: center;
+}
+
+.self-end {
+    align-self: flex-end;
+}
+
+.self-stretch {
+    align-self: stretch;
+}

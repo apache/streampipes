@@ -17,11 +17,6 @@
  */
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { FormLabelComponent } from '../form-label/form-label.component';
 
 @Component({
@@ -29,12 +24,7 @@ import { FormLabelComponent } from '../form-label/form-label.component';
     templateUrl: './form-field.component.html',
     styleUrls: ['./form-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        FormLabelComponent,
-    ],
+    imports: [FormLabelComponent],
 })
 export class FormFieldComponent {
     @Input()

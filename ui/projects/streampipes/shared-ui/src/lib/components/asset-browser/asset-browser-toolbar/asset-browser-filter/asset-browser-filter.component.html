@@ -18,7 +18,7 @@
 
 @if (activeFilters) {
     <div class="menu-content" (click)="$event.stopPropagation()">
-        <div fxLayout="column" fxLayoutGap="10px">
+        <div class="flex-col gap-sm">
             <sp-asset-browser-filter-asset-model
                 [assets]="assetBrowserData.assets"
                 [activeFilters]="activeFilters"
@@ -37,7 +37,7 @@
             >
             </sp-asset-browser-filter-labels>
             <mat-divider></mat-divider>
-            <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="flex-row justify-between items-center">
                 <button
                     mat-icon-button
                     data-cy="refresh-assets-btn"
@@ -48,7 +48,7 @@
                 >
                     <mat-icon> refresh </mat-icon>
                 </button>
-                <div fxLayout="row" fxLayoutGap="10px">
+                <div class="flex-row gap-sm">
                     <button
                         data-cy="reset-filters-btn"
                         mat-flat-button

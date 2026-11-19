@@ -23,12 +23,6 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -38,15 +32,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
     templateUrl: './feature-card-header.component.html',
     styleUrls: ['./feature-card-header.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        FlexDirective,
-        MatIcon,
-        MatButton,
-        MatIconButton,
-    ],
+    imports: [MatIcon, MatButton, MatIconButton],
 })
 export class FeatureCardHeaderComponent {
     @Input() title: string;

@@ -15,18 +15,9 @@
 ~ limitations under the License.
 ~
 -->
-<div
-    data-cy="sp-exception-details"
-    fxFlex="100"
-    fxLayout="column"
-    class="mt-10"
->
+<div data-cy="sp-exception-details" class="mt-10 flex-col flex-100">
     @if (title) {
-        <div
-            fxLayoutAlign="start center"
-            fxFlex="100"
-            class="title-message color-warn"
-        >
+        <div class="title-message color-warn flex-row items-center flex-100">
             <i class="material-icons color-warn" style="margin-right: 15px"
                 >warning</i
             >
@@ -51,7 +42,7 @@
         </button>
     </div>
     @if (showDetails) {
-        <div fxFlex="100" fxLayout="column" class="mt-10">
+        <div class="mt-10 flex-col flex-100">
             <div class="error-details-title">
                 {{ 'Full stack trace' | translate }}
             </div>

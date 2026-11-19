@@ -25,7 +25,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { DashboardLiveSettings } from '@streampipes/platform-services';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -38,7 +37,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrl: './refresh-interval-settings.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         MatButton,
         MatMenuTrigger,
         MatTooltip,

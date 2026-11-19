@@ -17,24 +17,13 @@
  */
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-basic-field-description',
     templateUrl: './basic-field-description.component.html',
     styleUrls: ['./basic-field-description.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
-        LayoutGapDirective,
-    ],
+    imports: [],
 })
 export class SpBasicFieldDescriptionComponent {
     @Input()

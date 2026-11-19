@@ -33,13 +33,7 @@ import {
 import { TimeSelectionService } from '../../../services/time-selection.service';
 import { CustomTimeRangeSelectionComponent } from './custom-time-range-selection/custom-time-range-selection.component';
 import { TimeSelectorLabel } from '../time-selector.model';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatDivider } from '@angular/material/divider';
 
 @Component({
@@ -47,15 +41,7 @@ import { MatDivider } from '@angular/material/divider';
     templateUrl: 'time-selector-menu.component.html',
     styleUrls: ['./time-selector-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        FlexDirective,
-        NgClass,
-        ClassDirective,
-        MatDivider,
-        CustomTimeRangeSelectionComponent,
-    ],
+    imports: [NgClass, MatDivider, CustomTimeRangeSelectionComponent],
 })
 export class TimeRangeSelectorMenuComponent {
     private timeSelectionService = inject(TimeSelectionService);

@@ -16,9 +16,9 @@
   ~
   -->
 
-<div fxFlex="100">
+<div class="flex-100">
     @if (downloading) {
-        <div fxLayout="column" fxLayoutAlign="center center" class="mt-35">
+        <div class="mt-35 flex-col justify-center items-center">
             <mat-spinner [diameter]="30" color="accent" />
             @if (downloadedMBs !== undefined) {
                 <label>{{ downloadedMBs | number: '1.0-2' }} Mb</label>
@@ -34,14 +34,14 @@
             }
         </div>
     } @else if (failed) {
-        <div fxLayout="column" fxLayoutAlign="center center">
+        <div class="flex-col justify-center items-center">
             <mat-icon class="download-error-icon">error</mat-icon>
             <p class="download-error" role="alert">
                 {{ errorMessage | translate }}
             </p>
         </div>
     } @else if (finished) {
-        <div fxLayout="column" fxLayoutAlign="center center">
+        <div class="flex-col justify-center items-center">
             <mat-icon class="icon-check">check</mat-icon>
             <h5>{{ 'Download successful' | translate }}</h5>
         </div>

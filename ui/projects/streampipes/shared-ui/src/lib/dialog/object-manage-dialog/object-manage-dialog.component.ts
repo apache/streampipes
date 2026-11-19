@@ -56,12 +56,6 @@ import {
     UserInfo,
 } from '@streampipes/platform-services';
 import { firstValueFrom, isObservable, zip } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -88,9 +82,6 @@ import { SearchSelectComponent } from '../../components/search-select/search-sel
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
         MatProgressSpinner,
         FormsModule,
         ReactiveFormsModule,
@@ -102,7 +93,6 @@ import { SearchSelectComponent } from '../../components/search-select/search-sel
         MatCheckbox,
         MatIcon,
         MatInput,
-        LayoutGapDirective,
         MatIconButton,
         MatTooltip,
         CdkCopyToClipboard,

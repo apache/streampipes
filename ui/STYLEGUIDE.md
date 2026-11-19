@@ -109,11 +109,7 @@ consuming component. It works without a workspace and projects arbitrary content
 
 ```html
 <sp-secondary-toolbar>
-  <div
-    fxLayout="row wrap"
-    fxLayoutAlign="start center"
-    fxLayoutGap="var(--space-sm)"
-  >
+  <div class="flex-row flex-wrap justify-start items-center gap-sm">
     <button mat-flat-button class="btn-secondary" (click)="resetFilters()">
       {{ 'Reset filters' | translate }}
     </button>
