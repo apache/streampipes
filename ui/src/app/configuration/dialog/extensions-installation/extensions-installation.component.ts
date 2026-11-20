@@ -26,6 +26,7 @@ import { DialogRef } from '@streampipes/shared-ui';
 import {
     ExtensionInstallationService,
     ExtensionItemDescription,
+    problemDetailMessage,
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatDivider } from '@angular/material/divider';
@@ -108,20 +109,16 @@ export class SpExtensionsInstallationDialogComponent {
                 publicElement: this.installAsPublicElement,
                 serviceTagPrefix: extensionItem.serviceTagPrefix,
             })
-            .subscribe(
-                data => {
-                    if (data.success) {
-                        this.installationStatus[index].status = 'success';
-                    } else {
-                        this.installationStatus[index].status = 'error';
-                        this.installationStatus[index].details =
-                            data.notifications[0].additionalInformation;
-                    }
+            .subscribe({
+                next: () => {
+                    this.installationStatus[index].status = 'success';
                 },
-                () => {
+                error: error => {
                     this.installationStatus[index].status = 'error';
+                    this.installationStatus[index].details =
+                        problemDetailMessage(error);
                 },
-            )
+            })
             .add(() => {
                 if (index < this.endpointItemsToInstall.length - 1) {
                     index++;
@@ -140,16 +137,16 @@ export class SpExtensionsInstallationDialogComponent {
     uninstallElement(extensionItem: ExtensionItemDescription, index: number) {
         this.extensionInstallationService
             .delete(extensionItem.elementId)
-            .subscribe(
-                data => {
-                    this.installationStatus[index].status = data.success
-                        ? 'success'
-                        : 'error';
+            .subscribe({
+                next: () => {
+                    this.installationStatus[index].status = 'success';
                 },
-                () => {
+                error: error => {
                     this.installationStatus[index].status = 'error';
+                    this.installationStatus[index].details =
+                        problemDetailMessage(error);
                 },
-            )
+            })
             .add(() => {
                 if (index < this.endpointItemsToInstall.length - 1) {
                     index++;

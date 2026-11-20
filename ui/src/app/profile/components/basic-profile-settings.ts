@@ -17,7 +17,10 @@
  */
 
 import { ProfileService } from '../profile.service';
-import { UserAccount } from '@streampipes/platform-services';
+import {
+    UserAccount,
+    problemDetailMessage,
+} from '@streampipes/platform-services';
 import { Directive, inject } from '@angular/core';
 import { AppConstants } from '../../services/app.constants';
 import { AuthService } from '../../services/auth.service';
@@ -57,16 +60,17 @@ export abstract class BasicProfileSettings {
             this.userData.language = this.selectedLanguage;
             this.translate.use(this.selectedLanguage);
         }
-        this.profileService
-            .updateUserProfile(this.userData)
-            .subscribe(response => {
+        this.profileService.updateUserProfile(this.userData).subscribe({
+            next: () => {
                 this.profileUpdating = false;
-                if (response.success) {
-                    this.receiveUserData();
-                } else {
-                    this.errorMessage = response.notifications[0].title;
-                }
-            });
+                this.errorMessage = undefined;
+                this.receiveUserData();
+            },
+            error: error => {
+                this.profileUpdating = false;
+                this.errorMessage = problemDetailMessage(error);
+            },
+        });
     }
 
     abstract onUserDataReceived();

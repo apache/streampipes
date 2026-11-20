@@ -26,7 +26,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.exception.BadRequestException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -93,7 +93,7 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
       );
       return outputStream -> runtimeInfoProvider.streamOutput(outputStream, response::flushBuffer);
     } catch (IllegalArgumentException e) {
-      throw new BadRequestException("Could not generate preview", e);
+      throw SpProblemException.badRequest("Could not generate preview", e);
     }
   }
 

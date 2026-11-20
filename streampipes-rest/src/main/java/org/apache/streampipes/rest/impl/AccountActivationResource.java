@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,7 +48,7 @@ public class AccountActivationResource extends AbstractAuthGuardedRestResource {
       resourceManager.manageUsers().activateAccount(recoveryCode);
       return ok();
     } catch (UserNotFoundException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, e);
     }
   }
 }

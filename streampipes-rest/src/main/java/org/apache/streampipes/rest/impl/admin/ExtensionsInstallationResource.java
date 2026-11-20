@@ -27,7 +27,6 @@ import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.message.Message;
-import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.resource.management.AdapterDescriptionResourceManager;
 import org.apache.streampipes.resource.management.DataProcessorResourceManager;
@@ -36,6 +35,8 @@ import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.exception.SpProblemDetails;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -83,26 +84,30 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Message> addElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
+  public ResponseEntity<Message> addElement(@RequestBody ExtensionItemInstallationRequest installationReq)
+      throws NoServiceEndpointsAvailableException {
     try {
       var service = findSupportedService(installationReq);
-      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager, descriptionStorage)
-          .installExtension(installationReq, getAuthenticatedUserSid()));
-    } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
-      return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
+      return ok(requireSuccess(
+          new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager, descriptionStorage)
+              .installExtension(installationReq, getAuthenticatedUserSid())));
+    } catch (IOException | SepaParseException e) {
+      throw installationFailed(installationReq, e);
     }
   }
 
   @PutMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Message> updateElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
+  public ResponseEntity<Message> updateElement(@RequestBody ExtensionItemInstallationRequest installationReq)
+      throws NoServiceEndpointsAvailableException {
     try {
       var service = findSupportedService(installationReq);
-      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager, descriptionStorage)
-          .updateExtension(installationReq));
-    } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
-      return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
+      return ok(requireSuccess(
+          new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager, descriptionStorage)
+              .updateExtension(installationReq)));
+    } catch (IOException | SepaParseException e) {
+      throw installationFailed(installationReq, e);
     }
   }
 
@@ -124,15 +129,32 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
         appId = requestor.getAdapterById(elementId).getAppId();
         adapterDescriptionResourceManager.delete(elementId);
       } else {
-        return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
-            NotificationType.STORAGE_ERROR.description()));
+        throw SpProblemException.notFound("Pipeline element", elementId);
       }
       assetManager.deleteAsset(appId);
     } catch (IOException e) {
-      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
-          NotificationType.STORAGE_ERROR.description()));
+      throw SpProblemException.operationFailed(
+          String.format("The assets of pipeline element %s could not be deleted: %s", elementId, e.getMessage()), e);
     }
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+  }
+
+  /**
+   * The installer reports a description that could not be transformed as an error message; that is
+   * a rejected request, not a stored element.
+   */
+  private Message requireSuccess(Message result) {
+    if (result != null && !result.isSuccess()) {
+      throw SpProblemException.badRequest(SpProblemDetails.describe(result));
+    }
+    return result;
+  }
+
+  private SpProblemException installationFailed(ExtensionItemInstallationRequest installationReq, Exception e) {
+    var detail = String.format("Extension %s could not be installed: %s", installationReq.appId(), e.getMessage());
+    return e instanceof SepaParseException
+        ? SpProblemException.badRequest(detail, e)
+        : SpProblemException.operationFailed(detail, e);
   }
 
   private SpServiceRegistration findSupportedService(ExtensionItemInstallationRequest installationReq) throws NoServiceEndpointsAvailableException {

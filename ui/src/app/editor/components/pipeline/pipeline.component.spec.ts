@@ -182,11 +182,11 @@ describe('Pipeline palette drops', () => {
         component['handlePipelineValidationFailure'](
             new HttpErrorResponse({
                 error: {
+                    type: 'https://streampipes.apache.org/docs/api/problems/service-unavailable',
                     title: 'Extension unavailable',
-                    description:
-                        'Pipeline validation requires an extension that is currently unavailable.',
-                    additionalInformation:
-                        'org.apache.streampipes.processors.enricher.jvm.processor.expression',
+                    status: 503,
+                    detail: 'Pipeline validation requires an extension that is currently unavailable.',
+                    appId: 'org.apache.streampipes.processors.enricher.jvm.processor.expression',
                 },
             }),
         );

@@ -62,6 +62,34 @@ _error_code_to_message = {
 }
 
 
+def _problem_detail_message(response: Response) -> str | None:
+    """Extracts the human-readable message of an RFC 9457 problem detail.
+
+    The StreamPipes API answers every error with a problem detail whose `detail`
+    member carries the specific sentence and whose `title` the generic one.
+
+    Parameters
+    ----------
+    response: Response
+        The error response of the StreamPipes API.
+
+    Returns
+    -------
+    The message to show, or `None` if the body is not a problem detail.
+    """
+    try:
+        body = response.json()
+    except ValueError:
+        return None
+    if not isinstance(body, dict):
+        return None
+    for key in ("detail", "title"):
+        value = body.get(key)
+        if isinstance(value, str) and value.strip():
+            return value
+    return None
+
+
 class Endpoint(ABC):
     """Abstract implementation of a StreamPipes endpoint.
 
@@ -159,6 +187,10 @@ class APIEndpoint(Endpoint):
                 HTTPStatus.NOT_FOUND.numerator,
             ] or status_code not in _error_code_to_message:
                 error_message += f"url: {err.response.url}\nstatus code: {status_code}"
+
+            problem_message = _problem_detail_message(err.response)
+            if problem_message:
+                error_message += f"\nserver message: {problem_message}"
 
             logger.debug(f"HTTP error response: {err.response.text}")
             raise HTTPError(error_message, response=response) from err

@@ -23,16 +23,12 @@ import org.apache.streampipes.commons.exceptions.connect.ParseException;
 import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataRequestManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
-import org.apache.streampipes.model.monitoring.SpLogMessage;
-import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,22 +60,6 @@ public class AdapterWorkerSampleDataResource extends AbstractSharedRestInterface
     var sampleData = guessManagement.getSampleData(adapterDescription);
     return ok(sampleData);
 
-  }
-
-  @ExceptionHandler(value = {ParseException.class})
-  private ResponseEntity<Object> handleParceException(ParseException ex) {
-    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
-    return ResponseEntity
-        .status(spLogMessageException.getStatus())
-        .body(spLogMessageException.getSpMessage());
-  }
-
-  @ExceptionHandler(value = {AdapterException.class})
-  private ResponseEntity<Object> handleAdapterException(AdapterException ex) {
-    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
-    return ResponseEntity
-        .status(spLogMessageException.getStatus())
-        .body(spLogMessageException.getSpMessage());
   }
 
 }

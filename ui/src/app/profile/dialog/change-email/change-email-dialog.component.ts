@@ -40,7 +40,11 @@ import {
     ValidatorFn,
     Validators,
 } from '@angular/forms';
-import { UserAccount, UserService } from '@streampipes/platform-services';
+import {
+    UserAccount,
+    UserService,
+    problemDetailMessage,
+} from '@streampipes/platform-services';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
@@ -134,7 +138,7 @@ export class ChangeEmailDialogComponent implements OnInit {
             error => {
                 this.operationApplied = true;
                 this.error = true;
-                this.errorMessage = error.error.notifications[0].title;
+                this.errorMessage = problemDetailMessage(error);
             },
         );
     }

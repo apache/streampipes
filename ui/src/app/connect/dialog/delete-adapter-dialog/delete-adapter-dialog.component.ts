@@ -26,6 +26,7 @@ import {
     AdapterDescription,
     AdapterSummaryDto,
     AdapterService,
+    problemErrors,
 } from '@streampipes/platform-services';
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import {
@@ -87,10 +88,11 @@ export class DeleteAdapterDialogComponent {
                 },
                 error => {
                     if (error.status === 409) {
+                        const pipelineNames = problemErrors(error).join(', ');
                         if (deleteAssociatedPipelines) {
-                            this.namesOfPipelinesNotOwnedByUser = error.error;
+                            this.namesOfPipelinesNotOwnedByUser = pipelineNames;
                         } else {
-                            this.namesOfPipelinesUsingAdapter = error.error;
+                            this.namesOfPipelinesUsingAdapter = pipelineNames;
                         }
                         this.adapterUsedByPipeline = true;
                         this.isInProgress = false;

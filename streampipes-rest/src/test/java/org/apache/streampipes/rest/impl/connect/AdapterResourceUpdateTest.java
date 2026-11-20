@@ -21,9 +21,11 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -31,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -84,12 +86,12 @@ class AdapterResourceUpdateTest {
     withUser(() -> {
       var updates = mock(AdapterUpdateManagement.class);
       var resource = resource(stored, updates);
-      var update = resource.updateAdapter(submitted);
-      var preflight = resource.performPipelineMigrationPreflight(submitted);
-      assertEquals(403, update.getStatusCode().value());
-      assertEquals(403, preflight.getStatusCode().value());
-      assertNull(update.getBody());
-      assertNull(preflight.getBody());
+      // denied requests are answered as a 403 problem detail by SpRestProblemHandler
+      var update = assertThrows(SpProblemException.class, () -> resource.updateAdapter(submitted));
+      var preflight = assertThrows(SpProblemException.class,
+          () -> resource.performPipelineMigrationPreflight(submitted));
+      assertEquals(HttpStatus.FORBIDDEN, update.getStatus());
+      assertEquals(HttpStatus.FORBIDDEN, preflight.getStatus());
       verifyNoInteractions(updates);
     });
   }

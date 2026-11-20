@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.exceptions.StorageNotFoundException;
@@ -81,6 +81,6 @@ class GenericStorageResourceTest {
   }
 
   private static void assertStatus(HttpStatus expected, Runnable call) {
-    assertEquals(expected, assertThrows(SpMessageException.class, call::run).getStatus());
+    assertEquals(expected, assertThrows(SpProblemException.class, call::run).getStatus());
   }
 }

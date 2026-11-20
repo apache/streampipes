@@ -45,7 +45,8 @@
                 <i class="material-icons">warning</i>
                 <span
                     >&nbsp;{{
-                        templateErrorMessage.notifications[0].title
+                        templateErrorMessage.detail ||
+                            templateErrorMessage.title
                     }}</span
                 >
             </div>

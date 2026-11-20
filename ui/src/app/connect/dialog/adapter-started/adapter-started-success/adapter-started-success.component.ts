@@ -18,7 +18,7 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
-    ErrorMessage,
+    ProblemDetail,
     PipelineOperationStatus,
     SpLogMessage,
 } from '@streampipes/platform-services';
@@ -47,7 +47,7 @@ import { SpExceptionDetailsComponent } from '@streampipes/shared-ui';
 })
 export class SpAdapterStartedSuccessComponent {
     @Input()
-    templateErrorMessage: ErrorMessage;
+    templateErrorMessage: ProblemDetail;
 
     @Input()
     adapterInstallationSuccessMessage = '';

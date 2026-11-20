@@ -59,6 +59,7 @@ import {
     DatalakeRestService,
     EventPropertyPrimitive,
     SemanticType,
+    problemDetailMessage,
 } from '@streampipes/platform-services';
 import {
     DialogRef,
@@ -413,7 +414,7 @@ export class CsvImportDialogComponent {
                         {
                             field: 'preview',
                             message:
-                                error?.error?.message ??
+                                problemDetailMessage(error) ||
                                 'Preview could not be generated.',
                         },
                     ]);
@@ -519,7 +520,7 @@ export class CsvImportDialogComponent {
                                   {
                                       field: 'import',
                                       message:
-                                          error?.error?.message ??
+                                          problemDetailMessage(error) ||
                                           this.translateService.instant(
                                               'The CSV import failed.',
                                           ),
@@ -742,7 +743,7 @@ export class CsvImportDialogComponent {
                         {
                             field: 'import',
                             message:
-                                error?.error?.message ??
+                                problemDetailMessage(error) ||
                                 this.translateService.instant(
                                     'CSV import status could not be loaded.',
                                 ),
