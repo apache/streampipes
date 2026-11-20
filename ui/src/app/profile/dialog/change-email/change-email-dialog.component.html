@@ -17,11 +17,11 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content">
-        <div fxFlex="100" fxLayout="column" class="p-15">
+    <div class="sp-dialog-content flex-row">
+        <div class="p-15 flex-col flex-100">
             @if (!operationApplied) {
-                <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                    <div fxLayout="column">
+                <form [formGroup]="parentForm" class="flex-col flex-100">
+                    <div class="flex-col">
                         <sp-form-field
                             [level]="3"
                             [label]="'New mail address' | translate"
@@ -29,7 +29,7 @@
                             <mat-form-field>
                                 <input
                                     formControlName="email"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     required
                                 />
@@ -45,7 +45,7 @@
                             <mat-form-field>
                                 <input
                                     formControlName="emailConfirm"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     required
                                 />
@@ -69,7 +69,7 @@
                             <mat-form-field>
                                 <input
                                     formControlName="passwordConfirm"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     type="password"
                                     required
@@ -103,7 +103,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <div fxLayout="row">
+        <div class="flex-row">
             <button
                 mat-button
                 mat-flat-button

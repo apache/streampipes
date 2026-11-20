@@ -22,15 +22,12 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.dao.CrudViewDao;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-import org.apache.http.client.methods.HttpGet;
-import org.lightcouch.NoDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,8 +40,8 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
   private static final Logger LOG = LoggerFactory.getLogger(UserStorage.class);
   private static final String viewName = "users/username";
 
-  public UserStorage() {
-    super(Utils::getCouchDbUserClient);
+  public UserStorage(CouchDbStores stores) {
+    super(stores.principal(CouchDbStores.USER_DB_NAME));
   }
 
   @Override
@@ -122,12 +119,6 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
 
   @Override
   public boolean existsDatabase() {
-    var client = Utils.getCouchDbClient(Utils.USER_DB_NAME, false);
-    try {
-      client.executeRequest(new HttpGet(URI.create(client.getBaseUri() + "/" + Utils.USER_DB_NAME)));
-      return true;
-    } catch (NoDocumentException e) {
-      return false;
-    }
+    return store.database().exists();
   }
 }

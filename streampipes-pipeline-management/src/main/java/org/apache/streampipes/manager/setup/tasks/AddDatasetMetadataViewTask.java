@@ -18,14 +18,8 @@
 
 package org.apache.streampipes.manager.setup.tasks;
 
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.DesignDocument;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
+import org.apache.streampipes.couchdb.client.design.DesignDocument;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 public class AddDatasetMetadataViewTask implements InstallationTask {
 
@@ -34,16 +28,15 @@ public class AddDatasetMetadataViewTask implements InstallationTask {
   public static final String VIEW_NAME = "by-measure-name";
   public static final String MAP_FUNCTION = "function (doc) { if (doc.measureName) { emit(doc.measureName, doc); } }";
 
+  private final CouchDbStores stores;
+
+  public AddDatasetMetadataViewTask(CouchDbStores stores) {
+    this.stores = stores;
+  }
+
   @Override
   public void execute() {
-    DesignDocument dataLakeDoc = prepareDocument(MEASUREMENT_BY_NAME_VIEW);
-    Map<String, DesignDocument.MapReduce> datasetMetadataViews = new HashMap<>();
-
-    DesignDocument.MapReduce byNameFn = new DesignDocument.MapReduce();
-    byNameFn.setMap(MAP_FUNCTION);
-
-    datasetMetadataViews.put(VIEW_NAME, byNameFn);
-    dataLakeDoc.setViews(datasetMetadataViews);
-    Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME).design().synchronizeWithDb(dataLakeDoc);
+    stores.database(CouchDbStores.DATA_LAKE_DB_NAME).design()
+        .sync(DesignDocument.named(MEASUREMENT_BY_NAME_VIEW).withView(VIEW_NAME, MAP_FUNCTION));
   }
 }

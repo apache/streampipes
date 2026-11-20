@@ -16,13 +16,16 @@
   ~
   -->
 
-<div [ngClass]="['alert', alertClasses]" class="transition duration-300">
+<div
+    [ngClass]="['alert', alertClasses]"
+    class="transition duration-300 flex-row"
+>
     <div [ngClass]="iconContainerClasses" class="alert-icon">
         <mat-icon>{{ displayIcon }}</mat-icon>
     </div>
 
-    <div class="alert-content" fxLayout="row" fxFlex="100">
-        <div fxFlex fxLayout="column">
+    <div class="alert-content flex-row flex-100">
+        <div class="flex-col flex-1">
             <div class="alert-title">{{ title }}</div>
             @if (description) {
                 <div
@@ -35,7 +38,7 @@
             <ng-content></ng-content>
         </div>
         @if (showDetailsButton) {
-            <div fxLayoutAlign="end center">
+            <div class="flex-row justify-end items-center">
                 <button
                     mat-flat-button
                     [class.btn-warn]="type === 'error'"

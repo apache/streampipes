@@ -25,6 +25,14 @@
     max-width: 120px;
 }
 
+/* A fixed width avoids fxFlex reading the parent's computed styles per row. */
+.pipeline-status-content {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 150px;
+}
+
 .ml-10 {
     margin-left: 10px;
 }
@@ -46,4 +54,15 @@
 
 .pipeline-name-cell small {
     max-width: 100%;
+}
+
+.pipeline-start-content,
+.pipeline-name-content {
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+.pipeline-name-content {
+    flex-direction: column;
 }

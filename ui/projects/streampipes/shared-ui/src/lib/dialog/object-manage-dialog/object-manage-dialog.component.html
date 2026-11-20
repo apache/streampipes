@@ -17,16 +17,16 @@
 -->
 <div class="sp-dialog-container">
     @if (loading) {
-        <div class="sp-dialog-content">
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+        <div class="sp-dialog-content flex-row">
+            <div class="flex-col justify-center items-center flex-100">
                 <mat-spinner [diameter]="25"></mat-spinner>
                 <h5>{{ 'Loading' | translate }}</h5>
             </div>
         </div>
     } @else if (!permissionDenied || createMode) {
-        <div class="sp-dialog-content">
-            <div fxFlex="100" fxLayout="column" class="p-15">
-                <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+        <div class="sp-dialog-content flex-row">
+            <div class="p-15 flex-col flex-100">
+                <form [formGroup]="parentForm" class="flex-col flex-100">
                     @if (showResourceSection) {
                         <sp-split-section
                             [level]="3"
@@ -74,7 +74,7 @@
                             }
 
                             @if (resourceOptionsTemplate) {
-                                <div class="mt-10" fxLayout="column">
+                                <div class="mt-10 flex-col">
                                     <ng-container
                                         [ngTemplateOutlet]="
                                             resourceOptionsTemplate
@@ -84,7 +84,7 @@
                             }
 
                             @if (isAssetAdmin && showAssetLinking) {
-                                <div class="mt-10" fxLayout="column">
+                                <div class="mt-10 flex-col">
                                     <mat-checkbox
                                         [(ngModel)]="addToAssets"
                                         [ngModelOptions]="{ standalone: true }"
@@ -136,7 +136,7 @@
                                     <mat-select
                                         data-cy="owner-select"
                                         formControlName="owner"
-                                        fxFlex
+                                        class="flex-1"
                                         required
                                     >
                                         @for (user of allUsers; track user) {
@@ -239,14 +239,10 @@
 
                             @if (parentForm.get('readAnonymous')?.value) {
                                 <div
-                                    fxLayout="row"
-                                    fxFlex="100"
-                                    class="mt-10"
-                                    fxLayoutGap="10px"
-                                    fxLayoutAlign="start center"
+                                    class="mt-10 flex-row items-center gap-sm flex-100"
                                 >
                                     <span>{{ 'URL' | translate }}</span>
-                                    <span class="public-link" fxFlex>{{
+                                    <span class="public-link flex-1">{{
                                         publicLink
                                     }}</span>
                                     <button
@@ -266,10 +262,10 @@
         </div>
     } @else {
         <div
-            class="sp-dialog-content"
+            class="sp-dialog-content flex-row"
             data-cy="warning-permissions-managed-by-owner"
         >
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <div class="flex-col justify-center items-center flex-100">
                 <mat-icon>block</mat-icon>
                 <h5>
                     {{
@@ -284,7 +280,7 @@
     <mat-divider></mat-divider>
 
     <div class="sp-dialog-actions">
-        <div fxLayout="row">
+        <div class="flex-row">
             @if (!loading && (!permissionDenied || createMode)) {
                 <button
                     mat-button

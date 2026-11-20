@@ -19,11 +19,16 @@
 package org.apache.streampipes.manager.setup.tasks;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 public class AddScriptTemplateViewTask extends AbstractAddGenericStorageViewTask {
 
   public static final String DESIGN_DOCUMENT = "_design/transformation-scripts";
   public static final String VIEW_NAME = "all-transformations";
+
+  public AddScriptTemplateViewTask(CouchDbStores stores) {
+    super(stores);
+  }
 
   @Override
   public String getDesignDocument() {

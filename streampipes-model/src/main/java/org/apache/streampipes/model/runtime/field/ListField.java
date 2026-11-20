@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.model.runtime.field;
 
-import org.apache.streampipes.model.util.EventUtils;
+import org.apache.streampipes.model.util.SimpleTypeParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class ListField extends AbstractField<List<AbstractField>> {
   public <T> List<T> parseAsSimpleType(Class<T> type) {
     return value.stream()
         .map(v -> v.getAsPrimitive().getRawValue())
-        .map(f -> EventUtils.TYPE_PARSER.parse(asString(f), type))
+        .map(f -> SimpleTypeParser.parse(asString(f), type))
         .collect(Collectors.toList());
   }
 }

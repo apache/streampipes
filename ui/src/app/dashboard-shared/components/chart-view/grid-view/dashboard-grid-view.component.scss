@@ -20,7 +20,11 @@
     border: 1px solid var(--color-bg-2);
 }
 
+// gridstack sets an inline height from the chart rows. Fill the view when that is shorter,
+// and keep the full height (the view scrolls) when it is taller.
 .dashboard-outer {
+    flex: 0 0 auto;
     width: 100%;
+    min-height: 100%;
     background: var(--color-bg-1);
 }

@@ -18,26 +18,16 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-exception-details',
+    host: { class: 'flex-row' },
     templateUrl: './exception-details.component.html',
     styleUrl: './exception-details.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [MatButton, TranslatePipe],
 })
 export class SpExceptionDetailsComponent {
     @Input()

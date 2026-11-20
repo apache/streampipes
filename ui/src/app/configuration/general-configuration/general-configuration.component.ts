@@ -51,12 +51,6 @@ import {
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { map } from 'rxjs/operators';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
@@ -79,9 +73,6 @@ import { SpSystemNotificationConfigurationComponent } from './system-notificatio
     styleUrls: ['./general-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         FormsModule,
         ReactiveFormsModule,
         SplitSectionComponent,
@@ -89,7 +80,6 @@ import { SpSystemNotificationConfigurationComponent } from './system-notificatio
         FormFieldComponent,
         MatFormField,
         MatInput,
-        LayoutGapDirective,
         MatButtonToggleGroup,
         MatButtonToggle,
         MatCheckbox,

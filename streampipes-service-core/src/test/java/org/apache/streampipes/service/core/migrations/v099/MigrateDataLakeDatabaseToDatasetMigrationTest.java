@@ -16,86 +16,71 @@
  *
  */
 
+
 package org.apache.streampipes.service.core.migrations.v099;
 
-import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.apache.streampipes.service.core.migrations.InMemoryCouchTransport;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHttpResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.lightcouch.CouchDbClient;
 
 import java.io.IOException;
+import java.util.List;
 
+import static org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeDatabaseToDatasetMigration.LEGACY_DATA_LAKE_DB_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class MigrateDataLakeDatabaseToDatasetMigrationTest {
 
-  private final MigrateDataLakeDatabaseToDatasetMigration migration =
-      spy(new MigrateDataLakeDatabaseToDatasetMigration());
+  private static final String TARGET = "dataset";
+  private static final String PAGE_REQUEST = "GET /data-lake/_all_docs";
+
+  private InMemoryCouchTransport couch;
+  private MigrateDataLakeDatabaseToDatasetMigration migration;
+
+  @BeforeEach
+  void setUp() {
+    couch = new InMemoryCouchTransport();
+    migration = new MigrateDataLakeDatabaseToDatasetMigration(couch.stores());
+  }
 
   @Test
-  void shouldExecuteUntilLegacyDatabaseIsRemoved() {
-    doReturn(true, false).when(migration).databaseExists(Utils.LEGACY_DATA_LAKE_DB_NAME);
-
-    assertTrue(migration.shouldExecute());
+  void shouldExecuteUntilLegacyDatabaseIsRemoved() throws IOException {
     assertFalse(migration.shouldExecute());
-    verify(migration, never()).databaseExists(Utils.DATA_LAKE_DB_NAME);
+    assertFalse(couch.hasDatabase(LEGACY_DATA_LAKE_DB_NAME), "checking must not create the database");
+
+    legacyDocuments(1);
+    assertTrue(migration.shouldExecute());
+    migration.executeMigration();
+    assertFalse(migration.shouldExecute());
   }
 
   @Test
   void copiesEachPageBeforeFetchingTheNextAndDeletesOnlyAfterCompletion() throws IOException {
-    var firstPage = rows(0, MigrateDataLakeDatabaseToDatasetMigration.PAGE_SIZE + 1);
-    var lastPage = rows(MigrateDataLakeDatabaseToDatasetMigration.PAGE_SIZE, 2);
-    doReturn(firstPage).when(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, null);
-    doReturn(lastPage).when(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, "doc-100");
-    doNothing().when(migration).upsertDocument(anyString(), any());
-    doNothing().when(migration).removeDatabase(anyString());
+    legacyDocuments(102);
 
-    try (var utils = mockStatic(Utils.class)) {
-      var client = mock(CouchDbClient.class);
-      utils.when(() -> Utils.getCouchDbClient(Utils.DATA_LAKE_DB_NAME, true)).thenReturn(client);
-      migration.executeMigration();
-      verify(client).shutdown();
-    }
+    migration.executeMigration();
 
-    var order = inOrder(migration);
-    order.verify(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, null);
-    for (int i = 0; i < 100; i++) {
-      order.verify(migration).upsertDocument(Utils.DATA_LAKE_DB_NAME, document(i));
-    }
-    order.verify(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, "doc-100");
-    order.verify(migration).upsertDocument(Utils.DATA_LAKE_DB_NAME, document(100));
-    order.verify(migration).upsertDocument(Utils.DATA_LAKE_DB_NAME, document(101));
-    order.verify(migration).removeDatabase(Utils.LEGACY_DATA_LAKE_DB_NAME);
-    verify(migration, times(102)).upsertDocument(anyString(), any());
+    assertEquals(102, couch.documentIds(TARGET).size());
+    assertFalse(couch.hasDatabase(LEGACY_DATA_LAKE_DB_NAME));
+
+    var requests = couch.requests();
+    int firstPage = requests.indexOf(PAGE_REQUEST + "?limit=101&include_docs=true");
+    int secondPage = requests.indexOf(PAGE_REQUEST + "?limit=101&start_key=%22doc-100%22&include_docs=true");
+    int delete = requests.indexOf("DELETE /data-lake");
+    assertTrue(firstPage >= 0 && firstPage < secondPage && secondPage < delete, requests.toString());
+    assertEquals(100, writes(requests.subList(firstPage, secondPage)));
+    assertEquals(2, writes(requests.subList(secondPage, delete)));
+    assertEquals(delete, requests.size() - 1, "nothing follows the deletion");
   }
 
   @Test
   void emptyDatabaseIsRemoved() throws IOException {
     assertFinalPage(0);
+    assertTrue(couch.hasDatabase(TARGET), "the target exists even if there was nothing to copy");
   }
 
   @Test
@@ -109,138 +94,123 @@ class MigrateDataLakeDatabaseToDatasetMigrationTest {
   }
 
   private void assertFinalPage(int count) throws IOException {
-    doReturn(rows(0, count)).when(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, null);
-    doNothing().when(migration).upsertDocument(anyString(), any());
-    doNothing().when(migration).removeDatabase(anyString());
-    try (var utils = mockStatic(Utils.class)) {
-      utils.when(() -> Utils.getCouchDbClient(Utils.DATA_LAKE_DB_NAME, true)).thenReturn(mock(CouchDbClient.class));
-      migration.executeMigration();
-    }
-    verify(migration, times(count)).upsertDocument(anyString(), any());
-    verify(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, null);
-    verify(migration, never()).getDocumentPage(anyString(), anyString());
-    verify(migration).removeDatabase(Utils.LEGACY_DATA_LAKE_DB_NAME);
+    legacyDocuments(count);
+
+    migration.executeMigration();
+
+    assertEquals(count, couch.documentIds(TARGET).size());
+    assertEquals(1, couch.requestsStartingWith(PAGE_REQUEST).size());
+    assertFalse(couch.hasDatabase(LEGACY_DATA_LAKE_DB_NAME));
   }
 
   @Test
-  void failedLaterPageRetainsLegacyDatabase() throws IOException {
-    doReturn(rows(0, 101)).when(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, null);
-    doThrow(new IOException("Page failed"))
-        .when(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, "doc-100");
-    doNothing().when(migration).upsertDocument(anyString(), any());
-    try (var utils = mockStatic(Utils.class)) {
-      utils.when(() -> Utils.getCouchDbClient(Utils.DATA_LAKE_DB_NAME, true)).thenReturn(mock(CouchDbClient.class));
-      assertThrows(IOException.class, migration::executeMigration);
-    }
-    verify(migration, times(100)).upsertDocument(anyString(), any());
-    verify(migration, never()).removeDatabase(anyString());
-  }
-
-  @Test
-  void failedCopyRetainsLegacyDatabaseForRetry() throws IOException {
-    doReturn(true).when(migration).databaseExists(Utils.LEGACY_DATA_LAKE_DB_NAME);
-    doThrow(new IOException("Copy failed")).when(migration).copyDocuments(anyString(), anyString());
+  void failedLaterPageRetainsLegacyDatabase() {
+    legacyDocuments(101);
+    couch.fail(PAGE_REQUEST + "?limit=101&start_key", 503);
 
     assertThrows(IOException.class, migration::executeMigration);
 
-    verify(migration, never()).removeDatabase(anyString());
+    assertEquals(100, couch.documentIds(TARGET).size());
+    assertTrue(couch.hasDatabase(LEGACY_DATA_LAKE_DB_NAME));
     assertTrue(migration.shouldExecute());
   }
 
   @Test
   void failedDeletionIsRetriedEvenAfterCopyCompletes() throws IOException {
-    doReturn(true).when(migration).databaseExists(Utils.LEGACY_DATA_LAKE_DB_NAME);
-    doNothing().when(migration).copyDocuments(anyString(), anyString());
-    doThrow(new IOException("Delete failed")).doNothing().when(migration).removeDatabase(anyString());
+    legacyDocuments(2);
+    couch.failOnce("DELETE /data-lake", 500);
 
     assertThrows(IOException.class, migration::executeMigration);
     assertTrue(migration.shouldExecute());
+
     migration.executeMigration();
 
-    verify(migration, times(2)).removeDatabase(Utils.LEGACY_DATA_LAKE_DB_NAME);
+    assertFalse(couch.hasDatabase(LEGACY_DATA_LAKE_DB_NAME));
+    assertEquals(2, couch.documentIds(TARGET).size());
   }
 
   @Test
-  void conflictAbortsCopyWithoutDeletingLegacyDatabase() throws IOException {
-    doReturn(rows(0, 1)).when(migration).getDocumentPage(Utils.LEGACY_DATA_LAKE_DB_NAME, null);
-    doReturn("2-target").when(migration).getDocumentRev(anyString());
-    var request = mock(Request.class, RETURNS_DEEP_STUBS);
-    when(request.execute().returnResponse()).thenReturn(new BasicHttpResponse(HttpVersion.HTTP_1_1, 409, "Conflict"));
+  void legacyDatabaseAlreadyGoneCountsAsRemoved() throws IOException {
+    legacyDocuments(1);
+    couch.fail("DELETE /data-lake", 404);
 
-    try (var utils = mockStatic(Utils.class)) {
-      utils.when(() -> Utils.getCouchDbClient(Utils.DATA_LAKE_DB_NAME, true)).thenReturn(mock(CouchDbClient.class));
-      utils.when(() -> Utils.putRequest(anyString(), anyString())).thenReturn(request);
-
-      assertThrows(IOException.class, migration::executeMigration);
-    }
-    verify(migration, never()).removeDatabase(anyString());
+    migration.executeMigration();
   }
 
   @Test
-  void revisionLookupFailurePreventsWrite() throws IOException {
-    var request = mock(Request.class, RETURNS_DEEP_STUBS);
-    when(request.execute().returnResponse()).thenReturn(new BasicHttpResponse(HttpVersion.HTTP_1_1, 503, "Unavailable"));
-    try (var utils = mockStatic(Utils.class)) {
-      utils.when(() -> Utils.getRequest(anyString())).thenReturn(request);
+  void conflictAbortsCopyWithoutDeletingLegacyDatabase() {
+    legacyDocuments(1);
+    couch.fail("PUT /dataset/doc-000", 409);
 
-      assertThrows(IOException.class, () -> migration.upsertDocument(Utils.DATA_LAKE_DB_NAME, document(0)));
+    assertThrows(IOException.class, migration::executeMigration);
 
-      utils.verify(() -> Utils.putRequest(anyString(), anyString()), never());
-    }
+    assertTrue(couch.hasDatabase(LEGACY_DATA_LAKE_DB_NAME));
   }
 
   @Test
-  void existingDocumentUsesTargetRevisionWithoutMutatingSource() throws IOException {
-    var source = document(0);
-    source.addProperty("_rev", "1-source");
-    var expected = source.deepCopy();
-    expected.addProperty("_rev", "2-target");
-    var get = mock(Request.class, RETURNS_DEEP_STUBS);
-    var response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 200, "OK");
-    response.setEntity(new StringEntity("{\"_rev\":\"2-target\"}"));
-    when(get.execute().returnResponse()).thenReturn(response);
-    var put = mock(Request.class, RETURNS_DEEP_STUBS);
-    when(put.execute().returnResponse()).thenReturn(new BasicHttpResponse(HttpVersion.HTTP_1_1, 201, "Created"));
+  void revisionLookupFailurePreventsWrite() {
+    legacyDocuments(1);
+    couch.fail("HEAD /dataset/doc-000", 503);
 
-    try (var utils = mockStatic(Utils.class)) {
-      utils.when(() -> Utils.getRequest(anyString())).thenReturn(get);
-      utils.when(() -> Utils.putRequest(anyString(), anyString())).thenReturn(put);
-      migration.upsertDocument(Utils.DATA_LAKE_DB_NAME, source);
-      utils.verify(() -> Utils.getRequest(anyString()), times(1));
-      utils.verify(() -> Utils.putRequest(anyString(), eq(expected.toString())));
-    }
-    assertEquals("1-source", source.get("_rev").getAsString());
+    assertThrows(IOException.class, migration::executeMigration);
+
+    assertEquals(List.of(), couch.requestsStartingWith("PUT /dataset/doc-000"));
+    assertTrue(couch.hasDatabase(LEGACY_DATA_LAKE_DB_NAME));
   }
 
   @Test
-  void pageRequestIsBoundedAndEncodesDocumentId() throws IOException {
-    var request = mock(Request.class, RETURNS_DEEP_STUBS);
-    when(request.execute().returnContent().asString()).thenReturn("{\"rows\":[]}");
-    try (var utils = mockStatic(Utils.class)) {
-      utils.when(() -> Utils.getDatabaseRoute("source")).thenReturn("http://localhost/source");
-      utils.when(() -> Utils.getRequest(anyString())).thenReturn(request);
+  void existingDocumentUsesTargetRevision() throws IOException {
+    couch.createDatabase(LEGACY_DATA_LAKE_DB_NAME);
+    couch.createDatabase(TARGET);
+    couch.store(LEGACY_DATA_LAKE_DB_NAME, "{\"_id\":\"doc\",\"_rev\":\"1-source\",\"value\":\"new\"}");
+    couch.store(TARGET, "{\"_id\":\"doc\",\"_rev\":\"2-target\",\"value\":\"old\"}");
 
-      assertTrue(migration.getDocumentPage("source", "a/\"&+雪").isEmpty());
+    migration.executeMigration();
 
-      utils.verify(() -> Utils.getRequest("http://localhost/source/_all_docs?include_docs=true&limit=101"
-          + "&startkey=%22a%2F%5C%22%26%2B%E9%9B%AA%22"));
+    var copied = couch.document(TARGET, "doc");
+    assertEquals("new", copied.get("value").asText());
+    assertEquals("3-memory", copied.get("_rev").asText());
+  }
+
+  @Test
+  void documentsAreCopiedCompletelyIncludingDesignDocuments() throws IOException {
+    couch.createDatabase(LEGACY_DATA_LAKE_DB_NAME);
+    couch.store(LEGACY_DATA_LAKE_DB_NAME, "{\"_id\":\"_design/measurement\",\"language\":\"javascript\",\"views\":{}}");
+    couch.store(LEGACY_DATA_LAKE_DB_NAME,
+        "{\"_id\":\"doc\",\"nothing\":null,\"count\":12345678901234567890,\"ratio\":0.1,\"nested\":{\"list\":[1,\"a\"]}}");
+
+    migration.executeMigration();
+
+    assertEquals("javascript", couch.document(TARGET, "_design/measurement").get("language").asText());
+    var document = couch.document(TARGET, "doc");
+    assertTrue(document.has("nothing") && document.get("nothing").isNull());
+    assertEquals("12345678901234567890", document.get("count").asText());
+    assertEquals(0.1, document.get("ratio").asDouble());
+    assertEquals("a", document.at("/nested/list/1").asText());
+  }
+
+  @Test
+  void pageRequestEncodesDocumentId() throws IOException {
+    legacyDocuments(100);
+    String id = "z/\"&+\u96EA";
+    couch.store(LEGACY_DATA_LAKE_DB_NAME, "{\"_id\":\"z/\\\"&+\u96EA\"}");
+
+    migration.executeMigration();
+
+    assertTrue(couch.requests().contains(
+        PAGE_REQUEST + "?limit=101&start_key=%22z%2F%5C%22%26%2B%E9%9B%AA%22&include_docs=true"), couch.requests().toString());
+    assertTrue(couch.documentIds(TARGET).contains(id));
+    assertEquals(1, couch.requestsStartingWith("PUT /dataset/z%2F%22%26%2B%E9%9B%AA").size());
+  }
+
+  private void legacyDocuments(int count) {
+    couch.createDatabase(LEGACY_DATA_LAKE_DB_NAME);
+    for (int i = 0; i < count; i++) {
+      couch.store(LEGACY_DATA_LAKE_DB_NAME, "{\"_id\":\"doc-%03d\"}".formatted(i));
     }
   }
 
-  private JsonArray rows(int start, int count) {
-    var rows = new JsonArray();
-    for (int i = start; i < start + count; i++) {
-      var row = new JsonObject();
-      row.addProperty("id", "doc-" + i);
-      row.add("doc", document(i));
-      rows.add(row);
-    }
-    return rows;
-  }
-
-  private JsonObject document(int index) {
-    var document = new JsonObject();
-    document.addProperty("_id", "doc-" + index);
-    return document;
+  private long writes(List<String> requests) {
+    return requests.stream().filter(request -> request.startsWith("PUT /dataset/")).count();
   }
 }

@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.matching.v2;
 
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.client.matching.MatchingResultType;
+import org.apache.streampipes.units.catalog.UnitCatalog;
 import org.apache.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
@@ -31,10 +32,25 @@ public class MeasurementUnitMatch extends AbstractMatcher<URI, URI> {
     super(MatchingResultType.MEASUREMENT_UNIT_MATCH);
   }
 
+  /**
+   * Units match if they are the same catalog unit, regardless of which of its identifiers
+   * (QUDT 1.1, QUDT 2.x, StreamPipes) offer and requirement use. Identifiers that are not in
+   * the catalog are compared as strings.
+   */
   @Override
   public boolean match(URI offer, URI requirement, List<MatchingResultMessage> errorLog) {
-    return requirement == null || (requirement.toString().equals(StreamPipes.ANYTHING) && offer != null)
-        || (offer != null && requirement.toString().equals(offer.toString()));
+    if (requirement == null) {
+      return true;
+    }
+    if (offer == null) {
+      return false;
+    }
+    if (requirement.toString().equals(StreamPipes.ANYTHING)) {
+      return true;
+    }
+    var catalog = UnitCatalog.builtIn();
+    return catalog.canonicalizeOrKeep(requirement).toString()
+        .equals(catalog.canonicalizeOrKeep(offer).toString());
   }
 
 }

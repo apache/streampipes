@@ -17,9 +17,11 @@
   -->
 
 <div
-    [fxLayout]="level === 3 ? 'row' : 'column'"
-    [fxLayoutAlign]="level === 3 ? 'start center' : 'start start'"
     class="label-title"
+    [class.flex-row]="level === 3"
+    [class.flex-col]="level !== 3"
+    [class.items-center]="level === 3"
+    [class.items-start]="level !== 3"
     [class.text-lg]="level === 1"
     [class.text-md]="level === 2"
     [class.text-sm]="level === 3"

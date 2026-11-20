@@ -19,23 +19,35 @@
 StreamPipes Compose is a simple collection of user-friendly `docker-compose` files that easily lets gain first-hand experience with Apache StreamPipes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.99.0-SNAPSHOT
+**Current version:** 1.0.0-SNAPSHOT
 <!-- END do not edit -->
 
 > **NOTE**: We recommend StreamPipes Compose to only use for initial try-out and testing. If you are a developer and want to develop new pipeline elements or core feature, use the [StreamPipes CLI](../cli).
 
-#### TL;DR: A one-liner to rule them all :tada: :tada: :tada:
+## Start StreamPipes
 
-```bash
-./configure
-docker compose up -d
-```
-Go to http://localhost and sign in with `admin@streampipes.apache.org` and the
-`SP_INITIAL_ADMIN_PASSWORD` from `.env`. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/user-guide-introduction/) to learn how to create your first pipeline!
+From the installer directory, run **`./start` on Linux or macOS** or **`.\start.cmd` on Windows**.
+The launcher needs Docker with Compose v2. On first startup it runs the credential helper in
+a temporary Python container and writes the credentials to `.env`. Subsequent starts use
+the existing file. Open http://localhost and sign in as `admin@streampipes.apache.org`
+with the initial password in `SP_INITIAL_ADMIN_PASSWORD`.
 
-The configure helper requires Python 3 and prepares a **new deployment**. Run it from
-this folder before starting any Compose variant. It generates independent random values
-for these settings and writes them to `.env` with restricted file permissions:
+**Existing deployments:** Keep your original `.env`, Compose project name and data volumes.
+The launcher passes an existing `.env` directly to Compose. Missing required values stop
+startup. Restore the original values from backup, including the encryption passcode and
+database credentials. The initial admin password setting only applies when the account
+is created.
+
+When `.env` is absent, the launcher checks Docker for existing installer data-volume names
+before generating credentials. If it finds a match it stops. If the matching volume belongs
+to another installation, set `COMPOSE_PROJECT_NAME` to a distinct name for the new deployment
+and the launcher records it in the new `.env`. For restored or nonstandard volumes with custom names, restore the
+original `.env` before invoking the launcher.
+
+**Custom configuration:** Edit `.env` directly, or copy `.env.example` and fill in your
+values before startup. With a complete file, `docker compose up -d` works directly.
+Select a variant for the launcher through `COMPOSE_FILE`, or use the direct
+Compose commands below.
 
 | Setting | Used by |
 | --- | --- |
@@ -53,7 +65,7 @@ The installer supplies an explicit value so it is backed up with the other crede
 Keep it distinct from the service-account secret and do not pass it to extensions.
 Changing it invalidates existing HMAC user JWTs; it is not used for RSA signing.
 
-The helper fills missing or empty values and preserves existing custom values on reruns.
+When run manually with Python 3 for a new installation, `./configure` fills missing or empty values and preserves existing custom values on reruns.
 The rejected historical service-secret default is replaced if present. To supply your
 own credentials, copy `.env.example` to `.env` and set the desired values before running
 `./configure`. The helper never prints passwords or tokens.
@@ -73,8 +85,7 @@ currently consumes only the generated service secret; the complete credential wi
 described above applies to the Compose variants in this installer directory.
 
 ## Prerequisite
-* Docker >= 17.06.0
-* Docker-Compose >= 1.17.0 (Compose file format: 3.4)
+* Docker with the Compose v2 plugin
 * Google Chrome (recommended), Mozilla Firefox, Microsoft Edge
 
 Tested on: **macOS, Linux, Windows** (CMD, PowerShell, GitBash)
@@ -93,10 +104,10 @@ We provide several options to get you going:
 The NATS-based setup is the recommended default. If you previously relied on Kafka, the Kafka compose file is still available as `docker-compose.kafka.yml`.
 
 **Starting** the **default (NATS)** option is as easy as simply running:
-> **NOTE**: Starting might take a while since `docker-compose up` also initially pulls all Docker images from Dockerhub.
+> **NOTE**: Starting might take a while since `docker compose up` also initially pulls all Docker images from Dockerhub.
 
 ```bash
-docker-compose up -d
+docker compose up -d
 # go to `http://localhost` after all services are started
 ```
 
@@ -104,51 +115,51 @@ Optional: enable token-based NATS auth using the generated `SP_NATS_TOKEN` and t
 (the token alone does not enable authentication):
 
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.nats-auth.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.nats-auth.yml up -d
 ```
 After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [documentation](https://streampipes.apache.org/docs/user-guide-introduction/) to learn more about StreamPipes!
 
 **Stopping** the **default** option is similarly easy:
 ```bash
-docker-compose down
+docker compose down
 # if you want to remove mapped data volumes, run:
-# docker-compose down -v
+# docker compose down -v
 ```
 
 If you need the Kafka-based setup, start it with the dedicated Kafka compose file:
 
 ```bash
-docker-compose -f docker-compose.kafka.yml up -d
+docker compose -f docker-compose.kafka.yml up -d
 # go to `http://localhost` after all services are started
 ```
 
 Stopping the **kafka** option:
 
 ```bash
-docker-compose -f docker-compose.kafka.yml down
+docker compose -f docker-compose.kafka.yml down
 ```
 
 Starting the **minimal** option is almost the same, just specify the `docker-compose.minimal.yml` file:
 ```bash
-docker-compose -f docker-compose.minimal.yml up -d
+docker compose -f docker-compose.minimal.yml up -d
 # go to `http://localhost` after all services are started
 ```
 
 Optional: enable token-based NATS auth in minimal mode:
 
 ```bash
-docker-compose -f docker-compose.minimal.yml -f docker-compose.minimal.nats-auth.yml up -d
+docker compose -f docker-compose.minimal.yml -f docker-compose.minimal.nats-auth.yml up -d
 ```
 Stopping the **minimal** option:
 ```bash
-docker-compose -f docker-compose.minimal.yml down
+docker compose -f docker-compose.minimal.yml down
 ```
 
 ## Update services
 To actively pull the latest available Docker images use:
 ```bash
-docker-compose pull
-# docker-compose -f docker-compose.full.yml pull
+docker compose pull
+# docker compose -f docker-compose.full.yml pull
 ```
 
 ## Upgrade

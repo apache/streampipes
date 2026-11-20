@@ -42,12 +42,11 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.TransformOperations;
-import org.apache.streampipes.units.UnitProvider;
+import org.apache.streampipes.units.UnitConversion;
+import org.apache.streampipes.units.UnitConverter;
+import org.apache.streampipes.units.catalog.UnitCatalog;
+import org.apache.streampipes.units.model.MeasurementUnit;
 
-import com.github.jqudt.Quantity;
-import com.github.jqudt.Unit;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,8 +57,9 @@ public class MeasurementUnitConverterProcessor implements IStreamPipesDataProces
   private static final String CONVERT_PROPERTY = "convert-property";
   private static final String OUTPUT_UNIT = "output-unit";
 
-  private Unit inputUnit;
-  private Unit outputUnit;
+  private final UnitCatalog catalog = UnitCatalog.builtIn();
+
+  private UnitConversion conversion;
 
   private String convertProperty;
 
@@ -105,23 +105,16 @@ public class MeasurementUnitConverterProcessor implements IStreamPipesDataProces
         .stream
             ().filter(Option::isSelected).map(Option::getInternalName).findFirst().get();
 
-    this.inputUnit = UnitProvider.INSTANCE.getUnit(inputUnitId);
-    this.outputUnit = UnitProvider.INSTANCE.getUnit(outputUnitId);
+    // fails here, at pipeline start, for unknown units or units of different quantities
+    this.conversion = UnitConverter.between(catalog.get(inputUnitId), catalog.get(outputUnitId));
   }
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
     double value = in.getFieldBySelector(convertProperty).getAsPrimitive().getAsDouble();
 
-    // transform old value to new unit
-    Quantity obs = new Quantity(value, inputUnit);
-    try {
-      Double newValue = obs.convertTo(outputUnit).getValue();
-      in.updateFieldBySelector(convertProperty, newValue);
-      out.collect(in);
-    } catch (IllegalAccessException e) {
-      throw new SpRuntimeException("Could not convert measurement", e);
-    }
+    in.updateFieldBySelector(convertProperty, conversion.applyAsDouble(value));
+    out.collect(in);
   }
 
   @Override
@@ -134,17 +127,11 @@ public class MeasurementUnitConverterProcessor implements IStreamPipesDataProces
     try {
       String selector = parameterExtractor.mappingPropertyValue(CONVERT_PROPERTY);
       EventProperty linkedEventProperty = parameterExtractor.getEventPropertyBySelector(selector);
-      if (linkedEventProperty instanceof EventPropertyPrimitive && ((EventPropertyPrimitive) linkedEventProperty)
-          .getMeasurementUnit() != null) {
-        Unit measurementUnit = UnitProvider.INSTANCE.getUnit(((EventPropertyPrimitive) linkedEventProperty)
-            .getMeasurementUnit().toString());
-        URI type = measurementUnit.getType();
-        List<Unit> availableUnits = UnitProvider.INSTANCE.getUnitsByType(type);
-        return availableUnits
-            .stream()
-            .filter(unit -> !(unit.getResource().toString().equals(measurementUnit.getResource().toString())))
-            .map(unit -> new Option(unit.getLabel(), unit.getResource().toString()))
-            .collect(Collectors.toList());
+      if (linkedEventProperty instanceof EventPropertyPrimitive primitive) {
+        // an unknown unit offers no conversion targets
+        return catalog.find(primitive.getMeasurementUnit())
+            .map(this::conversionTargets)
+            .orElseGet(ArrayList::new);
       } else {
         return new ArrayList<>();
       }
@@ -152,5 +139,13 @@ public class MeasurementUnitConverterProcessor implements IStreamPipesDataProces
       e.printStackTrace();
       return new ArrayList<>();
     }
+  }
+
+  private List<Option> conversionTargets(MeasurementUnit measurementUnit) {
+    return catalog.getUnitsOfKind(measurementUnit.type())
+        .stream()
+        .filter(unit -> !unit.resource().equals(measurementUnit.resource()))
+        .map(unit -> new Option(unit.label(), unit.resource().toString()))
+        .collect(Collectors.toList());
   }
 }

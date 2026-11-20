@@ -31,11 +31,13 @@ import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../../services/editor.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PipelineElementDiscoveryComponent } from '../../../dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 import {
+    LivePreviewState,
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../../model/editor.model';
@@ -53,6 +55,8 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthService } from '../../../../services/auth.service';
+import { UserPrivilege } from '../../../../core/auth/user-privilege.enum';
 
 export interface PipelineAssemblySaveOptions {
     startPipelineAfterStorage: boolean;
@@ -71,6 +75,7 @@ export interface PipelineAssemblySaveOptions {
         MatTooltip,
         MatIconButton,
         PipelineAssemblyOptionsPipelineCacheComponent,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
 })
@@ -79,6 +84,11 @@ export class PipelineAssemblyOptionsComponent {
     private pipelinePositioningService = inject(PipelinePositioningService);
     private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
+
+    /** Starting a preview deploys temporary pipeline elements, so it needs the write privilege. */
+    readonly canPreview = inject(AuthService).hasRole(
+        UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
+    );
 
     @Input()
     jsplumbBridge: JsplumbBridge;
@@ -93,7 +103,7 @@ export class PipelineAssemblyOptionsComponent {
     allElements: PipelineElementUnion[];
 
     @Input()
-    previewModeActive: boolean;
+    previewState: LivePreviewState = 'off';
 
     @Output()
     clearAssemblyEmitter: EventEmitter<void> = new EventEmitter<void>();

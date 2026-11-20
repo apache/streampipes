@@ -19,11 +19,16 @@
 package org.apache.streampipes.manager.setup.tasks;
 
 import org.apache.streampipes.commons.constants.GenericDocTypes;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 public class AddFunctionStateViewTask extends AbstractAddGenericStorageViewTask {
 
   public static final String DESIGN_DOCUMENT = "_design/function-states";
   public static final String VIEW_NAME = "all-function-states";
+
+  public AddFunctionStateViewTask(CouchDbStores stores) {
+    super(stores);
+  }
 
   @Override
   public String getDesignDocument() {

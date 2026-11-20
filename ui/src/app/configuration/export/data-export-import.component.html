@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxLayout="column">
+<div class="flex-col">
     <sp-split-section
         [title]="'Application Data' | translate"
         [subtitle]="'Application configuration files' | translate"
@@ -26,7 +26,7 @@
             [title]="'Export' | translate"
             [subtitle]="'Export assets and all linked resources' | translate"
         >
-            <div section-actions fxLayout="row" fxLayoutGap="10px">
+            <div section-actions class="flex-row gap-sm">
                 <button
                     mat-button
                     mat-flat-button
@@ -44,7 +44,7 @@
                 </button>
             </div>
             @for (asset of assets; track asset) {
-                <div fxLayout="column">
+                <div class="flex-col">
                     <mat-checkbox
                         [checked]="isSelected(asset.elementId)"
                         (change)="

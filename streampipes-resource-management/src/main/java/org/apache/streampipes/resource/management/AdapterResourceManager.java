@@ -25,9 +25,14 @@ import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 
 import org.springframework.security.core.Authentication;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
@@ -64,6 +69,18 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
     return new ResourceSummaryDto<>(adapters, adapters.size());
   }
 
+  public List<String> getReadableAdapterIds(Authentication auth, Collection<String> elementIds) {
+    if (elementIds.isEmpty()) {
+      return List.of();
+    }
+    var requestedIds = new HashSet<>(elementIds);
+    return db.findAll().stream()
+        .filter(adapter -> adapter != null && requestedIds.contains(adapter.getElementId()))
+        .filter(adapter -> canReadAdapter(auth, adapter))
+        .map(AdapterDescription::getElementId)
+        .toList();
+  }
+
   /**
    * Takes an {@link AdapterDescription}, encrypts the password properties and stores it to the database
    *
@@ -76,7 +93,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
 
     try {
       return db.persist(encryptedAdapterDescription).v;
-    } catch (org.lightcouch.DocumentConflictException e) {
+    } catch (StorageConflictException e) {
       throw new AdapterException("Conflict occurred while creating the adapter", e);
     }
   }
@@ -89,7 +106,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   public void encryptAndUpdate(AdapterDescription adapterDescription) throws AdapterException {
     try {
       db.updateElement(cloneAndEncrypt(adapterDescription));
-    } catch (org.lightcouch.DocumentConflictException e) {
+    } catch (StorageConflictException e) {
       throw new AdapterException(
           "Conflict occurred while editing the adapter with id: %s".formatted(adapterDescription.getElementId()),
           e

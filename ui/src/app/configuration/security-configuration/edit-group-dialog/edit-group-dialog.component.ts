@@ -42,7 +42,6 @@ import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { AlternateIdConfigurationComponent } from '../alternate-id-configuration/alternate-id-configuration.component';
@@ -59,8 +58,6 @@ import { MatIcon } from '@angular/material/icon';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         SplitSectionComponent,

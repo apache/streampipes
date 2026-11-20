@@ -28,27 +28,16 @@ import {
     MatDialogContent,
     MatDialogRef,
 } from '@angular/material/dialog';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
 
 @Component({
     selector: 'sp-confirm-dialog',
+    host: { class: 'flex-row' },
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        MatDialogContent,
-        MatDialogActions,
-        LayoutAlignDirective,
-        MatButton,
-    ],
+    imports: [MatDialogContent, MatDialogActions, MatButton],
 })
 export class ConfirmDialogComponent {
     public dialogRef =

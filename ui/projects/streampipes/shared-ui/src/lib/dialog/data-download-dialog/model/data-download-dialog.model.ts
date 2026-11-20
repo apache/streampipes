@@ -21,12 +21,17 @@ import {
 } from '@streampipes/platform-services';
 
 /**
- * Provide either measureName without additional configuration
+ * Provide either measureName without additional configuration,
+ * measureNames to download several measurements with shared export settings,
  * or dataConfig to allow selection of multiple sources
  */
 export interface DataDownloadDialogModel {
     // option 1 provide a measurement name
     measureName?: string;
+
+    // option 1b provide several measurement names; each is downloaded as a
+    // separate file using the same export configuration
+    measureNames?: string[];
 
     // option 2 provide data explorer configs
     dataExplorerDateRange?: DateRange;

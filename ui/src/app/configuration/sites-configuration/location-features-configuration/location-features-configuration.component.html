@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxLayout="column">
+<div class="flex-col">
     <sp-split-section
         [title]="'Geo features' | translate"
         [subtitle]="
@@ -24,7 +24,7 @@
         "
     >
         @if (locationConfig) {
-            <form [formGroup]="locationForm" fxFlex="100" fxLayout="column">
+            <form [formGroup]="locationForm" class="flex-col flex-100">
                 <mat-checkbox
                     formControlName="locationFeaturesEnabled"
                     data-cy="sites-enable-location-features-checkbox"
@@ -42,7 +42,7 @@
                         >
                             <mat-radio-group
                                 formControlName="mapLayerType"
-                                fxLayout="row"
+                                class="flex-row"
                             >
                                 <mat-radio-button
                                     value="TILE"
@@ -74,7 +74,7 @@
                             >
                                 <input
                                     formControlName="tileServerUrl"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     data-cy="sites-location-config-tile-server"
                                 />
@@ -95,7 +95,7 @@
                             >
                                 <input
                                     formControlName="attributionText"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     data-cy="sites-location-config-attribution-text"
                                 />

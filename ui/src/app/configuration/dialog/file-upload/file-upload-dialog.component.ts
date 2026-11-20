@@ -25,11 +25,6 @@ import {
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     MatError,
     MatFormField,
     MatSuffix,
@@ -47,9 +42,7 @@ import { MatDivider } from '@angular/material/divider';
     styleUrls: ['./file-upload-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         SpAlertBannerComponent,
-        FlexDirective,
         MatFormField,
         MatInput,
         MatProgressBar,
@@ -57,7 +50,6 @@ import { MatDivider } from '@angular/material/divider';
         MatSuffix,
         MatIcon,
         MatError,
-        LayoutAlignDirective,
         FormsModule,
         MatDivider,
         TranslatePipe,

@@ -23,11 +23,7 @@ import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
-import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractPipelineExtractionResource<T> extends AbstractRestResource {
@@ -36,19 +32,6 @@ public abstract class AbstractPipelineExtractionResource<T> extends AbstractRest
 
   public AbstractPipelineExtractionResource(SpResourceManager resourceManager) {
     this.resourceManager = resourceManager;
-  }
-
-  protected ResponseEntity<?> getPipelineByIdAndFieldValue(String appId,
-                                                        String pipelineId,
-                                                        String fieldValue) {
-    List<T> pipelines = extract(new ArrayList<>(), appId);
-
-    Optional<T> matchedPipeline =
-        pipelines
-            .stream()
-            .filter(pipeline -> matches(pipeline, pipelineId, fieldValue)).findFirst();
-
-    return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
   }
 
   protected List<T> extract(List<T> target, String appId) {
@@ -63,10 +46,6 @@ public abstract class AbstractPipelineExtractionResource<T> extends AbstractRest
 
   protected abstract T convert(Pipeline pipeline,
                                DataSinkInvocation sink);
-
-  protected abstract boolean matches(T resourceToExtract,
-                                     String pipelineId,
-                                     String fieldValue);
 
   protected List<DataSinkInvocation> extractSink(Pipeline pipeline, String appId) {
     return pipeline

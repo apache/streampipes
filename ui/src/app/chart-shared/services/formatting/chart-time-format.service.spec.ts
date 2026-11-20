@@ -80,6 +80,16 @@ describe('ChartTimeFormatService', () => {
             );
         });
 
+        it('shows date and time down to milliseconds at full resolution', () => {
+            expect(service.formatTimestamp(timestamp, 30 * DAY, 'full')).toBe(
+                '10/28/2026, 16:44:55.938',
+            );
+            currentLang = 'de';
+            expect(service.formatTimestamp(timestamp, undefined, 'full')).toBe(
+                '28.10.2026, 16:44:55,938',
+            );
+        });
+
         it('accepts ISO strings and Date objects', () => {
             const iso = new Date(timestamp).toISOString();
             expect(service.formatTimestamp(iso, HOUR)).toBe('16:44:55');

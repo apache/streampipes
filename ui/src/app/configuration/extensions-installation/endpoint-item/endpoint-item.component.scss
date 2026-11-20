@@ -17,7 +17,7 @@
  */
 
 :host {
-    display: block;
+    display: flex;
     --endpoint-type-color: var(--color-data-source);
     --endpoint-item-bg-selected: color-mix(
         in srgb,

@@ -35,6 +35,10 @@ public class JexlEvaluator {
     this.script = engine.createScript(jexlDescription.script());
   }
 
+  public String getFieldName() {
+    return jexlDescription.getFieldName();
+  }
+
   public void evaluate(MapContext context,
                        Event event) {
     event.addField(jexlDescription.getFieldName(), script.execute(context));

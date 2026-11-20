@@ -33,7 +33,6 @@ import {
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { UserRole } from '../../core/auth/user-role.enum';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { LocationFeaturesConfigurationComponent } from './location-features-configuration/location-features-configuration.component';
 import { SiteAreaConfigurationComponent } from './site-area-configuration/site-area-configuration.component';
 
@@ -42,7 +41,6 @@ import { SiteAreaConfigurationComponent } from './site-area-configuration/site-a
     templateUrl: './sites-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         LocationFeaturesConfigurationComponent,
         SiteAreaConfigurationComponent,
     ],

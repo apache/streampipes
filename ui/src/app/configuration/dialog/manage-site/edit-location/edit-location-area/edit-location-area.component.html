@@ -16,16 +16,11 @@
 ~
 -->
 
-<div
-    fxLayout="column"
-    class="w-100"
-    fxLayoutGap="10px"
-    [formGroup]="areaControlGroup"
->
+<div class="w-100 flex-col gap-sm" [formGroup]="areaControlGroup">
     @for (area of site.areas; track area; let i = $index) {
-        <div fxLayout="row" fxFlex="100" class="area">
-            <div fxFlex fxLayoutAlign="start center">{{ area }}</div>
-            <div fxLayoutAlign="end center">
+        <div class="area flex-row flex-100">
+            <div class="flex-row items-center flex-1">{{ area }}</div>
+            <div class="flex-row justify-end items-center">
                 <button
                     [attr.data-cy]="
                         'sites-dialog-remove-area-button_' +
@@ -41,14 +36,14 @@
         </div>
     }
     @if (site.areas.length === 0) {
-        <div fxLayoutAlign="start center">
+        <div class="flex-row items-center">
             <div class="no-areas-defined text-sm">
                 {{ 'No areas defined yet.' | translate }}
             </div>
         </div>
     }
-    <div fxLayout="row" fxLayoutGap="10px" class="w-100 mt-10">
-        <div fxFlex fxLayoutAlign="start center">
+    <div class="w-100 mt-10 flex-row gap-sm">
+        <div class="flex-row items-center flex-1">
             <mat-form-field
                 color="accent"
                 class="w-100"
@@ -70,7 +65,7 @@
                 }
             </mat-form-field>
         </div>
-        <div fxLayoutAlign="end center">
+        <div class="flex-row justify-end items-center">
             <button
                 data-cy="sites-dialog-add-area-button"
                 mat-icon-button

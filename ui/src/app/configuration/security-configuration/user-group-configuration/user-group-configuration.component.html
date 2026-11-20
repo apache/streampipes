@@ -16,8 +16,8 @@
 ~
 -->
 
-<div fxLayout="column">
-    <div fxFlex="100" fxLayout="column">
+<div class="flex-col">
+    <div class="flex-col flex-100">
         @if (dataSource) {
             <sp-table
                 data-cy="security-service-config"
@@ -48,12 +48,9 @@
                         class="text-right"
                     ></th>
                     <td mat-cell *matCellDef="let group">
-                        <div fxLayout="row">
+                        <div class="flex-row">
                             <span
-                                fxFlex
-                                fxFlexOrder="3"
-                                fxLayout="row"
-                                fxLayoutAlign="end center"
+                                class="flex-row justify-end items-center flex-1"
                             >
                                 <div class="mr-15">
                                     <button

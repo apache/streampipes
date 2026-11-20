@@ -26,7 +26,7 @@
                 | translate
         "
     >
-        <div section-actions fxLayoutAlign="end center" fxLayoutGap="10px">
+        <div section-actions class="flex-row justify-end items-center gap-sm">
             <button
                 mat-flat-button
                 [matTooltip]="'New' | translate"
@@ -47,11 +47,10 @@
         </div>
 
         <table
-            fxFlex="100"
             mat-table
             data-cy="exportproviders-settings"
             [dataSource]="dataSource"
-            class="export-provider-table"
+            class="export-provider-table flex-100"
             matSort
         >
             <ng-container matColumnDef="providertype">

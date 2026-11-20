@@ -21,11 +21,13 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpProblemException;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
+import org.apache.streampipes.storage.api.exceptions.StorageNotFoundException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,9 +40,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @RestController
 @RequestMapping("/api/v2/storage-generic")
@@ -59,13 +61,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   @GetMapping(path = "/{appDocName}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<List<Map<String, Object>>> getAll(@PathVariable(APP_DOC_NAME) String appDocName) {
-    try {
-      List<Map<String, Object>> assets = genericStorage.findAll(appDocName);
-      return ok(assets);
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
+    return ok(call(() -> genericStorage.findAll(appDocName)));
   }
 
   @PostMapping(
@@ -75,13 +71,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> create(@PathVariable(APP_DOC_NAME) String appDocName,
                                                     @RequestBody String document) {
-    try {
-      Map<String, Object> obj = genericStorage.create(document);
-      return ok(obj);
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
+    return ok(call(() -> genericStorage.create(document)));
   }
 
   @PostMapping(
@@ -91,26 +81,14 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<List<Map<String, Object>>> find(@PathVariable(APP_DOC_NAME) String appDocName,
                                                         @RequestBody Map<String, Object> query) {
-    try {
-      var docs = genericStorage.find(appDocName, query);
-      return ok(docs);
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
+    return ok(call(() -> genericStorage.find(appDocName, query)));
   }
 
   @GetMapping(path = "/{appDocName}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<Map<String, Object>> getCategory(@PathVariable(APP_DOC_NAME) String appDocName,
                                                          @PathVariable("id") String documentId) {
-    try {
-      Map<String, Object> obj = genericStorage.findOne(documentId);
-      return ok(obj);
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
+    return ok(call(() -> genericStorage.findOne(documentId)));
   }
 
   @PutMapping(
@@ -121,13 +99,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Map<String, Object>> update(@PathVariable(APP_DOC_NAME) String appDocName,
                                                     @PathVariable("id") String documentId,
                                                     @RequestBody String document) {
-    try {
-      Map<String, Object> obj = genericStorage.update(documentId, document);
-      return ok(obj);
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
+    return ok(call(() -> genericStorage.update(documentId, document)));
   }
 
   @DeleteMapping(path = "/{appDocName}/{id}/{rev}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -135,15 +107,23 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Void> delete(@PathVariable(APP_DOC_NAME) String appDocName,
                                      @PathVariable("id") String documentId,
                                      @PathVariable("rev") String rev) {
-    try {
+    call(() -> {
       genericStorage.delete(documentId, rev);
-      return ok();
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      throw SpProblemException.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
+      return null;
+    });
+    return ok();
   }
 
-
-
+  private <T> T call(Supplier<T> storageCall) {
+    try {
+      return storageCall.get();
+    } catch (StorageNotFoundException e) {
+      throw SpProblemException.notFound(e.getMessage());
+    } catch (StorageConflictException e) {
+      throw SpProblemException.conflict(e.getMessage());
+    } catch (StorageException e) {
+      LOG.error("Could not connect to storage", e);
+      throw SpProblemException.internalError(e.getMessage(), e);
+    }
+  }
 }

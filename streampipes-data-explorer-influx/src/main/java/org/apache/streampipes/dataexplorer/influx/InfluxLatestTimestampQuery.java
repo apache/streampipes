@@ -44,9 +44,9 @@ final class InfluxLatestTimestampQuery {
 
   private String makeLastSelectorQuery(String field,
                                        List<String> measurements) {
-    return "SELECT LAST(\""
-        + field
-        + "\") FROM /"
+    return "SELECT LAST("
+        + InfluxQueryIdentifiers.quoted(field)
+        + ") FROM /"
         + measurements.stream()
             .map(this::escapeRegex)
             .collect(Collectors.joining("|", "^(", ")$"))
@@ -54,7 +54,7 @@ final class InfluxLatestTimestampQuery {
   }
 
   private String escapeRegex(String measurement) {
-    return measurement.replaceAll("([\\\\.\\[\\]{}()*+?^$|])", "\\\\$1");
+    return measurement.replaceAll("([\\\\.\\[\\]{}()*+?^$|/])", "\\\\$1");
   }
 
   Map<String, Long> parse(QueryResult queryResult) {

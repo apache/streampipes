@@ -61,7 +61,6 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
@@ -72,6 +71,7 @@ import { DashboardOverviewCardComponent } from '../dashboard-overview-card/dashb
     selector: 'sp-dashboard-overview-table',
     templateUrl: './dashboard-overview-table.component.html',
     styleUrls: [
+        '../dashboard-overview.component.scss',
         '../../../../chart/components/chart-overview/chart-overview.component.scss',
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -87,7 +87,6 @@ import { DashboardOverviewCardComponent } from '../dashboard-overview-card/dashb
         MatSortHeader,
         MatCellDef,
         MatCell,
-        LayoutGapDirective,
         SpTableActionsDirective,
         MatMenuItem,
         MatIcon,

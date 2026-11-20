@@ -23,14 +23,13 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { Certificate } from '@streampipes/platform-services';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpLabelComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-certificate-label',
     templateUrl: './certificate-label.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, SpLabelComponent],
+    imports: [SpLabelComponent],
 })
 export class CertificateLabelComponent implements OnInit {
     @Input()

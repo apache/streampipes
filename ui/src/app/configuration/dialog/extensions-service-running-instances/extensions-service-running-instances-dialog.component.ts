@@ -37,12 +37,6 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpServiceRegistration } from '@streampipes/platform-services';
 import {
     DialogRef,
@@ -89,10 +83,6 @@ type PendingRemoval =
     styleUrls: ['./extensions-service-running-instances-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         MatCell,
         MatCellDef,

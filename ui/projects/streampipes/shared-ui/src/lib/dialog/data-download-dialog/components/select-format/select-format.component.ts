@@ -30,7 +30,6 @@ import { MatStepLabel } from '@angular/material/stepper';
 import { SplitSectionComponent } from '../../../../components/split-section/split-section.component';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -52,7 +51,6 @@ import { ExportFormatSelectionComponent } from '../export-format-selection/expor
         MatRadioGroup,
         FormsModule,
         MatRadioButton,
-        LayoutDirective,
         MatCheckbox,
         MatFormField,
         MatSelect,

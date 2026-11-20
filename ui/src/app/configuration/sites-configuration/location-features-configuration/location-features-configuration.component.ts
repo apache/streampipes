@@ -39,7 +39,6 @@ import {
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     FormFieldComponent,
     SplitSectionComponent,
@@ -56,10 +55,8 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './location-features-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         SplitSectionComponent,
         FormsModule,
-        FlexDirective,
         ReactiveFormsModule,
         MatCheckbox,
         FormFieldComponent,

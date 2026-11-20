@@ -25,21 +25,25 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InstallationConfiguration {
 
+  private final CouchDbStores stores;
   private final IGenericStorage genericStorage;
   private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
   private final IPipelineElementDescriptionStorage descriptionStorage;
   private final AvailableExtensionsProvider availableExtensionsProvider;
 
-  public InstallationConfiguration(IGenericStorage genericStorage,
+  public InstallationConfiguration(CouchDbStores stores,
+                                   IGenericStorage genericStorage,
                                    ICompactPipelineTemplateStorage pipelineTemplateStorage,
                                    IPipelineElementDescriptionStorage descriptionStorage,
                                    AvailableExtensionsProvider availableExtensionsProvider) {
+    this.stores = stores;
     this.genericStorage = genericStorage;
     this.pipelineTemplateStorage = pipelineTemplateStorage;
     this.descriptionStorage = descriptionStorage;
@@ -51,7 +55,7 @@ public class InstallationConfiguration {
     List<InstallationStep> steps = new ArrayList<>();
 
     steps.add(new SpCoreConfigurationStep(resourceManager.getCoreConfigurationStorage()));
-    steps.add(new CouchDbInstallationStep(genericStorage, pipelineTemplateStorage));
+    steps.add(new CouchDbInstallationStep(stores, genericStorage, pipelineTemplateStorage));
     steps.add(new UserRegistrationInstallationStep(
         settings.getAdminEmail(),
         settings.getAdminPassword(),

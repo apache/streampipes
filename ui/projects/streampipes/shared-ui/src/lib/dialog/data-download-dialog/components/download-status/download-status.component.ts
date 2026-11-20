@@ -26,22 +26,15 @@ import {
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-download-status',
+    host: { class: 'flex-row' },
     templateUrl: './download-status.component.html',
     styleUrls: ['./download-status.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatProgressSpinner,
         MatButton,
         MatIcon,

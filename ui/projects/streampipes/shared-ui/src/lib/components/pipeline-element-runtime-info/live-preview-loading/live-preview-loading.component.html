@@ -16,17 +16,17 @@
   ~
   -->
 
-<div fxLayout="column" data-cy="sp-connect-adapter-gathering-live-preview">
-    <div fxLayoutAlign="center">
+<div class="flex-col" data-cy="sp-connect-adapter-gathering-live-preview">
+    <div class="flex-row justify-center">
         <mat-spinner
             [diameter]="40"
-            fxLayoutAlign="center"
+            class="flex-row justify-center"
             style="margin: 10px 0 5px 0"
             color="accent"
             >Loading
         </mat-spinner>
     </div>
-    <div fxLayoutAlign="center">
+    <div class="flex-row justify-center">
         <h3>{{ 'Gathering data for live preview...' | translate }}</h3>
     </div>
 </div>

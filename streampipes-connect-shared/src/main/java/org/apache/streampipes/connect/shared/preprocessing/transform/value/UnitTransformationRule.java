@@ -21,35 +21,49 @@ package org.apache.streampipes.connect.shared.preprocessing.transform.value;
 import org.apache.streampipes.connect.shared.preprocessing.SupportsNestedTransformationRule;
 import org.apache.streampipes.connect.shared.preprocessing.utils.Utils;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.apache.streampipes.units.UnitProvider;
+import org.apache.streampipes.units.UnitConversion;
+import org.apache.streampipes.units.UnitConverter;
+import org.apache.streampipes.units.catalog.UnitCatalog;
 
-import com.github.jqudt.Quantity;
-import com.github.jqudt.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Converts a numeric event property from one measurement unit to another.
+ *
+ * <p>Both units are resolved and checked for compatibility when the rule is created, so an
+ * unknown unit or a conversion between different quantities fails when the adapter starts.</p>
+ */
 public class UnitTransformationRule extends SupportsNestedTransformationRule {
 
   private static final Logger logger = LoggerFactory.getLogger(UnitTransformationRule.class);
 
   private final List<String> eventKey;
-  private final Unit unitTypeFrom;
-  private final Unit unitTypeTo;
+  private final UnitConversion conversion;
 
   public UnitTransformationRule(UnitTransformRuleDescription description) {
-    this.unitTypeFrom = UnitProvider.INSTANCE.getUnit(description.getFromUnitRessourceURL());
-    this.unitTypeTo = UnitProvider.INSTANCE.getUnit(description.getToUnitRessourceURL());
-    this.eventKey = Utils.toKeyArray(description.getRuntimeKey());
+    this(
+        Utils.toKeyArray(description.getRuntimeKey()),
+        description.getFromUnitRessourceURL(),
+        description.getToUnitRessourceURL()
+    );
   }
 
+  /**
+   * @throws org.apache.streampipes.units.UnknownMeasurementUnitException if a unit is unknown
+   * @throws IllegalArgumentException if the units measure different quantities
+   */
   public UnitTransformationRule(List<String> keys,
                                 String fromUnitRessourceURL,
                                 String toUnitRessourceURL) {
-    this.unitTypeFrom = UnitProvider.INSTANCE.getUnit(fromUnitRessourceURL);
-    this.unitTypeTo = UnitProvider.INSTANCE.getUnit(toUnitRessourceURL);
+    var catalog = UnitCatalog.builtIn();
+    this.conversion = UnitConverter.between(
+        catalog.get(fromUnitRessourceURL),
+        catalog.get(toUnitRessourceURL)
+    );
     this.eventKey = keys;
   }
 
@@ -69,20 +83,15 @@ public class UnitTransformationRule extends SupportsNestedTransformationRule {
     try {
       double value = Double.parseDouble(String.valueOf(originalValue));
 
-      Quantity obs = new Quantity(value, unitTypeFrom);
-      double newValue = obs.convertTo(unitTypeTo).getValue();
-
-      event.put(key, newValue);
+      event.put(key, conversion.applyAsDouble(value));
     } catch (NumberFormatException e) {
       logger.debug(
           "Could not convert value '{}' from unit '{}' to '{}' for event property '{}'",
           originalValue,
-          unitTypeFrom,
-          unitTypeTo,
+          conversion.from(),
+          conversion.to(),
           key
       );
-    } catch (ClassCastException | IllegalAccessException e) {
-      logger.error(e.toString());
     }
   }
 }

@@ -20,7 +20,7 @@
 A single Docker image that runs the complete Apache StreamPipes platform in one container and
 seeds a demo scenario on first start, so you see live machine data without connecting any hardware.
 
-**Current version:** 0.99.0-SNAPSHOT
+**Current version:** 1.0.0-SNAPSHOT
 
 > **NOTE**: This image is made for trying StreamPipes out on a laptop, demos and workshops. It
 > runs every service in one container and keeps its data in the container. For anything you want
@@ -33,7 +33,7 @@ docker run --rm -p 80:80 apachestreampipes/all-in-one:dev
 ```
 
 Tags: `dev` follows the latest build of the `dev` branch, `latest` the newest release, and version tags
-(`0.99.0-SNAPSHOT` for development builds, `0.99.0` for releases) pin a specific build.
+(`1.0.0-SNAPSHOT` for development builds, `1.0.0` for releases) pin a specific build.
 
 1. Open [http://localhost](http://localhost). While the services boot (about a minute) the UI shows a
    progress screen that moves on by itself.
@@ -86,7 +86,7 @@ data is discarded; drop `--rm` to keep the container and start it again later wi
 
 | Process | Origin | Port (inside the container) |
 | --- | --- | --- |
-| CouchDB | `couchdb:3.4.3`, the base image | 5984 |
+| CouchDB | `couchdb:3.5.3`, the base image | 5984 |
 | InfluxDB | `influxdb:2.6` binaries and setup entrypoint | 8086 |
 | NATS | `nats` server binary, token authentication enabled | 4222 |
 | StreamPipes core | `streampipes-core.jar` built by Maven, exploded into layers like the `backend` image | 8030 |
@@ -94,8 +94,7 @@ data is discarded; drop `--rm` to keep the container and start it again later wi
 | UI | the production build of `ui/` served by nginx | **80** (the only exposed port) |
 | Demo seed | `bin/seed-demo.py`, runs once per start and builds the scenario above | - |
 
-The InfluxDB and NATS images are the ones `../compose/docker-compose.yml` uses; CouchDB is 3.4.x because
-the 3.3.1 image is built on a Debian release that no longer receives packages. The StreamPipes parts are
+The CouchDB, InfluxDB and NATS versions match `../compose/docker-compose.yml`. The StreamPipes parts are
 the same artifacts the component images are built from, so the demo always matches the commit it was
 built from. `supervisord`
 starts and watches the processes (`supervisord.conf`); the start scripts in `bin/` wait for their
@@ -156,7 +155,7 @@ docker build \
   --build-context core=streampipes-service-core/target \
   --build-context extensions=streampipes-extensions/streampipes-extensions-all-iiot/target \
   --build-context ui=ui/dist/streampipes/ui/browser \
-  -t apachestreampipes/all-in-one:0.99.0-SNAPSHOT installer/all-in-one
+  -t apachestreampipes/all-in-one:1.0.0-SNAPSHOT installer/all-in-one
 ```
 
 Named build contexts need BuildKit (Docker 23 or newer, or `docker buildx build`). Build arguments:

@@ -30,10 +30,6 @@ import { DataExportConfig } from '../../../model/data-export-config.model';
 import { SplitSectionComponent } from '../../../../../components/split-section/split-section.component';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { DateInputComponent } from '../../../../../components/date-input/date-input.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -50,8 +46,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatRadioGroup,
         FormsModule,
         MatRadioButton,
-        LayoutDirective,
-        LayoutGapDirective,
         DateInputComponent,
         TranslatePipe,
     ],

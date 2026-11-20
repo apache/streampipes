@@ -50,7 +50,7 @@ repos:
         name: pyupgrade
         language: python
         types: [ python ]
-        entry: pyupgrade --py38-plus --keep-runtime-typing
+        entry: pyupgrade --py311-plus --keep-runtime-typing
         verbose: true
 
       - id: autoflake

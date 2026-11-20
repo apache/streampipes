@@ -33,11 +33,6 @@ import { SecurityUserConfigComponent } from './security-user-configuration/secur
 import { SecurityServiceConfigComponent } from './security-service-configuration/security-service-config.component';
 import { SecurityRoleConfigComponent } from './role-configuration/role-configuration.component';
 import { SecurityUserGroupConfigComponent } from './user-group-configuration/user-group-configuration.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { SecurityAuthenticationConfigurationComponent } from './authentication-configuration/authentication-configuration.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -49,9 +44,6 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./security-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         SplitSectionComponent,
         MatButton,
         SecurityUserConfigComponent,

@@ -25,9 +25,9 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.units.StandardUnits;
 import org.apache.streampipes.vocabulary.SO;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -188,7 +188,7 @@ public class QualityTestSimulator extends StatefulMachineSimulator<QualityTestSi
             .description("Current pressure in the part in bar")
             .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://qudt.org/vocab/unit#Bar"))
+            .measurementUnit(StandardUnits.BAR)
             .build())
         .sample(TEST_PRESSURE, 3.0f)
         .property(PrimitivePropertyBuilder
@@ -205,7 +205,7 @@ public class QualityTestSimulator extends StatefulMachineSimulator<QualityTestSi
             .description("Duration of the last test in seconds")
             .semanticType(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
-            .measurementUnit(URI.create("http://qudt.org/vocab/unit#SecondTime"))
+            .measurementUnit(StandardUnits.SECOND)
             .build())
         .sample(TEST_DURATION, 30.0f)
         .property(PrimitivePropertyBuilder

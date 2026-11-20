@@ -140,6 +140,42 @@ export class AssetBtns {
         });
     }
 
+    public static showAssetBtn(assetName: string) {
+        return cy.dataCy('show-asset-' + assetName, { timeout: 10000 });
+    }
+
+    public static uploadImageBtn() {
+        return cy.dataCy('asset-image-upload', { timeout: 10000 });
+    }
+
+    public static imageFileInput() {
+        return cy.dataCy('asset-image-file-input', { timeout: 10000 });
+    }
+
+    public static importImageBtn() {
+        return cy.dataCy('asset-image-import', { timeout: 10000 });
+    }
+
+    public static removeImageBtn() {
+        return cy.dataCy('asset-image-remove', { timeout: 10000 });
+    }
+
+    public static imageThumbnail() {
+        return cy.dataCy('asset-image-thumbnail', { timeout: 10000 });
+    }
+
+    public static imagePlaceholder() {
+        return cy.dataCy('asset-image-placeholder', { timeout: 10000 });
+    }
+
+    public static imageViewer() {
+        return cy.dataCy('asset-image-viewer', { timeout: 10000 });
+    }
+
+    public static closeImageViewerBtn() {
+        return cy.dataCy('asset-image-viewer-close', { timeout: 10000 });
+    }
+
     public static updateAssetLinksBtn() {
         return cy.dataCy('assets-update-links-button', { timeout: 10000 });
     }

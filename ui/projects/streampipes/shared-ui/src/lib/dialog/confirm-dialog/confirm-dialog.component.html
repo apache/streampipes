@@ -16,20 +16,15 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     <mat-dialog-content>
         <div data-cy="confirm-dialog">
             <h4>{{ data.title }}</h4>
             <h5>{{ data.subtitle }}</h5>
         </div>
     </mat-dialog-content>
-    <mat-dialog-actions>
-        <div
-            fxFlex="100"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            class="footer"
-        >
+    <mat-dialog-actions class="flex-row">
+        <div class="footer flex-row items-center flex-100">
             @if (data.neutralTitle) {
                 <div class="neutral-action-wrapper">
                     <button
@@ -42,11 +37,7 @@
                     </button>
                 </div>
             }
-            <div
-                fxLayout="row"
-                fxLayoutAlign="end center"
-                class="primary-actions"
-            >
+            <div class="primary-actions flex-row justify-end items-center">
                 @if (data.cancelTitle) {
                     <button
                         mat-flat-button

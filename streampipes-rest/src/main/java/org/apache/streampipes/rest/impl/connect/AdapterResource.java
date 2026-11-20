@@ -50,6 +50,8 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,20 +144,61 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#adapterDescription.correspondingDataStreamElementId, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority()")
+  @Operation(summary = "Update an existing adapter",
+             description = "Updates adapter configuration while retaining its associated data stream. "
+                 + "Running adapters are restarted as part of the update.",
+             tags = {"Adapters"},
+             responses = {
+                 @ApiResponse(responseCode = "200", description = "Adapter operation result"),
+                 @ApiResponse(responseCode = "403", description = "Operation not permitted")
+             })
   public ResponseEntity<SuccessMessage> updateAdapter(@RequestBody AdapterDescription adapterDescription)
       throws AdapterException {
+    requireUpdatableAdapter(adapterDescription);
     adapterUpdateManagement.updateAdapter(adapterDescription, getAuthenticatedUserSid());
     return ok(Notifications.success(adapterDescription.getElementId()));
   }
 
   @PutMapping(path = "pipeline-migration-preflight", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
+  @Operation(summary = "Preview pipeline migrations for an adapter update",
+             description = "Returns pipeline changes associated with the proposed adapter schema. "
+                 + "This operation does not persist the adapter update or restart pipelines.",
+             tags = {"Adapters"},
+             responses = {
+                 @ApiResponse(responseCode = "200", description = "Pipeline migration preview"),
+                 @ApiResponse(responseCode = "403", description = "Operation not permitted")
+             })
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
       @RequestBody AdapterDescription adapterDescription) {
+    requireUpdatableAdapter(adapterDescription);
     var migrations = adapterUpdateManagement.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);
+  }
+
+  /**
+   * The write permission of an adapter is bound to its stored data stream, not to the stream id the
+   * client sends, so an update is only accepted for a stored adapter whose stream association is
+   * unchanged and which the user may write.
+   */
+  private void requireUpdatableAdapter(AdapterDescription submitted) {
+    var elementId = submitted != null ? submitted.getElementId() : null;
+    var stored = elementId != null && !elementId.isBlank()
+        ? resourceManager.manageAdapters().getDb().getElementById(elementId)
+        : null;
+    if (stored == null || stored.getCorrespondingDataStreamElementId() == null
+        || stored.getCorrespondingDataStreamElementId().isBlank()
+        || !stored.getCorrespondingDataStreamElementId().equals(submitted.getCorrespondingDataStreamElementId())) {
+      LOG.warn("Adapter update or preflight rejected: missing adapter or changed stream association");
+      throw SpProblemException.forbidden(
+          "The adapter does not exist or its data stream association differs from the stored adapter");
+    }
+    if (!checkAdapterPermission(stored, "WRITE")) {
+      LOG.warn("User {} is not allowed to update adapter {}", getAuthenticatedUsername(), elementId);
+      throw SpProblemException.forbidden("Not allowed to write adapter " + elementId);
+    }
   }
 
   @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})

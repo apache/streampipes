@@ -25,7 +25,6 @@ import {
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
@@ -33,12 +32,12 @@ import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-service-configs-text',
+    host: { class: 'flex-row' },
     templateUrl: './service-configs-text.component.html',
     providers: [ConfigurationService],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatFormField,
-        FlexDirective,
         MatInput,
         FormsModule,
         MatIcon,

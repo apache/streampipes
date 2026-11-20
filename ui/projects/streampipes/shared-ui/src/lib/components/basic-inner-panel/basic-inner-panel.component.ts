@@ -24,11 +24,6 @@ import {
     transition,
     trigger,
 } from '@angular/animations';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { NgStyle } from '@angular/common';
 import { SpBasicHeaderTitleComponent } from '../basic-header-title/header-title.component';
 import { MatIcon } from '@angular/material/icon';
@@ -63,15 +58,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         ]),
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        NgStyle,
-        LayoutAlignDirective,
-        SpBasicHeaderTitleComponent,
-        MatIcon,
-        TranslatePipe,
-    ],
+    imports: [NgStyle, SpBasicHeaderTitleComponent, MatIcon, TranslatePipe],
 })
 export class SpBasicInnerPanelComponent {
     private static nextId = 0;

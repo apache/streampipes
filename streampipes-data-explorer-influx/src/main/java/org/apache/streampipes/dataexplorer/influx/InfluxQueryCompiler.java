@@ -67,16 +67,16 @@ public final class InfluxQueryCompiler implements DatasetQueryCompiler<Query> {
       } else if ("*".equals(projection.field())) {
         selection.all();
       } else {
-        selection.column(projection.field());
+        selection.column(identifier(projection.field()));
       }
       projection.alias().ifPresent(alias -> selection.as(identifier(alias)));
     }
-    var query = selection.from(database, "\"" + storageName + "\"");
+    var query = selection.from(database, InfluxQueryIdentifiers.quoted(storageName));
     specification.predicates().forEach(predicate -> query.where(clause(predicate)));
     List<Clause> grouping = new ArrayList<>();
     specification.timeBucket().ifPresent(bucket -> grouping.add(new RawTextClause("time("
         + bucket.interval().value() + bucket.offset().map(offset -> "," + offset.toMillis() + "ms").orElse("") + ")")));
-    specification.dimensions().forEach(field -> grouping.add(new RawTextClause("\"" + field + "\"")));
+    specification.dimensions().forEach(field -> grouping.add(new RawTextClause(InfluxQueryIdentifiers.quoted(field))));
     if (!grouping.isEmpty()) {
       query.groupBy(grouping.toArray());
     }
@@ -98,7 +98,7 @@ public final class InfluxQueryCompiler implements DatasetQueryCompiler<Query> {
   private Clause clause(QuerySpec.Predicate predicate) {
     return switch (predicate) {
       case QuerySpec.Comparison comparison ->
-          new SimpleClause(comparison.field(), comparison.operator().symbol(), comparison.value().value());
+          new SimpleClause(identifier(comparison.field()), comparison.operator().symbol(), comparison.value().value());
       case QuerySpec.TimestampComparison timestamp ->
           new SimpleClause("time", timestamp.operator().symbol(), Math.multiplyExact(timestamp.epochMillis(), 1000000));
       case QuerySpec.Junction junction -> {
@@ -113,7 +113,6 @@ public final class InfluxQueryCompiler implements DatasetQueryCompiler<Query> {
   }
 
   private String identifier(String identifier) {
-    return identifier.matches("[A-Za-z0-9_]+")
-        ? identifier : "\"" + identifier.replace("\"", "\\\"") + "\"";
+    return InfluxQueryIdentifiers.identifier(identifier);
   }
 }

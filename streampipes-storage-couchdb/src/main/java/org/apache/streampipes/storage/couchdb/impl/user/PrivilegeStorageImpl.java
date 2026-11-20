@@ -19,14 +19,14 @@ package org.apache.streampipes.storage.couchdb.impl.user;
 
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class PrivilegeStorageImpl extends DefaultViewCrudStorage<Privilege> implements IPrivilegeStorage {
 
-  public PrivilegeStorageImpl() {
+  public PrivilegeStorageImpl(CouchDbStores stores) {
     super(
-        Utils::getCouchDbUserClient,
+        stores.principal(CouchDbStores.USER_DB_NAME),
         Privilege.class,
         "users/privilege"
     );

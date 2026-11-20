@@ -33,6 +33,7 @@ public class SpAsset {
 
   private AssetType assetType;
   private List<AssetLink> assetLinks;
+  private String imageId;
 
   private AssetSite assetSite;
   private List<SpAsset> assets;
@@ -116,5 +117,13 @@ public class SpAsset {
 
   public void setAssetSite(AssetSite assetSite) {
     this.assetSite = assetSite;
+  }
+
+  public String getImageId() {
+    return imageId;
+  }
+
+  public void setImageId(String imageId) {
+    this.imageId = imageId;
   }
 }

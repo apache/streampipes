@@ -15,54 +15,97 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.storage.couchdb.dao;
 
+import org.apache.streampipes.couchdb.client.DocumentRef;
+import org.apache.streampipes.couchdb.client.TypedCollection;
+import org.apache.streampipes.couchdb.client.ViewQuery;
+import org.apache.streampipes.couchdb.client.exception.DocumentConflictException;
+import org.apache.streampipes.couchdb.client.exception.DocumentNotFoundException;
 import org.apache.streampipes.model.Tuple2;
-
-import org.lightcouch.CouchDbClient;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
+import org.apache.streampipes.storage.couchdb.CouchDbStore;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public class CrudDao {
 
-  protected Supplier<CouchDbClient> couchDbClientSupplier;
+  protected static final String ALL_DOCS = "_all_docs";
 
-  public CrudDao(Supplier<CouchDbClient> couchDbClientSupplier) {
-    this.couchDbClientSupplier = couchDbClientSupplier;
+  protected final CouchDbStore store;
+
+  public CrudDao(CouchDbStore store) {
+    this.store = store;
   }
 
   public <T> Tuple2<Boolean, String> persist(T objToPersist, Class<T> clazz) {
-    DbCommand<Tuple2<Boolean, String>, T> cmd = new PersistCommand<>(couchDbClientSupplier,
-        objToPersist,
-        clazz);
-    return cmd.execute();
+    try {
+      DocumentRef ref = collection(clazz).create(objToPersist);
+      return new Tuple2<>(true, ref.id());
+    } catch (DocumentConflictException e) {
+      throw conflict(e);
+    }
   }
 
   public <T> Boolean delete(String key, Class<T> clazz) {
-    DbCommand<Boolean, T> cmd = new DeleteCommand<>(couchDbClientSupplier, key, clazz);
-    return cmd.execute();
+    try {
+      return collection(clazz).delete(key);
+    } catch (DocumentConflictException e) {
+      throw conflict(e);
+    }
   }
 
   public <T> Boolean update(T objToUpdate, Class<T> clazz) {
-    DbCommand<Boolean, T> cmd = new UpdateCommand<>(couchDbClientSupplier, objToUpdate, clazz);
-    return cmd.execute();
+    try {
+      collection(clazz).update(objToUpdate);
+      return true;
+    } catch (DocumentNotFoundException e) {
+      return false;
+    } catch (DocumentConflictException e) {
+      throw conflict(e);
+    }
   }
 
   public <T> Optional<T> find(String id, Class<T> clazz) {
-    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);
-    return cmd.execute();
+    return collection(clazz).find(id);
   }
 
-  public <T> List<T> findAll(String viewName,
-                             Class<T> clazz) {
-    DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClientSupplier, clazz, viewName);
-    return cmd.execute();
+  /**
+   * All documents of a view, or of the database for {@code _all_docs} (without design documents).
+   *
+   * @param viewName {@code _all_docs} or {@code design/view}
+   * @param clazz    document type
+   * @param <T>      document type
+   * @return the documents
+   */
+  public <T> List<T> findAll(String viewName, Class<T> clazz) {
+    TypedCollection<T> collection = collection(clazz);
+    return ALL_DOCS.equals(viewName) ? collection.findAll() : view(collection, viewName).docs();
   }
 
   public <T> T findWithNullIfEmpty(String id, Class<T> clazz) {
-    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);
-    return cmd.execute().orElse(null);
+    return find(id, clazz).orElse(null);
+  }
+
+  protected <T> TypedCollection<T> collection(Class<T> clazz) {
+    return store.typed(clazz);
+  }
+
+  protected <T> ViewQuery<T> view(String viewName, Class<T> clazz) {
+    return view(collection(clazz), viewName);
+  }
+
+  protected static StorageConflictException conflict(DocumentConflictException e) {
+    return new StorageConflictException(e.getMessage(), e);
+  }
+
+  private static <T> ViewQuery<T> view(TypedCollection<T> collection, String viewName) {
+    int separator = viewName.indexOf('/');
+    if (separator <= 0 || separator == viewName.length() - 1) {
+      throw new IllegalArgumentException("View name must be <design document>/<view>: " + viewName);
+    }
+    return collection.view(viewName.substring(0, separator), viewName.substring(separator + 1));
   }
 }

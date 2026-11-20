@@ -171,6 +171,15 @@
     border-collapse: collapse;
 }
 
+// [flexRows]: rows are flex rows and the consumer sizes cells with flex classes.
+.sp-table--flex-rows .mat-mdc-header-row,
+.sp-table--flex-rows
+    .mat-mdc-row:not(.grouped-table-row--header, .mat-mdc-no-data-row) {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+}
+
 .mat-mdc-header-row {
     background: var(--mat-sys-surface);
     border-bottom: none;
@@ -295,4 +304,11 @@
 
 .card-asset-context .card-asset-context__more {
     flex: none;
+}
+
+.table-row-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-sizing: border-box;
 }

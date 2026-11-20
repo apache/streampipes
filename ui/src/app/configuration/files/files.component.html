@@ -24,12 +24,7 @@
                 | translate
         "
     >
-        <div
-            fxLayout="row"
-            fxLayoutAlign="start start"
-            fxLayoutGap="10px"
-            section-actions
-        >
+        <div class="flex-row items-start gap-sm" section-actions>
             <button
                 mat-flat-button
                 color="accent"
@@ -42,9 +37,9 @@
             </button>
         </div>
 
-        <div fxFlex="100" fxLayout="column">
+        <div class="flex-col flex-100">
             <sp-file-overview
-                fxFlex="100"
+                class="flex-100"
                 #fileOverviewComponent
             ></sp-file-overview>
         </div>

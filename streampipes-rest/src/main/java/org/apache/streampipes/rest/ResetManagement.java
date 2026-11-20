@@ -37,6 +37,7 @@ import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
@@ -44,7 +45,6 @@ import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -206,7 +206,7 @@ public class ResetManagement {
       for (Map<String, Object> asset : genericStorage.findAll("asset-management")) {
         genericStorage.delete((String) asset.get("_id"), (String) asset.get("_rev"));
       }
-    } catch (IOException e) {
+    } catch (StorageException e) {
       throw new SpRuntimeException("Could not delete assets of user %s".formatted(username));
     }
   }
@@ -236,7 +236,7 @@ public class ResetManagement {
                  .toString()
           );
         }
-      } catch (IOException e) {
+      } catch (StorageException e) {
         throw new RuntimeException(e);
       }
     });

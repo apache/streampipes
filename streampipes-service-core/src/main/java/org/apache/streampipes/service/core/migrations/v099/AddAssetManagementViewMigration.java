@@ -20,14 +20,19 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
 import org.apache.streampipes.service.core.migrations.templates.AddGenericStorageViewMigration;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 
 import java.io.IOException;
 
 public class AddAssetManagementViewMigration extends AddGenericStorageViewMigration {
 
+  public AddAssetManagementViewMigration(CouchDbStores stores) {
+    super(stores);
+  }
+
   @Override
   public void executeMigration() throws IOException {
-    new AddAssetManagementViewTask().execute();
+    new AddAssetManagementViewTask(stores).execute();
   }
 
   @Override

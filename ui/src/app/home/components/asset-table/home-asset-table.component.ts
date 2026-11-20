@@ -44,18 +44,17 @@ import {
 } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { SpLabelComponent, SpTableComponent } from '@streampipes/shared-ui';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { AssetTableLinkPreviewComponent } from './asset-table-link-preview/asset-table-link-preview.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-home-asset-table',
+    host: { class: 'flex-row' },
     templateUrl: './home-asset-table.component.html',
     styleUrls: ['./home-asset-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpTableComponent,
-        FlexDirective,
         MatSort,
         MatColumnDef,
         MatHeaderCellDef,

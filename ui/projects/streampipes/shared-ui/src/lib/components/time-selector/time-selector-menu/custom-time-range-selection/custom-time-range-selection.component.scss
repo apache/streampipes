@@ -21,6 +21,12 @@
     font-size: 11pt;
 }
 
+.date-label {
+    flex: 1 1 30%;
+    max-width: 30%;
+    box-sizing: border-box;
+}
+
 .max-date-range-error {
     font-size: 9pt;
     color: var(--color-warn);

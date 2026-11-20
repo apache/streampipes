@@ -20,11 +20,6 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { GenericStorageItemComponent } from './generic-storage-item/generic-storage-item.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -38,9 +33,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         SplitSectionComponent,
         GenericStorageItemComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         MatFormField,
         MatLabel,
         MatInput,

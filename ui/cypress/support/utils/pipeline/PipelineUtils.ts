@@ -102,10 +102,56 @@ export class PipelineUtils {
     }
 
     public static selectDataStream(pipelineInput: PipelineInput) {
-        // Select a stream
+        PipelineUtils.selectDataStreamByName(pipelineInput.dataSource);
+    }
+
+    private static selectDataStreamByName(dataSource: string) {
         PipelineBtns.spPipelineElementSelection().should('be.visible');
         PipelineBtns.editorAddPipelineElement().click();
-        cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
+        cy.dataCy(dataSource, { timeout: 10000 }).click();
+    }
+
+    /**
+     * Opens the editor and connects a configured processor to a data stream,
+     * without adding a sink or saving the pipeline.
+     */
+    public static addDataStreamWithProcessor(
+        dataSource: string,
+        processingElement: PipelineElementInput,
+    ) {
+        PipelineUtils.goToPipelineEditor();
+        PipelineUtils.selectDataStreamByName(dataSource);
+        PipelineUtils.openPossibleElementsMenu(dataSource);
+        PipelineUtils.configureProcessingElement(processingElement);
+        PipelineUtils.savePipelineElementConfiguration();
+    }
+
+    /** Turns on the live preview and waits until the backend has started it. */
+    public static openLivePreview() {
+        cy.intercept('POST', '**/api/v2/pipeline-preview').as(
+            'startLivePreview',
+        );
+        PipelineBtns.livePreviewToggle().click();
+        cy.wait('@startLivePreview', { timeout: 30000 })
+            .its('response.statusCode')
+            .should('eq', 200);
+        PipelineBtns.livePreviewPanel().should('be.visible');
+    }
+
+    public static selectLivePreviewElement(elementName: string) {
+        PipelineBtns.livePreviewRow(elementName).click();
+    }
+
+    /** Closes the live preview panel and checks that the backend released the preview. */
+    public static closeLivePreview() {
+        cy.intercept('DELETE', '**/api/v2/pipeline-preview/*').as(
+            'stopLivePreview',
+        );
+        PipelineBtns.livePreviewClose().click();
+        cy.wait('@stopLivePreview')
+            .its('response.statusCode')
+            .should('eq', 200);
+        PipelineBtns.livePreviewPanel().should('not.exist');
     }
 
     public static openPossibleElementsMenu(dataSourceName: string) {

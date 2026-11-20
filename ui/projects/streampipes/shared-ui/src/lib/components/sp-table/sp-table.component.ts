@@ -54,23 +54,20 @@ import {
 } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SpTableActionsDirective } from './sp-actions/sp-table-actions.directive';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import {
+    MatMenu,
+    MatMenuContent,
+    MatMenuTrigger,
+} from '@angular/material/menu';
 import { SpTableMultiActionsDirective } from './sp-actions/sp-table-multi-actions.directive';
 import { SpTableCardDirective } from './sp-actions/sp-table-card.directive';
 import { SpOverviewCardGridComponent } from '../overview-card/overview-card-grid.component';
 import { LocalStorageService } from '../../services/local-storage-settings.service';
 import { FeatureCardService } from '../feature-card-host/feature-card.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import {
@@ -148,14 +145,12 @@ const CARD_ASSET_CONTEXT_LIMIT = 2;
     styleUrls: ['./sp-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         MatTable,
         MatColumnDef,
         MatHeaderCellDef,
         MatHeaderCell,
         MatCellDef,
         MatCell,
-        LayoutAlignDirective,
         MatIconButton,
         MatButton,
         MatTooltip,
@@ -167,6 +162,7 @@ const CARD_ASSET_CONTEXT_LIMIT = 2;
         MatInput,
         MatMenuTrigger,
         MatMenu,
+        MatMenuContent,
         MatSelect,
         MatOption,
         MatButtonToggleGroup,
@@ -176,13 +172,9 @@ const CARD_ASSET_CONTEXT_LIMIT = 2;
         MatHeaderRow,
         MatRowDef,
         MatRow,
-        NgClass,
-        ClassDirective,
         MatNoDataRow,
-        FlexDirective,
         MatPaginator,
         TranslatePipe,
-        LayoutGapDirective,
         SpLabelComponent,
         SpOverviewCardGridComponent,
     ],
@@ -205,6 +197,11 @@ export class SpTableComponent<T>
 
     @Input() columns: string[];
     @Input() noBorder = false;
+    /**
+     * Lays out header and data rows as flex rows, so cells can be sized with flex classes
+     * (`flex-1`, `basis-*`). This is how tables with former `fxFlex` cells rendered.
+     */
+    @Input() flexRows = false;
     @Input() noToolbarBorderTop = false;
     @Input() rowsClickable = false;
     @Input() showPaginator = true;

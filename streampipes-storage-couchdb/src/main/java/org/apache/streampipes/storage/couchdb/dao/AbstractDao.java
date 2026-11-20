@@ -18,21 +18,17 @@
 package org.apache.streampipes.storage.couchdb.dao;
 
 import org.apache.streampipes.model.Tuple2;
-
-import org.lightcouch.CouchDbClient;
+import org.apache.streampipes.storage.couchdb.CouchDbStore;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public class AbstractDao<T> extends CrudDao {
 
-  private static final String ALL_DOCS = "_all_docs";
-
   protected Class<T> clazz;
 
-  public AbstractDao(Supplier<CouchDbClient> couchDbClientSupplier, Class<T> clazz) {
-    super(couchDbClientSupplier);
+  public AbstractDao(CouchDbStore store, Class<T> clazz) {
+    super(store);
     this.clazz = clazz;
   }
 

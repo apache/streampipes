@@ -48,9 +48,12 @@ are in `DESIGN.md` ("Layout").
 - Every user-facing string goes through `| translate` and lives in
   `ui/deployment/i18n/{en,de,pl}.json`. Add keys via `npm run i18n:check`, which extracts
   and formats the files; do not hand-order them.
-- Layout with the `@ngbracket/ngx-layout` directives already used across the app
-  (`fxLayout`, `fxFlex`, `fxLayoutAlign`, `fxLayoutGap`) rather than new CSS layout wrappers.
-  (This is the maintained fork of Angular Flex-Layout; do not add `@angular/flex-layout`.)
+- `@ngbracket/ngx-layout` (`fxLayout`, `fxFlex`, `fxLayoutAlign`, `fxLayoutGap`) is being
+  phased out. Do not add it to new templates; use the flex utility classes in
+  `ui/src/scss/sp/flex.scss` (mapping in `DESIGN.md`, "Flex Utilities"). When you touch a
+  component that still uses the directives, migrate the whole component and drop the
+  `@ngbracket/ngx-layout` imports, so ESLint's `no-restricted-imports` warning disappears.
+  Do not add `@angular/flex-layout`.
 - Prefer `rem`, CSS variables, existing utility classes and token-derived values over raw
   pixels. Pixels are fine for borders, icons, canvas/SVG coordinates and where Angular
   Material or browser APIs require them.

@@ -28,11 +28,6 @@ import {
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpRegisteredExtensionsServiceComponent } from './registered-extensions-services/registered-extensions-services.component';
 import { SpExtensionsServiceConfigurationComponent } from './extensions-service-configuration/extensions-service-configuration.component';
 import { CertificateConfigurationComponent } from './certificate-configuration/certificate-configuration.component';
@@ -43,9 +38,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './extensions-service-management.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         SplitSectionComponent,
         SpRegisteredExtensionsServiceComponent,
         SpExtensionsServiceConfigurationComponent,

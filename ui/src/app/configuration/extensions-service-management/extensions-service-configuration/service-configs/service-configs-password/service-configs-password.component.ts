@@ -29,29 +29,26 @@ import {
     MatLabel,
     MatSuffix,
 } from '@angular/material/form-field';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIcon } from '@angular/material/icon';
 
 const hiddenPasswordString = '*****';
 
 @Component({
     selector: 'sp-service-configs-password',
+    host: { class: 'flex-row' },
     templateUrl: './service-configs-password.component.html',
     styleUrls: ['./service-configs-password.component.scss'],
     providers: [ConfigurationService],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatFormField,
-        FlexDirective,
         MatLabel,
         MatInput,
         FormsModule,
         NgClass,
-        ClassDirective,
         MatIcon,
         MatSuffix,
     ],

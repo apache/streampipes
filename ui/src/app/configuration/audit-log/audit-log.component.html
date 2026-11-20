@@ -64,7 +64,7 @@
     >
         <mat-icon>refresh</mat-icon>
     </button>
-    <div fxLayout="column" fxLayoutGap="var(--space-lg)">
+    <div class="flex-col gap-lg">
         @if (statusError) {
             <sp-alert-banner
                 type="error"
@@ -87,11 +87,8 @@
                 ></sp-alert-banner>
             } @else {
                 <form
-                    class="audit-filters"
+                    class="audit-filters flex-row flex-wrap items-end content-end gap-md"
                     (ngSubmit)="apply()"
-                    fxLayout="row wrap"
-                    fxLayoutGap="var(--space-md)"
-                    fxLayoutAlign="start end"
                 >
                     <sp-form-field
                         [level]="3"
@@ -318,9 +315,7 @@
                     </sp-table>
                 </div>
                 <nav
-                    fxLayout="row"
-                    fxLayoutGap="var(--space-md)"
-                    fxLayoutAlign="end center"
+                    class="flex-row justify-end items-center gap-md"
                     [attr.aria-label]="'Audit pages' | translate"
                 >
                     <button

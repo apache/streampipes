@@ -76,7 +76,7 @@ public abstract class InvocablePipelineElementResource<
     } catch (SpConfigurationException e) {
       return ResponseEntity
           .status(HttpStatus.SC_BAD_REQUEST)
-          .body(e);
+          .body(e.toSerializable());
     } catch (SpRuntimeException e) {
       return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
     }

@@ -118,7 +118,7 @@ public class OpcUa {
       LOG.error("Mapping property type: " + this.params.mappingPropertyType() + " is not supported");
     } else {
 
-      DataValue value = new DataValue(v);
+      DataValue value = DataValue.valueOnly(v);
       try {
         List<StatusCode> statuses = this.connectedClient.getClient().writeValues(List.of(node), List.of(value));
         StatusCode status = statuses.get(0);

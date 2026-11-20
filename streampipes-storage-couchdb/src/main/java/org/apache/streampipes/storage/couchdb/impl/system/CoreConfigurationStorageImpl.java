@@ -20,14 +20,14 @@ package org.apache.streampipes.storage.couchdb.impl.system;
 
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStores;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class CoreConfigurationStorageImpl extends AbstractDao<SpCoreConfiguration>
     implements ISpCoreConfigurationStorage {
 
-  public CoreConfigurationStorageImpl() {
-    super(Utils::getCouchDbGeneralConfigStorage, SpCoreConfiguration.class);
+  public CoreConfigurationStorageImpl(CouchDbStores stores) {
+    super(stores.gson("general-configuration"), SpCoreConfiguration.class);
   }
 
   @Override

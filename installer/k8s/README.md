@@ -21,7 +21,7 @@
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.99.0-SNAPSHOT
+**Current version:** 1.0.0-SNAPSHOT
 <!-- END do not edit -->
 
 We provide two helm chart templates to get you going:
@@ -118,7 +118,7 @@ rm -rf ${HOME}/streampipes-k8s
 
 | Parameter Name                                | Description                                             | Value                                    |
 |-----------------------------------------------|---------------------------------------------------------|------------------------------------------|
-| streampipes.version                           | StreamPipes version                                     | "0.99.0-SNAPSHOT"                        |
+| streampipes.version                           | StreamPipes version                                     | "1.0.0-SNAPSHOT"                         |
 | streampipes.registry                          | StreamPipes registry URL                                | "apachestreampipes"                      |
 | streampipes.auth.secretName                   | The secret name for storing secrets                     | "sp-secrets"                             |
 | streampipes.auth.users.admin.user             | The initial admin user                                  | "admin@streampipes.apache.org"           |
@@ -169,7 +169,7 @@ rm -rf ${HOME}/streampipes-k8s
 | Parameter Name                                | Description                               | Value                  |
 |-----------------------------------------------|-------------------------------------------|------------------------|
 | external.couchdb.appName                      | CouchDB application name                  | "couchdb"              |
-| external.couchdb.version                      | CouchDB version                           | 3.3.1                  |
+| external.couchdb.version                      | CouchDB version                           | 3.5.3                  |
 | external.couchdb.user                         | CouchDB admin username                    | "admin"                |
 | external.couchdb.password                     | CouchDB admin password                    | empty (auto-generated) |
 | external.couchdb.port                         | Port for the CouchDB service              | 5984                   |

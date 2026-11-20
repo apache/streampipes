@@ -24,7 +24,6 @@ import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -35,7 +34,7 @@ import static org.mockito.Mockito.when;
 public class DataStreamResourceManagerTest {
 
   @Test
-  void deletionCleansAssetLinksAndPermissions() throws IOException {
+  void deletionCleansAssetLinksAndPermissions() {
     var storage = mock(IDataStreamStorage.class);
     var permissions = mock(PermissionResourceManager.class);
     var genericStorage = mock(IGenericStorage.class);

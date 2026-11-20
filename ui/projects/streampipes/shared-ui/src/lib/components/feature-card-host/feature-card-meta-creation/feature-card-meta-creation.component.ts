@@ -18,10 +18,6 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FeatureCardMetaSectionComponent } from '../feature-card-meta-section/feature-card-meta-section.component';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -32,8 +28,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FeatureCardMetaSectionComponent,
-        LayoutDirective,
-        LayoutGapDirective,
         MatIcon,
         DatePipe,
         TranslatePipe,

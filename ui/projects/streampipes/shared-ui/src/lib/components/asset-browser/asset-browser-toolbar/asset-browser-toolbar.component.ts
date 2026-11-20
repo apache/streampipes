@@ -29,10 +29,6 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { Subscription } from 'rxjs';
 import { CurrentUserService } from '../../../services/current-user.service';
 import { SpAssetBrowserService } from '../asset-browser.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -45,13 +41,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['asset-browser-toolbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutAlignDirective,
         MatButton,
         MatMenuTrigger,
         MatTooltip,
         MatIcon,
         MatMenu,
-        FlexDirective,
         AssetBrowserFilterComponent,
         TranslatePipe,
     ],

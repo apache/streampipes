@@ -19,6 +19,10 @@
 package org.apache.streampipes.sinks.databases.jvm.couchdb;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.couchdb.client.CouchServer;
+import org.apache.streampipes.couchdb.client.DatabaseOptions;
+import org.apache.streampipes.couchdb.client.TypedCollection;
+import org.apache.streampipes.couchdb.client.codec.GsonCodec;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -34,8 +38,9 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
+import com.google.gson.Gson;
+
+import java.time.Duration;
 
 public class CouchDbSink implements IStreamPipesDataSink {
 
@@ -45,7 +50,11 @@ public class CouchDbSink implements IStreamPipesDataSink {
   private static final String DATABASE_USER_KEY = "db_user";
   private static final String DATABASE_PASSORD_KEY = "db_password";
 
-  private CouchDbClient couchDbClient;
+  // The database is external and may be further away than the internal CouchDB.
+  private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(10);
+
+  private CouchServer couchServer;
+  private TypedCollection<Object> documents;
 
   @Override
   public IDataSinkConfiguration declareConfig() {
@@ -82,24 +91,24 @@ public class CouchDbSink implements IStreamPipesDataSink {
     String user = null;
     String password = null;
 
-    this.couchDbClient = new CouchDbClient(new CouchDbProperties(
-        dbName,
-        true,
-        "http",
-       hostname,
-        port,
-        user,
-        password
-    ));
+    this.couchServer = CouchServer.builder()
+        .url("http", hostname, port)
+        .credentials(user, password)
+        .connectTimeout(CONNECT_TIMEOUT)
+        .build();
+    var database = couchServer.database(dbName, DatabaseOptions.createIfMissing());
+    database.ensureExists();
+    // Gson keeps the stored format: fields without a value are left out.
+    this.documents = database.typed(Object.class, GsonCodec.of(new Gson()));
   }
 
   @Override
   public void onEvent(Event event) throws SpRuntimeException {
-    couchDbClient.save(new EventConverter(event).toInputEventMap());
+    documents.create(new EventConverter(event).toInputEventMap());
   }
 
   @Override
   public void onPipelineStopped() {
-    this.couchDbClient.shutdown();
+    this.couchServer.close();
   }
 }
