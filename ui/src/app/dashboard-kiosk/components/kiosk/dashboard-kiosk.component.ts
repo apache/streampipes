@@ -41,11 +41,6 @@ import { ChartSharedService } from '../../../chart-shared/services/chart-shared.
 import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
 import { MatToolbar } from '@angular/material/toolbar';
 import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
 import { SpSystemNotificationComponent } from '../../../core/components/system-notification/system-notification.component';
@@ -56,10 +51,7 @@ import { SpSystemNotificationComponent } from '../../../core/components/system-n
     styleUrl: './dashboard-kiosk.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         MatToolbar,
-        FlexDirective,
-        LayoutAlignDirective,
         DashboardGridViewComponent,
         SpLabelComponent,
         TranslatePipe,

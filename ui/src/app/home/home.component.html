@@ -41,7 +41,7 @@
                 </div>
             }
 
-            <div fxFlex class="assets-wrapper">
+            <div class="assets-wrapper flex-1">
                 <sp-split-section
                     [level]="2"
                     [title]="'Assets' | translate"
@@ -65,11 +65,7 @@
                         }
                     </div>
                     @if (assets.length > 0) {
-                        <div
-                            fxFlexFill
-                            fxLayout="column"
-                            class="assets-content"
-                        >
+                        <div class="assets-content flex-col flex-fill">
                             @if (selectedView() === 'map') {
                                 @if (
                                     locationConfig &&

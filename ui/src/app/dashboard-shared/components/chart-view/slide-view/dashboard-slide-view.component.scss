@@ -35,7 +35,9 @@
     overflow-x: hidden;
     height: calc(100vh - 137px);
     border-right: 1px solid var(--color-bg-3);
-    max-width: 100%;
+    flex: 1 1 200px;
+    box-sizing: border-box;
+    max-width: 200px;
 }
 
 .slide-view-title {

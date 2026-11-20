@@ -17,10 +17,10 @@
 -->
 
 <mat-toolbar class="toolbar">
-    <div class="sp-toolbar" fxLayout fxLayoutAlign="start center">
+    <div class="sp-toolbar flex-row items-center">
         <sp-breadcrumb class="toolbar-breadcrumb"></sp-breadcrumb>
         @if (authenticated) {
-            <div class="toolbar-actions" fxLayout fxLayoutAlign="end center">
+            <div class="toolbar-actions flex-row justify-end items-center">
                 <sp-system-notification></sp-system-notification>
                 <sp-asset-browser-toolbar></sp-asset-browser-toolbar>
                 <button

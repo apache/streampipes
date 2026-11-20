@@ -35,7 +35,6 @@ import { CollapseService } from '../../collapse.service';
 import { NavMenuService } from '../../navigation/nav-menu.service';
 import { Subscription } from 'rxjs';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { IconbarComponent } from '../iconbar/iconbar.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { Router, RouterOutlet } from '@angular/router';
@@ -56,13 +55,7 @@ import { ShortcutDialogComponent } from '../../../help/components/shortcuts/shor
         ]),
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        NgClass,
-        ClassDirective,
-        IconbarComponent,
-        ToolbarComponent,
-        RouterOutlet,
-    ],
+    imports: [NgClass, IconbarComponent, ToolbarComponent, RouterOutlet],
 })
 export class StreampipesComponent implements OnInit, OnDestroy {
     darkMode: boolean;

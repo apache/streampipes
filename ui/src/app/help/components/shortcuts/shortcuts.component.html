@@ -16,13 +16,13 @@
 ~
 -->
 
-<div class="fixed-height" fxLayout="column" fxFlex="100">
-    <div class="shortcuts-content" fxLayout="column">
+<div class="fixed-height flex-col flex-100">
+    <div class="shortcuts-content flex-col">
         <sp-basic-header-title-component
             [title]="title"
         ></sp-basic-header-title-component>
 
-        <div class="shortcuts-list" fxFlex="100">
+        <div class="shortcuts-list flex-100">
             @for (shortcut of shortcuts; track shortcut.combo) {
                 <div class="shortcut-entry">
                     <div class="shortcut-entry__combo">

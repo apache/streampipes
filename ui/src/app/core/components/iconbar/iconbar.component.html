@@ -17,17 +17,12 @@
   -->
 
 <nav
-    class="menubar-root"
+    class="menubar-root flex-col"
     [class.collapsed]="collapsed()"
     [attr.aria-label]="appConstants.APP_NAME"
-    fxLayout="column"
 >
     <!-- Header / brand -->
-    <div
-        class="menubar-header"
-        fxLayout="row"
-        fxLayoutAlign="space-between center"
-    >
+    <div class="menubar-header flex-row justify-between items-center">
         <div class="brand" [class.hidden]="collapsed()">
             <img
                 alt="Apache StreamPipes"
@@ -56,7 +51,7 @@
     </div>
 
     <!-- Scrollable content -->
-    <div class="menubar-scroll" fxFlex fxLayout="column">
+    <div class="menubar-scroll flex-col flex-1">
         <!-- Top items (no group) -->
         <div class="top-items">
             @for (item of topItems; track item.title) {

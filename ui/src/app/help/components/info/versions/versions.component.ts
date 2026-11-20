@@ -21,11 +21,6 @@ import { VersionInfo } from './service/version-info.model';
 import { SystemInfo } from './service/system-info.model';
 import { RestApi } from '../../../../services/rest-api.service';
 import {
-    LayoutDirective,
-    LayoutGapDirective,
-    FlexDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     SpBasicHeaderTitleComponent,
     SpBasicInnerPanelComponent,
 } from '@streampipes/shared-ui';
@@ -36,11 +31,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './versions.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
         SpBasicHeaderTitleComponent,
         SpBasicInnerPanelComponent,
-        FlexDirective,
         TranslatePipe,
     ],
 })
