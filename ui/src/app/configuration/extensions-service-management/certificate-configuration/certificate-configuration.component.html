@@ -18,6 +18,7 @@
 
 @if (dataSource) {
     <sp-table
+        [flexRows]="true"
         data-cy="security-user-config"
         [dataSource]="dataSource"
         [columns]="displayedColumns"
@@ -25,8 +26,7 @@
     >
         <ng-container matColumnDef="issuer">
             <th
-                fxFlex="40"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-40"
                 mat-header-cell
                 mat-sort-header
                 *matHeaderCellDef
@@ -34,8 +34,7 @@
                 {{ 'Issuer' | translate }}
             </th>
             <td
-                fxFlex="40"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-40"
                 mat-cell
                 *matCellDef="let certificate"
                 data-cy="user-accounts-table-row"
@@ -48,8 +47,7 @@
         </ng-container>
         <ng-container matColumnDef="expires">
             <th
-                fxFlex
-                fxLayoutAlign="start center"
+                class="flex-row items-center flex-1"
                 mat-header-cell
                 mat-sort-header
                 *matHeaderCellDef
@@ -57,8 +55,7 @@
                 {{ 'Expires' | translate }}
             </th>
             <td
-                fxFlex
-                fxLayoutAlign="start center"
+                class="flex-row items-center flex-1"
                 mat-cell
                 *matCellDef="let certificate"
                 data-cy="user-accounts-table-row"
@@ -68,8 +65,7 @@
         </ng-container>
         <ng-container matColumnDef="actions">
             <th
-                fxFlex
-                fxLayoutAlign="end center"
+                class="flex-row justify-end items-center flex-1"
                 mat-header-cell
                 *matHeaderCellDef
             >
@@ -83,13 +79,12 @@
                 </button>
             </th>
             <td
-                fxFlex
-                fxLayoutAlign="end center"
+                class="flex-row justify-end items-center flex-1"
                 mat-cell
                 *matCellDef="let certificate"
                 data-cy="user-accounts-table-row"
             >
-                <div fxLayout="row" fxLayoutGap="10px">
+                <div class="flex-row gap-sm">
                     <button
                         mat-flat-button
                         class="mat-basic"

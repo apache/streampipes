@@ -23,6 +23,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-exception-details',
+    host: { class: 'flex-row' },
     templateUrl: './exception-details.component.html',
     styleUrl: './exception-details.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,

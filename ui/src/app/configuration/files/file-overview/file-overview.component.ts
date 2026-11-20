@@ -39,11 +39,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
@@ -51,20 +46,18 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-file-overview',
+    host: { class: 'flex-row' },
     templateUrl: './file-overview.component.html',
     styleUrls: ['./file-overview.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpTableComponent,
-        FlexDirective,
         MatColumnDef,
         MatHeaderCellDef,
         MatHeaderCell,
         MatCellDef,
         MatCell,
         SpLabelComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
         MatTooltip,
         DatePipe,

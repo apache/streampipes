@@ -25,12 +25,6 @@ import {
     SpLabelComponent,
     SpTableComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    FlexOrderDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
     MatCell,
@@ -50,8 +44,6 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./security-user-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -61,8 +53,6 @@ import { MatIcon } from '@angular/material/icon';
         MatCellDef,
         MatCell,
         SpLabelComponent,
-        FlexOrderDirective,
-        LayoutAlignDirective,
         MatButton,
         MatTooltip,
         TranslatePipe,

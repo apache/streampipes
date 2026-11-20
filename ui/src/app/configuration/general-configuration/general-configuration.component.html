@@ -15,15 +15,10 @@
 ~ limitations under the License.
 ~
 -->
-<div fxLayout="column" class="max-w-50">
+<div class="max-w-50 flex-col">
     @if (formReady) {
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <form
-                [formGroup]="parentForm"
-                fxFlex="100"
-                fxLayout="column"
-                class="w-100"
-            >
+        <div class="flex-col items-start flex-100">
+            <form [formGroup]="parentForm" class="w-100 flex-col flex-100">
                 <sp-split-section
                     [outline]="true"
                     [compact]="true"
@@ -41,7 +36,7 @@
                         >
                         </sp-alert-banner>
                     }
-                    <div fxLayout="column">
+                    <div class="flex-col">
                         <sp-form-field
                             [level]="2"
                             [label]="'App Name' | translate"
@@ -50,10 +45,10 @@
                                     | translate
                             "
                         >
-                            <mat-form-field appearance="outline" fxFlex>
+                            <mat-form-field appearance="outline" class="flex-1">
                                 <input
                                     formControlName="appName"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     required
                                     data-cy="general-config-app-name"
@@ -61,7 +56,7 @@
                             </mat-form-field>
                         </sp-form-field>
                     </div>
-                    <div fxLayout="column">
+                    <div class="flex-col">
                         <sp-form-field
                             [level]="2"
                             [label]="'Host and Port' | translate"
@@ -70,12 +65,8 @@
                                     | translate
                             "
                         >
-                            <div fxLayout="column" fxFlex="100">
-                                <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="start center"
-                                    fxLayoutGap="10px"
-                                >
+                            <div class="flex-col flex-100">
+                                <div class="flex-row items-center gap-sm">
                                     <sp-form-field
                                         [level]="3"
                                         [label]="'Protocol' | translate"
@@ -102,7 +93,7 @@
                                         <mat-form-field color="accent">
                                             <input
                                                 formControlName="hostname"
-                                                fxFlex
+                                                class="flex-1"
                                                 matInput
                                                 required
                                                 data-cy="general-config-hostname"
@@ -116,7 +107,7 @@
                                         <mat-form-field color="accent">
                                             <input
                                                 formControlName="port"
-                                                fxFlex
+                                                class="flex-1"
                                                 matInput
                                                 type="number"
                                                 required
@@ -150,7 +141,7 @@
                     @if (
                         generalConfig.configured && mailConfig.emailConfigured
                     ) {
-                        <div fxLayout="column">
+                        <div class="flex-col">
                             <mat-checkbox
                                 formControlName="allowSelfRegistration"
                                 >{{ 'Allow self - registration' | translate }}

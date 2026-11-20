@@ -22,7 +22,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ServiceConfigsPasswordComponent } from './service-configs-password.component';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -63,7 +62,6 @@ describe('ServiceConfigsPasswordComponent', () => {
             imports: [
                 CommonModule,
                 BrowserAnimationsModule,
-                FlexLayoutModule,
                 MatGridListModule,
                 MatButtonModule,
                 MatIconModule,

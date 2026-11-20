@@ -16,10 +16,10 @@
   ~
   -->
 
-<div fxLayout="row" fxLayoutAlign="start center">
+<div class="flex-row items-center">
     @if (!importMode) {
-        <span fxFlex>{{ exportItem.resourceId }}</span>
-        <div fxLayoutAlign="end center">
+        <span class="flex-1">{{ exportItem.resourceId }}</span>
+        <div class="flex-row justify-end items-center">
             <button
                 mat-icon-button
                 color="accent"

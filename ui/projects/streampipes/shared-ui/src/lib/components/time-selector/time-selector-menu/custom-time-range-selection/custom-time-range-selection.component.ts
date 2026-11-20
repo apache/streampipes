@@ -45,6 +45,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-custom-time-range-selection',
+    host: { class: 'flex-row' },
     templateUrl: 'custom-time-range-selection.component.html',
     styleUrls: ['./custom-time-range-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,

@@ -32,11 +32,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-    LayoutAlignDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     AuditService,
@@ -87,9 +82,6 @@ import { AuditRetentionDialogComponent } from '../dialog/audit-retention/audit-r
         MatSelectModule,
         MatProgressBarModule,
         MatTableModule,
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
         TranslatePipe,
         SpTableComponent,
         FormFieldComponent,

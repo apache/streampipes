@@ -17,14 +17,14 @@
 -->
 <div class="sp-dialog-container">
     @if (loading) {
-        <div class="sp-dialog-content">
+        <div class="sp-dialog-content flex-row">
             <div class="flex-col justify-center items-center flex-100">
                 <mat-spinner [diameter]="25"></mat-spinner>
                 <h5>{{ 'Loading' | translate }}</h5>
             </div>
         </div>
     } @else if (!permissionDenied || createMode) {
-        <div class="sp-dialog-content">
+        <div class="sp-dialog-content flex-row">
             <div class="p-15 flex-col flex-100">
                 <form [formGroup]="parentForm" class="flex-col flex-100">
                     @if (showResourceSection) {
@@ -262,7 +262,7 @@
         </div>
     } @else {
         <div
-            class="sp-dialog-content"
+            class="sp-dialog-content flex-row"
             data-cy="warning-permissions-managed-by-owner"
         >
             <div class="flex-col justify-center items-center flex-100">

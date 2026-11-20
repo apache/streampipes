@@ -46,10 +46,6 @@ import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.
 import { ExportProviderConfigurationComponent } from './export-provider-configuration/export-provider-configuration.component';
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -66,8 +62,6 @@ interface AssetReferenceExportItems {
     styleUrls: ['./data-export-import.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
         SplitSectionComponent,
         MatCheckbox,
         MatButton,

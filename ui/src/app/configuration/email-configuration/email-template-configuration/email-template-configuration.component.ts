@@ -30,12 +30,6 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
@@ -46,17 +40,14 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-email-template-configuration',
+    host: { class: 'flex-row' },
     templateUrl: './email-template-configuration.component.html',
     styleUrls: ['./email-template-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
         SplitSectionComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatButton,
         SpAlertBannerComponent,
-        LayoutGapDirective,
         MonacoEditorModule,
         FormsModule,
         TranslatePipe,

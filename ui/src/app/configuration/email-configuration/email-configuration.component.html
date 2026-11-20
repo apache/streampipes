@@ -16,14 +16,14 @@
 ~
 -->
 
-<div fxLayout="column">
+<div class="flex-col">
     @if (formReady) {
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <div class="flex-col items-start flex-100">
             <sp-split-section
                 [title]="'Mail Settings' | translate"
                 [subtitle]="'Settings to connect to a mail server' | translate"
             >
-                <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+                <form [formGroup]="parentForm" class="flex-col flex-100">
                     <sp-form-field
                         [level]="2"
                         [label]="'Mail Server' | translate"
@@ -35,7 +35,7 @@
                             <mat-form-field color="accent">
                                 <input
                                     formControlName="smtpServerHost"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     required
                                 />
@@ -46,7 +46,7 @@
                                 <input
                                     type="number"
                                     formControlName="smtpServerPort"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     required
                                 />
@@ -58,7 +58,7 @@
                         [label]="'Transport' | translate"
                     >
                         <mat-radio-group
-                            fxLayout="column"
+                            class="flex-col"
                             formControlName="transport"
                         >
                             <mat-radio-button value="SMTP" class="m-xs"
@@ -90,7 +90,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="smtpUsername"
-                                        fxFlex
+                                        class="flex-1"
                                         matInput
                                     />
                                 </mat-form-field>
@@ -102,7 +102,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="smtpPassword"
-                                        fxFlex
+                                        class="flex-1"
                                         type="password"
                                         matInput
                                     />
@@ -122,7 +122,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="proxyHost"
-                                        fxFlex
+                                        class="flex-1"
                                         matInput
                                     />
                                 </mat-form-field>
@@ -134,7 +134,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="proxyPort"
-                                        fxFlex
+                                        class="flex-1"
                                         matInput
                                     />
                                 </mat-form-field>
@@ -164,7 +164,7 @@
                                     }}</mat-label>
                                     <input
                                         formControlName="proxyUsername"
-                                        fxFlex
+                                        class="flex-1"
                                         matInput
                                     />
                                 </mat-form-field>
@@ -176,7 +176,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="proxyPassword"
-                                        fxFlex
+                                        class="flex-1"
                                         type="password"
                                         matInput
                                     />
@@ -192,7 +192,7 @@
                             <mat-form-field color="accent">
                                 <input
                                     formControlName="senderAddress"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                     required
                                 />
@@ -205,7 +205,7 @@
                             <mat-form-field color="accent">
                                 <input
                                     formControlName="senderName"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                 />
                             </mat-form-field>
@@ -217,13 +217,13 @@
                             <mat-form-field color="accent">
                                 <input
                                     formControlName="defaultRecipient"
-                                    fxFlex
+                                    class="flex-1"
                                     matInput
                                 />
                             </mat-form-field>
                         </sp-form-field>
                     </sp-form-field>
-                    <div fxLayout="row" class="mt-10">
+                    <div class="mt-10 flex-row">
                         <button
                             mat-button
                             mat-flat-button
@@ -251,9 +251,9 @@
                         </button>
                     </div>
                     @if (attemptSendingTestMail) {
-                        <div fxLayout="column">
+                        <div class="flex-col">
                             @if (sendingTestMailInProgress) {
-                                <div fxLayout="row">
+                                <div class="flex-row">
                                     <sp-spinner [diameter]="10"></sp-spinner>
                                     <h5>
                                         {{
@@ -263,7 +263,7 @@
                                     </h5>
                                 </div>
                             }
-                            <div fxLayout="row">
+                            <div class="flex-row">
                                 @if (
                                     !sendingTestMailInProgress &&
                                     sendingTestMailSuccess
@@ -283,7 +283,7 @@
                                     !sendingTestMailInProgress &&
                                     !sendingTestMailSuccess
                                 ) {
-                                    <div fxLayout="row" fxFlex="100">
+                                    <div class="flex-row flex-100">
                                         <sp-alert-banner
                                             class="w-100"
                                             type="error"
@@ -305,10 +305,9 @@
             </sp-split-section>
         </div>
     }
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+    <div class="flex-col items-start flex-100">
         <sp-email-template-configuration
-            fxFlex="100"
-            class="w-100"
+            class="w-100 flex-100"
         ></sp-email-template-configuration>
     </div>
     <mat-divider></mat-divider>

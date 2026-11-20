@@ -30,7 +30,7 @@
             <mat-form-field color="accent">
                 <input
                     formControlName="termsAcknowledgmentTitle"
-                    fxFlex
+                    class="flex-1"
                     matInput
                 />
             </mat-form-field>
@@ -38,7 +38,7 @@
 
         <sp-form-field [level]="3" [label]="'Terms' | translate">
             <quill-editor
-                fxFlex="100"
+                class="flex-100"
                 #textEditor
                 formControlName="termsAcknowledgmentText"
                 [modules]="quillConfig"

@@ -42,12 +42,6 @@ import {
     FormFieldComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -62,8 +56,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./edit-role-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         SplitSectionComponent,
@@ -71,8 +63,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatFormField,
         MatInput,
         MatError,
-        LayoutGapDirective,
-        LayoutAlignDirective,
         MatIconButton,
         MatIcon,
         AlternateIdConfigurationComponent,

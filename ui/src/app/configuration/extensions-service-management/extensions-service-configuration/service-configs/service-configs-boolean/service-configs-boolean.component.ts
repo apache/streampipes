@@ -24,11 +24,6 @@ import {
 } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
@@ -36,18 +31,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-service-configs-boolean',
+    host: { class: 'flex-row' },
     templateUrl: './service-configs-boolean.component.html',
     providers: [ConfigurationService],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        MatCheckbox,
-        FormsModule,
-        MatIcon,
-        MatTooltip,
-    ],
+    imports: [MatCheckbox, FormsModule, MatIcon, MatTooltip],
 })
 export class ServiceConfigsBooleanComponent {
     configService = inject(ConfigurationService);

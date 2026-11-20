@@ -25,7 +25,6 @@ import {
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { QuillEditorComponent } from 'ngx-quill';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -41,7 +40,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormFieldComponent,
         MatFormField,
         MatInput,
-        FlexDirective,
         QuillEditorComponent,
         TranslatePipe,
     ],
