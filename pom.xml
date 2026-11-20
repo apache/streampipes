@@ -120,6 +120,7 @@
         <jetbrains.version>26.1.0</jetbrains.version>
         <snakeyaml.version>3.2</snakeyaml.version>
         <vertx.version>4.5.31</vertx.version>
+        <zip4j.version>2.11.6</zip4j.version>
 
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
@@ -885,6 +886,11 @@
                 <groupId>commons-net</groupId>
                 <artifactId>commons-net</artifactId>
                 <version>${commons-net.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.lingala.zip4j</groupId>
+                <artifactId>zip4j</artifactId>
+                <version>${zip4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
