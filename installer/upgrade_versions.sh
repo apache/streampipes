@@ -23,7 +23,7 @@ FILES=(
   "./cli/.env"
   "./cli/README.md"
   # compose
-  "./compose/.env"
+  "./compose/.env.example"
   "./compose/README.md"
   # k8s
   "./k8s/values.yaml"

@@ -43,6 +43,25 @@ class ConfigureTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0 if success else 1, result.stderr)
         return result
 
+    def first_start(self, inventory, project=""):
+        return subprocess.run([sys.executable, str(CONFIGURE), "--first-start"], cwd=self.directory.name,
+                              env={**os.environ, "COMPOSE_PROJECT_NAME": project}, input=inventory,
+                              text=True, capture_output=True)
+
+    def test_missing_credentials_stop_startup(self):
+        for inventory in ("", "partial-output", "old_couchdb\ninventory-complete\n",
+                          "renamed com.docker.compose.volume=backend,com.docker.compose.project=old\ninventory-complete"):
+            self.assertNotEqual(self.first_start(inventory).returncode, 0)
+            self.assertFalse(self.path.exists())
+
+    def test_explicit_new_project_is_preserved(self):
+        result = self.first_start("old_influxdb2\ninventory-complete", "new-project")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("COMPOSE_PROJECT_NAME=new-project\n", self.path.read_text())
+        original = self.path.read_bytes()
+        self.assertNotEqual(self.first_start("inventory-complete").returncode, 0)
+        self.assertEqual(original, self.path.read_bytes())
+
     def test_first_install_and_restart_preserve_secret(self):
         first = self.run_configure()
         contents = self.path.read_text()
