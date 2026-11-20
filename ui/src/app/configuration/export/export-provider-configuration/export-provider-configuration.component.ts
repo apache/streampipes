@@ -41,11 +41,6 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     ExportProviderService,
     ExportProviderSettings,
 } from '@streampipes/platform-services';
@@ -67,9 +62,6 @@ import { ExportProviderComponent } from '../../../dataset/dialog/export-provider
     styleUrls: ['./export-provider-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         MatButton,
         MatCell,
         MatCellDef,

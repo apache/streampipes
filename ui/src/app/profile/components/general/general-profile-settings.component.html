@@ -16,9 +16,9 @@
 ~
 -->
 
-<div fxLayout="row" class="page-container-padding">
+<div class="page-container-padding flex-row">
     @if (profileLoaded) {
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <div class="flex-col items-start flex-100">
             <sp-split-section
                 [level]="2"
                 [title]="'Profile' | translate"
@@ -36,7 +36,7 @@
                     >
                     </sp-alert-banner>
                 }
-                <div fxLayout="row" fxLayoutAlign="start center">
+                <div class="flex-row items-center">
                     <span>{{ userData.username }}</span>
                     <button
                         [disabled]="isExternalUser"
@@ -50,7 +50,7 @@
                     </button>
                 </div>
                 <sp-form-field [level]="2" [label]="'Full name' | translate">
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <input
                             [disabled]="isExternalUser"
                             [(ngModel)]="userData.fullName"
@@ -59,7 +59,7 @@
                     </mat-form-field>
                 </sp-form-field>
                 <sp-form-field [level]="2" [label]="'Language' | translate">
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <mat-select [(ngModel)]="selectedLanguage">
                             @for (lang of availableLanguages; track lang) {
                                 <mat-option [value]="lang.id">
@@ -69,7 +69,7 @@
                         </mat-select>
                     </mat-form-field>
                 </sp-form-field>
-                <div fxLayout="row" fxLayoutAlign="start center">
+                <div class="flex-row items-center">
                     <button
                         mat-button
                         mat-flat-button

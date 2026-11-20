@@ -17,9 +17,9 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content">
+    <div class="sp-dialog-content flex-row">
         @if (preview && !exportInProgress) {
-            <div fxFlex="100" fxLayout="column" class="p-15">
+            <div class="p-15 flex-col flex-100">
                 @for (section of exportSections; track section.key) {
                     <sp-split-section
                         [level]="3"
@@ -31,8 +31,7 @@
                                 track assetConfig.assetId
                             ) {
                                 <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="space-between center"
+                                    class="flex-row justify-between items-center"
                                 >
                                     <h5>
                                         {{ assetConfig.assetName }}
@@ -62,11 +61,7 @@
                                         assetConfig
                                     )
                                 ) {
-                                    <div
-                                        fxLayout="row"
-                                        fxLayoutGap="10px"
-                                        class="mb-5"
-                                    >
+                                    <div class="mb-5 flex-row gap-sm">
                                         <button
                                             mat-button
                                             mat-flat-button
@@ -154,7 +149,7 @@
                     "
                 >
                     @if (getGenericStorageAppDocTypes().length > 0) {
-                        <div section-actions fxLayout="row" fxLayoutGap="10px">
+                        <div section-actions class="flex-row gap-sm">
                             <button
                                 mat-button
                                 mat-flat-button
@@ -185,7 +180,7 @@
                         </div>
                     }
                     @if (getGenericStorageAppDocTypes().length > 0) {
-                        <div fxLayout="column" class="mt-md">
+                        <div class="mt-md flex-col">
                             @for (
                                 exportItem of getGenericStorageAppDocTypes();
                                 track exportItem.resourceId
@@ -205,12 +200,7 @@
             </div>
         }
         @if (exportInProgress) {
-            <div
-                fxFlex="100"
-                fxLayout="column"
-                class="mt-10"
-                fxLayoutAlign="center center"
-            >
+            <div class="mt-10 flex-col justify-center items-center flex-100">
                 <sp-spinner
                     [diameter]="25"
                     [text]="'Exporting resources...' | translate"
@@ -226,8 +216,8 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <div fxLayout="column">
-            <div fxLayout="row">
+        <div class="flex-col">
+            <div class="flex-row">
                 <button
                     mat-button
                     mat-flat-button

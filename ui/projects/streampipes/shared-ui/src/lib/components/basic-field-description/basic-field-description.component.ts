@@ -20,6 +20,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'sp-basic-field-description',
+    host: { class: 'flex-row' },
     templateUrl: './basic-field-description.component.html',
     styleUrls: ['./basic-field-description.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,

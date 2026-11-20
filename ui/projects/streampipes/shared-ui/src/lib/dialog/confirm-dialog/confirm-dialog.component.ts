@@ -33,6 +33,7 @@ import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
 
 @Component({
     selector: 'sp-confirm-dialog',
+    host: { class: 'flex-row' },
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,

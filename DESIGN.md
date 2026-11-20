@@ -17,105 +17,106 @@
   -->
 
 ---
+
 name: "Apache StreamPipes"
 description: "A calm control-room system for clear and dependable industrial data work."
 colors:
-  deep-signal-indigo: "#1b1464"
-  deep-signal-indigo-dark: "#83a3de"
-  operational-green: "#39b54a"
-  operational-green-dark: "#7ac98a"
-  telemetry-blue: "#0062a0"
-  canvas: "#fafafa"
-  surface: "#ffffff"
-  surface-high: "#eeeeee"
-  surface-highest: "#e0e0e0"
-  ink: "#1a1a1a"
-  ink-muted: "#5e5e5e"
-  night-canvas: "#121212"
-  night-surface: "#1e1e1e"
-  night-ink: "#e0e0e0"
-  info: "#2563eb"
-  success: "#16a34a"
-  warning: "#f59e0b"
-  error: "#dc2626"
-  data-view: "#60a5fa"
-  dashboard: "#4f81bd"
-  adapter: "#b48c5f"
-  data-source: "#eab308"
-  pipeline: "#4ab69b"
-  measurement: "#38b2ac"
-  file: "#a855f7"
-  processor: "#009688"
-  sink: "#3f51b5"
+deep-signal-indigo: "#1b1464"
+deep-signal-indigo-dark: "#83a3de"
+operational-green: "#39b54a"
+operational-green-dark: "#7ac98a"
+telemetry-blue: "#0062a0"
+canvas: "#fafafa"
+surface: "#ffffff"
+surface-high: "#eeeeee"
+surface-highest: "#e0e0e0"
+ink: "#1a1a1a"
+ink-muted: "#5e5e5e"
+night-canvas: "#121212"
+night-surface: "#1e1e1e"
+night-ink: "#e0e0e0"
+info: "#2563eb"
+success: "#16a34a"
+warning: "#f59e0b"
+error: "#dc2626"
+data-view: "#60a5fa"
+dashboard: "#4f81bd"
+adapter: "#b48c5f"
+data-source: "#eab308"
+pipeline: "#4ab69b"
+measurement: "#38b2ac"
+file: "#a855f7"
+processor: "#009688"
+sink: "#3f51b5"
 typography:
-  display:
-    fontFamily: "Roboto, Arial, sans-serif"
-    fontSize: "clamp(1.7rem, 1.55rem + 0.55vw, 2.1rem)"
-    fontWeight: 700
-    lineHeight: 1.2
-  headline:
-    fontFamily: "Roboto, Arial, sans-serif"
-    fontSize: "clamp(1.35rem, 1.28rem + 0.38vw, 1.7rem)"
-    fontWeight: 600
-    lineHeight: 1.2
-  title:
-    fontFamily: "Roboto, Arial, sans-serif"
-    fontSize: "clamp(1.22rem, 1.14rem + 0.3vw, 1.4rem)"
-    fontWeight: 600
-    lineHeight: 1.2
-  body:
-    fontFamily: "Roboto-Regular, Arial, sans-serif"
-    fontSize: "clamp(0.96rem, 0.92rem + 0.16vw, 1.05rem)"
-    fontWeight: 400
-    lineHeight: 1.4
-  label:
-    fontFamily: "Roboto-Regular, Arial, sans-serif"
-    fontSize: "clamp(0.83rem, 0.79rem + 0.12vw, 0.9rem)"
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: "-0.01em"
+display:
+fontFamily: "Roboto, Arial, sans-serif"
+fontSize: "clamp(1.7rem, 1.55rem + 0.55vw, 2.1rem)"
+fontWeight: 700
+lineHeight: 1.2
+headline:
+fontFamily: "Roboto, Arial, sans-serif"
+fontSize: "clamp(1.35rem, 1.28rem + 0.38vw, 1.7rem)"
+fontWeight: 600
+lineHeight: 1.2
+title:
+fontFamily: "Roboto, Arial, sans-serif"
+fontSize: "clamp(1.22rem, 1.14rem + 0.3vw, 1.4rem)"
+fontWeight: 600
+lineHeight: 1.2
+body:
+fontFamily: "Roboto-Regular, Arial, sans-serif"
+fontSize: "clamp(0.96rem, 0.92rem + 0.16vw, 1.05rem)"
+fontWeight: 400
+lineHeight: 1.4
+label:
+fontFamily: "Roboto-Regular, Arial, sans-serif"
+fontSize: "clamp(0.83rem, 0.79rem + 0.12vw, 0.9rem)"
+fontWeight: 500
+lineHeight: 1.4
+letterSpacing: "-0.01em"
 rounded:
-  xs: "0.25rem"
-  sm: "0.5rem"
-  md: "0.75rem"
-  lg: "1rem"
-  pill: "999px"
+xs: "0.25rem"
+sm: "0.5rem"
+md: "0.75rem"
+lg: "1rem"
+pill: "999px"
 spacing:
-  2xs: "clamp(0.15rem, 0.12rem + 0.15vw, 0.25rem)"
-  xs: "clamp(0.25rem, 0.22rem + 0.2vw, 0.4rem)"
-  sm: "clamp(0.4rem, 0.35rem + 0.25vw, 0.6rem)"
-  md: "clamp(0.6rem, 0.5rem + 0.35vw, 0.9rem)"
-  lg: "clamp(0.9rem, 0.75rem + 0.4vw, 1.2rem)"
-  xl: "clamp(1.2rem, 1rem + 0.55vw, 1.6rem)"
-  2xl: "clamp(1.6rem, 1.3rem + 0.7vw, 2.2rem)"
+2xs: "clamp(0.15rem, 0.12rem + 0.15vw, 0.25rem)"
+xs: "clamp(0.25rem, 0.22rem + 0.2vw, 0.4rem)"
+sm: "clamp(0.4rem, 0.35rem + 0.25vw, 0.6rem)"
+md: "clamp(0.6rem, 0.5rem + 0.35vw, 0.9rem)"
+lg: "clamp(0.9rem, 0.75rem + 0.4vw, 1.2rem)"
+xl: "clamp(1.2rem, 1rem + 0.55vw, 1.6rem)"
+2xl: "clamp(1.6rem, 1.3rem + 0.7vw, 2.2rem)"
 components:
-  button-primary:
-    backgroundColor: "{colors.deep-signal-indigo}"
-    textColor: "#cccccc"
-    typography: "{typography.label}"
-    rounded: "{rounded.sm}"
-    padding: "0 1.3rem"
-    height: "2.5rem"
-  button-secondary:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.deep-signal-indigo}"
-    typography: "{typography.label}"
-    rounded: "{rounded.sm}"
-    padding: "0 1.3rem"
-    height: "2.5rem"
-  input-outlined:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
-    rounded: "{rounded.sm}"
-    padding: "0.5rem 1rem"
-    height: "2.5rem"
-  status-label:
-    backgroundColor: "{colors.surface-high}"
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    padding: "0.2rem 0.55rem"
+button-primary:
+backgroundColor: "{colors.deep-signal-indigo}"
+textColor: "#cccccc"
+typography: "{typography.label}"
+rounded: "{rounded.sm}"
+padding: "0 1.3rem"
+height: "2.5rem"
+button-secondary:
+backgroundColor: "{colors.surface}"
+textColor: "{colors.deep-signal-indigo}"
+typography: "{typography.label}"
+rounded: "{rounded.sm}"
+padding: "0 1.3rem"
+height: "2.5rem"
+input-outlined:
+backgroundColor: "{colors.surface}"
+textColor: "{colors.ink}"
+typography: "{typography.body}"
+rounded: "{rounded.sm}"
+padding: "0.5rem 1rem"
+height: "2.5rem"
+status-label:
+backgroundColor: "{colors.surface-high}"
+textColor: "{colors.ink}"
+typography: "{typography.label}"
+rounded: "{rounded.pill}"
+padding: "0.2rem 0.55rem"
 ---
 
 # Design System: Apache StreamPipes
@@ -274,16 +275,35 @@ migrate a whole component when you touch it.
 | `fxLayoutGap="…"`                 | `gap-2xs` … `gap-xl` (the `--space-*` tokens)        |
 | `fxFlex`                          | `flex-1`                                             |
 | `fxFlex="100"`                    | `flex-100`                                           |
+| `fxFlex="30"` (other percentages) | `basis-30` (values listed in `flex.scss`)            |
 | `fxFlex="auto"` / `"none"`        | `flex-auto` / `flex-none`                            |
 | `fxFlexFill`                      | `flex-fill`                                          |
 | `fxFlexAlign="center"`            | `self-center`, likewise `-start`, `-end`, `-stretch` |
 | `[fxLayout]="cond ? 'row' : …"`   | `[class.flex-row]="cond" [class.flex-col]="!cond"`   |
 
-Percentage splits (`fxFlex="30"`) and breakpoint variants (`fxLayout.lt-md`) have no
-utility class. Put them in the component SCSS: a named class with the exact equivalent
-(`flex: 1 1 30%; max-width: 30%`) or CSS grid for column splits, a `@media` query for
-breakpoints. Bound values (`[fxLayout]="…"`) become `[class.*]` bindings, or `[style.*]`
-when the value comes from an input.
+Breakpoint variants (`fxLayout.lt-md`) have no utility class; use a `@media` query in the
+component SCSS. Bound values (`[fxLayout]="…"`) become `[class.*]` bindings, or
+`[style.*]` when the value comes from an input.
+
+**The Flex Parent Rule.** `fxFlex` also turned its parent element into a flex row
+(ngx-layout's `addFlexToParent`), unless the parent already had `fxLayout`. The utility
+classes do not do this, so every former `fxFlex` element needs a flex parent:
+
+- Parent in the same template: add `flex-row` to it.
+- `fxFlex` on the template root: the parent is the component's host element. Add
+  `host: { class: 'flex-row' }` to the component, or `display: flex` to an existing
+  `:host` rule (a `:host` rule beats a global class).
+- `fxFlex` on `sp-table` cells: set `[flexRows]="true"` on `sp-table` and size the cells
+  with `flex-1` / `basis-*`. A native `mat-table` gets `flex-row` on its header and data
+  rows instead.
+- `fxFlex` on an `input` or `mat-select` inside `mat-form-field`: the flexed parent was
+  the field's infix wrapper, which renders the same either way; nothing to add.
+
+The same side effect works in the other direction while the migration is in progress: an
+`fxFlex` element in a template that is not migrated yet, projected into a migrated
+container, writes an inline `flex-direction: row` onto that container. `.flex-col`
+therefore sets its direction with `!important`. A container that gets its column
+direction from component SCSS instead is not protected; use `flex-col` on it.
 
 ngx-layout wrote inline styles, which beat any component stylesheet; utility classes do
 not. Where component SCSS on the same element sets `display`, `flex*`, `align-*`,
@@ -296,6 +316,12 @@ The classes are not exact copies of the directives. Check these when migrating:
 - `fxLayoutGap` put a margin on every child except the last; `gap-*` uses CSS `gap`.
   Remove child margins that were compensating, and pick the nearest token instead of
   copying pixel values.
+- In a column, a bare `fxFlex` used a near-zero basis (`1e-09px`); `flex-1` uses `0%`.
+  In a column without a fixed height, the old item collapsed to zero height and its
+  content overflowed; with `flex-1` it wraps its content. That is usually the intended
+  layout. Check it when the item has siblings after it or `overflow: auto`.
+- `fxFlex="200px"` and other fixed sizes have no class: set `flex: 1 1 200px;
+max-width: 200px` (`max-height` in a column) in the component SCSS.
 - Many `fxFlex="100"` items do nothing in their context. Migrate them one to one first;
   remove redundant classes in a separate pass.
 

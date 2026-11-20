@@ -42,28 +42,21 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpExtensionsServiceDetailsDialogComponent } from '../../dialog/extensions-service-details/extensions-service-details-dialog.component';
 import { SpExtensionsServiceRunningInstancesDialogComponent } from '../../dialog/extensions-service-running-instances/extensions-service-running-instances-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-registered-extensions-services',
+    host: { class: 'flex-row' },
     templateUrl: './registered-extensions-services.component.html',
     styleUrls: ['./registered-extensions-services.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         MatTable,
         MatColumnDef,
         MatHeaderCellDef,
         MatHeaderCell,
-        LayoutAlignDirective,
         MatCellDef,
         MatCell,
         MatIcon,

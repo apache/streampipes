@@ -18,7 +18,6 @@
 
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { NavMenuService } from '../../../core/navigation/nav-menu.service';
@@ -34,7 +33,7 @@ interface ShortcutDefinition {
     templateUrl: './shortcuts.component.html',
     styleUrl: './shortcuts.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, FlexDirective, SpBasicHeaderTitleComponent],
+    imports: [SpBasicHeaderTitleComponent],
 })
 export class ShortcutsTabComponent {
     private translateService = inject(TranslateService);

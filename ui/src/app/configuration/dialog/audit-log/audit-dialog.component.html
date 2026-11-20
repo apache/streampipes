@@ -24,11 +24,7 @@
     cdkTrapFocus
     [cdkTrapFocusAutoCapture]="true"
 >
-    <div
-        class="sp-dialog-content"
-        fxLayout="column"
-        fxLayoutGap="var(--space-lg)"
-    >
+    <div class="sp-dialog-content flex-col gap-lg">
         @if (loading) {
             <mat-progress-bar
                 mode="indeterminate"

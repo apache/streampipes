@@ -43,12 +43,6 @@ import {
 import { CertificateDetailsDialogComponent } from '../../../core-ui/certificate-details/certificate-details-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { CertificateLabelComponent } from './certificate-label/certificate-label.component';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -65,8 +59,6 @@ import { MatIcon } from '@angular/material/icon';
         MatColumnDef,
         MatHeaderCellDef,
         MatHeaderCell,
-        FlexDirective,
-        LayoutAlignDirective,
         MatSortHeader,
         MatCellDef,
         MatCell,
@@ -74,8 +66,6 @@ import { MatIcon } from '@angular/material/icon';
         MatIconButton,
         MatTooltip,
         MatIcon,
-        LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         TranslatePipe,
     ],

@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxLayout="column" class="pt-sm pb-sm">
+<div class="pt-sm pb-sm flex-col">
     <span class="text-sm">
         {{ certificate.subjectDn }}
     </span>
@@ -25,7 +25,7 @@
             {{ applicationUri }}
         </span>
     }
-    <div fxLayout="row wrap" class="mt-sm">
+    <div class="mt-sm flex-row flex-wrap">
         @for (dnsName of dnsNames; track $index) {
             <sp-label
                 shape="badge"

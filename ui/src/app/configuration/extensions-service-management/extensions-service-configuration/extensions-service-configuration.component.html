@@ -16,25 +16,23 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     <table
-        fxFlex="100"
+        class="flex-100"
         mat-table
         [dataSource]="dataSource"
         multiTemplateDataRows
     >
         <ng-container matColumnDef="group">
             <th
-                fxFlex="45"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-45"
                 mat-header-cell
                 *matHeaderCellDef
             >
                 {{ 'Service Group' | translate }}
             </th>
             <td
-                fxFlex="45"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-45"
                 mat-cell
                 *matCellDef="let element"
             >
@@ -44,16 +42,14 @@
 
         <ng-container matColumnDef="name">
             <th
-                fxFlex="45"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-45"
                 mat-header-cell
                 *matHeaderCellDef
             >
                 {{ 'Service Name' | translate }}
             </th>
             <td
-                fxFlex="45"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-45"
                 mat-cell
                 *matCellDef="let element"
             >
@@ -63,8 +59,7 @@
 
         <ng-container matColumnDef="action">
             <th
-                fxFlex="10"
-                fxLayoutAlign="end center"
+                class="flex-row justify-end items-center basis-10"
                 mat-header-cell
                 *matHeaderCellDef
             >
@@ -78,8 +73,7 @@
                 </button>
             </th>
             <td
-                fxFlex="10"
-                fxLayoutAlign="end center"
+                class="flex-row justify-end items-center basis-10"
                 mat-cell
                 *matCellDef="let element"
             >
@@ -105,7 +99,7 @@
                         element === expandedElement ? 'expanded' : 'collapsed'
                     "
                 >
-                    <div fxFlex="100">
+                    <div class="flex-100">
                         <sp-service-configs
                             [serviceConfiguration]="element"
                             (updateServiceConfiguration)="
@@ -117,11 +111,15 @@
             </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns"
+            class="flex-row"
+        ></tr>
         <tr
             mat-row
             *matRowDef="let element; columns: displayedColumns"
-            class="service-configuration-row"
+            class="service-configuration-row flex-row"
             [class.service-configuration-row-expanded]="
                 expandedElement === element
             "

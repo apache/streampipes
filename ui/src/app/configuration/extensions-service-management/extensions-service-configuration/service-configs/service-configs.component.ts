@@ -24,11 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { SpServiceConfiguration } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { ServiceConfigsItemComponent } from './service-configs-item/service-configs-item.component';
 import { MatButton } from '@angular/material/button';
@@ -36,14 +31,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-service-configs',
+    host: { class: 'flex-row' },
     templateUrl: './service-configs.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         FormsModule,
         ServiceConfigsItemComponent,
-        LayoutAlignDirective,
         MatButton,
         TranslatePipe,
     ],

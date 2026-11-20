@@ -28,7 +28,6 @@ import {
     SpBreadcrumbService,
     SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { LoginSettingsService } from '../login/services/login-settings.service';
 import { InfoTabComponent } from './components/info/info.component';
@@ -47,8 +46,6 @@ export type HelpTabId = 'info' | 'documentation' | 'sbom' | 'shortcuts';
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,
-        FlexDirective,
-        LayoutDirective,
         MatTabGroup,
         MatTab,
         MatTabLabel,

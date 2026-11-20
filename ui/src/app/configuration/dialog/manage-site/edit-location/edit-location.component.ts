@@ -30,7 +30,6 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -43,11 +42,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './edit-location.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         SplitSectionComponent,
-        FlexDirective,
         MatFormField,
         MatInput,
         MatError,

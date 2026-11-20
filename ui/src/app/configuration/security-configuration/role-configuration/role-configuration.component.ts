@@ -44,12 +44,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { EditRoleDialogComponent } from '../edit-role-dialog/edit-role-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    FlexOrderDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -60,8 +54,6 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./role-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -71,8 +63,6 @@ import { MatIcon } from '@angular/material/icon';
         MatCellDef,
         MatCell,
         SpLabelComponent,
-        FlexOrderDirective,
-        LayoutAlignDirective,
         MatButton,
         MatTooltip,
         TranslatePipe,

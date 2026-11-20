@@ -29,18 +29,18 @@
         <mat-tab label="API"></mat-tab>
     </mat-tab-group>
 
-    <div class="fixed-height page-tab-content" fxLayout="column" fxFlex="100">
+    <div class="fixed-height page-tab-content flex-col flex-100">
         @if (selectedIndex === 0) {
-            <div class="fixed-height" fxLayout="column" fxFlex="100">
+            <div class="fixed-height flex-col flex-100">
                 <sp-general-profile-settings
-                    fxFlex="100"
+                    class="flex-100"
                 ></sp-general-profile-settings>
             </div>
         }
         @if (selectedIndex === 1) {
-            <div class="fixed-height" fxLayout="column" fxFlex="100">
+            <div class="fixed-height flex-col flex-100">
                 <sp-token-management-settings
-                    fxFlex="100"
+                    class="flex-100"
                 ></sp-token-management-settings>
             </div>
         }

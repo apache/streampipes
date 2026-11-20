@@ -17,15 +17,15 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content">
-        <div fxFlex="100" fxLayout="column" class="p-15">
-            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+    <div class="sp-dialog-content flex-row">
+        <div class="p-15 flex-col flex-100">
+            <form [formGroup]="parentForm" class="flex-col flex-100">
                 <sp-split-section [level]="3" [title]="'Basics' | translate">
                     <sp-form-field [level]="3" [label]="'Role ID' | translate">
                         <mat-form-field color="accent">
                             <input
                                 formControlName="elementId"
-                                fxFlex
+                                class="flex-1"
                                 matInput
                                 required
                             />
@@ -42,7 +42,7 @@
                         <mat-form-field color="accent">
                             <input
                                 formControlName="label"
-                                fxFlex
+                                class="flex-1"
                                 matInput
                                 required
                             />
@@ -53,18 +53,14 @@
                     [level]="3"
                     [title]="'Privileges' | translate"
                 >
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        class="lists-container"
-                    >
-                        <div class="list-section" fxFlex="50">
+                    <div class="lists-container flex-row gap-sm">
+                        <div class="list-section">
                             <div class="privilege-header">
                                 {{ 'Available Privileges' | translate }}
                             </div>
                             @for (privilege of allPrivileges; track privilege) {
                                 <div>
-                                    <div fxLayoutAlign="start center">
+                                    <div class="flex-row items-center">
                                         <button
                                             mat-icon-button
                                             color="accent"
@@ -81,7 +77,7 @@
                                 </div>
                             }
                         </div>
-                        <div class="list-section" fxFlex="50">
+                        <div class="list-section">
                             <div class="privilege-header">
                                 {{ 'Selected Privileges' | translate }}
                             </div>
@@ -90,7 +86,7 @@
                                 track privilege
                             ) {
                                 <div>
-                                    <div fxLayoutAlign="start center">
+                                    <div class="flex-row items-center">
                                         <button
                                             mat-icon-button
                                             color="accent"
@@ -125,7 +121,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <div fxLayout="row">
+        <div class="flex-row">
             <button
                 mat-button
                 mat-flat-button

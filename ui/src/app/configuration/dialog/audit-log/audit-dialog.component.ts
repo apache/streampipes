@@ -29,10 +29,6 @@ import { A11yModule } from '@angular/cdk/a11y';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     AuditService,
@@ -61,8 +57,6 @@ import { auditOutcomeTone } from '../../audit-log/audit-outcome';
         MatButtonModule,
         MatProgressBarModule,
         TranslatePipe,
-        LayoutDirective,
-        LayoutGapDirective,
         SpAlertBannerComponent,
         SpLabelComponent,
     ],

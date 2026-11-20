@@ -17,16 +17,10 @@
 -->
 
 <div
-    fxLayout="column"
-    class="form-field-small mt-10"
+    class="form-field-small mt-10 flex-col"
     [ngClass]="editMode() ? '' : 'create-label'"
 >
-    <div
-        fxLayout="row"
-        fxFlex="100"
-        fxLayoutGap="10px"
-        fxLayoutAlign="start center"
-    >
+    <div class="flex-row items-center gap-sm flex-100">
         @if (showPreview()) {
             <sp-form-field [level]="3" label="" class="mt-xs">
                 <sp-label
@@ -66,7 +60,7 @@
                 [style.background]="draftLabel().color"
             />
         </sp-form-field>
-        <div fxFlex fxLayoutAlign="end center">
+        <div class="flex-row justify-end items-center flex-1">
             <button
                 mat-button
                 mat-flat-button

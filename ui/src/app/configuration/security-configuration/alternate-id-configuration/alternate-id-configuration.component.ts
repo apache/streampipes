@@ -17,12 +17,6 @@
  */
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -35,12 +29,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './alternate-id-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         MatIconButton,
         MatIcon,
-        LayoutGapDirective,
         MatFormField,
         MatLabel,
         MatInput,

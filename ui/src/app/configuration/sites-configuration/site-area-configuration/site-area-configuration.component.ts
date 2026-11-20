@@ -52,10 +52,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -75,8 +71,6 @@ import { MatDialog } from '@angular/material/dialog';
         MatSortHeader,
         MatCellDef,
         MatCell,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
         MatTooltip,
         TranslatePipe,

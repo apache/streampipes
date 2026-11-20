@@ -35,12 +35,6 @@ import {
     ExportConfiguration,
     ExportItem,
 } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
@@ -76,10 +70,6 @@ type AssetExportSectionKey =
     templateUrl: './data-export-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         SpSpinnerComponent,
         MatDivider,
         MatButton,

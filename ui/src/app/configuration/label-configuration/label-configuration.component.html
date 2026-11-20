@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxLayout="column">
+<div class="flex-col">
     <sp-split-section
         [title]="'Labels' | translate"
         [subtitle]="
@@ -24,12 +24,7 @@
                 | translate
         "
     >
-        <div
-            fxLayout="row"
-            fxLayoutAlign="start start"
-            fxLayoutGap="10px"
-            section-actions
-        >
+        <div class="flex-row items-start gap-sm" section-actions>
             <button
                 mat-button
                 mat-flat-button
@@ -95,7 +90,7 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let label">
-                    <div fxLayout="row" fxLayoutAlign="end center">
+                    <div class="flex-row justify-end items-center">
                         @if (!isEditMode(label._id)) {
                             <button
                                 mat-icon-button

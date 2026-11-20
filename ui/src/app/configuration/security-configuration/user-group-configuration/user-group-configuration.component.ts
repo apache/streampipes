@@ -40,12 +40,6 @@ import {
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    FlexOrderDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -57,8 +51,6 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./user-group-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -67,8 +59,6 @@ import { MatIcon } from '@angular/material/icon';
         MatSortHeader,
         MatCellDef,
         MatCell,
-        FlexOrderDirective,
-        LayoutAlignDirective,
         MatButton,
         MatTooltip,
         TranslatePipe,

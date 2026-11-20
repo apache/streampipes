@@ -39,11 +39,6 @@ import {
     Validators,
 } from '@angular/forms';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     FormFieldComponent,
     SpAlertBannerComponent,
     SplitSectionComponent,
@@ -62,9 +57,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./token-management-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         SplitSectionComponent,
         FormFieldComponent,
         MatFormField,

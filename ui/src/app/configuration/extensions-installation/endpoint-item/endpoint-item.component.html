@@ -17,15 +17,12 @@
 -->
 
 <div
-    fxFlex="100"
-    fxLayout="column"
-    fxLayoutAlign="start start"
-    class="pipeline-element-box"
+    class="pipeline-element-box flex-col items-start flex-100"
     [style.--endpoint-type-color]="itemTypeColor"
     [class.is-selected]="itemSelected"
     [class.is-disabled]="!item.editable"
 >
-    <div fxLayout="row" class="w-100 endpoint-header">
+    <div class="w-100 endpoint-header flex-row">
         <i
             class="material-icons endpoint-status-icon"
             [ngClass]="
@@ -35,7 +32,7 @@
             "
             >lens</i
         >
-        <span fxFlex></span>
+        <span class="flex-1"></span>
         <span
             class="{{ itemTypeStyle }} endpoint-type-badge"
             [matTooltip]="
@@ -50,7 +47,7 @@
             >{{ itemTypeTitle }}</span
         >
     </div>
-    <div fxFlex fxLayout="row" class="endpoint-main">
+    <div class="endpoint-main flex-row flex-1">
         <div class="endpoint-icon-wrapper">
             @if (!item.includesIcon || iconError) {
                 <div
@@ -71,7 +68,7 @@
                 </div>
             }
         </div>
-        <div fxFlex fxLayout="column" class="endpoint-content">
+        <div class="endpoint-content flex-col flex-1">
             <div class="ml-5">
                 @if (!item.editable) {
                     <small
@@ -80,7 +77,7 @@
                     </small>
                 }
             </div>
-            <div fxFlex fxLayoutAlign="start end" class="ml-5">
+            <div class="ml-5 flex-row items-end flex-1">
                 @if (!item.installed) {
                     <button
                         class="small-button-add"
@@ -147,9 +144,9 @@
             </div>
         </div>
     </div>
-    <div fxFlex="100" fxLayout="column" class="endpoint-description">
-        <div fxLayout="column">
-            <div fxFlex fxLayout="column">
+    <div class="endpoint-description flex-col flex-100">
+        <div class="flex-col">
+            <div class="flex-col flex-1">
                 <h3>
                     {{ item.name }}
                 </h3>

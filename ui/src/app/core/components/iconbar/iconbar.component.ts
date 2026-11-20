@@ -18,11 +18,6 @@
 
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -33,15 +28,7 @@ import { UpperCasePipe } from '@angular/common';
     templateUrl: './iconbar.component.html',
     styleUrls: ['./iconbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        MatIcon,
-        FlexDirective,
-        MatDivider,
-        TranslatePipe,
-        UpperCasePipe,
-    ],
+    imports: [MatIcon, MatDivider, TranslatePipe, UpperCasePipe],
 })
 export class IconbarComponent
     extends BaseNavigationComponent

@@ -29,28 +29,16 @@ import {
     DataExplorerWidgetModel,
     DatasetMetadata,
 } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { ChartContainerComponent } from '../../../../chart-shared/components/chart-container/chart-container.component';
 
 @Component({
     selector: 'sp-dashboard-slide-view',
+    host: { class: 'flex-row' },
     templateUrl: './dashboard-slide-view.component.html',
     styleUrls: ['./dashboard-slide-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        NgClass,
-        ClassDirective,
-        ChartContainerComponent,
-    ],
+    imports: [NgClass, ChartContainerComponent],
 })
 export class DashboardSlideViewComponent
     extends AbstractChartViewDirective

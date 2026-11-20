@@ -16,17 +16,12 @@
 ~
 -->
 
-<div
-    class="fixed-height"
-    fxLayout="column"
-    fxLayoutAlign="start start"
-    fxFlex="100"
->
+<div class="fixed-height flex-col items-start flex-100">
     <sp-split-section
         [title]="'Documentation' | translate"
         [subtitle]="'View the documentation for a full user guide.' | translate"
     >
-        <div fxLayout="column" class="subsection mt-8">
+        <div class="subsection mt-8 flex-col">
             <div>
                 <a
                     mat-button

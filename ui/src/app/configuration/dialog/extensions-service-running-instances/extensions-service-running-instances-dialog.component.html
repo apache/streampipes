@@ -18,9 +18,9 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxLayout="column" fxLayoutGap="20px" class="p-15">
-            <div fxLayout="row" fxLayoutAlign="space-between start">
-                <div fxLayout="column" fxLayoutGap="5px">
+        <div class="p-15 flex-col gap-lg">
+            <div class="flex-row justify-between items-start">
+                <div class="flex-col gap-2xs">
                     <div class="text-md">
                         {{ serviceReg.svcId }}
                     </div>
@@ -43,9 +43,7 @@
 
             @if (loading) {
                 <div
-                    fxLayout="row"
-                    fxLayoutAlign="center center"
-                    class="loading-container"
+                    class="loading-container flex-row justify-center items-center"
                 >
                     <sp-spinner [diameter]="32"></sp-spinner>
                 </div>
@@ -58,29 +56,28 @@
             }
 
             @if (!loading && !loadError) {
-                <div fxLayout="column" fxLayoutGap="10px">
+                <div class="flex-col gap-sm">
                     <div class="section-title">
                         {{ 'Adapters' | translate }}
                     </div>
                     @if (adapterDataSource.data.length > 0) {
                         <sp-table
-                            fxFlex="100"
+                            [flexRows]="true"
+                            class="flex-100"
                             [dataSource]="adapterDataSource"
                             [columns]="adapterColumns"
                             [nameSearchConfig]="adapterNameSearchConfig"
                         >
                             <ng-container matColumnDef="name">
                                 <th
-                                    fxFlex="25"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-25"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Name' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="25"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-25"
                                     mat-cell
                                     *matCellDef="let adapter"
                                 >
@@ -90,16 +87,14 @@
 
                             <ng-container matColumnDef="state">
                                 <th
-                                    fxFlex="15"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-15"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'State' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="15"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-15"
                                     mat-cell
                                     *matCellDef="let adapter"
                                 >
@@ -117,16 +112,14 @@
 
                             <ng-container matColumnDef="relation">
                                 <th
-                                    fxFlex="15"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-15"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Relation' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="15"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-15"
                                     mat-cell
                                     *matCellDef="let adapter"
                                 >
@@ -146,19 +139,16 @@
 
                             <ng-container matColumnDef="instanceId">
                                 <th
-                                    fxFlex="35"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-35"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Instance ID' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="35"
-                                    fxLayoutAlign="start center"
                                     mat-cell
                                     *matCellDef="let adapter"
-                                    class="instance-id"
+                                    class="instance-id flex-row items-center basis-35"
                                 >
                                     {{ adapter.instanceId }}
                                 </td>
@@ -166,14 +156,12 @@
 
                             <ng-container matColumnDef="action">
                                 <th
-                                    fxFlex="10"
-                                    fxLayoutAlign="end center"
+                                    class="flex-row justify-end items-center basis-10"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 ></th>
                                 <td
-                                    fxFlex="10"
-                                    fxLayoutAlign="end center"
+                                    class="flex-row justify-end items-center basis-10"
                                     mat-cell
                                     *matCellDef="let adapter"
                                 >
@@ -204,29 +192,28 @@
                     }
                 </div>
 
-                <div fxLayout="column" fxLayoutGap="10px">
+                <div class="flex-col gap-sm">
                     <div class="section-title">
                         {{ 'Pipeline elements' | translate }}
                     </div>
                     @if (pipelineElementDataSource.data.length > 0) {
                         <sp-table
-                            fxFlex="100"
+                            [flexRows]="true"
+                            class="flex-100"
                             [dataSource]="pipelineElementDataSource"
                             [columns]="pipelineElementColumns"
                             [nameSearchConfig]="pipelineElementNameSearchConfig"
                         >
                             <ng-container matColumnDef="name">
                                 <th
-                                    fxFlex="20"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-20"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Name' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="20"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-20"
                                     mat-cell
                                     *matCellDef="let element"
                                 >
@@ -236,16 +223,14 @@
 
                             <ng-container matColumnDef="pipelineName">
                                 <th
-                                    fxFlex="20"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-20"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Pipeline' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="20"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-20"
                                     mat-cell
                                     *matCellDef="let element"
                                 >
@@ -255,16 +240,14 @@
 
                             <ng-container matColumnDef="type">
                                 <th
-                                    fxFlex="12"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-12"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Type' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="12"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-12"
                                     mat-cell
                                     *matCellDef="let element"
                                 >
@@ -284,16 +267,14 @@
 
                             <ng-container matColumnDef="relation">
                                 <th
-                                    fxFlex="13"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-13"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Relation' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="13"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-13"
                                     mat-cell
                                     *matCellDef="let element"
                                 >
@@ -313,19 +294,16 @@
 
                             <ng-container matColumnDef="instanceId">
                                 <th
-                                    fxFlex="25"
-                                    fxLayoutAlign="start center"
+                                    class="flex-row items-center basis-25"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 >
                                     {{ 'Instance ID' | translate }}
                                 </th>
                                 <td
-                                    fxFlex="25"
-                                    fxLayoutAlign="start center"
                                     mat-cell
                                     *matCellDef="let element"
-                                    class="instance-id"
+                                    class="instance-id flex-row items-center basis-25"
                                 >
                                     {{ element.instanceId }}
                                 </td>
@@ -333,14 +311,12 @@
 
                             <ng-container matColumnDef="action">
                                 <th
-                                    fxFlex="10"
-                                    fxLayoutAlign="end center"
+                                    class="flex-row justify-end items-center basis-10"
                                     mat-header-cell
                                     *matHeaderCellDef
                                 ></th>
                                 <td
-                                    fxFlex="10"
-                                    fxLayoutAlign="end center"
+                                    class="flex-row justify-end items-center basis-10"
                                     mat-cell
                                     *matCellDef="let element"
                                 >
@@ -374,11 +350,7 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div
-        class="sp-dialog-actions running-instances-actions"
-        fxLayout="column"
-        fxLayoutGap="10px"
-    >
+    <div class="sp-dialog-actions running-instances-actions flex-col gap-sm">
         @if (pendingRemoval) {
             <sp-alert-banner
                 class="confirmation-alert"
@@ -390,20 +362,11 @@
                         | translate
                 "
             >
-                <div
-                    class="confirmation-content"
-                    fxLayout="column"
-                    fxLayoutAlign="start start"
-                    fxLayoutGap="10px"
-                >
+                <div class="confirmation-content flex-col items-start gap-sm">
                     <div class="text-sm instance-id">
                         {{ getPendingRemovalDescription() | translate }}
                     </div>
-                    <div
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        fxLayoutGap="10px"
-                    >
+                    <div class="flex-row items-center gap-sm">
                         <button
                             mat-button
                             mat-flat-button
@@ -426,7 +389,7 @@
                 </div>
             </sp-alert-banner>
         }
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div class="flex-row items-center gap-sm">
             <button
                 mat-button
                 mat-flat-button

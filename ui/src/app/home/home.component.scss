@@ -50,10 +50,13 @@
     justify-content: center;
 }
 
-.assets-wrapper,
+// .assets-wrapper is sized by .flex-1 and .assets-content fills it with .flex-fill.
+.assets-wrapper {
+    min-height: 0; /* super important so children can fill and scroll correctly */
+}
+
 .assets-content {
     flex: 1 1 auto;
-    min-height: 0; /* super important so children can fill and scroll correctly */
 }
 
 .assets-wrapper > .section-body {

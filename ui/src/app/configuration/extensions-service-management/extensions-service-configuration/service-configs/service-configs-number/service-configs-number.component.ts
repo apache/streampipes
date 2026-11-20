@@ -25,15 +25,15 @@ import {
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import { MatFormField } from '@angular/material/form-field';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-service-configs-number',
+    host: { class: 'flex-row' },
     templateUrl: './service-configs-number.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [MatFormField, FlexDirective, MatInput, FormsModule],
+    imports: [MatFormField, MatInput, FormsModule],
 })
 export class ServiceConfigsNumberComponent {
     configService = inject(ConfigurationService);

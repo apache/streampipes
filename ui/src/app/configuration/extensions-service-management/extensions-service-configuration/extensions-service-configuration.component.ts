@@ -45,11 +45,6 @@ import {
     trigger,
 } from '@angular/animations';
 import { SpServiceConfiguration } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -58,6 +53,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-extensions-service-configuration',
+    host: { class: 'flex-row' },
     templateUrl: './extensions-service-configuration.component.html',
     styleUrls: ['./extensions-service-configuration.component.scss'],
     animations: [
@@ -75,13 +71,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         MatTable,
         MatColumnDef,
         MatHeaderCellDef,
         MatHeaderCell,
-        LayoutAlignDirective,
         MatCellDef,
         MatCell,
         MatIconButton,

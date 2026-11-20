@@ -24,7 +24,6 @@ import {
 } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -39,7 +38,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormFieldComponent,
         MatFormField,
         MatInput,
-        FlexDirective,
         MatCheckbox,
         TranslatePipe,
     ],

@@ -43,11 +43,6 @@ import {
     MatTableDataSource,
 } from '@angular/material/table';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { SpEditLabelComponent } from './edit-label/edit-label.component';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -61,10 +56,7 @@ import { MatDialog } from '@angular/material/dialog';
     styleUrls: ['./label-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         SplitSectionComponent,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         MatButton,
         SpEditLabelComponent,
         SpTableComponent,

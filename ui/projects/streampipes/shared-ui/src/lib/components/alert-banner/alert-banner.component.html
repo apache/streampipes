@@ -16,7 +16,10 @@
   ~
   -->
 
-<div [ngClass]="['alert', alertClasses]" class="transition duration-300">
+<div
+    [ngClass]="['alert', alertClasses]"
+    class="transition duration-300 flex-row"
+>
     <div [ngClass]="iconContainerClasses" class="alert-icon">
         <mat-icon>{{ displayIcon }}</mat-icon>
     </div>

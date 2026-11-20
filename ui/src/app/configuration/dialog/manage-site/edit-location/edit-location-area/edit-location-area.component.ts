@@ -30,12 +30,6 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { checkForDuplicatesValidator } from '../../../../../core-ui/static-properties/input.validator';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatError, MatFormField } from '@angular/material/form-field';
@@ -48,12 +42,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./edit-location-area.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
         FormsModule,
         ReactiveFormsModule,
-        FlexDirective,
-        LayoutAlignDirective,
         MatIconButton,
         MatIcon,
         MatFormField,
