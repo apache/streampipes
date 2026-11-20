@@ -274,16 +274,29 @@ migrate a whole component when you touch it.
 | `fxLayoutGap="…"`                 | `gap-2xs` … `gap-xl` (the `--space-*` tokens)        |
 | `fxFlex`                          | `flex-1`                                             |
 | `fxFlex="100"`                    | `flex-100`                                           |
+| `fxFlex="30"` (other percentages) | `basis-30` (values listed in `flex.scss`)            |
 | `fxFlex="auto"` / `"none"`        | `flex-auto` / `flex-none`                            |
 | `fxFlexFill`                      | `flex-fill`                                          |
 | `fxFlexAlign="center"`            | `self-center`, likewise `-start`, `-end`, `-stretch` |
 | `[fxLayout]="cond ? 'row' : …"`   | `[class.flex-row]="cond" [class.flex-col]="!cond"`   |
 
-Percentage splits (`fxFlex="30"`) and breakpoint variants (`fxLayout.lt-md`) have no
-utility class. Put them in the component SCSS: a named class with the exact equivalent
-(`flex: 1 1 30%; max-width: 30%`) or CSS grid for column splits, a `@media` query for
-breakpoints. Bound values (`[fxLayout]="…"`) become `[class.*]` bindings, or `[style.*]`
-when the value comes from an input.
+Breakpoint variants (`fxLayout.lt-md`) have no utility class; use a `@media` query in the
+component SCSS. Bound values (`[fxLayout]="…"`) become `[class.*]` bindings, or
+`[style.*]` when the value comes from an input.
+
+**The Flex Parent Rule.** `fxFlex` also turned its parent element into a flex row
+(ngx-layout's `addFlexToParent`), unless the parent already had `fxLayout`. The utility
+classes do not do this, so every former `fxFlex` element needs a flex parent:
+
+- Parent in the same template: add `flex-row` to it.
+- `fxFlex` on the template root: the parent is the component's host element. Add
+  `host: { class: 'flex-row' }` to the component, or `display: flex` to an existing
+  `:host` rule (a `:host` rule beats a global class).
+- `fxFlex` on `sp-table` cells: set `[flexRows]="true"` on `sp-table` and size the cells
+  with `flex-1` / `basis-*`. A native `mat-table` gets `flex-row` on its header and data
+  rows instead.
+- `fxFlex` on an `input` or `mat-select` inside `mat-form-field`: the flexed parent was
+  the field's infix wrapper, which renders the same either way; nothing to add.
 
 ngx-layout wrote inline styles, which beat any component stylesheet; utility classes do
 not. Where component SCSS on the same element sets `display`, `flex*`, `align-*`,
