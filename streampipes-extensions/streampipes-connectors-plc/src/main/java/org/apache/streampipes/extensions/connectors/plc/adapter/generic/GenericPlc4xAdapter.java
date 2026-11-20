@@ -34,7 +34,6 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connecti
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.OneTimePlcRequestReader;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcRequestProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionExtractor;
-import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -54,7 +53,7 @@ import static org.apache.streampipes.extensions.connectors.plc.adapter.generic.m
 
 public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeConfig {
 
-  private PullAdapterScheduler pullAdapterScheduler;
+  private ContinuousPlcRequestReader plcRequestReader;
   private final PlcRequestProvider requestProvider;
 
   private final PlcDriver driver;
@@ -79,22 +78,23 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
     var settings = new Plc4xConnectionExtractor(
         extractor.getStaticPropertyExtractor(), driver.getProtocolCode()
     ).makeSettings();
-    var adapterName = extractor.getAdapterDescription().getName();
-    var plcRequestReader = new ContinuousPlcRequestReader(
+    this.plcRequestReader = new ContinuousPlcRequestReader(
         connectionManager,
         settings,
-        requestProvider,
         collector,
-        adapterName
+        extractor.getAdapterDescription().getElementId(),
+        adapterRuntimeContext.getLogger()
     );
-    this.pullAdapterScheduler = new PullAdapterScheduler();
-    this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
+    this.plcRequestReader.start();
   }
 
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
                                IAdapterRuntimeContext adapterRuntimeContext) {
-    this.pullAdapterScheduler.shutdown();
+    if (this.plcRequestReader != null) {
+      this.plcRequestReader.close();
+      this.plcRequestReader = null;
+    }
   }
 
   @Override
