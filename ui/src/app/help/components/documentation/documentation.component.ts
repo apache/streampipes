@@ -17,27 +17,16 @@
  */
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-documentation-tab',
+    host: { class: 'flex-row' },
     templateUrl: './documentation.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        SplitSectionComponent,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [SplitSectionComponent, MatButton, TranslatePipe],
 })
 export class DocumentationTabComponent {
     @Input()

@@ -48,11 +48,6 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin, Subscription } from 'rxjs';
 import { StatusBox } from './models/home.model';
-import {
-    FlexDirective,
-    FlexFillDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { StatusComponent } from './components/status.component';
 import {
@@ -68,16 +63,13 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./home.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         WelcomeComponent,
         StatusComponent,
-        FlexFillDirective,
         SpBasicViewComponent,
         SpSpinnerComponent,
         SplitSectionComponent,
         MatButtonToggleGroup,
         MatButtonToggle,
-        FlexDirective,
         HomeAssetMapComponent,
         SpAlertBannerComponent,
         HomeAssetTableComponent,

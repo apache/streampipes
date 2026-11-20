@@ -16,10 +16,10 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column" style="overflow-y: hidden">
-    <div class="h-100" fxLayout="row" fxFlex="100">
+<div class="flex-col flex-100" style="overflow-y: hidden">
+    <div class="h-100 flex-row flex-100">
         @if (widgetsAvailable && currentWidget) {
-            <div fxFlex="200px" fxLayout="column" class="selection-box">
+            <div class="selection-box flex-col">
                 @for (item of dashboard.widgets; track item; let i = $index) {
                     <div
                         [ngClass]="
@@ -27,13 +27,11 @@
                                 ? 'viz-preview viz-preview-selected'
                                 : 'viz-preview'
                         "
-                        fxLayoutAlign="center center"
+                        class="flex-row justify-center items-center"
                         (click)="selectWidget(i, item.dataViewElementId)"
                     >
                         <div
-                            fxFlex="100"
-                            fxLayout="column"
-                            fxLayoutAlign="center center"
+                            class="flex-col justify-center items-center flex-100"
                         >
                             @if (widgetsVisible) {
                                 <span class="slide-view-title text-sm">{{
@@ -47,8 +45,8 @@
                 }
             </div>
         }
-        <div fxFlex="100">
-            <div class="h-100 w-100 mw-100" id="slideViewOuter" fxFlex="100">
+        <div class="flex-100 flex-row">
+            <div class="h-100 w-100 mw-100 flex-100" id="slideViewOuter">
                 @if (
                     widgetsAvailable &&
                     displayWidget &&

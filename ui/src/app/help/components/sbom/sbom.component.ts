@@ -32,11 +32,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     SpAlertBannerComponent,
@@ -64,9 +59,6 @@ import { LoadedSbom, mergeSbomComponents } from './sbom-merge';
         MatProgressBarModule,
         MatTableModule,
         MatTooltipModule,
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
         TranslatePipe,
         SpAlertBannerComponent,
         SpLabelComponent,

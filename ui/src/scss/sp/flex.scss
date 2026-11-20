@@ -39,8 +39,11 @@
     flex-direction: row;
 }
 
+// !important while ngx-layout is still used: an fxFlex child in a template that has not been
+// migrated writes an inline `flex-direction: row` onto its parent, because the parent no longer
+// has fxLayout. Remove the !important together with @ngbracket/ngx-layout.
 .flex-col {
-    flex-direction: column;
+    flex-direction: column !important;
 }
 
 // fxLayout="row wrap"

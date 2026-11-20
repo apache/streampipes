@@ -16,9 +16,9 @@
 ~
 -->
 
-<div fxLayout="row" class="page-container-padding">
+<div class="page-container-padding flex-row">
     @if (profileLoaded) {
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <div class="flex-col items-start flex-100">
             <sp-split-section
                 [level]="2"
                 [title]="'API Keys' | translate"
@@ -29,7 +29,7 @@
             >
                 <sp-form-field [level]="2" [label]="'New API key' | translate">
                     <sp-form-field [level]="3" [label]="'Name' | translate">
-                        <mat-form-field fxFlex color="accent">
+                        <mat-form-field class="flex-1" color="accent">
                             <input
                                 [(ngModel)]="newTokenName"
                                 matInput
@@ -73,12 +73,7 @@
                                 | translate
                         "
                     >
-                        <div
-                            fxFlex="100"
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            class="new-token"
-                        >
+                        <div class="new-token flex-row items-center flex-100">
                             <div class="token-name">
                                 {{ newlyCreatedToken.tokenName }}
                             </div>
@@ -124,7 +119,7 @@
                                     Action
                                 </th>
                                 <td mat-cell *matCellDef="let element">
-                                    <div fxLayout="end end">
+                                    <div class="flex-row">
                                         <button
                                             mat-button
                                             mat-flat-button
@@ -156,8 +151,8 @@
                         | translate
                 "
             >
-                <div fxLayout="column" class="subsection">
-                    <div fxLayout="column" class="subsection mt-8"></div>
+                <div class="subsection flex-col">
+                    <div class="subsection mt-8 flex-col"></div>
                     <div>
                         <button
                             mat-button

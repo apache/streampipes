@@ -32,10 +32,6 @@ import {
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
 import { MatToolbar } from '@angular/material/toolbar';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpBreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -51,8 +47,6 @@ import { SpSystemNotificationComponent } from '../system-notification/system-not
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatToolbar,
-        LayoutDirective,
-        LayoutAlignDirective,
         SpBreadcrumbComponent,
         AssetBrowserToolbarComponent,
         MatIconButton,
