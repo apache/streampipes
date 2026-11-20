@@ -20,12 +20,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ServiceAccount } from '@streampipes/platform-services';
 import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
 import { Observable } from 'rxjs';
-import {
-    FlexDirective,
-    FlexOrderDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpTableComponent } from '@streampipes/shared-ui';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
@@ -46,8 +40,6 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./security-service-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -56,8 +48,6 @@ import { MatIcon } from '@angular/material/icon';
         MatSortHeader,
         MatCellDef,
         MatCell,
-        FlexOrderDirective,
-        LayoutAlignDirective,
         MatButton,
         MatTooltip,
         TranslatePipe,

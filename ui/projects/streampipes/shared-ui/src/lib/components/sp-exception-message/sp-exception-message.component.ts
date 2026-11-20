@@ -32,6 +32,7 @@ import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-exception-message',
+    host: { class: 'flex-row' },
     templateUrl: './sp-exception-message.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SpAlertBannerComponent, DatePipe, TranslatePipe],

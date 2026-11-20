@@ -24,18 +24,17 @@ import {
 } from '@angular/core';
 import { ConfigItem, DataType } from '@streampipes/platform-services';
 import { ServiceConfigsPasswordComponent } from '../service-configs-password/service-configs-password.component';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { ServiceConfigsTextComponent } from '../service-configs-text/service-configs-text.component';
 import { ServiceConfigsNumberComponent } from '../service-configs-number/service-configs-number.component';
 import { ServiceConfigsBooleanComponent } from '../service-configs-boolean/service-configs-boolean.component';
 
 @Component({
     selector: 'sp-service-configs-item',
+    host: { class: 'flex-row' },
     templateUrl: './service-configs-item.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ServiceConfigsPasswordComponent,
-        FlexDirective,
         ServiceConfigsTextComponent,
         ServiceConfigsNumberComponent,
         ServiceConfigsBooleanComponent,

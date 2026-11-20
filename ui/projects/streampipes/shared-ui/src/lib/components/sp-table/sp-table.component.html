@@ -257,6 +257,7 @@
     <table
         mat-table
         class="sp-table"
+        [class.sp-table--flex-rows]="flexRows"
         [class.sp-table--hidden]="showCardView"
         [dataSource]="renderedRows$"
         [multiTemplateDataRows]="viewMode === 'grouped'"

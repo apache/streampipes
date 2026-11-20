@@ -17,21 +17,27 @@
 -->
 
 @if (isPassword) {
-    <sp-service-configs-password fxFlex="100" [configuration]="configuration">
+    <sp-service-configs-password
+        class="flex-100"
+        [configuration]="configuration"
+    >
     </sp-service-configs-password>
 }
 
 @if (isString && !isPassword) {
-    <sp-service-configs-text fxFlex="100" [configuration]="configuration">
+    <sp-service-configs-text class="flex-100" [configuration]="configuration">
     </sp-service-configs-text>
 }
 
 @if (isNumber) {
-    <sp-service-configs-number fxFlex="100" [configuration]="configuration">
+    <sp-service-configs-number class="flex-100" [configuration]="configuration">
     </sp-service-configs-number>
 }
 
 @if (isBoolean) {
-    <sp-service-configs-boolean fxFlex="100" [configuration]="configuration">
+    <sp-service-configs-boolean
+        class="flex-100"
+        [configuration]="configuration"
+    >
     </sp-service-configs-boolean>
 }

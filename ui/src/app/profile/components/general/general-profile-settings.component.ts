@@ -35,11 +35,6 @@ import {
 import { ChangeEmailDialogComponent } from '../../dialog/change-email/change-email-dialog.component';
 import { ChangePasswordDialogComponent } from '../../dialog/change-password/change-password-dialog.component';
 import { Router } from '@angular/router';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -54,9 +49,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./general-profile-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         SplitSectionComponent,
         SpAlertBannerComponent,
         MatButton,

@@ -30,9 +30,13 @@
     }
 
     @if (!importMode) {
-        <div fxLayout="row" fxLayoutAlign="start center" class="mt-10">
-            <div fxLayoutAlign="start center" fxFlex>
-                <mat-form-field color="accent" fxFlex subscriptSizing="dynamic">
+        <div class="mt-10 flex-row items-center">
+            <div class="flex-row items-center flex-1">
+                <mat-form-field
+                    color="accent"
+                    class="flex-1"
+                    subscriptSizing="dynamic"
+                >
                     <mat-label>{{ 'Document ID' | translate }}</mat-label>
                     <input
                         matInput
@@ -41,7 +45,7 @@
                     />
                 </mat-form-field>
             </div>
-            <div fxLayoutAlign="end center" class="ml-5">
+            <div class="ml-5 flex-row justify-end items-center">
                 <button
                     mat-flat-button
                     color="accent"

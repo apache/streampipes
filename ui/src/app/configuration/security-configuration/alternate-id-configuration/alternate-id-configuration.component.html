@@ -16,10 +16,10 @@
   ~
   -->
 
-<div fxLayout="column">
+<div class="flex-col">
     @for (id of alternateIds; track $index) {
-        <div fxLayout="row" fxLayoutAlign="start center" class="p-5 border">
-            <span fxFlex>{{ id }}</span>
+        <div class="p-5 border flex-row items-center">
+            <span class="flex-1">{{ id }}</span>
             <button
                 mat-icon-button
                 color="accent"
@@ -29,13 +29,8 @@
             </button>
         </div>
     }
-    <div
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        class="alternate-id-row"
-        fxLayoutGap="10px"
-    >
-        <mat-form-field color="accent" fxFlex subscriptSizing="dynamic">
+    <div class="alternate-id-row flex-row items-center gap-sm">
+        <mat-form-field color="accent" class="flex-1" subscriptSizing="dynamic">
             <mat-label>{{ 'New Alternate ID' | translate }}</mat-label>
             <input
                 matInput
@@ -44,7 +39,7 @@
                 [placeholder]="'Enter new alternate ID' | translate"
             />
         </mat-form-field>
-        <div fxLayoutAlign="start center">
+        <div class="flex-row items-center">
             <button
                 mat-flat-button
                 class="mat-basic"

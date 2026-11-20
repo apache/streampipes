@@ -42,11 +42,6 @@ import {
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
@@ -61,9 +56,6 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './email-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         SplitSectionComponent,
         FormsModule,
         ReactiveFormsModule,

@@ -17,7 +17,7 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15" fxLayout="column">
+    <div class="sp-dialog-content p-15 flex-col">
         @if (uploadError) {
             <sp-alert-banner
                 type="error"
@@ -27,8 +27,8 @@
             </sp-alert-banner>
         }
         @if (this.duplicateFileNames.length === 0) {
-            <div fxFlex="100">
-                <div fxFlex="100" style="margin: 5px; width: 100%">
+            <div class="flex-100 flex-row">
+                <div class="flex-100" style="margin: 5px; width: 100%">
                     <mat-form-field
                         style="width: 95%"
                         (click)="fileInput.click()"
@@ -50,7 +50,7 @@
                         />
                         <div>
                             @for (filename of fileNames; track filename) {
-                                <div fxLayout="column">
+                                <div class="flex-col">
                                     {{ filename }}
                                 </div>
                             }
@@ -95,8 +95,8 @@
             </div>
         }
         @if (this.duplicateFileNames.length !== 0) {
-            <div fxLayout="column" style="width: 100%">
-                <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
+            <div class="flex-col" style="width: 100%">
+                <div class="flex-col justify-center flex-100">
                     <b>
                         <h4>
                             {{

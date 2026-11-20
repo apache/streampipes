@@ -197,6 +197,11 @@ export class SpTableComponent<T>
 
     @Input() columns: string[];
     @Input() noBorder = false;
+    /**
+     * Lays out header and data rows as flex rows, so cells can be sized with flex classes
+     * (`flex-1`, `basis-*`). This is how tables with former `fxFlex` cells rendered.
+     */
+    @Input() flexRows = false;
     @Input() noToolbarBorderTop = false;
     @Input() rowsClickable = false;
     @Input() showPaginator = true;

@@ -18,8 +18,8 @@
 
 @if (formAvailable) {
     <div class="sp-dialog-container">
-        <div class="sp-dialog-content">
-            <div fxFlex="100" fxLayout="column" class="p-15">
+        <div class="sp-dialog-content flex-row">
+            <div class="p-15 flex-col flex-100">
                 @if (isUserAccount && isExternalProvider) {
                     <sp-alert-banner
                         class="w-100"
@@ -31,7 +31,7 @@
                     >
                     </sp-alert-banner>
                 }
-                <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+                <form [formGroup]="parentForm" class="flex-col flex-100">
                     <sp-split-section
                         [level]="3"
                         [title]="'Basics' | translate"
@@ -47,7 +47,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="username"
-                                        fxFlex
+                                        class="flex-1"
                                         matInput
                                         required
                                     />
@@ -62,7 +62,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="username"
-                                        fxFlex
+                                        class="flex-1"
                                         type="email"
                                         matInput
                                         data-cy="new-user-email"
@@ -90,7 +90,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="fullName"
-                                        fxFlex
+                                        class="flex-1"
                                         matInput
                                         data-cy="new-user-full-name"
                                     />
@@ -119,7 +119,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="password"
-                                        fxFlex
+                                        class="flex-1"
                                         type="password"
                                         matInput
                                         required
@@ -134,7 +134,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="repeatPassword"
-                                        fxFlex
+                                        class="flex-1"
                                         type="password"
                                         matInput
                                         required
@@ -161,7 +161,7 @@
                                 <mat-form-field color="accent">
                                     <input
                                         formControlName="clientSecret"
-                                        fxFlex
+                                        class="flex-1"
                                         type="password"
                                         matInput
                                         required
@@ -249,8 +249,8 @@
         </div>
         <mat-divider></mat-divider>
         <div class="sp-dialog-actions">
-            <div fxLayout="column">
-                <div fxLayout="row">
+            <div class="flex-col">
+                <div class="flex-row">
                     <button
                         mat-flat-button
                         (click)="save()"

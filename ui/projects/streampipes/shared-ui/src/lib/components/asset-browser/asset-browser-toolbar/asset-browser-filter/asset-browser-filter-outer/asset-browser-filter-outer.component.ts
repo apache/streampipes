@@ -28,6 +28,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-filter-outer',
+    host: { class: 'flex-row' },
     templateUrl: 'asset-browser-filter-outer.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,

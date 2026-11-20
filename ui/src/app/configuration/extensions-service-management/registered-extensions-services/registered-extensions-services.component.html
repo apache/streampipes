@@ -16,35 +16,33 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     <table
-        fxFlex="100"
+        class="flex-100"
         mat-table
         [dataSource]="dataSource"
         multiTemplateDataRows
     >
         <ng-container matColumnDef="status">
             <th
-                fxFlex="10"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-10"
                 mat-header-cell
                 *matHeaderCellDef
             >
                 {{ 'Status' | translate }}
             </th>
             <td
-                fxFlex="10"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-10"
                 mat-cell
                 *matCellDef="let element"
             >
                 @if (element.status === 'HEALTHY') {
-                    <span fxLayoutAlign="center center">
+                    <span class="flex-row justify-center items-center">
                         <mat-icon class="service-icon-passing">lens</mat-icon>
                     </span>
                 }
                 @if (element.status !== 'HEALTHY') {
-                    <span fxLayoutAlign="center center">
+                    <span class="flex-row justify-center items-center">
                         <mat-icon class="service-icon-critical">lens</mat-icon>
                     </span>
                 }
@@ -53,16 +51,14 @@
 
         <ng-container matColumnDef="group">
             <th
-                fxFlex="40"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-40"
                 mat-header-cell
                 *matHeaderCellDef
             >
                 {{ 'Service Group' | translate }}
             </th>
             <td
-                fxFlex="40"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-40"
                 mat-cell
                 *matCellDef="let element"
             >
@@ -72,16 +68,14 @@
 
         <ng-container matColumnDef="name">
             <th
-                fxFlex="35"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-35"
                 mat-header-cell
                 *matHeaderCellDef
             >
                 {{ 'Service ID' | translate }}
             </th>
             <td
-                fxFlex="35"
-                fxLayoutAlign="start center"
+                class="flex-row items-center basis-35"
                 mat-cell
                 *matCellDef="let element"
             >
@@ -91,8 +85,7 @@
 
         <ng-container matColumnDef="action">
             <th
-                fxFlex="15"
-                fxLayoutAlign="end center"
+                class="flex-row justify-end items-center basis-15"
                 mat-header-cell
                 *matHeaderCellDef
             >
@@ -106,8 +99,7 @@
                 </button>
             </th>
             <td
-                fxFlex="15"
-                fxLayoutAlign="end center"
+                class="flex-row justify-end items-center basis-15"
                 mat-cell
                 *matCellDef="let element"
             >
@@ -130,11 +122,15 @@
             </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns"
+            class="flex-row"
+        ></tr>
         <tr
             mat-row
             *matRowDef="let element; columns: displayedColumns"
-            class="service-configuration-row"
+            class="service-configuration-row flex-row"
         ></tr>
     </table>
 </div>

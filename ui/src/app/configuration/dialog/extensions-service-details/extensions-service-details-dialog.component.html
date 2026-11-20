@@ -18,26 +18,28 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxLayout="column" fxLayoutGap="10px" class="p-15">
-            <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">{{ 'Service ID' | translate }}</div>
-                <div fxFlex="80">{{ serviceReg.svcId }}</div>
+        <div class="p-15 flex-col gap-sm">
+            <div class="flex-row gap-sm">
+                <div class="detail-label">{{ 'Service ID' | translate }}</div>
+                <div class="detail-value">{{ serviceReg.svcId }}</div>
             </div>
-            <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">{{ 'Service Group' | translate }}</div>
-                <div fxFlex="80">{{ serviceReg.svcGroup }}</div>
+            <div class="flex-row gap-sm">
+                <div class="detail-label">
+                    {{ 'Service Group' | translate }}
+                </div>
+                <div class="detail-value">{{ serviceReg.svcGroup }}</div>
             </div>
-            <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">{{ 'Location' | translate }}</div>
-                <div fxFlex="80">
+            <div class="flex-row gap-sm">
+                <div class="detail-label">{{ 'Location' | translate }}</div>
+                <div class="detail-value">
                     {{ serviceReg.scheme }}://{{ serviceReg.host }}:{{
                         serviceReg.port
                     }}
                 </div>
             </div>
-            <div fxLayout="row" fxLayoutGap="10px" fxFlex="60">
-                <div fxFlex="20">{{ 'Tags' | translate }}</div>
-                <div fxFlex="80">
+            <div class="flex-row gap-sm">
+                <div class="detail-label">{{ 'Tags' | translate }}</div>
+                <div class="detail-value">
                     <div>
                         @for (tag of sortedTags; track tag) {
                             <div class="service-tag text-sm">

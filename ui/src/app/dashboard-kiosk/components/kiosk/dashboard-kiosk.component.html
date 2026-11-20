@@ -16,19 +16,13 @@
 ~
 -->
 
-<div
-    fxLayout="column"
-    style="height: 100%"
-    class="light-mode w-100 standalone-outer"
->
+<div style="height: 100%" class="light-mode w-100 standalone-outer flex-col">
     <mat-toolbar class="standalone-toolbar">
-        <div class="md-toolbar-tools sp-toolbar">
-            <div fxFlex="100" fxLayout fxLayoutAlign="start center">
+        <div class="md-toolbar-tools sp-toolbar flex-row">
+            <div class="flex-row items-center flex-100">
                 <div
-                    class="md-toolbar-tools"
+                    class="md-toolbar-tools flex-row items-center"
                     style="height: 60px; max-height: 60px"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
                 >
                     <div
                         style="
@@ -73,7 +67,7 @@
             </div>
         </div>
     </mat-toolbar>
-    <div fxLayout="column" style="height: calc(100% - 40px)">
+    <div class="flex-col" style="height: calc(100% - 40px)">
         @if (dashboard) {
             @if (dashboard?.widgets.length > 0) {
                 <sp-dashboard-grid-view

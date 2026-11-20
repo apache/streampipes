@@ -17,9 +17,9 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content">
-        <div fxFlex="100" fxLayout="column" class="p-15">
-            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+    <div class="sp-dialog-content flex-row">
+        <div class="p-15 flex-col flex-100">
+            <form [formGroup]="parentForm" class="flex-col flex-100">
                 <sp-split-section [level]="3" [title]="'Basics' | translate">
                     <sp-form-field
                         [level]="3"
@@ -28,7 +28,7 @@
                         <mat-form-field color="accent">
                             <input
                                 formControlName="groupName"
-                                fxFlex
+                                class="flex-1"
                                 matInput
                                 required
                                 data-cy="group-name-input"
@@ -65,7 +65,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <div fxLayout="row">
+        <div class="flex-row">
             <button
                 mat-flat-button
                 (click)="save()"

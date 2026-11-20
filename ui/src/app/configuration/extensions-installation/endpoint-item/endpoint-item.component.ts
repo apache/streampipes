@@ -41,13 +41,7 @@ import {
 } from '@streampipes/shared-ui';
 import { ExtensionsInstallationService } from '../extensions-installation.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -59,11 +53,7 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./endpoint-item.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         NgClass,
-        ClassDirective,
         MatTooltip,
         MatButton,
         MatMenuTrigger,

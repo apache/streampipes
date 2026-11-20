@@ -28,6 +28,7 @@ import { PipelineElementSchemaService } from '../../../services/pipeline-element
 
 @Component({
     selector: 'sp-input-schema-property',
+    host: { class: 'flex-row' },
     templateUrl: './input-schema-property.component.html',
     styleUrls: ['./input-schema-property.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,

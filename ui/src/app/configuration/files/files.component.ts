@@ -33,12 +33,6 @@ import { FileUploadDialogComponent } from '../dialog/file-upload/file-upload-dia
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { FileOverviewComponent } from './file-overview/file-overview.component';
 import { MatIcon } from '@angular/material/icon';
@@ -49,11 +43,7 @@ import { MatIcon } from '@angular/material/icon';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         MatButton,
-        FlexDirective,
         FileOverviewComponent,
         TranslatePipe,
         MatIcon,

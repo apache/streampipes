@@ -17,9 +17,9 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content p-15 flex-row">
         @if (page === 'preview') {
-            <div fxFlex="100" class="md-dialog-content" style="padding: 20px">
+            <div class="md-dialog-content flex-100" style="padding: 20px">
                 <h4>
                     {{ 'You are about to {{ action }} the following elements:' |
                     translate:{ action: (install ? ('install' | translate) :
@@ -41,7 +41,7 @@
             </div>
         }
         @if (page === 'installation') {
-            <div fxFlex="100" class="md-dialog-content" style="padding: 20px">
+            <div class="md-dialog-content flex-100" style="padding: 20px">
                 @for (status of installationStatus; track status) {
                     <div>
                         <h4>
@@ -53,9 +53,9 @@
                             endpointItemsToInstall.length, name: status.name,
                             status: status.status } }}
                         </h4>
-                        <div>
+                        <div class="flex-row">
                             @if (status.details) {
-                                <div fxFlex fxLayout="column">
+                                <div class="flex-col flex-1">
                                     <b>{{ 'More Details:' | translate }}</b>
                                     <div class="error-message">
                                         {{ status.details }}

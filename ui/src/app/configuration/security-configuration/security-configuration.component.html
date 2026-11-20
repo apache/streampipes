@@ -16,8 +16,8 @@
   ~
   -->
 
-<div fxLayout="column">
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+<div class="flex-col">
+    <div class="flex-col items-start flex-100">
         <sp-split-section
             [title]="'User Accounts' | translate"
             [subtitle]="'Add and edit user accounts' | translate"
@@ -34,7 +34,7 @@
         </sp-split-section>
     </div>
 
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+    <div class="flex-col items-start flex-100">
         <sp-split-section
             [title]="'Service Accounts' | translate"
             [subtitle]="'Add and edit service accounts' | translate"
@@ -52,7 +52,7 @@
         </sp-split-section>
     </div>
 
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+    <div class="flex-col items-start flex-100">
         <sp-split-section
             [title]="'Groups' | translate"
             [subtitle]="'Manage user groups' | translate"
@@ -70,7 +70,7 @@
             <sp-security-user-group-config></sp-security-user-group-config>
         </sp-split-section>
     </div>
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+    <div class="flex-col items-start flex-100">
         <sp-split-section
             [title]="'Roles' | translate"
             [subtitle]="'Manage roles' | translate"
@@ -88,7 +88,7 @@
         </sp-split-section>
     </div>
 
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+    <div class="flex-col items-start flex-100">
         <sp-split-section
             [title]="'Authentication' | translate"
             [subtitle]="'Auth & token settings' | translate"

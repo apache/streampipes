@@ -46,27 +46,27 @@
             </mat-tab>
         }
     </mat-tab-group>
-    <div class="fixed-height page-tab-content" fxLayout="column" fxFlex="100">
+    <div class="fixed-height page-tab-content flex-col flex-100">
         @switch (selectedTab) {
             @case ('info') {
-                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                <div class="fixed-height flex-col flex-100">
                     <sp-info-tab></sp-info-tab>
                 </div>
             }
             @case ('documentation') {
-                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                <div class="fixed-height flex-col flex-100">
                     <sp-documentation-tab
                         [documentationLink]="documentationLink"
                     ></sp-documentation-tab>
                 </div>
             }
             @case ('sbom') {
-                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                <div class="fixed-height flex-col flex-100">
                     <sp-sbom-tab></sp-sbom-tab>
                 </div>
             }
             @case ('shortcuts') {
-                <div class="fixed-height" fxLayout="column" fxFlex="100">
+                <div class="fixed-height flex-col flex-100">
                     <sp-shortcuts-tab></sp-shortcuts-tab>
                 </div>
             }

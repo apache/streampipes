@@ -20,11 +20,11 @@
 // (fxLayout, fxLayoutAlign, fxLayoutGap, fxFlex), which are being phased out.
 // The mapping and the behavioural differences are documented in DESIGN.md ("Layout").
 //
-// Not covered here on purpose:
-// - Percentage splits (fxFlex="30"): a named class in the component SCSS with
-//   `flex: 1 1 30%; max-width: 30%`, or CSS grid (`grid-template-columns: 3fr 7fr`).
-// - Breakpoint variants (fxLayout.lt-md, fxFlex.gt-md): use a @media query in the
-//   component SCSS.
+// fxFlex also made its parent a flex row; the item classes below do not. Give every
+// former fxFlex element a flex parent (DESIGN.md, "The Flex Parent Rule").
+//
+// Not covered here on purpose: breakpoint variants (fxLayout.lt-md, fxFlex.gt-md).
+// Use a @media query in the component SCSS.
 
 // Containers (fxLayout). fxLayoutAlign without fxLayout also produced a flex row,
 // so such elements need .flex-row as well.
@@ -39,8 +39,11 @@
     flex-direction: row;
 }
 
+// !important while ngx-layout is still used: an fxFlex child in a template that has not been
+// migrated writes an inline `flex-direction: row` onto its parent, because the parent no longer
+// has fxLayout. Remove the !important together with @ngbracket/ngx-layout.
 .flex-col {
-    flex-direction: column;
+    flex-direction: column !important;
 }
 
 // fxLayout="row wrap"
@@ -156,6 +159,24 @@
 .flex-col > .flex-100 {
     max-width: none;
     max-height: 100%;
+}
+
+// fxFlex="30" and other percentages: grow and shrink from N%, capped at N% on the main axis.
+// The list covers the values used in the UI; add one here rather than in a component.
+$basis-values:
+    10, 12, 13, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90;
+
+@each $value in $basis-values {
+    .basis-#{$value} {
+        flex: 1 1 #{$value + '%'};
+        box-sizing: border-box;
+        max-width: #{$value + '%'};
+    }
+
+    .flex-col > .basis-#{$value} {
+        max-width: none;
+        max-height: #{$value + '%'};
+    }
 }
 
 // fxFlex="auto"

@@ -34,7 +34,7 @@
     >
         <mat-icon>refresh</mat-icon>
     </button>
-    <div fxLayout="column" fxLayoutGap="var(--space-lg)">
+    <div class="flex-col gap-lg">
         @if (loading) {
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         }
@@ -78,12 +78,7 @@
                 </h3>
                 <ul class="sbom-source-list">
                     @for (entry of entries; track entry.id) {
-                        <li
-                            class="sbom-source"
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                            fxLayoutGap="var(--space-sm)"
-                        >
+                        <li class="sbom-source flex-row items-center gap-sm">
                             <mat-checkbox
                                 [attr.data-cy]="'sbom-source-' + entry.id"
                                 [checked]="isSelected(entry.id)"
@@ -192,9 +187,7 @@
                         </th>
                         <td mat-cell *matCellDef="let row">
                             <span
-                                class="sbom-row-sources"
-                                fxLayout="row wrap"
-                                fxLayoutGap="var(--space-xs)"
+                                class="sbom-row-sources flex-row flex-wrap gap-xs"
                             >
                                 @for (source of row.sources; track source) {
                                     <sp-label
