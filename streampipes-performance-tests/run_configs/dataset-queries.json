@@ -1,0 +1,24 @@
+{
+  "target": "streampipes",
+  "output_directory": "../results/framework",
+  "cases": [
+    {
+      "id": "dataset-query",
+      "type": "streampipes.dataset_query",
+      "parameters": {
+        "number_of_datasets": [
+          2
+        ],
+        "rows_per_dataset": [
+          10000
+        ],
+        "parallel_operations": [
+          1
+        ],
+        "sensor_count": [
+          10
+        ]
+      }
+    }
+  ]
+}

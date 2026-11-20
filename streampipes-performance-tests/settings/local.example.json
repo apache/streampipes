@@ -1,0 +1,13 @@
+{
+  "url": "http://localhost:8082",
+  "username": "admin@streampipes.apache.org",
+  "nats_url": "nats://localhost:4222",
+  "adapter_nats_url": "nats://nats:4222",
+  "stream_nats_url": "nats://nats:4222",
+  "influx_url": "http://localhost:8086",
+  "influx_org": "sp",
+  "influx_bucket": "sp",
+  "wait_ready": true,
+  "ready_timeout": 600,
+  "log_level": "INFO"
+}
