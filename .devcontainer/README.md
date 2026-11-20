@@ -16,10 +16,10 @@
   ~
   -->
 
-# VS Code Devcontainer
+# Development Containers
 
-This setup runs third-party services in Docker Compose and starts StreamPipes
-from source inside the VS Code devcontainer.
+This setup runs third-party services in Docker Compose and provides a container
+for running StreamPipes from source with VS Code or IntelliJ IDEA.
 
 ## Services
 
@@ -28,16 +28,34 @@ from source inside the VS Code devcontainer.
 - NATS
 - One workspace container for Maven, Java and Node.js tooling
 
-Core, IIoT extensions and the UI are started with VS Code tasks or debug
-launches, not as prebuilt application images.
+Core, IIoT extensions and the UI are started from source with IDE run
+configurations or terminal commands, not as prebuilt application images.
 
-## First Start
+## First Start with VS Code
 
 1. Open the repository in VS Code.
 2. Run `Dev Containers: Reopen in Container`.
 3. Start the app with either:
    - `Run and Debug: Full StreamPipes Dev` for core, IIoT extensions and UI
    - `Tasks: Run Task: dev: start ui` if you only need the Angular dev server
+
+## First Start with IntelliJ IDEA
+
+1. Open IntelliJ IDEA and select `Dev Containers` under `Remote Development`.
+2. Click `New Dev Container`.
+3. Select `.devcontainer/idea/devcontainer.json` as the configuration file.
+
+## IDEA Troubleshooting
+
+In IntelliJ IDEA 2025.1 and earlier, the Docker plugin may report
+`client version 1.24 is too old` if your Docker Engine requires a newer API
+version than the plugin supports. If you see this error, upgrade IntelliJ IDEA
+to a release newer than 2025.2.
+
+If opening an existing Dev Container does nothing, check `idea.log` for a 404
+indicating that `/.jbdevcontainer/config/JetBrains/host-config.json` is missing.
+
+## Services and Ports
 
 The default URLs are:
 

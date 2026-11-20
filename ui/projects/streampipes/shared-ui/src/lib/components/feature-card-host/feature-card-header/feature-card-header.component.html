@@ -16,27 +16,16 @@
 ~
 -->
 
-<div
-    class="feature-card-header"
-    fxLayout="row"
-    fxLayoutAlign="start center"
-    fxLayoutGap="1.25rem"
-    [style.--feature-header-color]="iconColor"
->
+<div class="feature-card-header" [style.--feature-header-color]="iconColor">
     @if (icon) {
-        <div class="feature-card-header__icon" fxFlex="none">
+        <div class="feature-card-header__icon">
             <div class="feature-card-header__icon-circle">
                 <mat-icon [style.color]="iconColor">{{ icon }}</mat-icon>
             </div>
         </div>
     }
 
-    <div
-        class="feature-card-header__content"
-        fxFlex
-        fxLayout="column"
-        fxLayoutAlign="start start"
-    >
+    <div class="feature-card-header__content">
         <h2 class="feature-card-header__title">{{ title }}</h2>
         <p class="feature-card-header__description">{{ description }}</p>
 

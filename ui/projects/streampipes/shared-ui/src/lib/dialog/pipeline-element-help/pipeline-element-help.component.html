@@ -17,22 +17,15 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15" fxLayout="column">
-        <div fxLayout="row" fxFlex="100">
-            <div fxLayout="column" fxFlex>
-                <div fxLayout="row wrap" fxLayoutAlign="start center">
+    <div class="sp-dialog-content p-15 flex-col">
+        <div class="flex-row flex-100">
+            <div class="flex-col flex-1">
+                <div class="flex-row flex-wrap items-center content-center">
                     <h4 class="element-title">{{ pipelineElement.name }}</h4>
                     @if (assetContext) {
-                        <div
-                            class="asset-context ml-sm"
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
-                        >
+                        <div class="asset-context ml-sm flex-row items-center">
                             <div
-                                class="asset-context-boxes"
-                                fxLayout="row wrap"
-                                fxLayoutAlign="start center"
-                                fxLayoutGap="var(--space-md)"
+                                class="asset-context-boxes flex-row flex-wrap items-center content-center gap-md"
                             >
                                 @for (
                                     asset of assetContext.assets;
@@ -56,7 +49,7 @@
                 </small>
             </div>
             <sp-element-id
-                fxLayoutAlign="end start"
+                class="flex-row justify-end items-start"
                 [value]="
                     isDataStream
                         ? pipelineElement.elementId

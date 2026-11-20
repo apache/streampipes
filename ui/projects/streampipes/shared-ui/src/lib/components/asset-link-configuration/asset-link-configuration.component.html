@@ -44,7 +44,7 @@
                         </button>
                         <span
                             [class.selected-node]="isSelected(node)"
-                            fxLayoutAlign="start center"
+                            class="flex-row items-center"
                         >
                             {{ node.assetName }}
                             @if (isSelected(node)) {
@@ -67,7 +67,7 @@
                         </span>
                         <span
                             [class.selected-node]="isSelected(node)"
-                            fxLayoutAlign="start center"
+                            class="flex-row items-center"
                             >{{ node.assetName }}
                             @if (isSelected(node)) {
                                 &nbsp;<i class="material-icons">check_circle</i>

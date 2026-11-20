@@ -18,23 +18,13 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-spinner',
     templateUrl: './sp-spinner.component.html',
     styleUrls: ['./sp-spinner.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        MatProgressSpinner,
-    ],
+    imports: [MatProgressSpinner],
 })
 export class SpSpinnerComponent {
     @Input() text = '';
@@ -42,4 +32,17 @@ export class SpSpinnerComponent {
     @Input() align = 'center center';
     @Input() gap = '8px';
     @Input() diameter = 30;
+
+    // `align` keeps the former fxLayoutAlign syntax: "<main axis> <cross axis>".
+    get justifyContent(): string {
+        return toFlexValue(this.align.trim().split(/\s+/)[0] || 'start');
+    }
+
+    get alignItems(): string {
+        return toFlexValue(this.align.trim().split(/\s+/)[1] || 'stretch');
+    }
+}
+
+function toFlexValue(value: string): string {
+    return value === 'start' || value === 'end' ? `flex-${value}` : value;
 }

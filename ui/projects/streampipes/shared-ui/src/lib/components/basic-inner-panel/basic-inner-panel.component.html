@@ -17,27 +17,18 @@
 -->
 
 <div
-    fxLayout="column"
-    fxFlex="100"
-    class="panel-outer"
+    class="panel-outer flex-col flex-100"
     [class.panel-collapsed]="collapsible && collapsed"
     [ngStyle]="{ margin: outerMargin }"
 >
     @if (!hideToolbar) {
         <header
-            class="general-panel-header"
+            class="general-panel-header flex-row items-center"
             [class.bg-highlight]="headerBackground"
             [class.bg-no-highlight]="!headerBackground"
             [style.height]="headerHeight"
-            fxLayout="row"
-            fxLayoutAlign="start center"
         >
-            <div
-                class="panel-header-content"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                fxFlex="100"
-            >
+            <div class="panel-header-content flex-row items-center flex-100">
                 @if (showTitle) {
                     <sp-basic-header-title-component
                         [title]="panelTitle"
@@ -47,7 +38,7 @@
                     ></sp-basic-header-title-component>
                 }
                 <ng-content select="[header]"></ng-content>
-                <div fxFlex></div>
+                <div class="flex-1"></div>
                 @if (collapsible) {
                     <button
                         type="button"

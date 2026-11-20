@@ -19,7 +19,7 @@
 <ng-template matStepLabel>{{ 'Select Format' | translate }}</ng-template>
 <sp-export-format-selection [formatExportConfig]="formatExportConfig" />
 @if (formatExportConfig.format === 'xlsx' && hasReadFilePrivilege) {
-    <div fxLayout="column">
+    <div class="flex-col">
         <sp-split-section [level]="3" [title]="'Excel template' | translate">
             <mat-checkbox
                 [(ngModel)]="formatExportConfig.useTemplate"

@@ -27,7 +27,6 @@ import { DialogService } from '../../dialog/base-dialog/base-dialog.service';
 import { PanelType } from '../../dialog/base-dialog/base-dialog.model';
 import { SpExceptionDetailsDialogComponent } from './exception-details-dialog/exception-details-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpAlertBannerComponent } from '../alert-banner/alert-banner.component';
 import { DatePipe } from '@angular/common';
 
@@ -35,13 +34,7 @@ import { DatePipe } from '@angular/common';
     selector: 'sp-exception-message',
     templateUrl: './sp-exception-message.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        SpAlertBannerComponent,
-        DatePipe,
-        TranslatePipe,
-    ],
+    imports: [SpAlertBannerComponent, DatePipe, TranslatePipe],
 })
 export class SpExceptionMessageComponent {
     private dialogService = inject(DialogService);

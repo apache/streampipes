@@ -18,7 +18,7 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content">
-        <div fxFlex="100">
+        <div class="flex-100">
             <mat-horizontal-stepper #downloadDialogStepper>
                 <mat-step>
                     @if (multipleMeasurements) {
@@ -32,8 +32,7 @@
                             "
                         >
                             <div
-                                fxLayout="row wrap"
-                                fxLayoutGap="0.5rem grid"
+                                class="flex-row flex-wrap gap-sm"
                                 data-cy="download-selected-datasets"
                             >
                                 @for (name of measurementNames; track name) {
