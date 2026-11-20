@@ -48,13 +48,44 @@ def parse_value(name, value):
     return re.split(r"\s+#", value, maxsplit=1)[0].rstrip()
 
 
-def configure():
+# Compose names project volumes <project>_<volume>. Include the data volumes
+# from all three installer variants, including volumes restored without labels.
+DATA_VOLUMES = ("backend", "couchdb", "influxdb", "influxdb2", "kafka3")
+
+
+def check_first_start(inventory):
+    entries = inventory.splitlines()
+    if not entries or entries[-1].strip() != "inventory-complete":
+        raise ValueError("Could not check Docker volumes. Fix Docker access and retry.")
+    project = os.environ.get("COMPOSE_PROJECT_NAME")
+    for entry in entries[:-1]:
+        name, _, labels = entry.strip().partition(" ")
+        metadata = dict(item.split("=", 1) for item in labels.split(",") if "=" in item)
+        prefix, _, role = name.rpartition("_")
+        prefix = metadata.get("com.docker.compose.project", prefix)
+        role = metadata.get("com.docker.compose.volume", role)
+        if prefix and role in DATA_VOLUMES and (not project or project == prefix):
+            raise ValueError(f"Found existing Docker volume {name} but .env is missing. "
+                             "Restore the deployment's original .env before starting. "
+                             "For an independent new deployment, set COMPOSE_PROJECT_NAME explicitly.")
+
+
+def configure(first_start=False):
     path = Path(".env")
     if path.is_symlink():
         raise ValueError("Refusing to modify a symbolic-link .env file")
     existed = path.exists()
+    if first_start:
+        if existed:
+            raise ValueError(".env appeared during startup. Retry the launcher.")
+        check_first_start(sys.stdin.read())
     template = Path(__file__).resolve().with_name(".env.example")
     content = path.read_text() if existed else template.read_text()
+    if first_start and os.environ.get("COMPOSE_PROJECT_NAME"):
+        project = os.environ["COMPOSE_PROJECT_NAME"]
+        if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", project):
+            raise ValueError("Invalid COMPOSE_PROJECT_NAME")
+        content = content.replace("COMPOSE_PROJECT_NAME=streampipes", "COMPOSE_PROJECT_NAME=" + project)
     lines = content.splitlines(keepends=True)
     assignments = {}
     for index, line in enumerate(lines):
@@ -91,7 +122,11 @@ def configure():
                 temporary = Path(output.name)
                 os.chmod(temporary, 0o600)
                 output.write("".join(lines))
-            os.replace(temporary, path)
+            if first_start:
+                # Publish a complete file without overwriting a concurrent start.
+                os.link(temporary, path)
+            else:
+                os.replace(temporary, path)
         finally:
             if temporary is not None:
                 temporary.unlink(missing_ok=True)
@@ -103,7 +138,7 @@ def configure():
 
 if __name__ == "__main__":
     try:
-        configure()
+        configure(first_start=sys.argv[1:] == ["--first-start"])
     except (OSError, ValueError) as error:
         print("Configuration failed: " + str(error), file=sys.stderr)
         sys.exit(1)
