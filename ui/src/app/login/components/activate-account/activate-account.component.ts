@@ -21,24 +21,13 @@ import { AccountActivationService } from '../../services/account-activation.serv
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
 import { AuthBoxComponent } from '../auth-box/auth-box.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-activate-account',
     templateUrl: './activate-account.component.html',
     styleUrls: ['../login/login.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        AuthBoxComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
-        RouterLink,
-    ],
+    imports: [AuthBoxComponent, RouterLink],
 })
 export class ActivateAccountComponent extends BaseLoginPageDirective {
     activationCode: string;

@@ -16,31 +16,26 @@
 ~
 -->
 
-<div fxLayout="column" fxLayoutGap="10px">
+<div class="flex-col gap-sm">
     @for (step of statusIndicators; track step) {
-        <div fxLayout="column">
-            <div
-                fxLayout="row"
-                fxLayoutGap="30px"
-                fxFlex="100"
-                fxLayoutAlign="start center"
-            >
+        <div class="flex-col">
+            <div class="flex-row items-center gap-xl flex-100">
                 @if (step.status === Status.PROGRESS) {
                     <div>
                         <sp-spinner [diameter]="25"></sp-spinner>
                     </div>
                 }
                 @if (step.status === Status.SUCCESS) {
-                    <div fxLayoutAlign="start center">
+                    <div class="flex-row items-center">
                         <i class="material-icons status-icon">check_circle</i>
                     </div>
                 }
                 @if (step.status === Status.FAILURE) {
-                    <div fxLayoutAlign="start centers">
+                    <div class="flex-row">
                         <i class="material-icons status-icon">error</i>
                     </div>
                 }
-                <div fxFlex class="text-md" fxLayoutAlign="start center">
+                <div class="text-md flex-row items-center flex-1">
                     {{ step.message }}
                 </div>
             </div>

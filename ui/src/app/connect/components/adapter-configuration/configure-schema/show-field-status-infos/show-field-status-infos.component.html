@@ -15,7 +15,7 @@
 ~ limitations under the License.
 ~
 -->
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     @if (hasBadFieldStatusInfos()) {
         <sp-alert-banner
             type="warning"
@@ -29,7 +29,7 @@
                 @for (entry of badFieldStatusInfos(); track entry[0]) {
                     @let runtimeName = entry[0];
                     @let info = entry[1];
-                    <div fxLayout="column">
+                    <div class="flex-col">
                         <div class="font-bold text-sm">{{ runtimeName }}</div>
 
                         @if (info.additionalInfo) {

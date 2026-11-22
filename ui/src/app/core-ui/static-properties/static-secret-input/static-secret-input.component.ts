@@ -31,18 +31,16 @@ import {
 import { StaticPropertyUtilService } from '../static-property-util.service';
 import { SecretStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'sp-app-static-secret-input',
+    host: { class: 'flex-row' },
     templateUrl: './static-secret-input.component.html',
     styleUrls: ['./static-secret-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         MatFormField,

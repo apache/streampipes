@@ -16,8 +16,9 @@
  *
  */
 
+// The root element fills the host as a flex item (formerly fxFlex).
 :host {
-    display: block;
+    display: flex;
     width: 100%;
     --status-widget-color: var(--color-primary);
     --status-widget-bg: color-mix(

@@ -16,8 +16,7 @@
 ~
 -->
 <section
-    class="script-panel"
-    fxLayout="column"
+    class="script-panel flex-col"
     [class.script-panel-fullscreen]="fullscreen()"
     [attr.role]="fullscreen() ? 'dialog' : null"
     [attr.aria-modal]="fullscreen() ? 'true' : null"
@@ -25,12 +24,12 @@
 >
     <sp-secondary-toolbar class="script-secondary-toolbar" [padding]="false">
         <div
-            class="script-toolbar"
-            fxLayout="row wrap"
-            fxLayoutAlign="space-between center"
+            class="script-toolbar flex-row flex-wrap justify-between items-center content-center"
         >
             <span class="font-bold">{{ 'Script' | translate }}</span>
-            <div fxLayout="row wrap" fxLayoutAlign="end center">
+            <div
+                class="flex-row flex-wrap justify-end items-center content-center"
+            >
                 @if (selectedScriptMetadata()) {
                     <button
                         mat-button
@@ -153,10 +152,7 @@
         ></ngx-monaco-editor>
     </div>
     <footer
-        class="script-footer"
-        fxLayout="row wrap"
-        fxLayoutAlign="space-between center"
-        fxLayoutGap="8px"
+        class="script-footer flex-row flex-wrap justify-between items-center content-center gap-sm"
     >
         <sp-schema-preview-status
             [inline]="true"

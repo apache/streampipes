@@ -75,3 +75,21 @@
     color: var(--color-menubar-text-menu-item);
     font-size: 6vmax;
 }
+
+// Formerly fxFlex.gt-md="50" and fxFlex.lt-md="100". Between the two breakpoints neither
+// applied, so the panels keep their content size there.
+@media (min-width: 1280px) {
+    .auth-panel {
+        flex: 1 1 100%;
+        box-sizing: border-box;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 959.98px) {
+    .auth-panel {
+        flex: 1 1 100%;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+}

@@ -19,33 +19,29 @@
     cdkDropList
     [cdkDropListSortingDisabled]="true"
     [cdkDropListAutoScrollDisabled]="true"
-    fxFlex="100"
-    fxLayout="column"
+    class="flex-col flex-100"
     [attr.data-cy]="'sp-pipeline-element-selection'"
 >
     @if (allElements) {
-        <div id="editor-icon-stand" class="icon-stand">
-            <div fxFlex="100" fxLayout="column">
+        <div id="editor-icon-stand" class="icon-stand flex-row">
+            <div class="flex-col flex-100">
                 @for (
                     availableType of availableTypes;
                     track $index;
                     let i = $index
                 ) {
-                    <div fxLayout="column" class="panel-outer">
+                    <div class="panel-outer flex-col">
                         <div
-                            class="panel-header"
+                            class="panel-header flex-row items-center"
                             id="panel-{{ availableType.filters[0] }}"
-                            fxLayout="row"
-                            fxLayoutAlign="start center"
                             [ngStyle]="{ background: 'var(--color-bg-2)' }"
                         >
                             <div
-                                class="panel-title text-md"
-                                fxLayoutAlign="start center"
+                                class="panel-title text-md flex-row items-center"
                             >
                                 {{ availableType.title }}
                             </div>
-                            <span fxFlex></span>
+                            <span class="flex-1"></span>
                             @if (
                                 availableType.title === availableTypes[0].title
                             ) {
@@ -77,15 +73,9 @@
                             }
                         </div>
                         @if (availableType.open) {
-                            <div
-                                fxFlex="100"
-                                fxLayout="column"
-                                class="panel-content"
-                            >
+                            <div class="panel-content flex-col flex-100">
                                 <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="end center"
-                                    class="panel-options"
+                                    class="panel-options flex-row justify-end items-center"
                                 >
                                     <small
                                         >{{ 'Sort' | translate }}:&nbsp;<a
@@ -121,7 +111,7 @@
                                     >
                                 </div>
                                 @if (availableType.sort === 'name') {
-                                    <div fxFlex="100" fxLayout="column">
+                                    <div class="flex-col flex-100">
                                         @for (
                                             element of allElements
                                                 | pipelineElementType
@@ -131,13 +121,11 @@
                                             track element
                                         ) {
                                             <div
-                                                fxLayout="column"
-                                                fxFlex="100"
-                                                class="pe-row"
+                                                class="pe-row flex-col flex-100"
                                             >
                                                 <sp-pe-icon-stand-row
                                                     [element]="element"
-                                                    fxFlex="100"
+                                                    class="flex-100"
                                                 ></sp-pe-icon-stand-row>
                                             </div>
                                         }
@@ -147,14 +135,14 @@
                                     availableType.sort === 'group' &&
                                     categoriesReady
                                 ) {
-                                    <div fxFlex="100" fxLayout="column">
+                                    <div class="flex-col flex-100">
                                         @for (
                                             category of allCategories.get(
                                                 availableType.filters[0]
                                             );
                                             track category
                                         ) {
-                                            <div fxLayout="column">
+                                            <div class="flex-col">
                                                 <div class="group-outer">
                                                     <span
                                                         class="group-title text-sm"
@@ -174,13 +162,11 @@
                                                     track element
                                                 ) {
                                                     <div
-                                                        fxLayout="column"
-                                                        fxFlex="100"
-                                                        class="pe-row"
+                                                        class="pe-row flex-col flex-100"
                                                     >
                                                         <sp-pe-icon-stand-row
                                                             [element]="element"
-                                                            fxFlex="100"
+                                                            class="flex-100"
                                                         ></sp-pe-icon-stand-row>
                                                     </div>
                                                 }

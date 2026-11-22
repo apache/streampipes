@@ -28,11 +28,6 @@ import {
     AdapterService,
 } from '@streampipes/platform-services';
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -42,15 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './delete-adapter-dialog.component.html',
     styleUrls: ['./delete-adapter-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        MatButton,
-        SpSpinnerComponent,
-        MatDivider,
-        TranslatePipe,
-    ],
+    imports: [MatButton, SpSpinnerComponent, MatDivider, TranslatePipe],
 })
 export class DeleteAdapterDialogComponent {
     private dialogRef =

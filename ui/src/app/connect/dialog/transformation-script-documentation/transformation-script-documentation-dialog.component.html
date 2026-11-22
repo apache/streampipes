@@ -17,8 +17,8 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15" fxLayout="column" fxLayoutGap="24px">
-        <section fxLayout="column" fxLayoutGap="8px">
+    <div class="sp-dialog-content p-15 flex-col gap-xl">
+        <section class="flex-col gap-sm">
             <h3 class="section-title">Transformation scripts</h3>
             <p class="section-text">
                 A transformation script runs once for every incoming event. Your
@@ -41,7 +41,7 @@
             </ul>
         </section>
 
-        <section fxLayout="column" fxLayoutGap="8px">
+        <section class="flex-col gap-sm">
             <h3 class="section-title">Utility helpers</h3>
             <p class="section-text">
                 These helper functions are available globally through
@@ -49,14 +49,10 @@
             </p>
         </section>
 
-        <section fxLayout="column" fxLayoutGap="12px">
+        <section class="flex-col gap-md">
             @for (snippet of utilitySnippets; track snippet.label) {
-                <div class="snippet-card" fxLayout="column" fxLayoutGap="8px">
-                    <div
-                        class="snippet-header"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                    >
+                <div class="snippet-card flex-col gap-sm">
+                    <div class="snippet-header flex-row items-center">
                         <span class="snippet-title">{{ snippet.label }}</span>
                     </div>
                     <p class="snippet-description">{{ snippet.description }}</p>
@@ -79,15 +75,11 @@
             }
         </section>
 
-        <section fxLayout="column" fxLayoutGap="12px">
+        <section class="flex-col gap-md">
             <h3 class="section-title">Client and collector</h3>
             @for (snippet of apiSnippets; track snippet.label) {
-                <div class="snippet-card" fxLayout="column" fxLayoutGap="8px">
-                    <div
-                        class="snippet-header"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                    >
+                <div class="snippet-card flex-col gap-sm">
+                    <div class="snippet-header flex-row items-center">
                         <span class="snippet-title">{{ snippet.label }}</span>
                     </div>
                     <p class="snippet-description">{{ snippet.description }}</p>

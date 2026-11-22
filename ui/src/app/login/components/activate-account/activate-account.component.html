@@ -18,11 +18,11 @@
 
 @if (configReady) {
     <sp-auth-box [linkSettings]="loginSettings.linkSettings">
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
+        <div class="flex-col justify-center items-start flex-100">
             <h1>Account activation</h1>
         </div>
-        <div fxLayout="column" fxFlex="100">
-            <div fxLayout="column" class="mt-10">
+        <div class="flex-col flex-100">
+            <div class="mt-10 flex-col">
                 <div>
                     @if (!activationPerformed) {
                         <h5>Verifying account activation...</h5>

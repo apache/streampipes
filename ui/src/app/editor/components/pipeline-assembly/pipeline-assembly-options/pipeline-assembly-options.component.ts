@@ -47,11 +47,6 @@ import {
     PipelineCanvasMetadata,
 } from '@streampipes/platform-services';
 import { AddTemplateDialogComponent } from '../../../dialog/add-template-dialog/add-template-dialog.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -64,13 +59,11 @@ export interface PipelineAssemblySaveOptions {
 
 @Component({
     selector: 'sp-pipeline-assembly-options',
+    host: { class: 'flex-row' },
     templateUrl: './pipeline-assembly-options.component.html',
     styleUrls: ['./pipeline-assembly-options.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatButton,
         MatTooltip,
         MatIconButton,

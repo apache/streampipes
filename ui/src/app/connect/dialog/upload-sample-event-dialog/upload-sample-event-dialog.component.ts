@@ -31,7 +31,6 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -47,7 +46,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormsModule,
         SpAlertBannerComponent,
         MatDivider,
-        LayoutGapDirective,
         MatButton,
         MatIcon,
         TranslatePipe,

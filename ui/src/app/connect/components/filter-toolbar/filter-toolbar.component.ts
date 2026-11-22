@@ -23,11 +23,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
@@ -35,19 +30,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-connect-filter-toolbar',
+    host: { class: 'flex-row' },
     templateUrl: './filter-toolbar.component.html',
     styleUrls: ['./filter-toolbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        MatFormField,
-        MatInput,
-        MatIcon,
-        MatPrefix,
-        TranslatePipe,
-    ],
+    imports: [MatFormField, MatInput, MatIcon, MatPrefix, TranslatePipe],
 })
 export class SpConnectFilterToolbarComponent {
     @Output()

@@ -27,11 +27,6 @@ import { forkJoin } from 'rxjs';
 import { PipelinePositioningService } from '../../../../services/pipeline-positioning.service';
 import { EditorService } from '../../../../services/editor.service';
 import { PipelineCanvasMetadata } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
@@ -40,13 +35,7 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
     templateUrl: './pipeline-assembly-options-pipeline-cache.component.html',
     styleUrls: ['./pipeline-assembly-options-pipeline-cache.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        SpSpinnerComponent,
-        TranslatePipe,
-    ],
+    imports: [SpSpinnerComponent, TranslatePipe],
 })
 export class PipelineAssemblyOptionsPipelineCacheComponent {
     private pipelinePositioningService = inject(PipelinePositioningService);

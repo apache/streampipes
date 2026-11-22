@@ -24,11 +24,6 @@ import {
 } from '@streampipes/platform-services';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
@@ -38,12 +33,10 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-any-input',
+    host: { class: 'flex-row' },
     templateUrl: './static-runtime-resolvable-any-input.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         SpSpinnerComponent,
         MatCheckbox,

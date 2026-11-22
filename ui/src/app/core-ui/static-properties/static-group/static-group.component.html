@@ -16,7 +16,10 @@
 ~
 -->
 
-<div [fxLayout]="staticProperty.horizontalRendering ? 'row' : 'column'">
+<div
+    [class.flex-row]="staticProperty.horizontalRendering"
+    [class.flex-col]="!staticProperty.horizontalRendering"
+>
     @for (
         property of staticProperty.staticProperties;
         track property;

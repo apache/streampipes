@@ -57,11 +57,6 @@ import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { UserRole } from '../../../../core/auth/user-role.enum';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { SpAdapterOptionsPanelComponent } from './adapter-options-panel/adapter-options-panel.component';
@@ -71,16 +66,14 @@ import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
+    host: { class: 'flex-row' },
     templateUrl: './start-adapter-configuration.component.html',
     styleUrls: ['./start-adapter-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         FormsModule,
         ReactiveFormsModule,
         SpBasicInnerPanelComponent,
-        LayoutAlignDirective,
         FormFieldComponent,
         MatFormField,
         MatInput,

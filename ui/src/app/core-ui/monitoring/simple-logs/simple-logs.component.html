@@ -16,16 +16,16 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     @if (!logs || logs.length === 0) {
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+        <div class="flex-col justify-center items-center flex-100">
             <h5 class="text-center">
                 {{ '(no log messages available)' | translate }}
             </h5>
         </div>
     }
     @if (logs && logs.length > 0) {
-        <div fxFlex="100" fxLayout="column">
+        <div class="flex-col flex-100">
             @for (logEntry of logs; track logEntry) {
                 <div>
                     @if (logEntry.errorMessage) {

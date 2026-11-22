@@ -16,8 +16,8 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
+    <div class="flex-col flex-100">
         <sp-basic-inner-panel
             [panelTitle]="'Service Selection' | translate"
             outerMargin="20px 0px"
@@ -34,8 +34,8 @@
             [panelTitle]="'Basic Settings' | translate"
             outerMargin="20px 0px"
         >
-            <div header fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+            <div header class="flex-row justify-end items-center flex-100">
+                <div class="flex-row justify-end items-center flex-100">
                     @if (availableTemplates && availableTemplates.length > 0) {
                         <div class="form-field-small">
                             <mat-form-field color="accent" appearance="outline">
@@ -80,7 +80,7 @@
         </sp-basic-inner-panel>
     </div>
 
-    <div fxLayoutAlign="end">
+    <div class="flex-row justify-end">
         <button
             class="mat-basic"
             mat-flat-button

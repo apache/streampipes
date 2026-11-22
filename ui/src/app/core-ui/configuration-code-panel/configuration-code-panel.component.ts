@@ -29,7 +29,6 @@ import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { TranslatePipe } from '@ngx-translate/core';
 import { JsonPrettyPrintPipe } from '../pipes/json-pretty-print.pipe';
 import { YamlPrettyPrintPipe } from '../pipes/yaml-pretty-print.pipe';
@@ -47,7 +46,6 @@ import { YamlPrettyPrintPipe } from '../pipes/yaml-pretty-print.pipe';
         MatTooltip,
         MatIcon,
         NgStyle,
-        StyleDirective,
         TranslatePipe,
         JsonPrettyPrintPipe,
         YamlPrettyPrintPipe,

@@ -31,11 +31,6 @@ import {
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineElementUnion } from '../../editor/model/editor.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import {
     MatCell,
@@ -61,9 +56,6 @@ import { MatDivider } from '@angular/material/divider';
     styleUrls: ['./topics.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         MatTabGroup,
         MatTab,
         MatTable,

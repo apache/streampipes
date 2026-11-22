@@ -16,12 +16,10 @@
 ~
 -->
 
-<div fxLayout="column" fxFlex="100" class="pipeline-editor-outer">
+<div class="pipeline-editor-outer flex-col flex-100">
     @if (!allElementsLoaded || !allMetadataLoaded) {
         <div
-            fxFlex="100"
-            fxLayout="column"
-            fxLayoutAlign="center center"
+            class="flex-col justify-center items-center flex-100"
             role="status"
         >
             <sp-spinner
@@ -31,7 +29,7 @@
         </div>
     } @else {
         <sp-pipeline-assembly
-            fxFlex="100"
+            class="flex-100"
             [rawPipelineModel]="rawPipelineModel"
             [allElements]="allElements"
             [originalPipeline]="originalPipeline"

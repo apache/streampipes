@@ -50,7 +50,6 @@
     "@gradle-tech/develocity-agent": "^4.1.1",
     "@jsplumb/browser-ui": "^6.2.10",
     "@maplibre/maplibre-gl-leaflet": "^0.1.4",
-    "@ngbracket/ngx-layout": "^22.0.1",
     "@ngx-loading-bar/core": "^7.0.1",
     "@ngx-loading-bar/http-client": "^7.0.1",
     "@ngx-translate/core": "^18.0.0",

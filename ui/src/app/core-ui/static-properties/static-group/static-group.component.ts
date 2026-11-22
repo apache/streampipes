@@ -30,7 +30,6 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { NgTemplateOutlet } from '@angular/common';
 
 export type GroupRenderCtx = {
@@ -44,7 +43,7 @@ export type GroupRenderCtx = {
     templateUrl: './static-group.component.html',
     styleUrls: ['./static-group.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, NgTemplateOutlet],
+    imports: [NgTemplateOutlet],
 })
 export class StaticGroupComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyGroup>

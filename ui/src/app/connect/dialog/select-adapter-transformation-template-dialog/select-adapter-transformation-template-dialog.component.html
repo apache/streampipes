@@ -40,8 +40,8 @@
                     </mat-select-trigger>
                     @for (template of allTemplates; track template.elementId) {
                         <mat-option [value]="template">
-                            <div fxLayout="column">
-                                <div fxLayout="row">
+                            <div class="flex-col">
+                                <div class="flex-row">
                                     <span class="font-size-md">{{
                                         template.name
                                     }}</span>
@@ -60,7 +60,7 @@
         </sp-form-field>
 
         @if (selectedTemplate) {
-            <div fxLayout="column" class="mt-lg">
+            <div class="mt-lg flex-col">
                 <sp-form-field
                     [level]="3"
                     [label]="'Template name' | translate"
@@ -104,7 +104,7 @@
         }
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions" fxLayoutGap="10px">
+    <div class="sp-dialog-actions flex-row">
         <button
             data-cy="save-select-script-template"
             mat-flat-button
@@ -118,7 +118,7 @@
             Close
         </button>
 
-        <span fxFlex></span>
+        <span class="flex-1"></span>
 
         <button
             mat-flat-button

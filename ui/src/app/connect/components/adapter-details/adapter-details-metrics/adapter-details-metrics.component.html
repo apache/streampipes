@@ -38,7 +38,7 @@
     </button>
 
     @if (adapter && adapterMetrics) {
-        <div fxFlex="100" fxLayout="column">
+        <div class="flex-col flex-100">
             <sp-simple-metrics
                 [elementName]="adapter.name"
                 [lastPublishedLabel]="'Last published message' | translate"

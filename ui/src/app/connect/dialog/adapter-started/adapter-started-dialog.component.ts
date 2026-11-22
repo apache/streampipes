@@ -47,27 +47,18 @@ import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpAdapterStartedLoadingComponent } from './adapter-started-loading/adapter-started-loading.component';
 import { SpAdapterStartedUpdateMigrationComponent } from './adapter-started-update-migration/adapter-started-update-migration.component';
 import { SpAdapterStartedSuccessComponent } from './adapter-started-success/adapter-started-success.component';
 import { SpAdapterStartedPreviewComponent } from './adapter-started-preview/adapter-started-preview.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-started-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         SpAdapterStartedLoadingComponent,
         SpAdapterStartedUpdateMigrationComponent,
         SpAdapterStartedSuccessComponent,
@@ -75,7 +66,6 @@ import { LayoutGapDirective } from '@ngbracket/ngx-layout';
         MatDivider,
         MatButton,
         TranslatePipe,
-        LayoutGapDirective,
     ],
 })
 export class AdapterStartedDialog implements OnInit {

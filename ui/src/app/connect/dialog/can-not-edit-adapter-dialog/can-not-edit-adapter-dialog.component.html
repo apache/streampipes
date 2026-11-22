@@ -18,27 +18,23 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxLayout="column">
-            <div fxLayout="column">
+        <div class="flex-col">
+            <div class="flex-col">
                 <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
+                    class="flex-col justify-center items-center flex-100"
                     data-cy="can-not-edit-adapter-dialog-warning"
                 >
                     <b><h4>This adapter can not be edited.</h4></b>
                     <h5>It is used in the following pipelines:</h5>
                 </div>
             </div>
-            <div fxFlex="100" fxLayout="column" class="w-100">
+            <div class="w-100 flex-col flex-100">
                 @for (pipeline of pipelines; track pipeline) {
                     <div
-                        fxFlex="100"
-                        fxLayout="column"
-                        class="mat-elevation-z1 mt-10"
+                        class="mat-elevation-z1 mt-10 flex-col flex-100"
                         data-cy="adapter-in-pipeline"
                     >
-                        <div fxFlex="100" fxLayout="column" class="p-15">
+                        <div class="p-15 flex-col flex-100">
                             {{ pipeline.name }}
                         </div>
                     </div>

@@ -48,12 +48,6 @@ import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dia
 import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadSampleEventDialogComponent } from '../../../dialog/upload-sample-event-dialog/upload-sample-event-dialog.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { AdapterScriptEditorComponent } from './script-editor/adapter-script-editor.component';
 import { AdapterSamplePreviewComponent } from './sample-preview/adapter-sample-preview.component';
 import { AdapterResultPreviewComponent } from './result-preview/adapter-result-preview.component';
@@ -67,17 +61,14 @@ import { validateFieldNames } from './field-name-validation';
 
 @Component({
     selector: 'sp-configure-schema',
+    host: { class: 'flex-row' },
     templateUrl: './configure-schema.component.html',
     styleUrl: './configure-schema.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         AdapterScriptEditorComponent,
-        LayoutGapDirective,
         AdapterSamplePreviewComponent,
         AdapterResultPreviewComponent,
-        LayoutAlignDirective,
         MatButton,
         TranslatePipe,
         SpAlertBannerComponent,

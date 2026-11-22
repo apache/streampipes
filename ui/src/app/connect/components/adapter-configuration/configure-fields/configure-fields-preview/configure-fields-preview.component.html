@@ -16,8 +16,8 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
-    <div fxFlex="50" fxLayout="column">
+<div class="flex-row gap-md flex-100">
+    <div class="flex-col basis-50">
         <sp-basic-inner-panel
             [showTitle]="true"
             innerPadding="0"
@@ -31,15 +31,15 @@
         </sp-basic-inner-panel>
     </div>
 
-    <div fxFlex="50" fxLayout="column">
+    <div class="flex-col basis-50">
         <sp-basic-inner-panel
             [showTitle]="true"
             [panelTitle]="'Result' | translate"
             innerPadding="0"
-            fxFlex="100"
+            class="flex-100"
             data-cy="connect-schema-update-preview"
         >
-            <div header fxLayoutAlign="end center" fxFlex="100">
+            <div header class="flex-row justify-end items-center flex-100">
                 <button
                     color="accent"
                     mat-button

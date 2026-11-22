@@ -43,11 +43,6 @@ import {
     SpBasicViewComponent,
     SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { AdapterSettingsComponent } from './adapter-settings/adapter-settings.component';
 import { ConfigureSchemaComponent } from './configure-schema/configure-schema.component';
 import { ConfigureFieldsComponent } from './configure-fields/configure-fields.component';
@@ -64,9 +59,6 @@ import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         SpPageHeaderComponent,
         MatIconButton,
         MatMenuTrigger,

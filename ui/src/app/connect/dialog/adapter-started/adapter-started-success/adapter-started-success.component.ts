@@ -22,24 +22,17 @@ import {
     PipelineOperationStatus,
     SpLogMessage,
 } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { PipelineStartedStatusComponent } from '../../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
 import { MatDivider } from '@angular/material/divider';
 import { SpExceptionDetailsComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-adapter-started-success',
+    host: { class: 'flex-row' },
     templateUrl: './adapter-started-success.component.html',
     styleUrls: ['./adapter-started-success.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         PipelineStartedStatusComponent,
         MatDivider,
         SpExceptionDetailsComponent,

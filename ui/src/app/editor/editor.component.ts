@@ -43,11 +43,6 @@ import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
 import { catchError, map } from 'rxjs/operators';
 import { EditorService } from './services/editor.service';
 import { JsplumbService } from './services/jsplumb.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
 import { FormsModule } from '@angular/forms';
@@ -63,13 +58,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-editor',
+    host: { class: 'flex-row' },
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
         SpSpinnerComponent,
         PipelineElementIconStandComponent,
         PipelineAssemblyComponent,

@@ -17,24 +17,14 @@
  */
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-configure-fields-loading-message',
+    host: { class: 'flex-row' },
     templateUrl: './configure-fields-loading-message.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
-        SpSpinnerComponent,
-        TranslatePipe,
-    ],
+    imports: [SpSpinnerComponent, TranslatePipe],
 })
 export class ConfigureFieldsLoadingMessageComponent {}

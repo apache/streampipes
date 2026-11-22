@@ -30,10 +30,6 @@ import {
     SpExceptionMessageComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -50,13 +46,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: '../schema-preview.scss',
     imports: [
-        LayoutAlignDirective,
         MatIconButton,
         MatIcon,
         MatTooltip,
         MatButtonToggleGroup,
         MatButtonToggle,
-        LayoutDirective,
         SpSpinnerComponent,
         SpExceptionMessageComponent,
         ShowFieldStatusInfosComponent,
