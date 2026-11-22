@@ -317,14 +317,14 @@ css = ["tinycss2 (>=1.1.0)"]
 
 [[package]]
 name = "bracex"
-version = "2.5.post1"
+version = "3.2.4"
 description = "Bash style brace expander."
 optional = false
-python-versions = ">=3.8"
-groups = ["docs"]
+python-versions = ">=3.11"
+groups = ["dev", "docs"]
 files = [
-    {file = "bracex-2.5.post1-py3-none-any.whl", hash = "sha256:13e5732fec27828d6af308628285ad358047cec36801598368cb28bc631dbaf6"},
-    {file = "bracex-2.5.post1.tar.gz", hash = "sha256:12c50952415bfa773d2d9ccb8e79651b8cdb1f31a42f6091b804f6ba2b4a66b6"},
+    {file = "bracex-3.2.4-py3-none-any.whl", hash = "sha256:82e9e738b63fca213c33211d30b0b1ca330896a1091736e78da2c1bcda93ab30"},
+    {file = "bracex-3.2.4.tar.gz", hash = "sha256:c1e67eb59f81445dee15b2c588b7c81352b697cfbd6c4931a2943ea6b71eb5ea"},
 ]
 
 [[package]]
@@ -4540,18 +4540,18 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
 name = "wcmatch"
-version = "10.0"
+version = "11.2"
 description = "Wildcard/glob file name matcher."
 optional = false
-python-versions = ">=3.8"
-groups = ["docs"]
+python-versions = ">=3.11"
+groups = ["dev", "docs"]
 files = [
-    {file = "wcmatch-10.0-py3-none-any.whl", hash = "sha256:0dd927072d03c0a6527a20d2e6ad5ba8d0380e60870c383bc533b71744df7b7a"},
-    {file = "wcmatch-10.0.tar.gz", hash = "sha256:e72f0de09bba6a04e0de70937b0cf06e55f36f37b3deb422dfaf854b867b840a"},
+    {file = "wcmatch-11.2-py3-none-any.whl", hash = "sha256:952bab83c75c233836007a69550a3a8753cf06964c1eb3b84ff11ad5bff1c272"},
+    {file = "wcmatch-11.2.tar.gz", hash = "sha256:1605bde546fbde4c063628c7d89eda486909fd4337e51d73a873987fbcb2554c"},
 ]
 
 [package.dependencies]
-bracex = ">=2.1.1"
+bracex = ">=3.2"
 
 [[package]]
 name = "wcwidth"
