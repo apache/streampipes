@@ -28,11 +28,6 @@ import {
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -51,14 +46,11 @@ import { FieldOrderConfigComponent } from '../../../chart-config/field-order-con
         SelectMultiplePropertiesConfigComponent,
         SplitSectionComponent,
         MatFormField,
-        FlexDirective,
         MatInput,
         FormsModule,
         MatSelect,
         MatOption,
         ColorPickerDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatCheckbox,
         FieldOrderConfigComponent,
         TranslatePipe,

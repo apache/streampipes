@@ -16,12 +16,7 @@
 ~
 -->
 
-<div
-    fxFlex="100"
-    fxLayoutAlign="center center"
-    fxLayout="column"
-    class="main-panel"
->
+<div class="main-panel flex-col justify-center items-center flex-100">
     @if (showNoDataInDateRange) {
         <sp-no-data-in-date-range [viewDateRange]="timeSettings" class="h-100">
         </sp-no-data-in-date-range>

@@ -19,11 +19,6 @@
 import { NgStyle } from '@angular/common';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 export type IndicatorDeltaTone = 'positive' | 'negative' | 'neutral';
 
@@ -47,13 +42,7 @@ export interface IndicatorGroupCardView {
     templateUrl: './indicator-group-card.component.html',
     styleUrls: ['./indicator-group-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        NgStyle,
-        MatIcon,
-    ],
+    imports: [NgStyle, MatIcon],
 })
 export class IndicatorGroupCardComponent {
     private static readonly REFERENCE_CARD_WIDTH = 560;

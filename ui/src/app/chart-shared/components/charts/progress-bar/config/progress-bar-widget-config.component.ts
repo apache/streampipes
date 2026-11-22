@@ -36,7 +36,6 @@ import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -53,7 +52,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatCheckbox,
         MatRadioGroup,
         MatRadioButton,
-        FlexDirective,
         FormsModule,
         TranslatePipe,
     ],

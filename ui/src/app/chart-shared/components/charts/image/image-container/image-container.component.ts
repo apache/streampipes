@@ -25,17 +25,14 @@ import {
 } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-image-container',
+    host: { class: 'flex-row' },
     templateUrl: './image-container.component.html',
     styleUrls: ['./image-container.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutAlignDirective, FlexDirective],
+    imports: [],
 })
 export class SpImageContainerComponent {
     imagePath: SafeUrl;

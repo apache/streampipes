@@ -27,7 +27,6 @@ import {
     DataExplorerField,
     SpQueryResult,
 } from '@streampipes/platform-services';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
 import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.component';
@@ -53,12 +52,11 @@ interface ProgressBarViewModel {
 
 @Component({
     selector: 'sp-data-explorer-progress-bar-widget',
+    host: { class: 'flex-row' },
     templateUrl: './progress-bar-widget.component.html',
     styleUrls: ['./progress-bar-widget.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         NgStyle,
         NoDataInDateRangeComponent,
         TooMuchDataComponent,

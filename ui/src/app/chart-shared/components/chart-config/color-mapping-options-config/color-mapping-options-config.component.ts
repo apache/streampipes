@@ -29,12 +29,6 @@ import {
 } from '@angular/core';
 import { ColorMappingService } from '../../../services/color-mapping.service';
 import { DataExplorerField } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -49,12 +43,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-color-mapping-options-config',
     templateUrl: './color-mapping-options-config.component.html',
+    styles: [
+        '.mapping-value { flex: 1 1 40px; box-sizing: border-box; min-width: 40px; max-width: 40px; }',
+        '.mapping-color { flex: 1 1 70px; box-sizing: border-box; min-width: 70px; max-width: 70px; }',
+    ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         MatCheckbox,
         FormsModule,
         MatButton,

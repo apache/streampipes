@@ -320,6 +320,11 @@ The classes are not exact copies of the directives. Check these when migrating:
   container that already has a gap in its own CSS (`.sp-dialog-actions`), drop it.
 - A template whose component did not import the ngx-layout directives had inert `fx*`
   attributes. Remove them; do not convert them to classes.
+- The directive's inline `display: flex` beat every stylesheet; the classes do not. A
+  component rule that sets `display` on the same element (`inline-grid`,
+  `display: block` on `:host`) now wins and has to go. Material's own `display: block` on
+  `mat-drawer-container` and `mat-drawer-content` also wins; repeat `display: flex` in
+  the component SCSS with a more specific selector (`mat-drawer-content.flex-col`).
 - In a column, a bare `fxFlex` used a near-zero basis (`1e-09px`); `flex-1` uses `0%`.
   In a column without a fixed height, the old item collapsed to zero height and its
   content overflowed; with `flex-1` it wraps its content. That is usually the intended

@@ -41,7 +41,7 @@
     </sp-field-order-config>
     <sp-split-section [level]="3" [title]="'Settings' | translate">
         <sp-form-field [level]="3" [label]="'Filter' | translate">
-            <mat-form-field fxFlex="100">
+            <mat-form-field class="flex-100">
                 <input
                     [(ngModel)]="
                         currentlyConfiguredWidget.visualizationConfig
@@ -53,7 +53,7 @@
             </mat-form-field>
         </sp-form-field>
         <sp-form-field [level]="3" [label]="'Page size' | translate">
-            <mat-form-field fxFlex="100">
+            <mat-form-field class="flex-100">
                 <mat-select
                     [value]="
                         currentlyConfiguredWidget.visualizationConfig.pageSize
@@ -80,12 +80,10 @@
         </sp-form-field>
     </sp-split-section>
     <sp-split-section [level]="3" [title]="'Value Highlighting' | translate">
-        <div fxLayout="column" class="highlight-color-list">
+        <div class="highlight-color-list flex-col">
             @for (field of highlightableFields; track colorKey(field)) {
                 <div
-                    class="highlight-color-row"
-                    fxLayout="row"
-                    fxLayoutAlign="space-between center"
+                    class="highlight-color-row flex-row justify-between items-center"
                 >
                     <mat-checkbox
                         [checked]="isHighlighted(field)"

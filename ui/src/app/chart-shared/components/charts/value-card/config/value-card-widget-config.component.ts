@@ -32,7 +32,6 @@ import {
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FieldOrderConfigComponent } from '../../../chart-config/field-order-config/field-order-config.component';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -50,7 +49,6 @@ import { MatCheckbox } from '@angular/material/checkbox';
         MatFormField,
         MatInput,
         MatCheckbox,
-        FlexDirective,
         FormsModule,
         TranslatePipe,
     ],

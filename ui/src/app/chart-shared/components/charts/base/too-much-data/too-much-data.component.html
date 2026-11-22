@@ -15,16 +15,12 @@
   ~ limitations under the License.
   ~
   -->
-<div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-    <div fxLayout="row" fxLayoutAlign="center center">
+<div class="flex-col justify-center items-center flex-100">
+    <div class="flex-row justify-center items-center">
         <i class="material-icons" style="margin-top: 8px">warning</i>
         <h2>&nbsp;{{ 'Warning' | translate }}</h2>
     </div>
-    <div
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        style="margin-top: 10px"
-    >
+    <div class="flex-col justify-center items-center" style="margin-top: 10px">
         <div class="default-text">
             {{ 'This chart tries to load too much data (#Events:' | translate }}
             {{ amountOfEvents }})

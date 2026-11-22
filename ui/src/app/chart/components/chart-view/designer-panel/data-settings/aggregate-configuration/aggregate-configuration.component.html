@@ -16,15 +16,10 @@
 ~
 -->
 
-<div fxLayout="column" fxFlex="100">
-    <div
-        fxFlex="100"
-        fxLayout="column"
-        fxLayoutAlign="start center"
-        class="ml-0 mr-5 form-field-small"
-    >
+<div class="flex-col flex-100">
+    <div class="ml-0 mr-5 form-field-small flex-col items-center flex-100">
         <sp-form-field [level]="3" [label]="'Unit' | translate" class="w-100">
-            <mat-form-field appearance="outline" fxFlex="100" class="w-100">
+            <mat-form-field appearance="outline" class="w-100 flex-100">
                 <mat-select
                     [(value)]="queryConfig.aggregationTimeUnit"
                     class="w-100"
@@ -45,8 +40,7 @@
         >
             <mat-form-field
                 appearance="outline"
-                fxFlex="100"
-                class="w-100"
+                class="w-100 flex-100"
                 color="accent"
             >
                 <input

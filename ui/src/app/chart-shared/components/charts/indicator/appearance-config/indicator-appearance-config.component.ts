@@ -32,7 +32,6 @@ import {
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -45,7 +44,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatFormField,
         MatInput,
         FormsModule,
-        FlexDirective,
         TranslatePipe,
     ],
 })

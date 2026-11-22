@@ -15,10 +15,7 @@
 ~   limitations under the License.
 -->
 <div
-    fxFlex="100"
-    fxLayoutAlign="center center"
-    fxLayout="column"
-    class="main-panel"
+    class="main-panel flex-col justify-center items-center flex-100"
     [ngStyle]="{
         background: dataExplorerWidget.baseAppearanceConfig.backgroundColor,
         color: dataExplorerWidget.baseAppearanceConfig.textColor,
@@ -31,10 +28,7 @@
     }
 
     <div
-        class="traffic-light-wrapper"
-        fxFlex
-        fxLayout="column"
-        fxLayoutAlign="center center"
+        class="traffic-light-wrapper flex-col justify-center items-center flex-1"
     >
         <div
             class="tl-container"

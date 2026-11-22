@@ -16,9 +16,9 @@
 ~
 -->
 
-<div fxFlex="100" class="h-100 form-field-small" fxLayout="column">
+<div class="h-100 form-field-small flex-col flex-100">
     @if (!configurationValid) {
-        <div fxLayoutAlign="center center">
+        <div class="flex-row justify-center items-center">
             <h5>
                 {{
                     "The current data selection can't be displayed by this chart."
@@ -28,7 +28,7 @@
         </div>
     }
     @if (configurationValid) {
-        <div fxFlex="100">
+        <div class="flex-100">
             <ng-content></ng-content>
         </div>
     }

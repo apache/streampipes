@@ -16,7 +16,7 @@
 ~
 -->
 <sp-split-section [level]="3" [title]="'Fields' | translate">
-    <div section-actions fxLayoutAlign="start center" fxFlex="100">
+    <div section-actions class="flex-row items-center flex-100">
         <button
             mat-button
             mat-flat-button
@@ -35,7 +35,7 @@
         >
             {{ 'Deselect all' | translate }}
         </button>
-        <span fxFlex></span>
+        <span class="flex-1"></span>
         @if (!expandFields) {
             <button
                 mat-icon-button
@@ -83,12 +83,12 @@
         }
     </mat-form-field>
     <div
-        fxLayout="column"
+        class="flex-col"
         [class.field-scroll-panel]="!expandFields"
         data-cy="data-explorer-field-selection-panel"
     >
         @for (field of filteredFields; track field) {
-            <div fxLayout="column">
+            <div class="flex-col">
                 <sp-field-selection
                     [field]="field"
                     [sourceConfig]="sourceConfig"

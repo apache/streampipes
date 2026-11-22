@@ -45,12 +45,6 @@ import { ChartFieldProviderService } from '../../../../../chart-shared/services/
 import { FieldProvider } from '../../../../../chart-shared/models/dataview-dashboard.model';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelHeader,
@@ -68,7 +62,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatInput } from '@angular/material/input';
 import { AggregateConfigurationComponent } from './aggregate-configuration/aggregate-configuration.component';
@@ -80,28 +73,24 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-data-settings',
+    host: { class: 'flex-row' },
     templateUrl: './chart-data-settings.component.html',
     styleUrls: ['./chart-data-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         MatAccordion,
         MatExpansionPanel,
         MatExpansionPanelHeader,
-        LayoutAlignDirective,
         MatIconButton,
         MatTooltip,
         SplitSectionComponent,
         SpAlertBannerComponent,
-        LayoutGapDirective,
         MatButton,
         MatFormField,
         MatIcon,
         MatRadioGroup,
         FormsModule,
         NgClass,
-        ClassDirective,
         MatRadioButton,
         FormFieldComponent,
         MatCheckbox,

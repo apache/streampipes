@@ -26,7 +26,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { AxisConfig } from '../../../models/dataview-dashboard.model';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { FormFieldComponent } from '@streampipes/shared-ui';
@@ -40,7 +39,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./select-axis-options-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         MatCheckbox,
         FormsModule,
         FormFieldComponent,

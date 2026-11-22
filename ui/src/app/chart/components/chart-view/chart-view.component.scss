@@ -32,3 +32,10 @@
     display: inline-block;
     overflow-x: hidden;
 }
+
+// Material styles the drawer elements with `display: block`, which wins over the flex-col
+// utility class. ngx-layout used to override it with an inline style.
+mat-drawer-container.flex-col,
+mat-drawer-content.flex-col {
+    display: flex;
+}

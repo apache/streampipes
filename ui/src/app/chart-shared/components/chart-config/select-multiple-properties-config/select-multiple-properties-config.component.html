@@ -38,7 +38,7 @@
             {{ 'Deselect all' | translate }}
         </button>
     </div>
-    <div fxLayout="column" class="field-scroll-panel">
+    <div class="field-scroll-panel flex-col">
         @for (field of availableProperties; track field) {
             <mat-checkbox
                 color="accent"

@@ -17,7 +17,7 @@
   -->
 
 <sp-split-section [level]="3" [title]="'Filter' | translate">
-    <div section-actions fxLayoutAlign="start center" fxFlex="100">
+    <div section-actions class="flex-row items-center flex-100">
         <button
             mat-flat-button
             color="accent"
@@ -38,7 +38,7 @@
             {{ 'Advanced Filter' | translate }}
         </button>
     </div>
-    <div fxLayout="column">
+    <div class="flex-col">
         @if (hasAdvancedFilterExpression()) {
             <sp-alert-banner
                 data-cy="filter-alert-banner"

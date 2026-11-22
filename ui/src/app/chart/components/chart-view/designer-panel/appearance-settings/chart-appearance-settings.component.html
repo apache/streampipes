@@ -16,13 +16,13 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small mt-10 p-sm">
+<div class="form-field-small mt-10 p-sm flex-col flex-100">
     <sp-split-section [level]="3" [title]="'Color' | translate">
         <sp-form-field [level]="3" [label]="'Background' | translate">
             <mat-radio-group
                 [(ngModel)]="backgroundOption"
                 (ngModelChange)="onBackgroundChange($event)"
-                fxLayout="row"
+                class="flex-row"
             >
                 <mat-radio-button value="default">{{
                     'Default' | translate
@@ -54,7 +54,7 @@
             <mat-radio-group
                 [(ngModel)]="textOption"
                 (ngModelChange)="onTextChange($event)"
-                fxLayout="row"
+                class="flex-row"
             >
                 <mat-radio-button value="default">{{
                     'Default' | translate

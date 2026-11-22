@@ -39,7 +39,7 @@
         </button>
     </div>
     @for (field of availableProperties; track field) {
-        <div fxLayout="column" class="field-selection-box">
+        <div class="field-selection-box flex-col">
             <sp-time-series-item-config
                 [selectedProperties]="selectedProperties"
                 [currentlyConfiguredWidget]="currentlyConfiguredWidget"

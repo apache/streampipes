@@ -18,17 +18,13 @@
 
 @if (selectedResultFields.length > 0) {
     <sp-split-section [level]="3" [title]="'Result Labels' | translate">
-        <div fxLayout="column" fxLayoutGap="10px">
+        <div class="flex-col gap-sm">
             @for (field of selectedResultFields; track field.fullDbName) {
-                <div
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    fxLayoutGap="10px"
-                >
-                    <div fxFlex="35" class="text-xs">
+                <div class="flex-row items-center gap-sm">
+                    <div class="text-xs basis-35">
                         {{ field.fullDbName }}
                     </div>
-                    <div fxFlex="65">
+                    <div class="basis-65">
                         <mat-form-field
                             appearance="outline"
                             color="accent"

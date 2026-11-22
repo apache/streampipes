@@ -16,9 +16,9 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small mt-10 p-sm">
+<div class="form-field-small mt-10 p-sm flex-col flex-100">
     <sp-split-section [level]="3" [title]="'Chart Type' | translate">
-        <mat-form-field appearance="outline" color="accent" fxFlex="100">
+        <mat-form-field appearance="outline" color="accent" class="flex-100">
             <mat-select
                 [(value)]="currentlyConfiguredWidget.widgetType"
                 (selectionChange)="triggerWidgetTypeChange($event)"

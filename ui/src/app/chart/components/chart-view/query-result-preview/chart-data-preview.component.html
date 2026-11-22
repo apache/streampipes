@@ -16,21 +16,15 @@
 ~
 -->
 
-<div class="preview-shell" fxLayout="column" data-cy="chart-data-preview">
+<div class="preview-shell flex-col" data-cy="chart-data-preview">
     <div
-        class="preview-header"
-        fxLayout="row"
-        fxLayoutAlign="space-between center"
+        class="preview-header flex-row justify-between items-center"
         data-cy="chart-data-preview-header"
     >
-        <div class="preview-title" fxFlex>
+        <div class="preview-title flex-1">
             {{ 'Data preview' | translate }}
         </div>
-        <div
-            class="preview-header-actions"
-            fxLayout="row"
-            fxLayoutAlign="end center"
-        >
+        <div class="preview-header-actions flex-row justify-end items-center">
             <div class="preview-meta">
                 {{ totalRows }} {{ 'rows' | translate }}
                 @if (!allRowsRendered) {
@@ -57,8 +51,7 @@
 
     @if (expanded && rows.length > 0 && columns.length > 0) {
         <div
-            class="preview-table-scroll"
-            fxFlex
+            class="preview-table-scroll flex-1"
             data-cy="chart-data-preview-table-scroll"
         >
             <table class="preview-table" data-cy="chart-data-preview-table">
@@ -99,10 +92,7 @@
         </div>
     } @else if (expanded) {
         <div
-            class="preview-empty"
-            fxFlex
-            fxLayout
-            fxLayoutAlign="center center"
+            class="preview-empty flex-row justify-center items-center flex-1"
             data-cy="chart-data-preview-empty"
         >
             {{ 'Run or adjust the query to see a row preview.' | translate }}

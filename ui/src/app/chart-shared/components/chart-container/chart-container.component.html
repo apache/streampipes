@@ -33,14 +33,9 @@
     "
 >
     @if (!previewMode) {
-        <div class="widget-header h-40 w-100">
-            <div fxFlex="100" fxLayout="row">
-                <div
-                    fxFlex
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    class="text-md font-bold"
-                >
+        <div class="widget-header h-40 w-100 flex-row">
+            <div class="flex-row flex-100">
+                <div class="text-md font-bold flex-row items-center flex-1">
                     @if (!isEditingName) {
                         <ng-container>
                             @if (!dataViewMode) {
@@ -84,7 +79,7 @@
                     }
                 </div>
                 @if (!kioskMode) {
-                    <div fxLayout="row" fxLayoutAlign="end center">
+                    <div class="flex-row justify-end items-center">
                         @if (editMode) {
                             @if (timerActive) {
                                 <sp-spinner [diameter]="20" class="mr-10">
@@ -209,18 +204,13 @@
             </div>
         </div>
     }
-    <div fxLayout="column" class="widget-content p-0 ml-0 mr-0 h-100 mw-100">
+    <div class="widget-content p-0 ml-0 mr-0 h-100 mw-100 flex-col">
         @if (showRequiresAttentionMessage) {
-            <div
-                fxFlex="100"
-                fxLayout="column"
-                fxLayoutAlign="center center"
-                fxLayoutGap="10px"
-            >
-                <div fxLayout="row" fxLayoutAlign="center center">
+            <div class="flex-col justify-center items-center gap-sm flex-100">
+                <div class="flex-row justify-center items-center">
                     <i class="material-icons warning-icon">sync_problem</i>
                 </div>
-                <div fxLayout="column" fxLayoutAlign="center center">
+                <div class="flex-col justify-center items-center">
                     <div class="default-text text-xl">
                         {{
                             'Chart requires attention because the dataset schema changed'
@@ -238,7 +228,7 @@
         }
         <ng-template spWidgetHost class="h-100 p-0"></ng-template>
         @if (!showRequiresAttentionMessage && errorMessage) {
-            <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+            <div class="flex-col justify-center items-center flex-100">
                 <sp-exception-message
                     [message]="errorMessage"
                     [showDetails]="true"

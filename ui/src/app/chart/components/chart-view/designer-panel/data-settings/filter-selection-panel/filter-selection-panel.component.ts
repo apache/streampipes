@@ -37,11 +37,6 @@ import {
     SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { FilterSelectionPanelRowComponent } from './filter-selection-panel-row/filter-selection-panel-row.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -57,10 +52,7 @@ import { FilterExpressionPreviewService } from './filter-expression-preview.serv
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
-        LayoutAlignDirective,
-        FlexDirective,
         MatButton,
-        LayoutDirective,
         FilterSelectionPanelRowComponent,
         TranslatePipe,
         SpAlertBannerComponent,

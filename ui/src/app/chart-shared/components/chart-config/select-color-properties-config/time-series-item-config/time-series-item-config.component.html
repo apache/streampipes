@@ -16,8 +16,8 @@
 ~
 -->
 
-<div fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="start center">
+<div class="flex-col">
+    <div class="flex-row items-center">
         <mat-checkbox
             color="accent"
             [checked]="isSelected(field)"
@@ -32,7 +32,7 @@
                 }}</small
             >
         </mat-checkbox>
-        <span fxFlex></span>
+        <span class="flex-1"></span>
         <span
             class="color-indicator"
             [ngStyle]="{
@@ -54,12 +54,12 @@
         </button>
     </div>
     @if (isSelected(field) && expanded) {
-        <div fxLayout="column" fxFlex="100" fxLayoutGap="5px" class="ml-10">
-            <div fxLayout="row" fxFlex="100">
-                <div fxFlex="30">
+        <div class="ml-10 flex-col gap-2xs flex-100">
+            <div class="flex-row flex-100">
+                <div class="basis-30">
                     <small>{{ 'Color' | translate }}</small>
                 </div>
-                <div fxFlex="70" fxLayoutAlign="start center">
+                <div class="flex-row items-center basis-70">
                     <input
                         class="color-field"
                         [(colorPicker)]="
@@ -78,11 +78,11 @@
                     />
                 </div>
             </div>
-            <div fxLayout="row" fxFlex="100">
-                <div fxFlex="30" fxLayoutAlign="start center">
+            <div class="flex-row flex-100">
+                <div class="flex-row items-center basis-30">
                     <small>{{ 'Label' | translate }}</small>
                 </div>
-                <div fxFlex="70" fxLayoutAlign="start center">
+                <div class="flex-row items-center basis-70">
                     <mat-form-field
                         appearance="outline"
                         color="accent"
@@ -98,11 +98,11 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div fxLayout="row" fxFlex="100">
-                <div fxFlex="30" fxLayoutAlign="start center">
+            <div class="flex-row flex-100">
+                <div class="flex-row items-center basis-30">
                     <small>{{ 'Type' | translate }}</small>
                 </div>
-                <div fxFlex="70" fxLayoutAlign="start center">
+                <div class="flex-row items-center basis-70">
                     <mat-form-field
                         appearance="outline"
                         color="accent"
@@ -135,11 +135,11 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div fxLayout="row" fxFlex="100">
-                <div fxFlex="30" fxLayoutAlign="start center">
+            <div class="flex-row flex-100">
+                <div class="flex-row items-center basis-30">
                     <small>{{ 'Axis' | translate }}</small>
                 </div>
-                <div fxFlex="70" fxLayoutAlign="start center">
+                <div class="flex-row items-center basis-70">
                     <mat-form-field
                         appearance="outline"
                         color="accent"
@@ -163,11 +163,11 @@
                 </div>
             </div>
             @if (hasGrouping(field)) {
-                <div fxLayout="row" fxFlex="100">
-                    <div fxFlex="30" fxLayoutAlign="start center">
+                <div class="flex-row flex-100">
+                    <div class="flex-row items-center basis-30">
                         <small>{{ 'Grouped colors' | translate }}</small>
                     </div>
-                    <div fxFlex="70" fxLayoutAlign="start center">
+                    <div class="flex-row items-center basis-70">
                         <mat-form-field
                             appearance="outline"
                             color="accent"

@@ -30,7 +30,6 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../charts/time-series-chart/model/time-series-chart-widget.model';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpTimeseriesItemConfigComponent } from './time-series-item-config/time-series-item-config.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -42,7 +41,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         SplitSectionComponent,
         MatButton,
-        LayoutDirective,
         SpTimeseriesItemConfigComponent,
         TranslatePipe,
     ],

@@ -16,9 +16,9 @@
   ~
   -->
 
-<div class="sp-dialog-container" fxLayout="column" fxLayoutGap="16px">
+<div class="sp-dialog-container flex-col gap-lg">
     <!-- Content Section -->
-    <div class="sp-dialog-content p-15" fxLayout="column" fxLayoutGap="10px">
+    <div class="sp-dialog-content p-15 flex-col gap-sm">
         <mat-checkbox
             [(ngModel)]="addToAssets"
             color="accent"
@@ -44,10 +44,7 @@
     <mat-divider></mat-divider>
 
     <div
-        class="sp-dialog-actions actions-align-left"
-        fxLayout="row"
-        fxLayoutAlign="end center"
-        fxLayoutGap="8px"
+        class="sp-dialog-actions actions-align-left flex-row justify-end items-center gap-sm"
     >
         <button
             mat-flat-button

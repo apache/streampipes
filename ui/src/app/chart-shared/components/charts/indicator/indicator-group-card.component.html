@@ -17,23 +17,19 @@
   -->
 
 <div
-    class="indicator-card"
-    fxLayout="column"
+    class="indicator-card flex-col"
     [ngStyle]="cardStyles"
     [class.grouped]="grouped"
     data-cy="indicator-chart-card"
 >
     @if (card.label) {
-        <div class="indicator-card-copy" fxLayout="column">
+        <div class="indicator-card-copy flex-col">
             <div class="indicator-card-label">{{ card.label }}</div>
         </div>
     }
 
     <div
-        class="indicator-card-value-panel"
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxFlex
+        class="indicator-card-value-panel flex-col justify-center items-center flex-1"
     >
         <div class="indicator-card-value" data-cy="indicator-chart-value">
             {{ card.displayValue }}
@@ -42,21 +38,17 @@
 
     @if (card.deltaView) {
         <div
-            class="indicator-card-delta"
-            fxLayout="row"
-            fxLayoutAlign="start center"
+            class="indicator-card-delta flex-row items-center"
             data-cy="indicator-chart-delta"
         >
             <div
-                class="indicator-card-delta-marker"
-                fxLayout="row"
-                fxLayoutAlign="center center"
+                class="indicator-card-delta-marker flex-row justify-center items-center"
             >
                 <mat-icon class="indicator-card-delta-icon">
                     {{ card.deltaView.icon }}
                 </mat-icon>
             </div>
-            <div class="indicator-card-delta-copy" fxLayout="column">
+            <div class="indicator-card-delta-copy flex-col">
                 <div class="indicator-card-delta-label">
                     <span class="indicator-card-delta-value">
                         {{ card.deltaView.label }}

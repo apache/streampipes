@@ -78,11 +78,6 @@ import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../core/auth/user-role.enum';
 import { ChartFieldProviderService } from '../../../chart-shared/services/chart-field-provider.service';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { ChartViewToolbarComponent } from './toolbar/chart-view-toolbar.component';
 import {
     MatDrawer,
@@ -111,9 +106,6 @@ import { AsyncPipe } from '@angular/common';
         SpPageHeaderComponent,
         SpWorkspaceContainerComponent,
         SpAlertBannerComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
         ChartViewToolbarComponent,
         MatDrawerContainer,
         MatDrawer,

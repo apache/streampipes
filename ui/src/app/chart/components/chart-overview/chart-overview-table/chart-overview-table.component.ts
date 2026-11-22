@@ -59,11 +59,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
 import { finalize, Subscription } from 'rxjs';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -78,12 +73,10 @@ type ManageableChart = DataExplorerWidgetModel & {
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
+    host: { class: 'flex-row' },
     templateUrl: './chart-overview-table.component.html',
     styleUrls: ['../chart-overview.component.scss'],
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         SpTableComponent,
         MatSort,
         MatColumnDef,
