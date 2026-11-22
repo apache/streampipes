@@ -19,7 +19,6 @@
 import { Component, inject } from '@angular/core';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
@@ -30,7 +29,6 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-asset-image-upload-dialog',
     templateUrl: './asset-image-upload-dialog.component.html',
     imports: [
-        LayoutDirective,
         SpAlertBannerComponent,
         MatFormField,
         MatSuffix,

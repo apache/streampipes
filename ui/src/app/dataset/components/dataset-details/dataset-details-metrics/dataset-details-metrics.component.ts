@@ -20,12 +20,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
 import { SpQueryResult } from '@streampipes/platform-services';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -51,10 +45,6 @@ interface DayBucket extends DailyEventCount {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpDatasetDetailsLayoutComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        FlexDirective,
         MatIconButton,
         MatIcon,
         MatTooltip,

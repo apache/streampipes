@@ -16,9 +16,9 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxLayout="row" fxFlex="100">
-        <div fxFlex="50px">
+<div class="flex-col flex-100">
+    <div class="flex-row flex-100">
+        <div class="element-icon">
             <div class="draggable-icon-editor tt" [ngClass]="elementType">
                 <span class="pe-container">
                     <sp-pipeline-element
@@ -29,8 +29,8 @@
                 </span>
             </div>
         </div>
-        <div fxFlex fxLayoutAlign="start start" fxLayout="column">
-            <div class="element-name" fxLayoutAlign="start start">
+        <div class="flex-col items-start flex-1">
+            <div class="element-name flex-row items-start">
                 {{ pipelineElement.name }}
             </div>
         </div>

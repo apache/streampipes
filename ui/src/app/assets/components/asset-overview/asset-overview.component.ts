@@ -63,11 +63,6 @@ import { Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenuItem } from '@angular/material/menu';
@@ -89,9 +84,6 @@ type ManageableAsset = SpAssetModel & {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
         MatButton,
         MatIconButton,
         MatTooltip,

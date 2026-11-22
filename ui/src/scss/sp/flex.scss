@@ -114,8 +114,7 @@
     align-content: flex-end;
 }
 
-// Spacing between items (fxLayoutGap). fxLayoutGap added a margin to every child
-// except the last one; CSS gap does not, so check children that bring their own margins.
+// Spacing between items (fxLayoutGap, which also set CSS gap).
 
 .gap-2xs {
     gap: var(--space-2xs);

@@ -16,8 +16,8 @@
 ~
 -->
 
-<div class="sp-dialog-container" fxLayout="column">
-    <div class="sp-dialog-content p-15" fxFlex="100" fxLayout="column">
+<div class="sp-dialog-container flex-col">
+    <div class="sp-dialog-content p-15 flex-col flex-100">
         @if (pipeline) {
             <div class="info-message">
                 {{
@@ -25,7 +25,7 @@
                         | translate
                 }}
             </div>
-            <div class="log-message" fxFlex="100" fxLayout="column">
+            <div class="log-message flex-col flex-100">
                 @for (
                     notification of pipeline.pipelineNotifications;
                     track notification
@@ -37,7 +37,7 @@
                 }
             </div>
         } @else {
-            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start center">
+            <div class="flex-col items-center flex-100">
                 <sp-spinner [diameter]="20"></sp-spinner>
             </div>
         }

@@ -29,7 +29,6 @@ import {
     PipelineService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { ConfigurationCodePanelComponent } from '../../../core-ui/configuration-code-panel/configuration-code-panel.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -40,8 +39,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './pipeline-code-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         ConfigurationCodePanelComponent,
         MatDivider,
         MatButton,

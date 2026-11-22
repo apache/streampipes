@@ -25,7 +25,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { SpAsset, SpAssetModel } from '@streampipes/platform-services';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -33,7 +32,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './asset-selection-menu.component.html',
     styleUrls: ['./asset-selection-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, MatIcon],
+    imports: [MatIcon],
 })
 export class SpAssetSelectionMenuComponent implements OnInit {
     @Input()

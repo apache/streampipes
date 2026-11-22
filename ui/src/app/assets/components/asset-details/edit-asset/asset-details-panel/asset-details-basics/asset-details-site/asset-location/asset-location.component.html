@@ -17,7 +17,7 @@
 -->
 
 @if (locationConfig && locationConfig.locationEnabled) {
-    <div fxFlex="100">
+    <div class="flex-100">
         <mat-checkbox
             [disabled]="!editMode"
             [(ngModel)]="asset.assetSite.hasExactLocation"

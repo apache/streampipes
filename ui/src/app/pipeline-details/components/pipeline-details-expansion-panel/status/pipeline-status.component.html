@@ -17,17 +17,17 @@
 -->
 
 @if (pipelineStatus.length > 0) {
-    <div fxLayout="column" class="p-10">
+    <div class="p-10 flex-col">
         @for (status of pipelineStatus; track status) {
-            <div fxFlex="100" fxLayout="column" fxLayoutGap="10px">
-                <div fxFlex="100" fxLayout="column" class="mb-10">
-                    <div fxLayout="row">
-                        <div fxFlex="50">
+            <div class="flex-col gap-sm flex-100">
+                <div class="mb-10 flex-col flex-100">
+                    <div class="flex-row">
+                        <div class="basis-50">
                             <span class="status-time">{{
                                 status.timestamp | date: 'dd.MM.yyyy HH:mm'
                             }}</span>
                         </div>
-                        <div fxFlex="50">
+                        <div class="basis-50">
                             <span>{{ status.messageType }}</span>
                         </div>
                     </div>
@@ -43,8 +43,7 @@
 }
 @if (pipelineStatus.length === 0) {
     <div
-        fxLayout="column"
-        fxLayoutAlign="center center"
+        class="flex-col justify-center items-center"
         style="min-height: 100px; padding: 5px; padding-left: 15px"
     >
         ({{ 'no status information available' | translate }})

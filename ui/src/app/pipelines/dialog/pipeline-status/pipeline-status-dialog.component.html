@@ -16,20 +16,13 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content p-15 flex-row">
         <div
-            class="sp-dialog-content p-15"
-            fxLayout="column"
-            fxLayoutAlign="center center"
-            fxFlex="100"
+            class="sp-dialog-content p-15 flex-col justify-center items-center flex-100"
         >
             @if (operationInProgress) {
-                <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                >
-                    <div fxFlex="100" fxLayoutAlign="center center">
+                <div class="flex-col justify-center items-center flex-100">
+                    <div class="flex-row justify-center items-center flex-100">
                         <sp-spinner
                             [diameter]="30"
                             style="margin: 10px 0 5px 0"
@@ -40,11 +33,7 @@
                             "
                         ></sp-spinner>
                     </div>
-                    <div
-                        fxFlex="100"
-                        fxLayoutAlign="center center"
-                        fxLayout="column"
-                    >
+                    <div class="flex-col justify-center items-center flex-100">
                         <span class="success-message">
                             @if (action === 0) {
                                 {{
@@ -63,18 +52,11 @@
             }
 
             @if (!operationInProgress && forceStopActive) {
-                <div
-                    fxLayout="column"
-                    fxLayoutAlign="center center"
-                    fxFlex="100"
-                >
+                <div class="flex-col justify-center items-center flex-100">
                     <div
-                        class="success-message"
-                        fxFlex="100"
-                        fxLayoutAlign="center center"
-                        fxLayout="column"
+                        class="success-message flex-col justify-center items-center flex-100"
                     >
-                        <div fxLayout="row">
+                        <div class="flex-row">
                             <mat-icon color="accent">done</mat-icon>
                             <span
                                 >&nbsp;{{
@@ -91,9 +73,7 @@
                     [pipelineOperationStatus]="pipelineOperationStatus"
                     [action]="action"
                     (forceStopPipelineEmitter)="forceStopPipeline()"
-                    fxLayout="column"
-                    fxLayoutAlign="center center"
-                    fxFlex="100"
+                    class="flex-col justify-center items-center flex-100"
                 >
                 </sp-pipeline-started-status>
             }

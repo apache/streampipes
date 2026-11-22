@@ -17,7 +17,7 @@
 -->
 
 <sp-split-section [title]="'Asset links' | translate">
-    <div section-actions fxLayoutGap="10px">
+    <div section-actions class="flex-row gap-sm">
         @if (editMode) {
             <button
                 [disabled]="!assetLinksLoaded"
@@ -42,7 +42,7 @@
             </button>
         }
     </div>
-    <div fxLayout="column" fxFlex="100" class="mt-10">
+    <div class="mt-10 flex-col flex-100">
         <sp-asset-link-table
             #assetLinkTable
             [assetLinkTypes]="assetLinkTypes"

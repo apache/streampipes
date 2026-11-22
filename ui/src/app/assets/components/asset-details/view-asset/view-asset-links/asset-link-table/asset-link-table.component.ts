@@ -59,11 +59,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../../../services/auth.service';
 import { UserRole } from '../../../../../../core/auth/user-role.enum';
 import { Subscription } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { AssetLinkTableTypeComponent } from './asset-link-table-link-type/asset-link-table-type.component';
 import { AssetLinkTableAdditionalDataComponent } from './asset-link-table-additional-data/asset-link-table-additional-data.component';
 import { MatMenuItem } from '@angular/material/menu';
@@ -71,12 +66,10 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-asset-link-table',
+    host: { class: 'flex-row' },
     templateUrl: './asset-link-table.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         SpTableComponent,
         MatSort,
         MatColumnDef,

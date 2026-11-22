@@ -28,12 +28,6 @@ import {
     PipelineService,
     PipelineStatusMessage,
 } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -42,14 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './pipeline-status.component.html',
     styleUrls: ['./pipeline-status.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        DatePipe,
-        TranslatePipe,
-    ],
+    imports: [DatePipe, TranslatePipe],
 })
 export class PipelineStatusComponent implements OnInit {
     private pipelineService = inject(PipelineService);

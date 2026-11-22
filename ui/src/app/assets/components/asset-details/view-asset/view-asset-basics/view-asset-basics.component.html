@@ -16,13 +16,13 @@
 ~
 -->
 
-<div class="asset-hero" fxLayout="row" fxLayoutGap="20px">
-    <div fxFlex class="hero-text">
+<div class="asset-hero flex-row gap-lg">
+    <div class="hero-text flex-1">
         <div class="asset-title text-2xl">{{ selectedAsset.assetName }}</div>
         <div class="asset-subtitle text-md">
             {{ getDescription(selectedAsset) }}
         </div>
-        <div class="meta-row" fxLayout="row" fxLayoutGap="10px" fxLayoutWrap>
+        <div class="meta-row flex-row gap-sm">
             @if (selectedAssetType) {
                 <sp-label
                     tone="neutral"

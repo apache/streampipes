@@ -35,7 +35,6 @@ import {
     SpAsset,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     FormFieldComponent,
     SplitSectionComponent,
@@ -59,13 +58,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './asset-details-basics.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         SplitSectionComponent,
         FormFieldComponent,
         MatFormField,
         MatInput,
         FormsModule,
-        FlexDirective,
         MatSelect,
         MatOption,
         AssetDetailsLabelsComponent,

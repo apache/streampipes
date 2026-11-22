@@ -27,7 +27,6 @@ import {
 import { DialogRef } from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -41,13 +40,7 @@ import { AssetLinkTableComponent } from './asset-link-table/asset-link-table.com
     selector: 'sp-manage-asset-links-dialog-component',
     templateUrl: './manage-asset-links-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        MatButton,
-        MatDivider,
-        AssetLinkTableComponent,
-        TranslatePipe,
-    ],
+    imports: [MatButton, MatDivider, AssetLinkTableComponent, TranslatePipe],
 })
 export class SpManageAssetLinksDialogComponent
     extends BaseAssetLinksDirective

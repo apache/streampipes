@@ -31,10 +31,6 @@ import {
 } from '@streampipes/shared-ui';
 import { ExportProviderService } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 
@@ -43,8 +39,6 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './export-provider-connection-test.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutAlignDirective,
-        LayoutDirective,
         SpSpinnerComponent,
         MatDivider,
         MatButton,

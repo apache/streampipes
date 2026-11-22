@@ -23,7 +23,7 @@
     activeLink="schema"
 >
     @if (dataset) {
-        <div fxLayout="column" fxFlex="100">
+        <div class="flex-col flex-100">
             @if (schemaRows.length > 0) {
                 <div data-cy="dataset-details-schema-table">
                     <table mat-table [dataSource]="schemaRows" class="w-100">

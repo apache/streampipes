@@ -38,18 +38,9 @@
     </button>
 
     @if (dataset) {
-        <div
-            fxFlex="100"
-            fxLayout="column"
-            fxLayoutGap="1rem"
-            data-cy="dataset-details-metrics"
-        >
+        <div class="flex-col gap-lg flex-100" data-cy="dataset-details-metrics">
             @if (loadingMetrics) {
-                <div
-                    class="loading-state"
-                    fxLayout="row"
-                    fxLayoutAlign="center center"
-                >
+                <div class="loading-state flex-row justify-center items-center">
                     <sp-spinner
                         [diameter]="32"
                         [text]="'Loading' | translate"

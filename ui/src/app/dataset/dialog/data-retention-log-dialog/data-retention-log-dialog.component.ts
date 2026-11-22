@@ -37,7 +37,6 @@ import {
     MatRowDef,
     MatTable,
 } from '@angular/material/table';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -49,7 +48,6 @@ import { DatePipe } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatTable,
-        FlexDirective,
         MatSort,
         MatColumnDef,
         MatHeaderCellDef,

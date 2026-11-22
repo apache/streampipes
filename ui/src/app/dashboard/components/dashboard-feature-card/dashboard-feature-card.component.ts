@@ -24,11 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import {
-    FlexDirective,
-    FlexFillDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout';
-import {
     FeatureCardHeaderComponent,
     FeatureCardMetaCreationComponent,
     TimeSelectionService,
@@ -55,12 +50,9 @@ import { DashboardGridViewComponent } from '../../../dashboard-shared/components
     styleUrls: ['./dashboard-feature-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexFillDirective,
         MatDivider,
-        LayoutDirective,
         FeatureCardHeaderComponent,
         FeatureCardMetaCreationComponent,
-        FlexDirective,
         DashboardGridViewComponent,
     ],
 })

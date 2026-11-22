@@ -46,11 +46,6 @@ import { FormsModule } from '@angular/forms';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDivider } from '@angular/material/divider';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -60,8 +55,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./edit-dashboard-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormFieldComponent,
         MatFormField,
         MatInput,
@@ -72,7 +65,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatCheckbox,
         AssetLinkConfigurationComponent,
         MatDivider,
-        LayoutGapDirective,
         MatButton,
         TranslatePipe,
     ],

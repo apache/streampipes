@@ -17,7 +17,7 @@
 -->
 
 @if (dashboard) {
-    <div fxFlexFill fxLayout="column" class="feature-card-outer">
+    <div class="feature-card-outer flex-col flex-fill">
         <sp-feature-card-header
             [title]="dashboard.name"
             [description]="dashboard.description"
@@ -46,9 +46,9 @@
         </div>
 
         <mat-divider></mat-divider>
-        <span fxFlex></span>
+        <span class="flex-1"></span>
 
-        <div fxFlex fxLayout="column" class="feature-preview-wrapper">
+        <div class="feature-preview-wrapper flex-col flex-1">
             <div class="feature-preview-scale">
                 <div class="dashboard-preview-inner">
                     <sp-dashboard-grid-view

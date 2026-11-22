@@ -31,12 +31,6 @@ import {
     MatSelect,
     MatSelectChange,
 } from '@angular/material/select';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
@@ -51,10 +45,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './asset-details-site.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         FormFieldComponent,
         MatButton,
         RouterLink,

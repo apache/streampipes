@@ -20,7 +20,7 @@
     <mat-radio-group
         [(ngModel)]="dataRetentionConfig.dataRetentionConfig.action"
         data-cy="retention-action-select"
-        fxLayout="column"
+        class="flex-col"
     >
         <mat-radio-button value="DELETE" data-cy="action-configuration-delete">
             {{ 'delete' | translate }}

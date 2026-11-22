@@ -54,9 +54,7 @@
             @if (dashboardNotFound) {
                 @if (dashboardNotFound) {
                     <div
-                        fxFlex="100"
-                        fxLayout="column"
-                        fxLayoutAlign="center center"
+                        class="flex-col justify-center items-center flex-100"
                         data-cy="dashboard-not-found"
                     >
                         <h4>
@@ -78,27 +76,21 @@
                         class="designer-panel"
                     >
                         <div
-                            fxLayout="column"
-                            fxFlex="100"
+                            class="flex-col flex-100"
                             style="min-height: 0; overflow: hidden"
                         >
                             @if (editMode) {
                                 <div
-                                    fxFlex="100"
-                                    class="designer-panel-content"
-                                    fxLayout="column"
+                                    class="designer-panel-content flex-col flex-100"
                                     style="min-height: 0"
                                 >
                                     <div
-                                        fxFlex="100"
-                                        fxLayout="column"
-                                        class="no-overflow"
+                                        class="no-overflow flex-col flex-100"
                                         style="min-height: 0"
                                     >
                                         <mat-tab-group
                                             color="accent"
-                                            fxFlexFill
-                                            class="small-tab-headers mat-tab-fill-height"
+                                            class="small-tab-headers mat-tab-fill-height flex-fill"
                                             [(selectedIndex)]="
                                                 selectedDesignerTabIndex
                                             "
@@ -108,7 +100,7 @@
                                                 [label]="'Charts' | translate"
                                             >
                                                 <div
-                                                    class="scroll-tab-content chart-selection-tab-content"
+                                                    class="scroll-tab-content chart-selection-tab-content flex-row"
                                                 >
                                                     <sp-chart-selection
                                                         (addChartEmitter)="
@@ -116,7 +108,7 @@
                                                                 $event
                                                             )
                                                         "
-                                                        fxFlex="100"
+                                                        class="flex-100"
                                                     >
                                                     </sp-chart-selection>
                                                 </div>
@@ -126,9 +118,7 @@
                                                 [label]="'General' | translate"
                                             >
                                                 <div
-                                                    class="scroll-tab-content p-15"
-                                                    fxLayout="column"
-                                                    fxLayoutGap="10px"
+                                                    class="scroll-tab-content p-15 flex-col gap-sm"
                                                 >
                                                     <sp-form-field
                                                         [level]="3"
@@ -226,10 +216,7 @@
                                                         </mat-form-field>
                                                     </sp-form-field>
 
-                                                    <div
-                                                        class="mt-10"
-                                                        fxLayout="column"
-                                                    >
+                                                    <div class="mt-10 flex-col">
                                                         <sp-form-field
                                                             [level]="3"
                                                             [label]="
@@ -336,10 +323,7 @@
                         }
                         @if (dashboard.widgets.length === 0) {
                             <div
-                                fxFlex="100"
-                                fxLayout="column"
-                                fxLayoutAlign="center center"
-                                class="empty-dashboard-state"
+                                class="empty-dashboard-state flex-col justify-center items-center flex-100"
                                 data-cy="empty-dashboard"
                             >
                                 <h4>

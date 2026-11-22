@@ -26,12 +26,6 @@ import { Router } from '@angular/router';
 import { SpQueryResult } from '@streampipes/platform-services';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -53,10 +47,6 @@ type PreviewRow = Record<string, unknown>;
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpDatasetDetailsLayoutComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        FlexDirective,
         MatButton,
         MatIcon,
         SpSpinnerComponent,

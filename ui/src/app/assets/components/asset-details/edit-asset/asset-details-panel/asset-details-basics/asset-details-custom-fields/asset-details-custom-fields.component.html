@@ -30,16 +30,11 @@
             let i = $index;
             track $index
         ) {
-            <div
-                fxLayout="row"
-                fxLayoutGap="15px"
-                fxLayoutAlign="start center"
-                fxFlex="100"
-            >
+            <div class="flex-row items-center gap-md flex-100">
                 <sp-form-field
                     [level]="3"
                     [label]="'Field name' | translate"
-                    fxFlex="40"
+                    class="basis-40"
                 >
                     <mat-form-field>
                         <input
@@ -53,7 +48,7 @@
                 <sp-form-field
                     [level]="3"
                     [label]="'Value' | translate"
-                    fxFlex="40"
+                    class="basis-40"
                 >
                     <mat-form-field>
                         <input
@@ -88,14 +83,10 @@
         </div>
     </sp-form-field>
 } @else {
-    <div fxLayout="column" fxLayoutGap="6px">
+    <div class="flex-col gap-xs">
         @if (customFields?.length) {
             @for (field of customFields; track field.key ?? $index) {
-                <div
-                    fxLayout="row"
-                    fxLayoutGap="8px"
-                    fxLayoutAlign="start start"
-                >
+                <div class="flex-row items-start gap-sm">
                     <span class="text-md font-emphasized">{{ field.key }}</span>
                     <span class="text-md">{{ field.value }}</span>
                 </div>

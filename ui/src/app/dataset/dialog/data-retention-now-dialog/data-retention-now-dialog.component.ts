@@ -32,10 +32,6 @@ import {
 import { DatalakeRestService } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 
@@ -44,8 +40,6 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './data-retention-now-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutAlignDirective,
-        LayoutDirective,
         SpSpinnerComponent,
         MatDivider,
         MatButton,

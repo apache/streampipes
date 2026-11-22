@@ -16,14 +16,9 @@
 ~
 -->
 
-<div
-    fxFlex="100"
-    fxLayoutAlign="start start"
-    fxLayout="column"
-    style="padding: 10px"
->
+<div class="flex-col items-start flex-100" style="padding: 10px">
     @if (!pipeline.running) {
-        <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="flex-row items-center">
             <button
                 mat-icon-button
                 color="accent"
@@ -38,7 +33,7 @@
         </div>
     }
     @if (pipeline.running) {
-        <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="flex-row items-center">
             <button
                 mat-icon-button
                 color="accent"
@@ -52,7 +47,7 @@
             <span>&nbsp;{{ 'Stop pipeline' | translate }}</span>
         </div>
     }
-    <div fxLayout="row" fxLayoutAlign="start center">
+    <div class="flex-row items-center">
         <button
             mat-icon-button
             color="accent"
@@ -65,7 +60,7 @@
         </button>
         <span>&nbsp;{{ 'Modify pipeline' | translate }}</span>
     </div>
-    <div fxLayout="row" fxLayoutAlign="start center">
+    <div class="flex-row items-center">
         <button
             mat-icon-button
             color="accent"

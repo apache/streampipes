@@ -16,10 +16,10 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-    <div fxFlex="100" fxLayout="column" fxLayoutGap="8px">
+<div class="flex-row justify-center items-start flex-100">
+    <div class="flex-col gap-sm flex-100">
         @if (loading) {
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <div class="flex-col justify-center items-center flex-100">
                 <sp-spinner
                     [diameter]="25"
                     [text]="'Loading' | translate"
@@ -27,7 +27,7 @@
             </div>
         } @else {
             <sp-table
-                fxFlex="100"
+                class="flex-100"
                 [columns]="displayedColumns"
                 [dataSource]="dataSource"
                 [showActionsMenu]="true"
@@ -41,11 +41,7 @@
                         {{ 'Type' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let assetLink">
-                        <div
-                            fxLayout="column"
-                            fxLayoutAlign="start start"
-                            class="truncate"
-                        >
+                        <div class="truncate flex-col items-start">
                             <sp-asset-link-table-type
                                 [assetLink]="assetLink"
                                 [assetLinkTypes]="assetLinkTypes"
@@ -64,11 +60,7 @@
                         *matCellDef="let assetLink"
                         data-cy="asset-links-table"
                     >
-                        <div
-                            fxLayout="column"
-                            fxLayoutAlign="start start"
-                            class="truncate"
-                        >
+                        <div class="truncate flex-col items-start">
                             <span>{{ assetLink.linkLabel }}</span>
                         </div>
                     </td>

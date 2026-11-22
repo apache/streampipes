@@ -37,12 +37,11 @@
         }}</mat-icon>
     </button>
     @if (activeFunction && contentReady) {
-        <div fxFlex="100" fxLayout="column">
+        <div class="flex-col flex-100">
             <sp-simple-logs
                 [elementName]="activeFunction.functionId.id"
                 [logs]="logs"
-                fxFlex="100"
-                fxLayout="column"
+                class="flex-col flex-100"
             >
             </sp-simple-logs>
         </div>

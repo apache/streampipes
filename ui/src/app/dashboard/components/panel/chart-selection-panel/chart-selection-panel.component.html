@@ -16,21 +16,22 @@
   ~
   -->
 
-<div fxFlex="100" class="designer-panel-content" fxLayout="column">
-    <div fxFlex="100" fxLayout="column" class="no-overflow">
+<div class="designer-panel-content flex-col flex-100">
+    <div class="no-overflow flex-col flex-100">
         <mat-tab-group
             color="accent"
-            fxFlexFill
-            class="small-tab-headers mat-tab-fill-height"
+            class="small-tab-headers mat-tab-fill-height flex-fill"
         >
             <mat-tab
                 data-cy="designer-panel-data-config"
                 [label]="'Charts' | translate"
             >
-                <div class="scroll-tab-content chart-selection-tab-content">
+                <div
+                    class="scroll-tab-content chart-selection-tab-content flex-row"
+                >
                     <sp-chart-selection
                         (addChartEmitter)="addChartEmitter.emit($event)"
-                        fxFlex="100"
+                        class="flex-100"
                     >
                     </sp-chart-selection>
                 </div>

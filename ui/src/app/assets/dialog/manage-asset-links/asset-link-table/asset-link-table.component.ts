@@ -60,12 +60,6 @@ import {
     MatButtonToggle,
     MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 interface AssetLinkGroupHeaderRow {
@@ -87,10 +81,6 @@ type AssetLinkViewMode = 'grouped' | 'list';
     styleUrls: ['./asset-link-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         MatButtonToggle,
         MatButtonToggleGroup,
         MatButton,

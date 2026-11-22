@@ -24,7 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FlexFillDirective } from '@ngbracket/ngx-layout';
 import {
     DateFormatService,
     FeatureCardHeaderComponent,
@@ -44,11 +43,6 @@ import {
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-dataset-feature-card',
@@ -56,11 +50,7 @@ import {
     styleUrls: ['./dataset-feature-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexFillDirective,
-        LayoutDirective,
         TranslatePipe,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         MatIcon,
         FeatureCardHeaderComponent,
         FeatureCardMetaSectionComponent,

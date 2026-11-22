@@ -26,12 +26,6 @@ import {
 } from '@angular/core';
 import { SpAsset } from '@streampipes/platform-services';
 import { FormFieldComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -50,10 +44,6 @@ export interface CustomField {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormFieldComponent,
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         MatFormField,
         MatInput,
         FormsModule,

@@ -28,11 +28,6 @@ import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MeasurementUpdateAction } from '../../model/pipeline-model';
 
 @Component({
@@ -41,9 +36,6 @@ import { MeasurementUpdateAction } from '../../model/pipeline-model';
     styleUrls: ['./measurement-update-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutAlignDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         MatDivider,
         MatIcon,

@@ -35,12 +35,6 @@ import {
     SpLabelComponent,
     SearchSelectComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -51,10 +45,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './asset-details-labels.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         FormFieldComponent,
         MatButton,
         RouterLink,

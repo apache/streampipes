@@ -29,26 +29,16 @@ import {
     OnInit,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LayoutAlignDirective } from '@ngbracket/ngx-layout';
 
 @Component({
     selector: 'sp-pipeline-notifications',
     templateUrl: './pipeline-notifications.component.html',
     styleUrls: ['./pipeline-notifications.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        MatDivider,
-        MatButton,
-        TranslatePipe,
-        SpSpinnerComponent,
-        LayoutAlignDirective,
-    ],
+    imports: [MatDivider, MatButton, TranslatePipe, SpSpinnerComponent],
 })
 export class PipelineNotificationsComponent implements OnInit {
     private dialogRef =

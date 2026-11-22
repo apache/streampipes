@@ -37,7 +37,7 @@
                 [framed]="false"
                 margin="0"
             >
-                <div nav fxLayout="row" fxLayoutAlign="space-between center">
+                <div nav class="flex-row justify-between items-center">
                     <span class="selector-title">{{
                         'Assets' | translate
                     }}</span>
@@ -53,8 +53,8 @@
                     </button>
                 </div>
 
-                <div fxFlex="100" class="w-100 tree-content" fxLayout="column">
-                    <div fxFlex="100" class="tree-wrapper">
+                <div class="w-100 tree-content flex-col flex-100">
+                    <div class="tree-wrapper flex-100">
                         <mat-tree
                             [dataSource]="dataSource"
                             [treeControl]="treeControl"

@@ -37,7 +37,6 @@ import {
     MatSelectChange,
 } from '@angular/material/select';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
@@ -49,8 +48,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     templateUrl: './edit-asset-link-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormFieldComponent,
         MatFormField,
         MatSelect,

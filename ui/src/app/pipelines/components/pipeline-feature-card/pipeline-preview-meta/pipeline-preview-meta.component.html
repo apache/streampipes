@@ -21,12 +21,7 @@
     </sp-feature-card-meta-creation>
 
     <sp-feature-card-meta-section [label]="'Status' | translate">
-        <div
-            class="feature-card-meta-box"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            fxLayoutGap="0.75rem"
-        >
+        <div class="feature-card-meta-box flex-row items-center gap-md">
             <mat-icon class="feature-card-meta-icon"
                 >fiber_manual_record</mat-icon
             >
@@ -44,12 +39,7 @@
             </div>
         </div>
 
-        <div
-            class="feature-card-meta-box"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            fxLayoutGap="0.75rem"
-        >
+        <div class="feature-card-meta-box flex-row items-center gap-md">
             <mat-icon class="feature-card-meta-icon">favorite</mat-icon>
             <div>
                 <div class="feature-card-meta-field-label">Health</div>
@@ -68,15 +58,9 @@
 
     <sp-feature-card-meta-section [label]="'Monitoring' | translate">
         <div
-            class="feature-card-meta-box"
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
+            class="feature-card-meta-box flex-row justify-between items-center"
         >
-            <div
-                fxLayout="row"
-                fxLayoutGap="0.5rem"
-                fxLayoutAlign="start center"
-            >
+            <div class="flex-row items-center gap-sm">
                 <mat-icon class="feature-card-meta-icon"
                     >arrow_downward</mat-icon
                 >
@@ -88,15 +72,9 @@
         </div>
 
         <div
-            class="feature-card-meta-box"
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
+            class="feature-card-meta-box flex-row justify-between items-center"
         >
-            <div
-                fxLayout="row"
-                fxLayoutGap="0.5rem"
-                fxLayoutAlign="start center"
-            >
+            <div class="flex-row items-center gap-sm">
                 <mat-icon class="feature-card-meta-icon">arrow_upward</mat-icon>
                 <span class="feature-card-meta-field-label">Data out</span>
             </div>

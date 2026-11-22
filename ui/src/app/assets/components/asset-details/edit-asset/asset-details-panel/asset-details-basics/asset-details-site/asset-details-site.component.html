@@ -16,19 +16,19 @@
 ~
 -->
 
-<div fxLayout="column">
-    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
-        <div fxFlex fxLayoutAlign="start center">
+<div class="flex-col">
+    <div class="flex-row items-center gap-md">
+        <div class="flex-row items-center flex-1">
             <sp-form-field
                 [level]="2"
-                fxFlex="100"
+                class="flex-100"
                 [label]="'Site' | translate"
                 [description]="
                     'Assign a location (site and area) to this asset'
                         | translate
                 "
             >
-                <div form-field-actions fxLayoutAlign="start center">
+                <div form-field-actions class="flex-row items-center">
                     <a
                         mat-flat-button
                         class="mat-basic"

@@ -90,13 +90,6 @@ import {
     MatDrawerContainer,
     MatDrawerContent,
 } from '@angular/material/sidenav';
-import {
-    FlexFillDirective,
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { ChartSelectionComponent } from './chart-selection-panel/chart-selection/chart-selection.component';
 import { MatFormField } from '@angular/material/form-field';
@@ -126,11 +119,6 @@ import { AsyncPipe } from '@angular/common';
         SpBasicViewComponent,
         SpPageHeaderComponent,
         SpWorkspaceContainerComponent,
-        FlexDirective,
-        FlexFillDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         DashboardToolbarComponent,
         MatDrawerContainer,
         MatDrawer,

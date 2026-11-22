@@ -37,7 +37,7 @@
         }}</mat-icon>
     </button>
     @if (activeFunction && contentReady) {
-        <div fxFlex="100" fxLayout="column">
+        <div class="flex-col flex-100">
             @for (
                 messagesIn of metrics.messagesIn | keyvalue;
                 track messagesIn

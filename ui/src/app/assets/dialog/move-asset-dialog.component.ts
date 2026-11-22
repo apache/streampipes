@@ -19,11 +19,6 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, inject, Input } from '@angular/core';
 import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     MatNestedTreeNode,
     MatTree,
     MatTreeNestedDataSource,
@@ -71,9 +66,6 @@ export type MoveAssetDialogResult =
         MatButton,
         MatIconButton,
         MatIcon,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         TranslatePipe,
     ],
 })

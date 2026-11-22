@@ -44,7 +44,6 @@ import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -61,7 +60,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatInput,
         MatError,
         MatDivider,
-        LayoutGapDirective,
         MatButton,
         TranslatePipe,
         SplitSectionComponent,

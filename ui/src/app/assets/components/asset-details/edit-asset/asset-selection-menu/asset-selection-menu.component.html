@@ -16,8 +16,8 @@
   ~
   -->
 
-<div fxLayout="column" class="asset-selection-outer">
-    <div fxLayout="column" class="m-md">
+<div class="asset-selection-outer flex-col">
+    <div class="m-md flex-col">
         @for (option of flatAssets; track option.asset.assetId) {
             <div
                 class="option-content p-md"

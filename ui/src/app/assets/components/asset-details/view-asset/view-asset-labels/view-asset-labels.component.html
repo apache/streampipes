@@ -16,13 +16,8 @@
   ~
   -->
 
-<div fxLayout="column" fxLayoutAlign="start end">
-    <div
-        fxLayout="row"
-        fxLayoutGap="10px"
-        fxLayoutAlign="end center"
-        fxFlex="100"
-    >
+<div class="flex-col items-end">
+    <div class="flex-row justify-end items-center gap-sm flex-100">
         @for (label of assignedLabels; track label) {
             <sp-label
                 variant="solid"

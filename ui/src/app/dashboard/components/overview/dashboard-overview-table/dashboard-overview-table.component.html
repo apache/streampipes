@@ -17,10 +17,10 @@
 -->
 
 @let dashboardLinkType = dashboardLinkType$ | async;
-<div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+<div class="flex-col flex-100">
+    <div class="flex-row justify-center items-start flex-100">
         <sp-table
-            fxFlex="100"
+            class="flex-100"
             [columns]="displayedColumns"
             [assetContextConfig]="assetContextConfig"
             [nameSearchConfig]="{

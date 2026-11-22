@@ -16,19 +16,10 @@
 ~
 -->
 
-<div
-    fxFlex="100"
-    fxLayout="column"
-    fxLayoutGap="12px"
-    class="chart-selection-shell"
->
-    <div fxLayout="column" fxLayoutGap="10px" class="chart-selection-toolbar">
-        <div
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="12px"
-        >
-            <div fxLayout="column" class="chart-selection-heading">
+<div class="chart-selection-shell flex-col gap-md flex-100">
+    <div class="chart-selection-toolbar flex-col gap-sm">
+        <div class="flex-row justify-between items-center gap-md">
+            <div class="chart-selection-heading flex-col">
                 <span class="chart-selection-caption">
                     {{ filteredChartItems.length }}
                     @if (filteredChartItems.length === 1) {
@@ -40,10 +31,7 @@
             </div>
 
             <div
-                fxLayout="row"
-                fxLayoutAlign="end center"
-                fxLayoutGap="4px"
-                class="chart-selection-actions"
+                class="chart-selection-actions flex-row justify-end items-center gap-2xs"
             >
                 <button
                     mat-icon-button
@@ -100,10 +88,7 @@
 
     @if (isRefreshing) {
         <div
-            fxFlex="100"
-            fxLayout="column"
-            fxLayoutAlign="center center"
-            class="chart-selection-loading"
+            class="chart-selection-loading flex-col justify-center items-center flex-100"
         >
             <sp-spinner
                 [diameter]="36"
@@ -112,8 +97,7 @@
         </div>
     } @else if (charts.length > 0 && filteredChartItems.length > 0) {
         <cdk-virtual-scroll-viewport
-            fxFlexFill
-            class="chart-selection-results chart-selection-viewport"
+            class="chart-selection-results chart-selection-viewport flex-fill"
             [itemSize]="chartItemSize"
             [minBufferPx]="chartItemSize * 4"
             [maxBufferPx]="chartItemSize * 8"
@@ -133,7 +117,7 @@
             </div>
         </cdk-virtual-scroll-viewport>
     } @else if (charts.length === 0) {
-        <div fxLayoutAlign="center center" fxLayout="column" fxFlex="100">
+        <div class="flex-col justify-center items-center flex-100">
             <span class="no-widget-hint">{{
                 'No charts found - create a new chart first to add it to this dashboard.'
                     | translate
@@ -141,11 +125,7 @@
         </div>
     } @else {
         <div
-            fxLayoutAlign="center center"
-            fxLayout="column"
-            fxLayoutGap="8px"
-            fxFlex="100"
-            class="chart-selection-empty"
+            class="chart-selection-empty flex-col justify-center items-center gap-sm flex-100"
         >
             <mat-icon class="chart-selection-empty-icon">search_off</mat-icon>
             <span class="no-widget-hint">{{

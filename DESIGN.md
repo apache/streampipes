@@ -313,15 +313,20 @@ conflicting component rule or drop the utility class.
 The classes are not exact copies of the directives. Check these when migrating:
 
 - `fxLayoutAlign` without `fxLayout` still produced a flex row; add `flex-row`.
-- `fxLayoutGap` put a margin on every child except the last; `gap-*` uses CSS `gap`.
-  Remove child margins that were compensating, and pick the nearest token instead of
-  copying pixel values.
+- `fxLayoutGap` set an inline CSS `gap`, like `gap-*`; pick the nearest token instead of
+  copying pixel values. Up to ngx-layout 21 it put a margin on the children instead,
+  which also spaced the children of an element that is not a flex container. Since the
+  upgrade to 22 such elements lost their spacing; restore it with `flex-row gap-*`. On a
+  container that already has a gap in its own CSS (`.sp-dialog-actions`), drop it.
+- A template whose component did not import the ngx-layout directives had inert `fx*`
+  attributes. Remove them; do not convert them to classes.
 - In a column, a bare `fxFlex` used a near-zero basis (`1e-09px`); `flex-1` uses `0%`.
   In a column without a fixed height, the old item collapsed to zero height and its
   content overflowed; with `flex-1` it wraps its content. That is usually the intended
   layout. Check it when the item has siblings after it or `overflow: auto`.
 - `fxFlex="200px"` and other fixed sizes have no class: set `flex: 1 1 200px;
-max-width: 200px` (`max-height` in a column) in the component SCSS.
+min-width: 200px; max-width: 200px` (`min-height`/`max-height` in a column) in the
+  component SCSS. The directive fixed the size in both directions.
 - Many `fxFlex="100"` items do nothing in their context. Migrate them one to one first;
   remove redundant classes in a separate pass.
 

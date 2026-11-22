@@ -93,7 +93,7 @@
                 </button>
             </mat-menu>
             @if (asset) {
-                <div fxLayout="column">
+                <div class="flex-col">
                     <sp-asset-details-basics
                         (reloadSites)="reloadSites()"
                         [pendingImage]="pendingImages.get(selectedAsset)"

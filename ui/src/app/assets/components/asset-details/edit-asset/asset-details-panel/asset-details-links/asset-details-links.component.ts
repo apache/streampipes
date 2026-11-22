@@ -44,11 +44,6 @@ import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-l
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AssetLinkTableComponent } from '../../../view-asset/view-asset-links/asset-link-table/asset-link-table.component';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 
@@ -58,10 +53,7 @@ import { MatIcon } from '@angular/material/icon';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
-        LayoutGapDirective,
         MatButton,
-        LayoutDirective,
-        FlexDirective,
         AssetLinkTableComponent,
         TranslatePipe,
         MatIcon,

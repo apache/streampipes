@@ -29,7 +29,6 @@ import {
     PipelineSummaryDto,
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { PipelineStartService } from '../../services/pipeline-start.service';
@@ -38,7 +37,7 @@ import { PipelineStartService } from '../../services/pipeline-start.service';
     selector: 'sp-start-all-pipelines-dialog',
     templateUrl: './start-all-pipelines-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
+    imports: [MatDivider, MatButton, TranslatePipe],
 })
 export class StartAllPipelinesDialogComponent implements OnInit {
     @Input()

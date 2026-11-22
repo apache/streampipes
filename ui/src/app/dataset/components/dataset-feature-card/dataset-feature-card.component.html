@@ -17,7 +17,7 @@
   -->
 
 @if (dataset) {
-    <div fxFlexFill fxLayout="column" class="feature-card-outer">
+    <div class="feature-card-outer flex-col flex-fill">
         <sp-feature-card-header
             [title]="dataset.measureName"
             [icon]="assetLinkType.linkIcon"
@@ -30,12 +30,7 @@
 
         <div class="feature-card-meta-card meta-card">
             <sp-feature-card-meta-section [label]="'Status' | translate">
-                <div
-                    class="feature-card-meta-box"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    fxLayoutGap="0.75rem"
-                >
+                <div class="feature-card-meta-box flex-row items-center gap-md">
                     <mat-icon class="feature-card-meta-icon"
                         >fiber_manual_record</mat-icon
                     >
@@ -55,12 +50,7 @@
                     </div>
                 </div>
 
-                <div
-                    class="feature-card-meta-box"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    fxLayoutGap="0.75rem"
-                >
+                <div class="feature-card-meta-box flex-row items-center gap-md">
                     <mat-icon class="feature-card-meta-icon">numbers</mat-icon>
                     <div>
                         <div class="feature-card-meta-field-label">
@@ -82,8 +72,7 @@
             <div class="dataset-preview-inner">
                 @if (dataPreview && dataPreview.total > 0) {
                     <div
-                        class="dataset-preview-table"
-                        fxLayout="column"
+                        class="dataset-preview-table flex-col"
                         data-cy="dataset-preview-table"
                     >
                         @for (row of previewRows; track row.header) {

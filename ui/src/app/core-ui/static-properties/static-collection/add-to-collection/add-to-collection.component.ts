@@ -32,7 +32,6 @@ import {
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FlexDirective, LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -49,10 +48,8 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     styleUrls: ['./add-to-collection.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutGapDirective,
         MatButton,
         MatIcon,
-        FlexDirective,
         MatFormField,
         MatInput,
         MatProgressBar,
