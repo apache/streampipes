@@ -14,9 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# run relative to the installer directory, wherever the script is called from
+cd "$(dirname "$0")" || exit 1
+
+fatal(){
+  echo "Error: $*" >&2
+  exit 1
+}
+
+if [ "$#" -ne 1 ]; then
+  fatal "Usage: $0 <new-version>  (the current version is read from ./cli/.env)"
+fi
+
 NEW_VERSION=$1
-# get old version from ./cli/.env
-OLD_VERSION=$(grep -oP '^SP_VERSION=\K\S*' ./cli/.env)
+# get old version from ./cli/.env (portable, no grep -P which BSD grep lacks)
+OLD_VERSION=$(sed -n 's/^SP_VERSION=\([^[:space:]]*\).*/\1/p' ./cli/.env)
+
+if [ -z "$OLD_VERSION" ]; then
+  fatal "Could not read SP_VERSION from ./cli/.env"
+fi
+
+# escape regex metacharacters (e.g. the dots in 0.99.0) so sed matches the version literally
+OLD_VERSION_RE=$(printf '%s' "$OLD_VERSION" | sed 's/[][\.*^$/]/\\&/g')
 
 FILES=(
   # cli
@@ -28,7 +47,6 @@ FILES=(
   # k8s
   "./k8s/values.yaml"
   "./k8s/Chart.yaml"
-  "./k8s/Chart.yaml"
   "./k8s/README.md"
   # all-in-one
   "./all-in-one/Dockerfile"
@@ -37,26 +55,20 @@ FILES=(
   "../README.md"
 )
 
-if [ "$#" -gt 1 ]; then
-    fatal "Illegal number of arguments"
-fi
-
 set_version(){
-  options=( "cli" "compose" "k8s" )
-
   case "$(uname -s)" in
       Darwin)
         # for MacOS
-        for file in "${FILES[@]}"; 
+        for file in "${FILES[@]}";
         do
-          sed -i '' "s/$OLD_VERSION/$NEW_VERSION/g" "$file"
+          sed -i '' "s/$OLD_VERSION_RE/$NEW_VERSION/g" "$file"
         done
         ;;
       *)
         # for Linux and Windows
-        for file in "${FILES[@]}"; 
+        for file in "${FILES[@]}";
         do
-          sed -i "s/$OLD_VERSION/$NEW_VERSION/g" "$file"
+          sed -i "s/$OLD_VERSION_RE/$NEW_VERSION/g" "$file"
         done
         ;;
   esac
