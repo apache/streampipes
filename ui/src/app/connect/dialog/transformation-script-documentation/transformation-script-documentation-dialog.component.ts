@@ -23,11 +23,6 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { DialogRef } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -44,9 +39,6 @@ interface CodeSnippet {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ClipboardModule,
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
         MatButton,
         MatDivider,
         MatIcon,

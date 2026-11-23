@@ -18,7 +18,7 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxLayout="column">
+        <div class="flex-col">
             <h5>{{ "These elements can't be connected." | translate }}</h5>
             <span class="text-md">
                 {{
@@ -46,7 +46,7 @@
                 </button>
             </div>
             @if (statusDetailsVisible) {
-                <div class="mt-md" fxLayout="column">
+                <div class="mt-md flex-col">
                     @for (entry of notifications; track entry) {
                         <sp-alert-banner
                             type="warning"

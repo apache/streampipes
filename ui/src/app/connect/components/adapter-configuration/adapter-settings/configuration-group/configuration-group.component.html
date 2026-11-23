@@ -16,9 +16,9 @@
 ~
 -->
 
-<div>
-    <form [formGroup]="configurationGroup" fxFlex="100">
-        <div fxFlex="100">
+<div class="flex-row">
+    <form [formGroup]="configurationGroup" class="flex-100 flex-row">
+        <div class="flex-100">
             @for (config of configuration; track config) {
                 <sp-app-static-property
                     [deploymentConfiguration]="deploymentConfiguration"

@@ -30,11 +30,6 @@ import {
 import { BaseLoginPageDirective } from '../base-login-page.directive';
 import { AuthBoxComponent } from '../auth-box/auth-box.component';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     FormFieldComponent,
     SpAlertBannerComponent,
     SpSpinnerComponent,
@@ -55,9 +50,6 @@ const OAUTH_LOGIN_FAILED = 'oauth_login_failed';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         FormsModule,
         ReactiveFormsModule,
         FormFieldComponent,

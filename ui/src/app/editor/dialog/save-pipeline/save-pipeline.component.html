@@ -17,16 +17,16 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div fxFlex="100" fxLayout="column" class="w-100">
+    <div class="sp-dialog-content p-15 flex-row">
+        <div class="flex-col flex-100">
+            <div class="w-100 flex-col flex-100">
                 @if (
                     pipelineUpdatePreflight &&
                     !operationCompleted &&
                     !operationProgress
                 ) {
                     <sp-save-pipeline-update-migration
-                        fxFlex="100"
+                        class="flex-100"
                         [measurementUpdateInfos]="measurementUpdateInfos"
                         (startUpdateEmitter)="savePipeline(true)"
                     >
@@ -58,7 +58,7 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions actions-align-right" fxLayoutGap="10px">
+    <div class="sp-dialog-actions actions-align-right">
         @if (operationCompleted) {
             <button
                 mat-flat-button

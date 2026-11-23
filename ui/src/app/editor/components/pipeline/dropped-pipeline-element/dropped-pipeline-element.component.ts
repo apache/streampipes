@@ -30,7 +30,6 @@ import {
 } from '../../../model/editor.model';
 import { SpMetricsEntry } from '@streampipes/platform-services';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import {
     PipelineElementComponent,
     SpSpinnerComponent,
@@ -46,7 +45,6 @@ import { LivePreviewBadgeComponent } from '../../live-preview-panel/live-preview
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgClass,
-        ClassDirective,
         SpSpinnerComponent,
         PipelineElementComponent,
         MatTooltip,

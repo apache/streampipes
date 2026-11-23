@@ -17,16 +17,13 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content p-15 flex-row">
         @if (
             !isInProgress && adapterUsedByPipeline && !deleteAssociatedPipelines
         ) {
-            <div fxLayout="column" style="width: 100%">
+            <div class="flex-col" style="width: 100%">
                 <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                    class="info-text"
+                    class="info-text flex-col justify-center items-center flex-100"
                 >
                     <p>
                         {{
@@ -56,10 +53,7 @@
                     </p>
                 </div>
                 <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                    class="mt-10"
+                    class="mt-10 flex-col justify-center items-center flex-100"
                 >
                     <button
                         mat-button
@@ -77,9 +71,7 @@
             !isInProgress && adapterUsedByPipeline && deleteAssociatedPipelines
         ) {
             <div
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                fxLayout="column"
+                class="flex-col justify-center items-center flex-100"
                 style="width: 100%"
                 data-cy="adapter-deletion-permission-denied"
             >
@@ -99,12 +91,8 @@
             </div>
         }
         @if (!isInProgress && !adapterUsedByPipeline) {
-            <div fxLayout="column">
-                <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                >
+            <div class="flex-col">
+                <div class="flex-col justify-center items-center flex-100">
                     <b
                         ><h4>
                             {{
@@ -120,11 +108,7 @@
                         </h5></b
                     >
                 </div>
-                <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                >
+                <div class="flex-col justify-center items-center flex-100">
                     <button
                         mat-button
                         mat-flat-button
@@ -139,12 +123,10 @@
         }
         @if (isInProgress) {
             <div
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                fxLayout="column"
+                class="flex-col justify-center items-center flex-100"
                 data-cy="adapter-deletion-in-progress"
             >
-                <div fxLayout="row" fxLayoutAlign="space-around">
+                <div class="flex-row justify-around">
                     <sp-spinner
                         [diameter]="50"
                         [text]="currentStatus"

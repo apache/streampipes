@@ -73,11 +73,6 @@ import { Router } from '@angular/router';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { interval, of, Subscription, switchMap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -92,9 +87,6 @@ import { AsyncPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
         MatButton,
         MatIcon,
         MatIconButton,

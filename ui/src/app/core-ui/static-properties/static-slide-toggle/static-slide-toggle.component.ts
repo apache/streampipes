@@ -20,20 +20,14 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SlideToggleStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
     selector: 'sp-static-slide-toggle',
+    host: { class: 'flex-row' },
     templateUrl: './static-slide-toggle.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        FormsModule,
-        ReactiveFormsModule,
-        MatSlideToggle,
-    ],
+    imports: [FormsModule, ReactiveFormsModule, MatSlideToggle],
 })
 export class StaticSlideToggleComponent
     extends AbstractValidatedStaticPropertyRenderer<SlideToggleStaticProperty>

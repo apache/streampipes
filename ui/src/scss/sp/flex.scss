@@ -16,8 +16,8 @@
  *
  */
 
-// Flex layout utilities. These replace the @ngbracket/ngx-layout directives
-// (fxLayout, fxLayoutAlign, fxLayoutGap, fxFlex), which are being phased out.
+// Flex layout utilities. These replaced the @ngbracket/ngx-layout directives
+// (fxLayout, fxLayoutAlign, fxLayoutGap, fxFlex).
 // The mapping and the behavioural differences are documented in DESIGN.md ("Layout").
 //
 // fxFlex also made its parent a flex row; the item classes below do not. Give every
@@ -39,11 +39,8 @@
     flex-direction: row;
 }
 
-// !important while ngx-layout is still used: an fxFlex child in a template that has not been
-// migrated writes an inline `flex-direction: row` onto its parent, because the parent no longer
-// has fxLayout. Remove the !important together with @ngbracket/ngx-layout.
 .flex-col {
-    flex-direction: column !important;
+    flex-direction: column;
 }
 
 // fxLayout="row wrap"

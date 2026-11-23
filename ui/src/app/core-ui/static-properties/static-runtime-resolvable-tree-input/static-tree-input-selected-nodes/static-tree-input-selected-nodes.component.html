@@ -15,7 +15,7 @@
 ~ limitations under the License.
 ~
 -->
-<div class="tree-input-header" fxLayoutAlign="start center">
+<div class="tree-input-header flex-row items-center">
     <b
         >{{ 'Selected Nodes' | translate }} ({{
             selectedNodesInternalNames?.length || 0
@@ -34,13 +34,11 @@
     ) {
         <div class="selected-node-wrapper">
             <div
-                class="selected-node"
+                class="selected-node flex-row items-center"
                 [class.selected-node-active]="isActiveNode(selectedNodeName)"
-                fxLayout="row"
-                fxLayoutAlign="start center"
                 [attr.data-cy]="'selected-node-' + selectedNodeName"
             >
-                <div fxFlex class="selected-node-text text-sm">
+                <div class="selected-node-text text-sm flex-1">
                     <div
                         class="selected-node-name"
                         [matTooltip]="selectedNodeName"
@@ -48,7 +46,7 @@
                         {{ selectedNodeName }}
                     </div>
                 </div>
-                <div fxLayoutAlign="end center">
+                <div class="flex-row justify-end items-center">
                     <button
                         mat-icon-button
                         [attr.data-cy]="'remove-' + selectedNodeName"

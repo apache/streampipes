@@ -16,17 +16,11 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="options-panel">
-    <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
-        <div fxFlex fxLayout="column" fxLayoutAlign="center start">
-            <div
-                fxFlex="100"
-                class="w-100"
-                fxLayout="row"
-                fxLayoutAlign="start start"
-                fxLayoutGap="15px"
-            >
-                <div class="mr-15" fxLayoutAlign="start center">
+<div class="options-panel flex-col flex-100">
+    <div class="flex-row items-center flex-100">
+        <div class="flex-col justify-center items-start flex-1">
+            <div class="w-100 flex-row items-start gap-md flex-100">
+                <div class="mr-15 flex-row items-center">
                     <mat-icon class="icon mr-15">{{ optionIcon }}</mat-icon>
                     <mat-checkbox
                         (change)="optionSelectedEmitter.emit($event.checked)"
@@ -36,7 +30,7 @@
                     >
                     </mat-checkbox>
                 </div>
-                <div fxFlex fxLayout="column" class="w-100">
+                <div class="w-100 flex-col flex-1">
                     <div class="text-md font-emphasized">{{ optionTitle }}</div>
                     <span class="text-sm">{{ optionDescription }} </span>
                     <ng-content class="w-100 mt-md"></ng-content>

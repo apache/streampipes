@@ -15,7 +15,7 @@
 ~ limitations under the License.
 ~
 -->
-<div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
+<div [formGroup]="parentForm" id="formWrapper" class="flex-col flex-100">
     @if (!treeFullscreen) {
         <sp-static-tree-input-button-menu
             [showOptions]="showOptions"
@@ -31,7 +31,7 @@
     }
 
     @if (error) {
-        <div fxLayout="column" class="mt-10">
+        <div class="mt-10 flex-col">
             <sp-exception-message
                 [message]="errorMessage"
             ></sp-exception-message>
@@ -46,11 +46,9 @@
             @if (treeFullscreen) {
                 <div class="tree-workspace-shell-header">
                     <div
-                        class="tree-workspace-toolbar"
-                        fxLayout="row"
-                        fxLayoutAlign="space-between center"
+                        class="tree-workspace-toolbar flex-row justify-between items-center"
                     >
-                        <div class="tree-workspace-title" fxLayout="row">
+                        <div class="tree-workspace-title flex-row">
                             <span>{{
                                 staticProperty.label || ('Tree' | translate)
                             }}</span>
@@ -82,18 +80,16 @@
             }
             <div
                 #treeWorkspace
-                class="tree-workspace"
-                fxLayout="row"
+                class="tree-workspace flex-row"
                 [class.tree-workspace-resizing]="isResizingPanels"
                 data-cy="tree-editor"
             >
                 <div
-                    class="tree-panel tree-input-section"
-                    fxLayout="column"
+                    class="tree-panel tree-input-section flex-col"
                     [style.flex-basis.%]="browsePanelWidth"
                 >
                     <sp-static-tree-input-browse-nodes
-                        fxFlex="100"
+                        class="flex-100"
                         #staticTreeInputBrowseNodesComponent
                         [staticProperty]="staticProperty"
                         (showNodeDetailsEmitter)="showNodeDetails($event)"
@@ -114,31 +110,24 @@
                 >
                     <div class="tree-panel-resizer-handle"></div>
                 </div>
-                <div class="tree-panel tree-inspector-panel" fxLayout="column">
+                <div class="tree-panel tree-inspector-panel flex-col">
                     <div
-                        class="tree-inspector-content"
-                        fxFlex="100"
-                        fxLayout="column"
-                        fxLayoutGap="15px"
+                        class="tree-inspector-content flex-col gap-md flex-100"
                     >
                         <div
-                            class="tree-input-section tree-inspector-section"
-                            fxFlex="60"
-                            fxLayout="column"
+                            class="tree-input-section tree-inspector-section flex-col basis-60"
                         >
                             <sp-static-tree-input-node-details
-                                fxFlex="100"
+                                class="flex-100"
                                 [node]="nodeDetails"
                             >
                             </sp-static-tree-input-node-details>
                         </div>
                         <div
-                            class="tree-input-section tree-inspector-section"
-                            fxFlex="40"
-                            fxLayout="column"
+                            class="tree-input-section tree-inspector-section flex-col basis-40"
                         >
                             <sp-static-tree-input-selected-nodes
-                                fxFlex="100"
+                                class="flex-100"
                                 [selectedNodesInternalNames]="
                                     staticProperty.selectedNodesInternalNames
                                 "
@@ -160,9 +149,9 @@
     }
 
     @if (editorMode === 'text') {
-        <div fxLayout="row" fxFlex="100" class="mt-10" data-cy="text-editor">
+        <div class="mt-10 flex-row flex-100" data-cy="text-editor">
             <sp-static-tree-input-text-editor
-                fxFlex="100"
+                class="flex-100"
                 [staticProperty]="staticProperty"
                 (performValidationEmitter)="performValidation()"
             >

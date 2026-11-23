@@ -18,13 +18,9 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div>
+        <div class="flex-row">
             @if (page === 'preview') {
-                <div
-                    fxFlex="100"
-                    class="md-dialog-content"
-                    style="padding: 20px"
-                >
+                <div class="md-dialog-content flex-100" style="padding: 20px">
                     <h4>
                         {{
                             action
@@ -47,11 +43,7 @@
                 </div>
             }
             @if (page === 'running') {
-                <div
-                    fxFlex="100"
-                    class="md-dialog-content"
-                    style="padding: 20px"
-                >
+                <div class="md-dialog-content flex-100" style="padding: 20px">
                     @for (status of actionStatus; track status) {
                         <div>
                             <h4>

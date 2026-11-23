@@ -27,19 +27,17 @@ import {
     OutputStrategyUnion,
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { CustomOutputStrategyComponent } from './custom-output/custom-output-strategy.component';
 import { UserDefinedOutputStrategyComponent } from './user-defined-output/user-defined-output.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-output-strategy',
+    host: { class: 'flex-row' },
     templateUrl: './output-strategy.component.html',
     styleUrls: ['./output-strategy.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         CustomOutputStrategyComponent,
         UserDefinedOutputStrategyComponent,
         TranslatePipe,

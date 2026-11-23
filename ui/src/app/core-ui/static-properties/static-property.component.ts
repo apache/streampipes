@@ -51,7 +51,6 @@ import {
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { FormLabelComponent } from '@streampipes/shared-ui';
 import { StaticCodeInputComponent } from './static-code-input/static-code-input.component';
 import { StaticSecretInputComponent } from './static-secret-input/static-secret-input.component';
@@ -74,12 +73,11 @@ import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-app-static-property',
+    host: { class: 'flex-row' },
     templateUrl: './static-property.component.html',
     styleUrls: ['./static-property.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormLabelComponent,
         StaticCodeInputComponent,
         StaticSecretInputComponent,

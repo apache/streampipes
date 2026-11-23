@@ -26,28 +26,17 @@ import { CustomOutputStrategy } from '@streampipes/platform-services';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import { PropertySelectorService } from '../../../../services/property-selector.service';
 import { UntypedFormControl } from '@angular/forms';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { PropertySelectionComponent } from '../property-selection/property-selection.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-custom-output-strategy',
+    host: { class: 'flex-row' },
     templateUrl: './custom-output-strategy.component.html',
     styleUrls: ['./custom-output-strategy.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        MatButton,
-        PropertySelectionComponent,
-        TranslatePipe,
-    ],
+    imports: [MatButton, PropertySelectionComponent, TranslatePipe],
 })
 export class CustomOutputStrategyComponent
     extends BaseOutputStrategy<CustomOutputStrategy>

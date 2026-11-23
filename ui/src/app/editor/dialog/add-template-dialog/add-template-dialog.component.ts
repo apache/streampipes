@@ -28,11 +28,6 @@ import {
     PipelineTemplateService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TemplateSelectionComponent } from './template-selection/template-selection.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -42,15 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-add-template-dialog',
     templateUrl: './add-template-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        TemplateSelectionComponent,
-        MatDivider,
-        LayoutGapDirective,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [TemplateSelectionComponent, MatDivider, MatButton, TranslatePipe],
 })
 export class AddTemplateDialogComponent implements OnInit {
     private pipelineTemplateService = inject(PipelineTemplateService);

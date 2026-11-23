@@ -18,18 +18,14 @@
 
 @if (configReady && showAcknowledgment) {
     <sp-auth-box [linkSettings]="loginSettings.linkSettings">
-        <div fxLayout="column" class="page">
-            <div fxLayout="column" fxLayoutAlign="center start" fxFlex="none">
+        <div class="page flex-col">
+            <div class="flex-col justify-center items-start flex-none">
                 <h1>{{ loginSettings.termsAcknowledgmentTitle }}</h1>
             </div>
 
-            <div
-                fxFlex="none"
-                class="terms-box"
-                [innerHTML]="sanitizedText"
-            ></div>
+            <div class="terms-box flex-none" [innerHTML]="sanitizedText"></div>
             <mat-divider></mat-divider>
-            <div fxLayout="row" fxLayoutGap="10px" fxFlex="none" class="mt-10">
+            <div class="mt-10 flex-row gap-sm flex-none">
                 <button mat-flat-button (click)="onTermsAcknowledged()">
                     {{ 'Accept' | translate }}
                 </button>

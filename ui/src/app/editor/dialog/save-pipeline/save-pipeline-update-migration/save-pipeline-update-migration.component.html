@@ -16,9 +16,9 @@
 ~
 -->
 
-<div class="migration-view" fxLayout="column" fxLayoutAlign="start stretch">
+<div class="migration-view flex-col">
     @if (measurementUpdateInfos.length > 0) {
-        <div class="migration-summary" fxLayout="column" fxLayoutGap="4px">
+        <div class="migration-summary flex-col gap-2xs">
             @if (hasCriticalFieldChanges()) {
                 <h4>
                     {{
@@ -35,13 +35,13 @@
                 </h4>
             }
         </div>
-        <div class="migration-infos" fxLayout="column" fxLayoutGap="12px">
+        <div class="migration-infos flex-col gap-md">
             @for (updateInfo of measurementUpdateInfos; track updateInfo) {
                 <div
                     class="pipeline-update-info"
                     data-cy="sp-pipeline-edit-warning"
                 >
-                    <div class="pipeline-status" fxLayoutAlign="start center">
+                    <div class="pipeline-status flex-row items-center">
                         @if (
                             updateInfo.criticalMeasurementFieldChanges?.length >
                             0
@@ -81,14 +81,13 @@
                     @if (
                         updateInfo.criticalMeasurementFieldChanges?.length > 0
                     ) {
-                        <div class="validation-infos" fxLayout="column">
+                        <div class="validation-infos flex-col">
                             <div
                                 class="validation-info validation-info-error"
                                 data-cy="sp-pipeline-measurement-edit-warning"
                             >
                                 <div
-                                    class="validation-info-title"
-                                    fxLayoutAlign="start center"
+                                    class="validation-info-title flex-row items-center"
                                 >
                                     <mat-icon class="error-icon">
                                         error
@@ -112,10 +111,9 @@
                     }
 
                     @if (updateInfo.chartSchemaUpdateInfos?.length > 0) {
-                        <div class="affected-charts" fxLayout="column">
+                        <div class="affected-charts flex-col">
                             <div
-                                class="affected-charts-title"
-                                fxLayoutAlign="start center"
+                                class="affected-charts-title flex-row items-center"
                             >
                                 <mat-icon class="affected-charts-icon">
                                     query_stats
@@ -131,8 +129,7 @@
                                     data-cy="sp-pipeline-chart-edit-warning"
                                 >
                                     <div
-                                        class="affected-chart-title"
-                                        fxLayoutAlign="start center"
+                                        class="affected-chart-title flex-row items-center"
                                     >
                                         <mat-icon class="warning-icon">
                                             warning

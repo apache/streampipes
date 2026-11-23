@@ -15,7 +15,7 @@
 ~ limitations under the License.
 ~
 -->
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     @if (invalidFieldNames().length > 0) {
         <sp-alert-banner
             type="error"
@@ -68,9 +68,7 @@
 
     <sp-secondary-toolbar>
         <div
-            fxLayout="row wrap"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="8px"
+            class="flex-row flex-wrap justify-between items-center content-center gap-sm"
         >
             <mat-slide-toggle
                 data-cy="toggle-script-active"
@@ -90,10 +88,9 @@
         </div>
     </sp-secondary-toolbar>
 
-    <div class="schema-workspace" fxLayout="row" fxLayout.lt-lg="column">
+    <div class="schema-workspace flex-row">
         <sp-adapter-script-editor
-            fxFlex="50"
-            fxFlex.lt-lg="none"
+            class="schema-script-editor basis-50"
             [selectedScriptMetadata]="selectedScriptMetadata()"
             [availableScripts]="availableScripts()"
             [loadingAvailableScriptsError]="loadingAvailableScriptsError()"
@@ -117,7 +114,7 @@
             (runScript)="runScript()"
             (createTemplate)="openCreateScriptTemplateDialog()"
         ></sp-adapter-script-editor>
-        <div class="schema-previews" fxFlex fxLayout="column">
+        <div class="schema-previews flex-col flex-1">
             <sp-adapter-sample-preview
                 [isSampleLoading]="isSampleLoading()"
                 [sampleErrorMessage]="sampleErrorMessage()"
@@ -143,7 +140,7 @@
         </div>
     </div>
 
-    <div fxLayoutAlign="end" class="schema-navigation">
+    <div class="schema-navigation flex-row justify-end">
         <button class="mat-basic" mat-flat-button (click)="cancel()">
             {{ 'Cancel' | translate }}
         </button>

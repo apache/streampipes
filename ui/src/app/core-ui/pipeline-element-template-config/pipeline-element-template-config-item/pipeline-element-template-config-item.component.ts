@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { StaticPropertyUnion } from '@streampipes/platform-services';
 import { PipelineElementTemplateGenerator } from '../pipeline-element-template-generator';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -32,7 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-element-template-config-item',
     templateUrl: './pipeline-element-template-config-item.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, MatCheckbox, TranslatePipe],
+    imports: [MatCheckbox, TranslatePipe],
 })
 export class PipelineElementTemplateConfigItemComponent implements OnInit {
     @Input()

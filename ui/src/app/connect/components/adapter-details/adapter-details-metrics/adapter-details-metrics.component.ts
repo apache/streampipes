@@ -20,7 +20,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { SpMetricsEntry } from '@streampipes/platform-services';
 import { SpConnectRoutes } from '../../../connect.breadcrumb';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -36,11 +35,9 @@ import { finalize } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpAdapterDetailsLayoutComponent,
-        LayoutDirective,
         MatIconButton,
         MatIcon,
         MatTooltip,
-        FlexDirective,
         SpSimpleMetricsComponent,
         TranslatePipe,
     ],

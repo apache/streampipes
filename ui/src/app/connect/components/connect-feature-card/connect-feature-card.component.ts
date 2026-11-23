@@ -24,13 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FlexFillDirective } from '@ngbracket/ngx-layout';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
@@ -57,11 +50,6 @@ import {
     styleUrls: ['./connect-feature-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexFillDirective,
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         MatIcon,
         TranslatePipe,
         FeatureCardHeaderComponent,

@@ -29,11 +29,6 @@ import {
     PipelineElementUnion,
 } from '../../model/editor.model';
 import { PipelineElementTypeUtils } from '../../utils/editor.utils';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { PipelineElementStatisticsBadgeComponent } from './pipeline-element-statistics-badge/pipeline-element-statistics-badge.component';
 import { KeyValuePipe } from '@angular/common';
 
@@ -42,13 +37,7 @@ import { KeyValuePipe } from '@angular/common';
     templateUrl: './pipeline-element-statistics.component.html',
     styleUrls: ['./pipeline-element-statistics.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        PipelineElementStatisticsBadgeComponent,
-        KeyValuePipe,
-    ],
+    imports: [PipelineElementStatisticsBadgeComponent, KeyValuePipe],
 })
 export class PipelineElementStatisticsComponent implements OnInit {
     @Input()

@@ -30,7 +30,6 @@ import {
     AdapterService,
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 
@@ -38,7 +37,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'sp-start-all-adapters-dialog',
     templateUrl: './all-adapter-actions-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
+    imports: [MatDivider, MatButton, TranslatePipe],
 })
 export class AllAdapterActionsComponent implements OnInit {
     private dialogRef =

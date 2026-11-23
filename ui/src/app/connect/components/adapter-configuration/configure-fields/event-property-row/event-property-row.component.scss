@@ -73,3 +73,9 @@
         padding: 6px 0;
     }
 }
+
+// Material styles mat-icon with `display: inline-block`, which wins over the flex-row
+// utility class. ngx-layout used to override it with an inline style.
+mat-icon.flex-row {
+    display: flex;
+}

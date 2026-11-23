@@ -15,7 +15,7 @@
 ~ limitations under the License.
 ~
 -->
-<div fxLayout="column">
+<div class="flex-col">
     <div>
         <button
             mat-button
@@ -30,10 +30,8 @@
         </button>
     </div>
     <div
-        [fxLayout]="staticProperty.horizontalRendering ? 'row' : 'column'"
-        [fxLayoutGap]="
-            staticProperty.horizontalRendering ? 'space-between center' : ''
-        "
+        [class.flex-row]="staticProperty.horizontalRendering"
+        [class.flex-col]="!staticProperty.horizontalRendering"
     >
         @for (
             property of staticProperty.staticProperties;

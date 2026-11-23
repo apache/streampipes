@@ -16,7 +16,7 @@
 ~
 -->
 
-<div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
+<div [formGroup]="parentForm" id="formWrapper" class="flex-col flex-100">
     <div>
         <button
             mat-button
@@ -32,17 +32,17 @@
         </button>
     </div>
     @if (error) {
-        <div fxLayout="column" class="mt-10">
+        <div class="mt-10 flex-col">
             <sp-exception-message
                 [message]="errorMessage"
             ></sp-exception-message>
         </div>
     }
     @if (!loading) {
-        <div fxLayout="column">
-            <div fxFlex fxLayout="row">
+        <div class="flex-col">
+            <div class="flex-row flex-1">
                 @if (showOptions || staticProperty.options) {
-                    <div fxLayout="column" style="margin-left: 10px">
+                    <div class="flex-col" style="margin-left: 10px">
                         @for (option of staticProperty.options; track option) {
                             <mat-radio-button
                                 (click)="select(option.elementId)"
@@ -57,12 +57,12 @@
                     </div>
                 }
                 @if (!showOptions && !loading) {
-                    <div fxLayout="column" class="mt-10">
+                    <div class="mt-10 flex-col">
                         <span>{{ '(waiting for input)' | translate }}</span>
                     </div>
                 }
                 @if (loading) {
-                    <div fxLayout="column">
+                    <div class="flex-col">
                         <sp-spinner [diameter]="20"></sp-spinner>
                     </div>
                 }

@@ -48,7 +48,6 @@ import { CompatibleElementsComponent } from '../../dialog/compatible-elements/co
 import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -59,14 +58,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './pipeline-element-options.component.html',
     styleUrls: ['./pipeline-element-options.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        NgStyle,
-        StyleDirective,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        TranslatePipe,
-    ],
+    imports: [NgStyle, MatIconButton, MatTooltip, MatIcon, TranslatePipe],
 })
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     private objectProvider = inject(ObjectProvider);

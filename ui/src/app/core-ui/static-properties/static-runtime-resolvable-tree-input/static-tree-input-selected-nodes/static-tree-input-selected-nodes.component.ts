@@ -23,11 +23,6 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -41,15 +36,7 @@ import { MatIcon } from '@angular/material/icon';
         './static-tree-input-selected-nodes.component.scss',
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutAlignDirective,
-        LayoutDirective,
-        FlexDirective,
-        MatIconButton,
-        MatTooltip,
-        TranslatePipe,
-        MatIcon,
-    ],
+    imports: [MatIconButton, MatTooltip, TranslatePipe, MatIcon],
 })
 export class StaticTreeInputSelectedNodesComponent {
     @Input()

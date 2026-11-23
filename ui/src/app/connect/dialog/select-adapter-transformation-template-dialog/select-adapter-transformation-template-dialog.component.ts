@@ -39,11 +39,6 @@ import {
     MatSelectTrigger,
 } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -64,14 +59,11 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormsModule,
         MatSelectTrigger,
         MatOption,
-        LayoutDirective,
         SpLabelComponent,
         MatInput,
         MatDivider,
-        LayoutGapDirective,
         MatButton,
         MatIcon,
-        FlexDirective,
         TranslatePipe,
     ],
 })

@@ -27,11 +27,6 @@ import {
     CriticalMeasurementFieldChange,
     MeasurementUpdateInfo,
 } from '@streampipes/platform-services';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -41,14 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './save-pipeline-update-migration.component.html',
     styleUrls: ['./save-pipeline-update-migration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        MatButton,
-        MatIcon,
-        TranslatePipe,
-    ],
+    imports: [MatButton, MatIcon, TranslatePipe],
 })
 export class SavePipelineUpdateMigrationComponent {
     @Input()

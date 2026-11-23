@@ -21,9 +21,7 @@
     [attr.aria-label]="'Preview' | translate"
 >
     <header
-        class="preview-toolbar"
-        fxLayout="row wrap"
-        fxLayoutAlign="space-between center"
+        class="preview-toolbar flex-row flex-wrap justify-between items-center content-center"
     >
         <span class="font-bold">{{ 'Preview' | translate }}</span>
         <mat-button-toggle-group
@@ -50,14 +48,14 @@
     ></sp-schema-preview-status>
     <div class="preview-body">
         @if (isRunningScript()) {
-            <div fxLayoutAlign="center center" class="m-lg">
+            <div class="m-lg flex-row justify-center items-center">
                 <sp-spinner
                     [diameter]="25"
                     [text]="'Loading' | translate"
                 ></sp-spinner>
             </div>
         } @else if (scriptError()) {
-            <div fxLayoutAlign="center center" class="m-xs">
+            <div class="m-xs flex-row justify-center items-center">
                 <sp-exception-message
                     [message]="scriptError()"
                     [showDetails]="true"
@@ -86,11 +84,7 @@
     ) {
         <div class="changed-fields text-sm">
             @if (changedFields().length) {
-                <div
-                    class="changed-fields-heading"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                >
+                <div class="changed-fields-heading flex-row items-center">
                     <mat-icon aria-hidden="true">difference</mat-icon>
                     <span>{{ 'Changed fields' | translate }}</span>
                     <sp-label
@@ -100,8 +94,7 @@
                     ></sp-label>
                 </div>
                 <ul
-                    class="changed-fields-list"
-                    fxLayout="row wrap"
+                    class="changed-fields-list flex-row flex-wrap"
                     [attr.aria-label]="'Changed fields' | translate"
                 >
                     @for (field of changedFields(); track field) {

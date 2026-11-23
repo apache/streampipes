@@ -44,7 +44,7 @@ export class RegistrationAllowedCanActivateGuard {
             map(config => {
                 return config.allowSelfRegistration
                     ? true
-                    : this.router.parseUrl('register');
+                    : this.router.parseUrl('login');
             }),
         );
     }

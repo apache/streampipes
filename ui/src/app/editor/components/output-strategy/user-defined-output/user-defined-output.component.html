@@ -16,13 +16,8 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
-    <div
-        fxFlex="100"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        style="margin-bottom: 20px"
-    >
+<div class="flex-col flex-100">
+    <div class="flex-row items-center flex-100" style="margin-bottom: 20px">
         <button
             mat-button
             mat-flat-button
@@ -38,20 +33,20 @@
     </div>
 
     @for (ep of outputStrategy.eventProperties; track ep; let i = $index) {
-        <div fxFlex="100" fxLayout="row" fxLayoutGap="10px">
-            <div fxLayout="column" fxFlex="30">
+        <div class="flex-row gap-sm flex-100">
+            <div class="flex-col basis-30">
                 <sp-form-field [level]="3" [label]="'Runtime name' | translate">
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <input
                             [(ngModel)]="ep.runtimeName"
                             data-cy="runtime-name"
-                            fxFlex
+                            class="flex-1"
                             matInput
                         />
                     </mat-form-field>
                 </sp-form-field>
             </div>
-            <div fxLayout="column" fxFlex="30">
+            <div class="flex-col basis-30">
                 @if (isPrimitiveProperty(ep)) {
                     <sp-form-field
                         [level]="3"
@@ -79,23 +74,23 @@
                     </sp-form-field>
                 }
             </div>
-            <div fxLayout="column" fxFlex="30">
+            <div class="flex-col basis-30">
                 <sp-form-field
                     [level]="3"
                     [label]="'Semantic type' | translate"
                 >
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <input
                             [(ngModel)]="ep.semanticType"
                             [disabled]="restrictedEditMode"
                             data-cy="semantic-type"
-                            fxFlex
+                            class="flex-1"
                             matInput
                         />
                     </mat-form-field>
                 </sp-form-field>
             </div>
-            <div fxLayout="column" fxFlex="10">
+            <div class="flex-col basis-10">
                 <button
                     mat-icon-button
                     class="icon-button"

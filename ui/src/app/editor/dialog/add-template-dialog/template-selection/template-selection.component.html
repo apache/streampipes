@@ -16,16 +16,14 @@
   ~
   -->
 
-<div fxLayout="column">
+<div class="flex-col">
     @for (template of pipelineTemplates; track template.elementId) {
         <div
-            fxLayout="row"
-            class="p-10 m-10 template-item"
+            class="p-10 m-10 template-item flex-row items-center"
             (click)="selectTemplate(template)"
-            fxLayoutAlign="start center"
             [attr.data-cy]="template.name.toLowerCase().replaceAll(' ', '_')"
         >
-            <div fxLayout="column" fxLayoutAlign="center start">
+            <div class="flex-col justify-center items-start">
                 <sp-form-label
                     [label]="template.name"
                     [description]="template.description"

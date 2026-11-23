@@ -17,15 +17,11 @@
   -->
 
 <div
-    class="md-padding sp-fade"
-    fxLayout="row"
-    fxLayoutAlign="center center"
+    class="md-padding sp-fade flex-row justify-center items-center"
     style="min-height: 100vh !important; background: white"
 >
     <div
-        fxFlex="80"
-        fxLayout="column"
-        fxLayoutAlign="center center"
+        class="flex-col justify-center items-center basis-80"
         style="display: flex"
     >
         <img
@@ -33,10 +29,10 @@
             style="max-width: 500px"
         />
 
-        <div fxFlex="100">
+        <div class="flex-100">
             <h2>Welcome!</h2>
         </div>
-        <div fxFlex="100">
+        <div class="flex-100">
             <h4 style="text-align: center">
                 Please wait while {{ appConstants.APP_NAME }} is starting up.
             </h4>
@@ -49,7 +45,7 @@
             </h5>
         </div>
 
-        <div fxFlex="100" fxLayoutAlign="center center">
+        <div class="flex-row justify-center items-center flex-100">
             <mat-progress-bar
                 class="sp-progress"
                 mode="determinate"

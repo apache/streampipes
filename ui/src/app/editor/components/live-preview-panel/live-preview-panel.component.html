@@ -32,12 +32,7 @@
         (pointerdown)="startResize($event)"
         (keydown)="resizeWithKeyboard($event)"
     ></div>
-    <header
-        class="live-preview-panel__header"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        fxLayoutGap="0.5rem"
-    >
+    <header class="live-preview-panel__header flex-row items-center gap-sm">
         <h2 id="sp-live-preview-title" class="live-preview-panel__title">
             {{ 'Live preview' | translate }}
         </h2>
@@ -57,7 +52,7 @@
                 'Updates paused' | translate
             }}</span>
         }
-        <span fxFlex></span>
+        <span class="flex-1"></span>
         <button
             mat-icon-button
             type="button"
@@ -72,9 +67,7 @@
 
     @if (!store.active()) {
         <div
-            class="live-preview-panel__starting"
-            fxLayout="column"
-            fxLayoutAlign="center center"
+            class="live-preview-panel__starting flex-col justify-center items-center"
         >
             @if (starting()) {
                 <sp-spinner
@@ -108,11 +101,7 @@
                                 element.name.toLowerCase().replaceAll(' ', '_')
                             "
                         >
-                            <span
-                                fxLayout="row"
-                                fxLayoutAlign="start center"
-                                fxLayoutGap="0.375rem"
-                            >
+                            <span class="flex-row items-center gap-xs">
                                 <span
                                     [class]="
                                         'live-preview-dot live-preview-dot--' +
@@ -135,10 +124,7 @@
             <div class="live-preview-panel__detail" aria-live="off">
                 @if (detail(); as detail) {
                     <div
-                        class="live-preview-panel__detail-header"
-                        fxLayout="row wrap"
-                        fxLayoutAlign="start center"
-                        fxLayoutGap="0.5rem"
+                        class="live-preview-panel__detail-header flex-row flex-wrap items-center content-center gap-sm"
                     >
                         <span class="live-preview-panel__detail-name">{{
                             detail.element.name
@@ -146,7 +132,7 @@
                         <span class="live-preview-panel__meta">{{
                             typeLabel(detail.element)
                         }}</span>
-                        <span fxFlex></span>
+                        <span class="flex-1"></span>
                         @if (
                             detail.showOutput &&
                             store.status(detail.element.elementId) !== 'error'

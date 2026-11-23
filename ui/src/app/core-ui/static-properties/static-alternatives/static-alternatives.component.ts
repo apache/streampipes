@@ -33,7 +33,6 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgTemplateOutlet } from '@angular/common';
@@ -47,17 +46,11 @@ export type AlternativeRenderCtx = {
 
 @Component({
     selector: 'sp-app-static-alternatives',
+    host: { class: 'flex-row' },
     templateUrl: './static-alternatives.component.html',
     styleUrls: ['./static-alternatives.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        MatRadioGroup,
-        MatRadioButton,
-        MatTooltip,
-        NgTemplateOutlet,
-    ],
+    imports: [MatRadioGroup, MatRadioButton, MatTooltip, NgTemplateOutlet],
 })
 export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>

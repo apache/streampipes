@@ -17,35 +17,27 @@
 -->
 
 <div
-    class="full-background sp-fade light-mode"
-    fxLayout="row wrap"
-    fxLayoutAlign="center center"
+    class="full-background sp-fade light-mode flex-row flex-wrap justify-center items-center content-center"
     style="min-height: 100vh !important"
 >
     <div class="system-notification-outer">
         <sp-system-notification></sp-system-notification>
     </div>
-    <div
-        fxFlex.gt-md="50"
-        fxFlex.lt-md="100"
-        fxLayout="row"
-        fxLayoutAlign="start start"
-        class="full-height"
-    >
-        <div fxFlex="100" fxLayout="column" class="full-height">
-            <div fxLayoutAlign="end end" fxLayout="row" class="logo-outer">
+    <div class="auth-panel full-height flex-row items-start">
+        <div class="full-height flex-col flex-100">
+            <div class="logo-outer flex-row justify-end items-end">
                 <img
                     alt="icon"
                     src="../../../../assets/img/sp/logo.png"
                     class="logo"
                 />
             </div>
-            <div fxLayout="row" fxFlex fxLayoutAlign="center center">
-                <div fxLayout="column" class="content-box">
+            <div class="flex-row justify-center items-center flex-1">
+                <div class="content-box flex-col">
                     <ng-content></ng-content>
                 </div>
             </div>
-            <div fxLayout="row" fxLayoutAlign="end end" class="auth-box-footer">
+            <div class="auth-box-footer flex-row justify-end items-end">
                 @if (linkSettings.showDocumentationLinkOnStartScreen) {
                     <a
                         class="footer-link"
@@ -82,11 +74,7 @@
         </div>
     </div>
     <div
-        fxFlex.gt-md="50"
-        fxFlex.lt-md="100"
-        fxLayout="column wrap"
-        fxLayoutAlign="center center"
-        class="background-auth-box full-height"
+        class="auth-panel background-auth-box full-height flex-col flex-wrap justify-center items-center content-center"
     >
         <h1 class="app-name-text">{{ appConstants.APP_NAME }}</h1>
     </div>

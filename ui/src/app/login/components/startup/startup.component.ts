@@ -25,11 +25,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
@@ -37,12 +32,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     templateUrl: './startup.component.html',
     styleUrls: ['./startup.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        MatProgressBar,
-    ],
+    imports: [MatProgressBar],
 })
 export class StartupComponent implements OnInit {
     private authService = inject(AuthService);
