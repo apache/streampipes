@@ -24,11 +24,6 @@ import {
 } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { LinkSettings } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpSystemNotificationComponent } from '../../../core/components/system-notification/system-notification.component';
@@ -39,9 +34,6 @@ import { SpSystemNotificationComponent } from '../../../core/components/system-n
     styleUrls: ['./auth-box.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         RouterLink,
         RouterLinkActive,
         TranslatePipe,

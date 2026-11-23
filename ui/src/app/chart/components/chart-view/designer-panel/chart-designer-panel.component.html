@@ -16,16 +16,15 @@
 ~
 -->
 
-<div fxFlex="100">
+<div class="flex-100 flex-row">
     @if (currentlyConfiguredWidget) {
-        <div fxFlex="100" fxLayout="column" class="designer-panel-content">
-            <div fxFlex="100" fxLayout="column" class="no-overflow">
+        <div class="designer-panel-content flex-col flex-100">
+            <div class="no-overflow flex-col flex-100">
                 <mat-tab-group
                     [selectedIndex]="selectedIndex"
                     (selectedIndexChange)="selectOptionsPanel($event)"
                     color="accent"
-                    fxFlexFill
-                    class="small-tab-headers mat-tab-fill-height"
+                    class="small-tab-headers mat-tab-fill-height flex-fill"
                 >
                     <mat-tab
                         data-cy="designer-panel-data-config"
@@ -56,11 +55,10 @@
                                 .length === 0
                         "
                     >
-                        <div class="scroll-tab-content">
+                        <div class="scroll-tab-content flex-row">
                             @if (currentlyConfiguredWidget.widgetType) {
                                 <sp-chart-visualisation-settings
-                                    fxFlex="100"
-                                    fxLayout="column"
+                                    class="flex-col flex-100"
                                     [currentlyConfiguredWidget]="
                                         currentlyConfiguredWidget
                                     "
@@ -73,10 +71,9 @@
                         data-cy="designer-panel-appearance-config"
                         [label]="'Appearance' | translate"
                     >
-                        <div class="scroll-tab-content">
+                        <div class="scroll-tab-content flex-row">
                             <sp-chart-appearance-settings
-                                fxFlex="100"
-                                fxLayout="column"
+                                class="flex-col flex-100"
                                 [currentlyConfiguredWidget]="
                                     currentlyConfiguredWidget
                                 "
@@ -88,10 +85,7 @@
             </div>
             @if (newWidgetMode) {
                 <div
-                    fxFlex="50px"
-                    fxLayoutAlign="end center"
-                    fxLayout="row"
-                    class="new-widget-section"
+                    class="new-widget-section flex-row justify-end items-center"
                 >
                     @if (newWidgetMode && selectedIndex === 0) {
                         <button

@@ -18,26 +18,16 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-configure-fields-error-message',
+    host: { class: 'flex-row' },
     templateUrl: './configure-fields-error-message.component.html',
     styleUrls: ['./configure-fields-error-message.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        SpExceptionMessageComponent,
-        TranslatePipe,
-    ],
+    imports: [SpExceptionMessageComponent, TranslatePipe],
 })
 export class ConfigureFieldsErrorMessageComponent {
     @Input() errorMessage: SpLogMessage;

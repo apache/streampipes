@@ -17,7 +17,7 @@
   -->
 
 @if (adapter) {
-    <div fxFlexFill fxLayout="column" class="feature-card-outer">
+    <div class="feature-card-outer flex-col flex-fill">
         <sp-feature-card-header
             [title]="adapter.name"
             [description]="adapter.description"
@@ -31,12 +31,7 @@
 
         <div class="feature-card-meta-card meta-card">
             <sp-feature-card-meta-section [label]="'Status' | translate">
-                <div
-                    class="feature-card-meta-box"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    fxLayoutGap="0.75rem"
-                >
+                <div class="feature-card-meta-box flex-row items-center gap-md">
                     <mat-icon class="feature-card-meta-icon">
                         {{ adapter.running ? 'play_circle' : 'pause_circle' }}
                     </mat-icon>
@@ -60,7 +55,7 @@
             <div class="feature-card-meta-section__label">
                 {{ 'Preview info' | translate }}
             </div>
-            <div class="adapter-info-table" fxLayout="column">
+            <div class="adapter-info-table flex-col">
                 <div class="adapter-info-row">
                     <span class="adapter-info-key">{{
                         'Created' | translate
@@ -90,7 +85,7 @@
             </div>
         </div>
 
-        <div fxFlex fxLayout="column" class="feature-preview-wrapper">
+        <div class="feature-preview-wrapper flex-col flex-1">
             <div class="adapter-live-preview">
                 <div class="feature-card-meta-section__label">
                     {{ 'Live preview' | translate }}

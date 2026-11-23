@@ -49,7 +49,6 @@ import {
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { EditDataTypeComponent } from './edit-data-type/edit-data-type.component';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
@@ -71,8 +70,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormFieldComponent,
         EditDataTypeComponent,
         SpAlertBannerComponent,
-        FlexDirective,
-        LayoutDirective,
         MatFormField,
         MatInput,
         FormsModule,

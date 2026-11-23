@@ -16,9 +16,9 @@
 ~
 -->
 
-<div [formGroup]="parentForm" id="formWrapper">
-    <div fxFlex="100" fxLayout="row">
-        <mat-form-field color="accent" fxFlex="100">
+<div class="flex-row" [formGroup]="parentForm" id="formWrapper">
+    <div class="flex-row flex-100">
+        <mat-form-field color="accent" class="flex-100">
             <mat-select
                 formControlName="{{ fieldName }}"
                 [placeholder]="staticProperty.label"

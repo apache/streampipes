@@ -26,11 +26,6 @@ import {
 import { QueryConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -41,13 +36,11 @@ type FillMode = 'none' | 'previous' | 'linear' | 'null' | 'number';
 
 @Component({
     selector: 'sp-fill-configuration',
+    host: { class: 'flex-row' },
     templateUrl: './fill-configuration.component.html',
     styleUrls: ['./fill-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         FormFieldComponent,
         MatFormField,
         MatSelect,

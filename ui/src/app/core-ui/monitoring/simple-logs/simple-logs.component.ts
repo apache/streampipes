@@ -18,26 +18,16 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-simple-logs',
+    host: { class: 'flex-row' },
     templateUrl: './simple-logs.component.html',
     styleUrls: [],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        SpExceptionMessageComponent,
-        TranslatePipe,
-    ],
+    imports: [SpExceptionMessageComponent, TranslatePipe],
 })
 export class SpSimpleLogsComponent {
     @Input()

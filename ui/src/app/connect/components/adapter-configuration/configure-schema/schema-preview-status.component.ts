@@ -18,27 +18,21 @@
 
 import { Component, computed, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-schema-preview-status',
-    imports: [MatIcon, LayoutDirective, LayoutAlignDirective, TranslatePipe],
+    imports: [MatIcon, TranslatePipe],
     styleUrl: './schema-preview-status.component.scss',
     host: { '[class.inline-status]': 'inline()' },
     template: `
         <div
-            class="schema-status text-sm"
+            class="schema-status text-sm flex-row items-center"
             [class]="
                 'status-' +
                 status() +
                 (inline() ? '' : ' status-' + status() + '-bg')
             "
-            fxLayout="row"
-            fxLayoutAlign="start center"
             aria-live="polite"
         >
             <mat-icon aria-hidden="true">{{ icons[status()] }}</mat-icon>

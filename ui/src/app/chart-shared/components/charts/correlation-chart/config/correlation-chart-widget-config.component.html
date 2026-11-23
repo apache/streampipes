@@ -24,7 +24,7 @@
     <sp-split-section [level]="3" [title]="'Fields' | translate">
         <sp-form-field [level]="3" [label]="'X' | translate">
             <sp-select-single-property-config
-                fxFlex
+                class="flex-1"
                 [availableProperties]="fieldProvider.numericFields"
                 [selectedProperty]="
                     currentlyConfiguredWidget.visualizationConfig.firstField
@@ -47,7 +47,7 @@
         </sp-form-field>
         <sp-form-field [level]="3" [label]="'Y' | translate">
             <sp-select-single-property-config
-                fxFlex
+                class="flex-1"
                 [availableProperties]="fieldProvider.numericFields"
                 [selectedProperty]="
                     currentlyConfiguredWidget.visualizationConfig.secondField

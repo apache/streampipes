@@ -16,8 +16,8 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column" class="form-field-small">
-    <mat-accordion fxFlex="100" class="data-source-selection-panel">
+<div class="form-field-small flex-col flex-100">
+    <mat-accordion class="data-source-selection-panel flex-100">
         @if (sourceConfig) {
             <mat-expansion-panel
                 [expanded]="step === 0"
@@ -25,12 +25,8 @@
                 class="expansion-panel"
             >
                 <mat-expansion-panel-header class="expansion-panel-header">
-                    <div fxFlex="100" fxLayout="row">
-                        <span
-                            fxFlex
-                            fxLayoutAlign="start center"
-                            class="text-sm"
-                        >
+                    <div class="flex-row flex-100">
+                        <span class="text-sm flex-row items-center flex-1">
                             {{
                                 sourceConfig.measureName ||
                                     ('Dataset' | translate)
@@ -38,7 +34,7 @@
                         </span>
                     </div>
                 </mat-expansion-panel-header>
-                <div fxFlex="100" fxLayout="column" class="mt-10 p-sm">
+                <div class="mt-10 p-sm flex-col flex-100">
                     <sp-split-section
                         [level]="3"
                         [title]="'Dataset' | translate"
@@ -54,17 +50,9 @@
                                 "
                             >
                             </sp-alert-banner>
-                            <div
-                                class="warning-container"
-                                fxLayout="column"
-                                fxLayoutAlign="start stretch"
-                            >
+                            <div class="warning-container flex-col">
                                 <div
-                                    fxFlex
-                                    fxLayout="row"
-                                    fxLayoutAlign="end end"
-                                    fxLayoutGap="0.5rem"
-                                    class="mt-10"
+                                    class="mt-10 flex-row justify-end items-end gap-sm flex-1"
                                 >
                                     <button
                                         mat-flat-button
@@ -85,7 +73,7 @@
                         }
                         @if (availableDatasets.length !== 0) {
                             <sp-search-select
-                                fxFlex="100"
+                                class="flex-100"
                                 [items]="availableDatasets"
                                 [value]="selectedDataset"
                                 [placeholder]="'Search datasets' | translate"
@@ -107,10 +95,9 @@
                         >
                             <div
                                 section-actions
-                                fxFlex
-                                class="header-container"
+                                class="header-container flex-1 flex-row"
                             >
-                                <span fxFlex></span>
+                                <span class="flex-1"></span>
                                 <button
                                     mat-icon-button
                                     class="pull-btn-right"
@@ -139,8 +126,7 @@
                                         sourceConfig.queryType === 'raw'
                                     ) {
                                         <div
-                                            class="radio-option-box"
-                                            fxLayout="column"
+                                            class="radio-option-box flex-col"
                                             [ngClass]="{
                                                 'radio-option-box-accent':
                                                     sourceConfig.queryType ===
@@ -168,9 +154,7 @@
                                                 sourceConfig.queryType === 'raw'
                                             ) {
                                                 <div
-                                                    fxLayout="column"
-                                                    class="selection-form-field"
-                                                    fxFlex="100"
+                                                    class="selection-form-field flex-col flex-100"
                                                 >
                                                     <sp-form-field
                                                         class="form-field-small"
@@ -180,7 +164,7 @@
                                                         "
                                                     >
                                                         <mat-form-field
-                                                            fxFlex="100"
+                                                            class="flex-100"
                                                             color="accent"
                                                             appearance="outline"
                                                         >
@@ -205,7 +189,7 @@
                                                         "
                                                     >
                                                         <mat-form-field
-                                                            fxFlex="100"
+                                                            class="flex-100"
                                                             color="accent"
                                                             appearance="outline"
                                                         >
@@ -232,8 +216,7 @@
                                     ) {
                                         <div
                                             data-cy="data-explorer-query-type-aggregated"
-                                            class="radio-option-box"
-                                            fxLayout="column"
+                                            class="radio-option-box flex-col"
                                             [ngClass]="{
                                                 'radio-option-box-accent':
                                                     sourceConfig.queryType ===
@@ -257,9 +240,7 @@
                                                 'aggregated'
                                             ) {
                                                 <div
-                                                    fxLayout="column"
-                                                    class="selection-form-field"
-                                                    fxFlex="100"
+                                                    class="selection-form-field flex-col flex-100"
                                                 >
                                                     <div
                                                         data-cy="data-explorer-auto-aggregate-checkbox"
@@ -314,8 +295,7 @@
                                         sourceConfig.queryType === 'single'
                                     ) {
                                         <div
-                                            class="radio-option-box"
-                                            fxLayout="column"
+                                            class="radio-option-box flex-col"
                                             [ngClass]="{
                                                 'radio-option-box-accent':
                                                     sourceConfig.queryType ===
@@ -341,7 +321,7 @@
                         </sp-split-section>
                     }
                     @if (sourceConfig.queryType && sourceConfig.measure) {
-                        <div fxLayout="column">
+                        <div class="flex-col">
                             <sp-field-selection-panel
                                 #fieldSelectionPanel
                                 [sourceConfig]="sourceConfig"

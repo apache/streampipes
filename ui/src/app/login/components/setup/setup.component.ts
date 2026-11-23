@@ -21,11 +21,6 @@ import { RestApi } from '../../../services/rest-api.service';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -40,9 +35,6 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
     templateUrl: './setup.component.html',
     styleUrls: ['./setup.component.scss'],
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         FormsModule,
         MatFormField,
         MatLabel,

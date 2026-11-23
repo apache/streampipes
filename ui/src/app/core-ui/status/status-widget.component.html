@@ -16,16 +16,17 @@
   ~
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-    <div class="status-container p-10" [ngStyle]="{ height: widgetHeight }">
-        <div fxFlex fxLayout="column">
-            <div class="status-container-label" fxLayoutAlign="start start">
+<div class="flex-col justify-center items-center flex-100">
+    <div
+        class="status-container p-10 flex-row"
+        [ngStyle]="{ height: widgetHeight }"
+    >
+        <div class="flex-col flex-1">
+            <div class="status-container-label flex-row items-start">
                 <span>{{ label }}</span>
             </div>
             <div
-                class="status-container-value"
-                fxLayoutAlign="center center"
-                fxFlex
+                class="status-container-value flex-row justify-center items-center flex-1"
             >
                 <span>{{ statusValue }}</span>
             </div>

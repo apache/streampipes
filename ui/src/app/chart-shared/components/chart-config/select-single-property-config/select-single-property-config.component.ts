@@ -25,23 +25,16 @@ import {
 } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-select-single-property-config',
+    host: { class: 'flex-row' },
     templateUrl: './select-single-property-config.component.html',
     styleUrls: [],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        MatFormField,
-        FlexDirective,
-        MatLabel,
-        MatSelect,
-        FormsModule,
-        MatOption,
-    ],
+    imports: [MatFormField, MatLabel, MatSelect, FormsModule, MatOption],
 })
 export class SelectSinglePropertyConfigComponent {
     @Output() changeSelectedProperty: EventEmitter<DataExplorerField> =

@@ -25,12 +25,6 @@ import { AuthService } from '../../../services/auth.service';
 import { UserAccount } from '@streampipes/platform-services';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AuthBoxComponent } from '../auth-box/auth-box.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -40,16 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './terms.component.html',
     styleUrls: ['./terms.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        AuthBoxComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        MatDivider,
-        LayoutGapDirective,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [AuthBoxComponent, MatDivider, MatButton, TranslatePipe],
 })
 export class TermsComponent extends BaseLoginPageDirective {
     returnUrl = '';

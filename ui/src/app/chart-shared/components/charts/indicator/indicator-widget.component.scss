@@ -16,8 +16,9 @@
  *
  */
 
+// The root element fills the host as a flex item (formerly fxFlex="100").
 :host {
-    display: block;
+    display: flex;
     height: 100%;
 }
 

@@ -23,8 +23,8 @@
             }}"
             (click)="toggleErrorMessagesDisplayed()"
         >
-            <div fxLayout="row" fxLayoutAlign="center center">
-                <div fxLayout="row" fxLayoutAlign="start center">
+            <div class="flex-row justify-center items-center">
+                <div class="flex-row items-center">
                     @if (hasErrorMessages()) {
                         <i class="material-icons">notifications</i>
                     }

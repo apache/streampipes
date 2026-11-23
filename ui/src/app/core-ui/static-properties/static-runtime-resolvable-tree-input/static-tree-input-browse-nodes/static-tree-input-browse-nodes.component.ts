@@ -37,11 +37,6 @@ import {
     MatTreeNodeOutlet,
 } from '@angular/material/tree';
 import { StaticTreeInputServiceService } from '../static-tree-input-service.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -56,9 +51,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutAlignDirective,
-        LayoutDirective,
-        FlexDirective,
         MatIconButton,
         MatIcon,
         MatTree,

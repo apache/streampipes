@@ -42,7 +42,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MapLayerProviderService } from '../services/map-layer-provider.service';
 import { LeafletDirective, LeafletLayerDirective } from '@bluehalo/ngx-leaflet';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-single-marker-map',
@@ -55,7 +54,7 @@ import { StyleDirective } from '@ngbracket/ngx-layout/extended';
         },
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LeafletDirective, NgStyle, StyleDirective, LeafletLayerDirective],
+    imports: [LeafletDirective, NgStyle, LeafletLayerDirective],
 })
 export class SingleMarkerMapComponent implements OnInit, ControlValueAccessor {
     private mapLayerProviderService = inject(MapLayerProviderService);

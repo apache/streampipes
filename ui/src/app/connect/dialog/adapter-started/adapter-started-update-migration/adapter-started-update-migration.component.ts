@@ -24,10 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { PipelineUpdateInfo } from '@streampipes/platform-services';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -37,13 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './adapter-started-update-migration.component.html',
     styleUrls: ['./adapter-started-update-migration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        MatButton,
-        MatIcon,
-        TranslatePipe,
-    ],
+    imports: [MatButton, MatIcon, TranslatePipe],
 })
 export class SpAdapterStartedUpdateMigrationComponent {
     @Input()

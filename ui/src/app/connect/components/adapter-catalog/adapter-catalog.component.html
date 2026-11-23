@@ -28,14 +28,11 @@
         (filterChangedEmitter)="applyFilter($event)"
     >
     </sp-connect-filter-toolbar>
-    <div fxLayout="column" fxFlex="100">
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
+    <div class="flex-col flex-100">
+        <div class="flex-col justify-center items-start flex-100">
             @if (adapterLoadingError) {
                 <div
-                    class="container-fluid marketplace-container"
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="row"
+                    class="container-fluid marketplace-container flex-row justify-center items-center flex-100"
                 >
                     <h4>
                         Available adapters could not be loaded. Did you start a
@@ -45,9 +42,7 @@
             }
             @if (adaptersLoading) {
                 <div
-                    class="container-fluid marketplace-container"
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
+                    class="container-fluid marketplace-container flex-row justify-center items-center flex-100"
                 >
                     <sp-spinner
                         [diameter]="20"

@@ -40,12 +40,6 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { NgTemplateOutlet } from '@angular/common';
 import { AdvancedFilterConditionRowComponent } from './advanced-filter-condition-row/advanced-filter-condition-row.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout';
 import { MatDivider } from '@angular/material/list';
 import { FilterExpressionPreviewService } from '../filter-expression-preview.service';
 import { MatIcon } from '@angular/material/icon';
@@ -71,11 +65,7 @@ export interface AdvancedFilterDialogResult {
         AdvancedFilterConditionRowComponent,
         TranslatePipe,
         SpAlertBannerComponent,
-        LayoutGapDirective,
         MatDivider,
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatIcon,
     ],
 })

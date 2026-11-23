@@ -38,11 +38,6 @@ import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../model/editor.model';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 
@@ -52,9 +47,6 @@ import { MatButton } from '@angular/material/button';
     styleUrls: ['./pipeline-element-discovery.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         PipelineElementComponent,
         FormLabelComponent,
         MatDivider,

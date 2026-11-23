@@ -71,7 +71,6 @@ import {
 } from './pipeline-assembly-options/pipeline-assembly-options.component';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -93,8 +92,6 @@ import {
         SpWorkspaceContainerComponent,
         SpSplitButtonComponent,
         SpLabelComponent,
-        FlexDirective,
-        LayoutDirective,
         TranslatePipe,
         MatIconButton,
         MatIcon,

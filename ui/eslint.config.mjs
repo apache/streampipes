@@ -107,10 +107,9 @@ export default defineConfig([
 
             '@angular-eslint/prefer-standalone': 'off',
 
-            // ngx-layout is being phased out; each warning is a component still to migrate.
-            // Switch to 'error' once the last import is gone.
+            // ngx-layout was replaced by the flex utility classes; keep it out.
             'no-restricted-imports': [
-                'warn',
+                'error',
                 {
                     patterns: [
                         {

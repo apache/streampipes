@@ -29,11 +29,6 @@ import {
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpQueryResult } from '@streampipes/platform-services';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -44,14 +39,7 @@ type PreviewRow = Record<string, unknown>;
     templateUrl: './chart-data-preview.component.html',
     styleUrls: ['./chart-data-preview.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        TranslatePipe,
-        MatIconButton,
-        MatIcon,
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-    ],
+    imports: [TranslatePipe, MatIconButton, MatIcon],
 })
 export class ChartDataPreviewComponent implements OnChanges {
     private static readonly MAX_PREVIEW_ROWS = 2000;

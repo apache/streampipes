@@ -21,11 +21,11 @@
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
 >
-    <div fxLayout="column">
+    <div class="flex-col">
         <sp-split-section [level]="3" [title]="'Fields' | translate">
             <sp-form-field [level]="3" [label]="'Latitude' | translate">
                 <sp-select-single-property-config
-                    fxFlex
+                    class="flex-1"
                     [availableProperties]="fieldProvider.numericFields"
                     [selectedProperty]="
                         currentlyConfiguredWidget.visualizationConfig
@@ -40,7 +40,7 @@
             </sp-form-field>
             <sp-form-field [level]="3" [label]="'Longitude' | translate">
                 <sp-select-single-property-config
-                    fxFlex
+                    class="flex-1"
                     [availableProperties]="fieldProvider.numericFields"
                     [selectedProperty]="
                         currentlyConfiguredWidget.visualizationConfig

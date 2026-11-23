@@ -90,7 +90,7 @@
                     (changeSelectedProperty)="
                         selectBooleanFieldToObserve($event)
                     "
-                    fxFlex
+                    class="flex-1"
                 ></sp-select-single-property-config>
             </sp-form-field>
             <sp-form-field [level]="3" [label]="'Select Mapping' | translate">
@@ -101,7 +101,7 @@
                     "
                     (change)="selectMappingGreenTrue($event.source.value)"
                 >
-                    <div fxLayout="column">
+                    <div class="flex-col">
                         <mat-radio-button [value]="true">
                             <span class="color-box green-box"></span>
                             {{ 'True' | translate }}

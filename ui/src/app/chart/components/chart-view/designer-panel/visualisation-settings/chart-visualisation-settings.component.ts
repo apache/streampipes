@@ -35,7 +35,6 @@ import {
 } from '@angular/material/select';
 import { IWidget } from '../../../../../chart-shared/models/dataview-dashboard.model';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -44,12 +43,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-visualisation-settings',
+    host: { class: 'flex-row' },
     templateUrl: './chart-visualisation-settings.component.html',
     styleUrls: ['./chart-visualisation-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         SplitSectionComponent,
         MatFormField,
         MatSelect,

@@ -38,12 +38,11 @@
     </button>
 
     @if (adapter) {
-        <div fxFlex="100" fxLayout="column">
+        <div class="flex-col flex-100">
             <sp-simple-logs
                 [elementName]="adapter.name"
                 [logs]="adapterLogs"
-                fxFlex="100"
-                fxLayout="column"
+                class="flex-col flex-100"
             ></sp-simple-logs>
         </div>
     }

@@ -34,7 +34,6 @@ import {
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../../model/ConfigurationInfo';
 import { StaticPropertyUtilService } from '../../../../../core-ui/static-properties/static-property-util.service';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { StaticPropertyComponent } from '../../../../../core-ui/static-properties/static-property.component';
 
 @Component({
@@ -42,12 +41,7 @@ import { StaticPropertyComponent } from '../../../../../core-ui/static-propertie
     templateUrl: './configuration-group.component.html',
     styleUrls: ['./configuration-group.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FormsModule,
-        FlexDirective,
-        ReactiveFormsModule,
-        StaticPropertyComponent,
-    ],
+    imports: [FormsModule, ReactiveFormsModule, StaticPropertyComponent],
 })
 export class ConfigurationGroupComponent implements OnInit {
     private staticPropertyUtils = inject(StaticPropertyUtilService);

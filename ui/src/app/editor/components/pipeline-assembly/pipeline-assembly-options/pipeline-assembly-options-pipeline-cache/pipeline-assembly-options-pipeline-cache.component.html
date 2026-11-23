@@ -16,14 +16,10 @@
 ~
 -->
 
-<div
-    fxLayout="column"
-    fxLayoutAlign="start center"
-    class="pipeline-cache-block"
->
+<div class="pipeline-cache-block flex-col items-center">
     @if (pipelineCached || pipelineCacheRunning) {
-        <div fxFlex="100" fxLayoutAlign="start center" fxLayout="row">
-            <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="flex-row items-center flex-100">
+            <div class="flex-row items-center">
                 @if (pipelineCacheRunning) {
                     <sp-spinner
                         data-cy="saving-pipeline-modification"

@@ -19,25 +19,13 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Status, StatusIndicator } from './multi-step-status-indicator.model';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-multi-step-status-indicator',
     templateUrl: './multi-step-status-indicator.component.html',
     styleUrls: ['./multi-step-status-indicator.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        SpSpinnerComponent,
-    ],
+    imports: [SpSpinnerComponent],
 })
 export class MultiStepStatusIndicatorComponent {
     @Input()

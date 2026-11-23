@@ -37,12 +37,6 @@ import {
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { EventPropertyScopeComponent } from './event-property-scope/event-property-scope.component';
@@ -51,14 +45,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-event-property-row',
+    host: { class: 'flex-row' },
     templateUrl: './event-property-row.component.html',
     styleUrls: ['./event-property-row.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
         MatIcon,
         MatTooltip,
         EventPropertyScopeComponent,

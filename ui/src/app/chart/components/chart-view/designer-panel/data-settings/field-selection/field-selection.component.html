@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxLayout="row" fxLayoutAlign="start center">
+<div class="flex-row items-center">
     <mat-checkbox
         color="accent"
         [(ngModel)]="field.selected"
@@ -24,7 +24,7 @@
     >
         {{ field.runtimeName }}
     </mat-checkbox>
-    <div fxFlex fxLayoutAlign="end center">
+    <div class="flex-row justify-end items-center flex-1">
         @if (!(sourceConfig.queryType === 'raw')) {
             <mat-form-field
                 appearance="outline"

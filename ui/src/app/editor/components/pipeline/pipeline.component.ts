@@ -75,7 +75,6 @@ import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { DroppedPipelineElementComponent } from './dropped-pipeline-element/dropped-pipeline-element.component';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -90,7 +89,6 @@ import { EnabledPipelineElementFilter } from '../../filter/enabled-pipeline-elem
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle,
-        StyleDirective,
         DroppedPipelineElementComponent,
         MatIconButton,
         MatTooltip,

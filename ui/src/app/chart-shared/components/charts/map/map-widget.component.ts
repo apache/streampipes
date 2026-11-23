@@ -43,31 +43,22 @@ import {
     SpQueryResult,
 } from '@streampipes/platform-services';
 import { MapLayerProviderService } from '../../../../core-ui/services/map-layer-provider.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
 import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.component';
 import { LeafletDirective, LeafletLayerDirective } from '@bluehalo/ngx-leaflet';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-data-explorer-map-widget',
+    host: { class: 'flex-row' },
     templateUrl: './map-widget.component.html',
     styleUrls: ['./map-widget.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
         NoDataInDateRangeComponent,
         TooMuchDataComponent,
         LeafletDirective,
         NgStyle,
-        StyleDirective,
         LeafletLayerDirective,
     ],
 })

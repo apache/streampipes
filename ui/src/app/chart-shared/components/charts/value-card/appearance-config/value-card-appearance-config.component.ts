@@ -31,7 +31,6 @@ import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 
 @Component({
@@ -46,7 +45,6 @@ import { ChartConfigurationService } from '../../../../services/chart-configurat
         MatFormField,
         MatInput,
         FormsModule,
-        FlexDirective,
     ],
 })
 export class ValueCardWidgetAppearanceConfigComponent implements OnInit {

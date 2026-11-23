@@ -16,16 +16,10 @@
   ~
   -->
 
-<div class="simple-metrics" fxLayout="column">
-    <div
-        class="simple-metrics__grid"
-        fxLayout="row"
-        fxLayoutAlign="start stretch"
-        fxLayoutGap="var(--space-md)"
-        fxFlex="100"
-    >
+<div class="simple-metrics flex-col">
+    <div class="simple-metrics__grid flex-row gap-md flex-100">
         <sp-status-widget
-            fxFlex="50"
+            class="basis-50"
             [label]="lastPublishedLabel"
             widgetHeight="7.5rem"
             [statusValue]="
@@ -34,7 +28,7 @@
         >
         </sp-status-widget>
         <sp-status-widget
-            fxFlex="50"
+            class="basis-50"
             [label]="statusValueLabel"
             widgetHeight="7.5rem"
             [statusValue]="statusValue"

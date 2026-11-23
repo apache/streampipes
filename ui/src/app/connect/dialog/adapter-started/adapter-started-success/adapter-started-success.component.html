@@ -16,15 +16,12 @@
 ~
 -->
 
-<div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" class="w-100">
+<div class="w-100 flex-col justify-center items-center flex-100">
     @if (!adapterErrorMessage) {
-        <div fxFlex="100" fxLayout="column" class="w-100">
-            <div>
+        <div class="w-100 flex-col flex-100">
+            <div class="flex-row">
                 <div
-                    class="info-message"
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="row"
+                    class="info-message flex-row justify-center items-center flex-100"
                 >
                     <i class="material-icons">done</i>
                     <span data-cy="sp-connect-adapter-success-added"
@@ -35,12 +32,9 @@
         </div>
     }
     @if (saveInDataLake && templateErrorMessage) {
-        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+        <div class="flex-col justify-center items-center flex-100">
             <div
-                class="info-message warning-message"
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                fxLayout="row"
+                class="info-message warning-message flex-row justify-center items-center flex-100"
             >
                 <i class="material-icons">warning</i>
                 <span
@@ -52,46 +46,40 @@
         </div>
     }
     @if (pipelineOperationStatus) {
-        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+        <div class="flex-col justify-center items-center flex-100">
             <sp-pipeline-started-status
                 [pipelineOperationStatus]="pipelineOperationStatus"
             >
             </sp-pipeline-started-status>
-            <mat-divider fxFlex="100"></mat-divider>
+            <mat-divider class="flex-100"></mat-divider>
         </div>
     }
 
     @if (saveInAsset !== '') {
-        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div>
+        <div class="flex-col justify-center items-center flex-100">
+            <div class="flex-row">
                 <div
-                    class="info-message"
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="row"
+                    class="info-message flex-row justify-center items-center flex-100"
                 >
                     <i class="material-icons">done</i>
                     <span>&nbsp;{{ saveInAsset }}</span>
                 </div>
             </div>
-            <mat-divider fxFlex="100"></mat-divider>
+            <mat-divider class="flex-100"></mat-divider>
         </div>
     }
 
     @if (deletedFromAsset !== '') {
-        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div>
+        <div class="flex-col justify-center items-center flex-100">
+            <div class="flex-row">
                 <div
-                    class="info-message"
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="row"
+                    class="info-message flex-row justify-center items-center flex-100"
                 >
                     <i class="material-icons">done</i>
                     <span>&nbsp;{{ deletedFromAsset }}</span>
                 </div>
             </div>
-            <mat-divider fxFlex="100"></mat-divider>
+            <mat-divider class="flex-100"></mat-divider>
         </div>
     }
     @if (adapterErrorMessage) {

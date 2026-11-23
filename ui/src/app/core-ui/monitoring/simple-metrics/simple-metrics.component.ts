@@ -17,12 +17,6 @@
  */
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { StatusWidgetComponent } from '../../status/status-widget.component';
 import { DatePipe } from '@angular/common';
 
@@ -31,14 +25,7 @@ import { DatePipe } from '@angular/common';
     templateUrl: './simple-metrics.component.html',
     styleUrls: ['./simple-metrics.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        FlexDirective,
-        StatusWidgetComponent,
-        DatePipe,
-    ],
+    imports: [StatusWidgetComponent, DatePipe],
 })
 export class SpSimpleMetricsComponent {
     @Input()

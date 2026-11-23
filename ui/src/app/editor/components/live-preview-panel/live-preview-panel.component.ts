@@ -35,12 +35,6 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltip } from '@angular/material/tooltip';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
 import {
@@ -94,10 +88,6 @@ const OUTPUT_BEHIND_MS = 1500;
     templateUrl: './live-preview-panel.component.html',
     styleUrls: ['./live-preview-panel.component.scss'],
     imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         MatButtonToggle,
         MatButtonToggleGroup,
         MatIcon,

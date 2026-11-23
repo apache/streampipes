@@ -42,7 +42,6 @@ import {
     DataExplorerField,
     SpQueryResult,
 } from '@streampipes/platform-services';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
 import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -104,12 +103,11 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
 
 @Component({
     selector: 'sp-data-explorer-table-widget',
+    host: { class: 'flex-row' },
     templateUrl: './table-widget.component.html',
     styleUrls: ['./table-widget.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         NgStyle,
         NgClass,
         CdkDropList,

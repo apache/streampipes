@@ -22,27 +22,16 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-configure-fields-header',
+    host: { class: 'flex-row' },
     templateUrl: './configure-fields-header.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-    ],
+    imports: [MatIconButton, MatTooltip, MatIcon],
 })
 export class ConfigureFieldsHeaderComponent {
     @Output() guessSchemaEmitter = new EventEmitter();

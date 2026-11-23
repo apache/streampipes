@@ -51,7 +51,9 @@
         </sp-page-header>
         <sp-workspace-container [topBorder]="true">
             @if (chartNotFound) {
-                <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
+                <div
+                    class="text-xl flex-row justify-center items-center flex-100"
+                >
                     {{ 'The desired chart was not found!' | translate }}
                 </div>
             } @else {
@@ -83,9 +85,7 @@
                     </div>
                 }
                 <mat-drawer-container
-                    fxFlex="100"
-                    fxLayout="column"
-                    class="h-100"
+                    class="h-100 flex-col flex-100"
                     style="width: 100%; min-height: 0"
                 >
                     <mat-drawer
@@ -100,32 +100,28 @@
                             [maxWidth]="1000"
                             (widthChanged)="onWidthChanged($event)"
                         >
-                            <div fxLayout="column" fxFlex="100">
+                            <div class="flex-col flex-100">
                                 <sp-chart-designer-panel
                                     [currentlyConfiguredWidget]="dataView"
                                     [dataLakeMeasure]="dataLakeMeasure"
                                     (addWidgetEmitter)="onAddWidget($event)"
-                                    fxFlex="100"
+                                    class="flex-100"
                                 >
                                 </sp-chart-designer-panel>
                             </div>
                         </sp-sidebar-resize>
                     </mat-drawer>
                     <mat-drawer-content
-                        class="h-100"
-                        fxFlex
-                        fxLayout="column"
+                        class="h-100 flex-col flex-1"
                         style="min-height: 0"
                     >
                         <div
-                            fxFlex
-                            fxLayout="column"
+                            class="flex-col flex-1"
                             style="min-height: 0; overflow: hidden"
                         >
                             <div
                                 #panel
-                                fxLayout="column"
-                                fxFlex
+                                class="flex-col flex-1"
                                 style="min-height: 0; overflow: hidden"
                             >
                                 @if (
@@ -134,7 +130,7 @@
                                         0
                                 ) {
                                     <sp-chart-container
-                                        fxFlex
+                                        class="flex-1"
                                         style="display: block; min-height: 0"
                                         [dataViewMode]="true"
                                         [editMode]="editMode"

@@ -23,12 +23,6 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpBasicInnerPanelComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -38,15 +32,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-configure-fields-preview',
+    host: { class: 'flex-row' },
     templateUrl: './configure-fields-preview.component.html',
     styleUrls: ['./configure-fields-preview.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         SpBasicInnerPanelComponent,
-        LayoutAlignDirective,
         MatButton,
         MatTooltip,
         MatIcon,

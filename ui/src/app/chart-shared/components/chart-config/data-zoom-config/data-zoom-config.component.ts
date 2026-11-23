@@ -27,11 +27,6 @@ import {
 } from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
@@ -44,11 +39,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
-        LayoutDirective,
         MatCheckbox,
         FormsModule,
-        FlexDirective,
-        LayoutAlignDirective,
         MatFormField,
         MatSelect,
         MatOption,

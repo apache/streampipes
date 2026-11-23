@@ -48,10 +48,10 @@
             <mat-icon aria-hidden="true">refresh</mat-icon>
         </button>
     </sp-page-header>
-    <div fxFlex="100" fxLayout="column">
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+    <div class="flex-col flex-100">
+        <div class="flex-row justify-center items-start flex-100">
             <sp-table
-                fxFlex="100"
+                class="flex-100"
                 featureCardId="adapter"
                 [rememberViewMode]="true"
                 resourceIdKey="elementId"
@@ -101,7 +101,7 @@
                         ) {
                             <div
                                 data-cy="adapter-operation-in-progress-spinner"
-                                fxLayoutAlign="center center"
+                                class="flex-row justify-center items-center"
                             >
                                 <sp-spinner [diameter]="20"></sp-spinner>
                             </div>

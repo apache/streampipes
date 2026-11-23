@@ -30,12 +30,6 @@ import { ChartFieldProviderService } from '../../../../../../chart-shared/servic
 import { ResultLabelService } from '../../../../../../chart-shared/services/result-label.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -48,10 +42,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        FlexDirective,
         MatFormField,
         MatInput,
         FormsModule,

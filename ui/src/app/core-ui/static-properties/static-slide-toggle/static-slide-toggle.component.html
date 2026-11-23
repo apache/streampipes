@@ -16,10 +16,10 @@
   ~
   -->
 
-<div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="row">
+<div [formGroup]="parentForm" id="formWrapper" class="flex-col flex-100">
+    <div class="flex-row flex-100">
         <mat-slide-toggle
-            fxFlex
+            class="flex-1"
             formControlName="{{ fieldName }}"
             color="accent"
             [attr.data-cy]="fieldName"

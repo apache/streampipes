@@ -17,12 +17,10 @@
 -->
 <section class="preview-panel" [attr.aria-label]="'Original event' | translate">
     <header
-        class="preview-toolbar"
-        fxLayout="row wrap"
-        fxLayoutAlign="space-between center"
+        class="preview-toolbar flex-row flex-wrap justify-between items-center content-center"
     >
         <span class="font-bold">{{ 'Original event' | translate }}</span>
-        <div fxLayout="row" fxLayoutAlign="end center">
+        <div class="flex-row justify-end items-center">
             <button
                 mat-icon-button
                 data-cy="connect-get-new-sample-button"
@@ -62,7 +60,7 @@
     </header>
     <div class="preview-body">
         @if (isSampleLoading()) {
-            <div fxLayoutAlign="center center" class="m-lg">
+            <div class="m-lg flex-row justify-center items-center">
                 <sp-spinner
                     [diameter]="25"
                     [text]="'Loading' | translate"

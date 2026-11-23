@@ -19,9 +19,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { SpImageContainerComponent } from '../image-container/image-container.component';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { ImageBarComponent } from '../image-bar/image-bar.component';
 
 @Component({
@@ -29,14 +27,7 @@ import { ImageBarComponent } from '../image-bar/image-bar.component';
     templateUrl: './image-viewer.component.html',
     styleUrls: ['./image-viewer.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        NgStyle,
-        StyleDirective,
-        SpImageContainerComponent,
-        FlexDirective,
-        LayoutDirective,
-        ImageBarComponent,
-    ],
+    imports: [NgStyle, SpImageContainerComponent, ImageBarComponent],
 })
 export class ImageViewerComponent {
     @Input()

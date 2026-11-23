@@ -17,9 +17,9 @@
 -->
 
 @let chartLinkType = chartLinkType$ | async;
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     @if (isLoading && !hasLoadedCharts) {
-        <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
+        <div class="flex-col justify-center items-center flex-100">
             <sp-spinner
                 [diameter]="40"
                 [text]="'Loading' | translate"
@@ -37,9 +37,9 @@
                 ></sp-spinner>
             </div>
         }
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+        <div class="flex-row justify-center items-start flex-100">
             <sp-table
-                fxFlex="100"
+                class="flex-100"
                 [columns]="displayedColumns"
                 [dataSource]="dataSource"
                 [nameSearchConfig]="nameSearchConfig"

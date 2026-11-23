@@ -27,11 +27,6 @@ import {
 } from '@angular/core';
 import type * as monacoType from 'monaco-editor';
 import type { editor as MonacoEditor } from 'monaco-editor';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
@@ -45,18 +40,11 @@ declare const monaco: typeof monacoType;
 
 @Component({
     selector: 'sp-static-code-input',
+    host: { class: 'flex-row' },
     templateUrl: './static-code-input.component.html',
     styleUrls: ['./static-code-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        MatButton,
-        MonacoEditorModule,
-        FormsModule,
-        TranslatePipe,
-    ],
+    imports: [MatButton, MonacoEditorModule, FormsModule, TranslatePipe],
 })
 export class StaticCodeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<CodeInputStaticProperty>

@@ -64,7 +64,7 @@
     @let adapterConfigurationState = state();
     @if (adapterConfigurationState) {
         @if (adapterConfigurationState.adapterDescription) {
-            <div fxLayout="column" fxLayoutAlign="center stretch">
+            <div class="flex-col justify-center">
                 <mat-horizontal-stepper
                     [linear]="true"
                     #stepper
@@ -109,8 +109,7 @@
                         </ng-template>
 
                         <sp-configure-fields
-                            fxLayout="column"
-                            fxFlex="100"
+                            class="flex-col flex-100"
                             [adapterDescription]="
                                 adapterConfigurationState.adapterDescription
                             "

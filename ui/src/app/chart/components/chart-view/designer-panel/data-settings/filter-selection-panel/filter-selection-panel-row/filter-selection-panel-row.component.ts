@@ -24,11 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { FieldConfig, SelectedFilter } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { FilterSelectionPanelRowPropertySelectionComponent } from './panel-row-property-selection/filter-selection-panel-row-property-selection.component';
 import { FilterSelectionPanelRowOperationSelectionComponent } from './panel-row-operation-selection/filter-selection-panel-row-operation-selection.component';
 import { FilterSelectionPanelRowValueInputComponent } from './panel-row-value-input/filter-selection-panel-row-value-input.component';
@@ -40,12 +35,10 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-filter-selection-panel-row',
+    host: { class: 'flex-row' },
     templateUrl: './filter-selection-panel-row.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         FilterSelectionPanelRowPropertySelectionComponent,
         FilterSelectionPanelRowOperationSelectionComponent,
         FilterSelectionPanelRowValueInputComponent,

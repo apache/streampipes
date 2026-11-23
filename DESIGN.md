@@ -262,9 +262,9 @@ in the tab row; section titles belong in `sp-split-section`.
 
 ### Flex Utilities
 
-Arrange elements with the flex utility classes in `ui/src/scss/sp/flex.scss`. The
-`@ngbracket/ngx-layout` directives are being phased out: do not introduce them, and
-migrate a whole component when you touch it.
+Arrange elements with the flex utility classes in `ui/src/scss/sp/flex.scss`. The UI no
+longer uses `@ngbracket/ngx-layout`; do not add it back. The table and the notes below map
+the old directives, for porting templates that still use them (older branches, examples).
 
 | Directive                         | Utility classes                                      |
 | --------------------------------- | ---------------------------------------------------- |
@@ -299,12 +299,6 @@ classes do not do this, so every former `fxFlex` element needs a flex parent:
 - `fxFlex` on an `input` or `mat-select` inside `mat-form-field`: the flexed parent was
   the field's infix wrapper, which renders the same either way; nothing to add.
 
-The same side effect works in the other direction while the migration is in progress: an
-`fxFlex` element in a template that is not migrated yet, projected into a migrated
-container, writes an inline `flex-direction: row` onto that container. `.flex-col`
-therefore sets its direction with `!important`. A container that gets its column
-direction from component SCSS instead is not protected; use `flex-col` on it.
-
 ngx-layout wrote inline styles, which beat any component stylesheet; utility classes do
 not. Where component SCSS on the same element sets `display`, `flex*`, `align-*`,
 `justify-content` or `gap`, the component rule now wins. Keep one source: either drop the
@@ -320,6 +314,13 @@ The classes are not exact copies of the directives. Check these when migrating:
   container that already has a gap in its own CSS (`.sp-dialog-actions`), drop it.
 - A template whose component did not import the ngx-layout directives had inert `fx*`
   attributes. Remove them; do not convert them to classes.
+- The directive's inline `display: flex` beat every stylesheet; the classes do not. A
+  component rule that sets `display` on the same element (`inline-grid`,
+  `display: block` on `:host`) now wins and has to go. Material's own `display: block` on
+  `mat-drawer-container` and `mat-drawer-content` also wins; repeat `display: flex` in
+  the component SCSS with a more specific selector (`mat-drawer-content.flex-col`).
+  Before changing a `:host` rule, check whether other components load the same SCSS
+  file; scope the change with `:host(element-name)` if they do.
 - In a column, a bare `fxFlex` used a near-zero basis (`1e-09px`); `flex-1` uses `0%`.
   In a column without a fixed height, the old item collapsed to zero height and its
   content overflowed; with `flex-1` it wraps its content. That is usually the intended

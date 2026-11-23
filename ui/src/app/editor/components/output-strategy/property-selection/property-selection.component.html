@@ -17,7 +17,7 @@
 -->
 
 <div class="property-selection" style="margin-left:{{ layer * 5 }}%">
-    <div fxLayout="row">
+    <div class="flex-row">
         <mat-checkbox
             [checked]="exists(eventProperty.runtimeId)"
             (change)="toggle(eventProperty.runtimeId)"

@@ -53,11 +53,6 @@ import {
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { StaticPropertyUtilService } from '../../../core-ui/static-properties/static-property-util.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
@@ -67,7 +62,6 @@ import { PipelineElementTemplateConfigComponent } from '../../../core-ui/pipelin
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -77,9 +71,6 @@ import { MatIcon } from '@angular/material/icon';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatFormField,
         MatLabel,
         MatSelect,
@@ -95,7 +86,6 @@ import { MatIcon } from '@angular/material/icon';
         MatDivider,
         MatButton,
         TranslatePipe,
-        LayoutGapDirective,
         MatIcon,
     ],
 })

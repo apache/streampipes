@@ -23,27 +23,16 @@ import {
     inject,
 } from '@angular/core';
 import { TimeSettings } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ChartTimeFormatService } from '../../../../services/formatting';
 
 @Component({
     selector: 'sp-no-data-in-date-range',
+    host: { class: 'flex-row' },
     templateUrl: './no-data-in-date-range.component.html',
     styleUrls: ['./no-data-in-date-range.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        LayoutGapDirective,
-        TranslatePipe,
-    ],
+    imports: [TranslatePipe],
 })
 export class NoDataInDateRangeComponent {
     private timeFormatService = inject(ChartTimeFormatService);

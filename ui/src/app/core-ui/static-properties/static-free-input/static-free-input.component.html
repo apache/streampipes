@@ -16,13 +16,13 @@
 ~
 -->
 
-<div [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+<div [formGroup]="parentForm" class="flex-col flex-100">
     @if (!staticProperty.valueSpecification && !staticProperty.multiLine) {
-        <div fxFlex fxLayout="row">
-            <mat-form-field fxFlex>
+        <div class="flex-row flex-1">
+            <mat-form-field class="flex-1">
                 <input
                     formControlName="{{ fieldName }}"
-                    fxFlex
+                    class="flex-1"
                     matInput
                     [placeholder]="staticProperty.label"
                     (blur)="emitUpdate()"
@@ -37,8 +37,8 @@
         </div>
     }
     @if (staticProperty.valueSpecification) {
-        <div>
-            <div fxLayout="column" fxFlex="100">
+        <div class="flex-row">
+            <div class="flex-col flex-100">
                 <mat-slider
                     [max]="staticProperty.valueSpecification.maxValue"
                     [min]="staticProperty.valueSpecification.minValue"
@@ -57,11 +57,11 @@
         </div>
     }
     @if (!staticProperty.valueSpecification && !staticProperty.mapsTo) {
-        <div fxFlex="100" fxLayout="column">
+        <div class="flex-col flex-100">
             @if (staticProperty.placeholdersSupported) {
-                <div fxFlex="100" fxLayout="column">
+                <div class="flex-col flex-100">
                     <h5>{{ 'Possible placeholders:' | translate }}</h5>
-                    <div fxFlex="100" fxLayout="row" style="background: white">
+                    <div class="flex-row flex-100" style="background: white">
                         <mat-chip-set style="margin-bottom: 10px">
                             @for (
                                 property of eventSchemas[0].eventProperties;
@@ -84,11 +84,11 @@
                 </div>
             }
             @if (staticProperty.multiLine) {
-                <div fxFlex="100">
+                <div class="flex-100 flex-row">
                     @if (staticProperty.htmlAllowed) {
                         @if (staticProperty.htmlFontFormat) {
                             <quill-editor
-                                fxFlex="100"
+                                class="flex-100"
                                 #textEditor
                                 formControlName="{{ fieldName }}"
                                 [modules]="quillModulesFontFormat"
@@ -96,14 +96,14 @@
                         }
                         @if (!staticProperty.htmlFontFormat) {
                             <quill-editor
-                                fxFlex="100"
+                                class="flex-100"
                                 #textEditor
                                 formControlName="{{ fieldName }}"
                                 [modules]="quillModules"
                             ></quill-editor>
                         }
                     } @else {
-                        <mat-form-field fxFlex>
+                        <mat-form-field class="flex-1">
                             <textarea
                                 formControlName="{{ fieldName }}"
                                 matInput

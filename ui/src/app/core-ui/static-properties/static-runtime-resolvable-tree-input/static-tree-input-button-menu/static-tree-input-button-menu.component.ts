@@ -22,12 +22,6 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -44,14 +38,10 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
     styleUrl: './static-tree-input-button-menu.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
         MatButton,
         MatIconButton,
         MatIcon,
         SpSpinnerComponent,
-        FlexDirective,
         MatButtonToggleGroup,
         MatButtonToggle,
         MatTooltip,

@@ -17,9 +17,7 @@
   -->
 
 <div
-    class="value-card-widget"
-    fxLayout="column"
-    fxFlex="100"
+    class="value-card-widget flex-col flex-100"
     [ngStyle]="widgetStyles"
     data-cy="value-card-widget"
 >
@@ -46,9 +44,9 @@
     }
 
     @if (showData) {
-        <div class="value-card-shell" fxLayout="column" fxFlex="100">
+        <div class="value-card-shell flex-col flex-100">
             @if (titleText || descriptionText) {
-                <div class="value-card-copy" fxLayout="column">
+                <div class="value-card-copy flex-col">
                     @if (titleText) {
                         <div
                             class="value-card-title"
@@ -78,7 +76,7 @@
                 </div>
             }
 
-            <article class="value-card-panel" fxFlex>
+            <article class="value-card-panel flex-1">
                 <div
                     class="value-card-list"
                     [style.--value-card-list-columns]="valueListColumns"

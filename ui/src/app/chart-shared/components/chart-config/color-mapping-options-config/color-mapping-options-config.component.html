@@ -15,15 +15,9 @@
 ~ limitations under the License.
 ~
 -->
-<div fxLayout="column" fxLayoutGap="10px">
+<div class="flex-col gap-sm">
     @if (showToggle) {
-        <div
-            fxLayout="row"
-            fxLayoutGap="10px"
-            fxLayoutAlign="start center"
-            fxFlex="1"
-            class="checkbox-container"
-        >
+        <div class="checkbox-container flex-row items-center gap-sm">
             <mat-checkbox
                 color="accent"
                 [(ngModel)]="showCustomColorMapping"
@@ -46,18 +40,13 @@
                     <span>{{ 'Add Mapping' | translate }}</span>
                 </button>
             </div>
-            <div fxLayout="column" fxLayoutGap="10px">
+            <div class="flex-col gap-sm">
                 @for (mapping of colorMapping; track mapping; let i = $index) {
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                        fxFlex="100"
-                    >
+                    <div class="flex-row items-center gap-sm flex-100">
                         <sp-form-field
                             [level]="3"
                             [label]="'Value' | translate"
-                            fxFlex="35"
+                            class="basis-35"
                         >
                             <mat-form-field color="accent" appearance="outline">
                                 <input
@@ -70,7 +59,7 @@
                         <sp-form-field
                             [level]="3"
                             [label]="'Label' | translate"
-                            fxFlex="35"
+                            class="basis-35"
                         >
                             <mat-form-field color="accent">
                                 <input
@@ -81,9 +70,7 @@
                             </mat-form-field>
                         </sp-form-field>
                         <div
-                            fxFlex="15"
-                            fxLayoutAlign="center center"
-                            class="mt-10"
+                            class="mt-10 flex-row justify-center items-center basis-15"
                         >
                             <input
                                 [(colorPicker)]="mapping.color"
@@ -99,9 +86,7 @@
                             />
                         </div>
                         <div
-                            fxLayoutAlign="end center"
-                            fxFlex="15"
-                            class="mt-10"
+                            class="mt-10 flex-row justify-end items-center basis-15"
                         >
                             <button
                                 mat-icon-button
@@ -121,20 +106,16 @@
     @if (isSelectedPropertyBoolean && showCustomColorMapping) {
         <div>
             <div
-                fxLayout="column"
-                fxLayoutGap="10px"
+                class="flex-col gap-sm"
                 style="margin-top: 10px; margin-right: 10px"
             >
                 @for (mapping of colorMapping; track mapping; let i = $index) {
                     <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                        fxFlex="1"
+                        class="flex-row items-center gap-sm"
                         style="margin-top: 10px; align-items: center"
                     >
-                        <div fxFlex="40px">{{ mapping.value }}</div>
-                        <div fxFlex>
+                        <div class="mapping-value">{{ mapping.value }}</div>
+                        <div class="flex-1">
                             <mat-form-field
                                 class="w-100"
                                 color="accent"
@@ -148,7 +129,7 @@
                                 />
                             </mat-form-field>
                         </div>
-                        <div fxFlex="70px">
+                        <div class="mapping-color">
                             <input
                                 [(colorPicker)]="mapping.color"
                                 [style.background]="mapping.color"

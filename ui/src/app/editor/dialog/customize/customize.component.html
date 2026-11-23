@@ -17,15 +17,14 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content">
-        <div fxFlex="100" fxLayout="column">
+    <div class="sp-dialog-content flex-row">
+        <div class="flex-col flex-100">
             <div
                 style="border-bottom: 1px solid #ccc; padding: 10px"
-                fxLayout="row"
-                class="sp-tab-bg"
+                class="sp-tab-bg flex-row"
             >
                 @if (availableTemplates && availableTemplates.length > 0) {
-                    <div fxLayoutAlign="start center" class="form-field-small">
+                    <div class="form-field-small flex-row items-center">
                         <mat-form-field
                             class="form-field"
                             color="accent"
@@ -52,7 +51,7 @@
                         </mat-form-field>
                     </div>
                 }
-                <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+                <div class="flex-row justify-end items-center flex-1">
                     <mat-slide-toggle
                         [(ngModel)]="showDocumentation"
                         color="accent"
@@ -69,14 +68,15 @@
                     </mat-slide-toggle>
                 </div>
             </div>
-            <div fxFlex="100" fxLayout="row">
-                <div fxFlex="{{ _showDocumentation ? 50 : 100 }}">
+            <div class="flex-row flex-100">
+                <div
+                    [class.basis-50]="_showDocumentation"
+                    [class.flex-100]="!_showDocumentation"
+                >
                     @if (!templateMode) {
-                        <div fxLayout="column">
+                        <div class="flex-col">
                             <div
-                                fxFlex="100"
-                                fxLayout="column"
-                                class="customize-section p-15"
+                                class="customize-section p-15 flex-col flex-100"
                             >
                                 <sp-input-schema-panel
                                     [inputStreams]="
@@ -84,7 +84,7 @@
                                     "
                                 >
                                 </sp-input-schema-panel>
-                                <form [formGroup]="parentForm" fxFlex="100">
+                                <form [formGroup]="parentForm" class="flex-100">
                                     @for (
                                         config of cachedPipelineElement.staticProperties;
                                         track config
@@ -138,7 +138,7 @@
                         </div>
                     }
                     @if (templateMode) {
-                        <div fxLayout="column">
+                        <div class="flex-col">
                             <sp-pipeline-element-template-config
                                 [staticProperties]="
                                     cachedPipelineElement.staticProperties
@@ -153,7 +153,7 @@
                 </div>
                 @if (showDocumentation) {
                     <div
-                        fxFlex="50"
+                        class="basis-50"
                         style="
                             padding-left: 10px;
                             border-left: 2px solid rgb(204, 204, 204);
@@ -169,9 +169,9 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions">
+    <div class="sp-dialog-actions flex-row">
         @if (!templateMode) {
-            <div fxLayout="row" fxLayoutGap="10px" fxFlex="100">
+            <div class="flex-row gap-sm flex-100">
                 <button
                     mat-button
                     mat-flat-button
@@ -192,7 +192,7 @@
                 >
                     {{ 'Cancel' | translate }}
                 </button>
-                <div fxFlex></div>
+                <div class="flex-1"></div>
                 <button
                     mat-button
                     mat-flat-button
@@ -207,7 +207,7 @@
             </div>
         }
         @if (templateMode) {
-            <div fxLayout="row" fxLayoutGap="10px">
+            <div class="flex-row gap-sm">
                 <button
                     mat-button
                     mat-flat-button

@@ -30,7 +30,6 @@ import {
 } from '@streampipes/shared-ui';
 import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
 import { MatFormField } from '@angular/material/form-field';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -45,7 +44,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         SelectSinglePropertyConfigComponent,
         FormFieldComponent,
         MatFormField,
-        FlexDirective,
         MatInput,
         FormsModule,
         TranslatePipe,

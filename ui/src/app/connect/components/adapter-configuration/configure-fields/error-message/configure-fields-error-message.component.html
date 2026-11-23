@@ -16,16 +16,16 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100">
-    <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
-        <div fxLayoutAlign="start center" class="error-text mt-10">
+<div class="flex-col flex-100">
+    <div class="flex-row justify-center items-center flex-100">
+        <div class="error-text mt-10 flex-row items-center">
             &nbsp;{{
                 'There was an error while guessing the schema of your configured data stream'
                     | translate
             }}:
         </div>
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" class="mt-10 w-100">
+    <div class="mt-10 w-100 flex-row justify-center items-center">
         <sp-exception-message
             [message]="errorMessage"
             class="w-100"

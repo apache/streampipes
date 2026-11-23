@@ -17,23 +17,14 @@
  */
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-visualization-config-outer',
+    host: { class: 'flex-row' },
     templateUrl: './visualization-config-outer.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        TranslatePipe,
-    ],
+    imports: [TranslatePipe],
 })
 export class SpVisualizationConfigOuterComponent {
     @Input()

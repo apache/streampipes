@@ -34,7 +34,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
@@ -48,7 +47,6 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
         MatCheckbox,
         MatFormField,
         MatInput,
-        FlexDirective,
         FormsModule,
         TranslatePipe,
     ],

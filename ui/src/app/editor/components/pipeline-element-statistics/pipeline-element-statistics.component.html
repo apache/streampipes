@@ -18,8 +18,8 @@
 
 @if (metricsInfo) {
     <div class="statistics">
-        <div fxLayout="row" fxLayoutGap="5px">
-            <div fxLayout="column" fxLayoutAlign="start center">
+        <div class="flex-row gap-2xs">
+            <div class="flex-col items-center">
                 @for (info of metricsInfo.messagesIn | keyvalue; track info) {
                     <sp-pipeline-element-statistics-badge
                         key="in"
@@ -29,7 +29,7 @@
                 }
             </div>
             @if (type !== PipelineElementType.DataSink) {
-                <div fxLayout="column" fxLayoutAlign="end center">
+                <div class="flex-col justify-end items-center">
                     <sp-pipeline-element-statistics-badge
                         key="out"
                         [value]="metricsInfo.messagesOut.counter"

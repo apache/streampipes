@@ -59,7 +59,17 @@
     }
 }
 
+// Formerly fxLayout.lt-lg="column" on the workspace and fxFlex.lt-lg="none" on the editor.
 @media (max-width: 1279px) {
+    .schema-workspace {
+        flex-direction: column;
+    }
+
+    .schema-script-editor {
+        flex: 0 0 auto;
+        max-width: none;
+    }
+
     .schema-previews {
         border-left: 0;
         border-top: 1px solid var(--color-border-subtle);

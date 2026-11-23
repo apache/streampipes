@@ -18,17 +18,13 @@
 
 import { Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-status-indicator',
+    host: { class: 'flex-row' },
     templateUrl: './status-indicator.component.html',
     styleUrls: ['./status-indicator.component.scss'],
-    imports: [LayoutDirective, FlexDirective, LayoutAlignDirective],
+    imports: [],
 })
 export class StatusIndicatorComponent {
     private readonly translateService = inject(TranslateService);

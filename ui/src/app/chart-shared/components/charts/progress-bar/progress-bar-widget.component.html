@@ -17,9 +17,7 @@
   -->
 
 <div
-    class="progress-widget"
-    fxLayout="column"
-    fxFlex="100"
+    class="progress-widget flex-col flex-100"
     [ngStyle]="widgetStyles"
     data-cy="progress-bar-widget"
 >
@@ -46,9 +44,9 @@
     }
 
     @if (showData && progressView) {
-        <div class="progress-shell" fxLayout="column" fxFlex="100">
+        <div class="progress-shell flex-col flex-100">
             @if (titleText || descriptionText) {
-                <div class="progress-copy" fxLayout="column">
+                <div class="progress-copy flex-col">
                     @if (titleText) {
                         <div
                             class="progress-title"
@@ -69,11 +67,7 @@
                 </div>
             }
 
-            <div
-                class="progress-meta"
-                fxLayout="row"
-                fxLayoutAlign="space-between center"
-            >
+            <div class="progress-meta flex-row justify-between items-center">
                 <span class="progress-status" data-cy="progress-bar-status">{{
                     progressView.statusLabel
                 }}</span>
@@ -95,7 +89,7 @@
             </div>
 
             @if (showLabel) {
-                <div class="progress-labels" fxLayout="column">
+                <div class="progress-labels flex-col">
                     @if (
                         dataExplorerWidget.visualizationConfig.displayMode ===
                             'percent' ||

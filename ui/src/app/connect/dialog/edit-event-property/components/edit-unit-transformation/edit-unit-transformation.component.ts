@@ -37,12 +37,6 @@ import {
     FormFieldComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexAlignDirective,
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
@@ -63,9 +57,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         SplitSectionComponent,
         FormFieldComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         MatFormField,
         MatInput,
         MatAutocompleteTrigger,
@@ -74,7 +65,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatAutocomplete,
         MatOption,
         MatIconButton,
-        FlexAlignDirective,
         MatIcon,
         MatSelect,
         AsyncPipe,

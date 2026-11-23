@@ -23,26 +23,16 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-too-much-data',
+    host: { class: 'flex-row' },
     templateUrl: './too-much-data.component.html',
     styleUrls: ['./too-much-data.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [MatButton, TranslatePipe],
 })
 export class TooMuchDataComponent {
     @Input()

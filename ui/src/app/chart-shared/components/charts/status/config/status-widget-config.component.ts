@@ -34,7 +34,6 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -53,8 +52,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatInput,
         MatCheckbox,
         SelectSinglePropertyConfigComponent,
-        FlexDirective,
-        LayoutDirective,
         TranslatePipe,
     ],
 })

@@ -16,9 +16,9 @@
 ~
 -->
 
-<div class="migration-view" fxLayout="column" fxLayoutAlign="start stretch">
+<div class="migration-view flex-col">
     @if (adapterPipelineUpdateInfos.length > 0) {
-        <div class="migration-summary" fxLayout="column" fxLayoutGap="4px">
+        <div class="migration-summary flex-col">
             @if (adapterPipelineUpdateInfos.length > 1) {
                 <h4>
                     {{ 'This adapter is used by' | translate }}
@@ -33,17 +33,14 @@
                 </h4>
             }
         </div>
-        <div class="migration-infos" fxLayout="column" fxLayoutGap="12px">
+        <div class="migration-infos flex-col">
             @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
                 <div
                     class="pipeline-update-info"
                     data-cy="sp-connect-adapter-edit-warning"
                 >
                     @if (updateInfo.canAutoMigrate) {
-                        <div
-                            class="pipeline-status"
-                            fxLayoutAlign="start center"
-                        >
+                        <div class="pipeline-status flex-row items-center">
                             <mat-icon class="status-icon status-icon-ok">
                                 check_circle
                             </mat-icon>
@@ -63,8 +60,7 @@
                     }
                     @if (updateInfo.validationUnavailable) {
                         <div
-                            class="pipeline-status"
-                            fxLayoutAlign="start center"
+                            class="pipeline-status flex-row items-center"
                             data-cy="adapter-pipeline-validation-unavailable-warning"
                         >
                             <mat-icon class="status-icon status-icon-warning">
@@ -89,8 +85,7 @@
                         !updateInfo.validationUnavailable
                     ) {
                         <div
-                            class="pipeline-status"
-                            fxLayoutAlign="start center"
+                            class="pipeline-status flex-row items-center"
                             data-cy="adapter-manual-pipeline-migration-warning"
                         >
                             <mat-icon class="status-icon status-icon-warning">
@@ -111,10 +106,9 @@
                         </div>
                     }
                     @if (updateInfo.chartSchemaUpdateInfos?.length > 0) {
-                        <div class="affected-charts" fxLayout="column">
+                        <div class="affected-charts flex-col">
                             <div
-                                class="affected-charts-title"
-                                fxLayoutAlign="start center"
+                                class="affected-charts-title flex-row items-center"
                             >
                                 <mat-icon class="affected-charts-icon">
                                     query_stats
@@ -130,8 +124,7 @@
                                     data-cy="sp-connect-adapter-chart-edit-warning"
                                 >
                                     <div
-                                        class="affected-chart-title"
-                                        fxLayoutAlign="start center"
+                                        class="affected-chart-title flex-row items-center"
                                     >
                                         <mat-icon class="chart-warning-icon">
                                             warning

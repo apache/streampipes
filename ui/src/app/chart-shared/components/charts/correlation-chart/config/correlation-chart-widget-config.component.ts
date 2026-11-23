@@ -29,7 +29,6 @@ import {
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -44,7 +43,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         SplitSectionComponent,
         FormFieldComponent,
         SelectSinglePropertyConfigComponent,
-        FlexDirective,
         MatFormField,
         MatInput,
         FormsModule,

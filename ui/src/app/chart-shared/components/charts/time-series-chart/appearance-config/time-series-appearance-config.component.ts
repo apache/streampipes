@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpEchartsWidgetAppearanceConfigComponent } from '../../../chart-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
 import { SpDataZoomConfigComponent } from '../../../chart-config/data-zoom-config/data-zoom-config.component';
 
@@ -33,7 +32,6 @@ import { SpDataZoomConfigComponent } from '../../../chart-config/data-zoom-confi
     templateUrl: './time-series-appearance-config.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
         SpEchartsWidgetAppearanceConfigComponent,
         SpDataZoomConfigComponent,
     ],

@@ -28,11 +28,6 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { AddToCollectionComponent } from './add-to-collection/add-to-collection.component';
@@ -46,13 +41,11 @@ export type CollectionRenderCtx = {
 
 @Component({
     selector: 'sp-static-collection',
+    host: { class: 'flex-row' },
     templateUrl: './static-collection.component.html',
     styleUrls: ['./static-collection.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
         MatIcon,
         AddToCollectionComponent,

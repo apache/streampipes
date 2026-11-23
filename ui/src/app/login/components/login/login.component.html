@@ -18,13 +18,13 @@
 
 @if (configReady) {
     <sp-auth-box [linkSettings]="loginSettings.linkSettings">
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center start">
+        <div class="flex-col justify-center items-start flex-100">
             <h1>{{ 'Login' | translate }}</h1>
         </div>
-        <div fxFlex="100" fxLayout="column" class="mt-10">
-            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+        <div class="mt-10 flex-col flex-100">
+            <form [formGroup]="parentForm" class="flex-col flex-100">
                 <sp-form-field [level]="3" [label]="'Email ' | translate">
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <input
                             formControlName="username"
                             matInput
@@ -36,7 +36,7 @@
                     </mat-form-field>
                 </sp-form-field>
                 <sp-form-field [level]="3" [label]="'Password ' | translate">
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <input
                             formControlName="password"
                             matInput
@@ -93,7 +93,7 @@
                         >
                         </sp-alert-banner>
                     }
-                    <div fxLayout="row" class="mt-10">
+                    <div class="mt-10 flex-row">
                         @if (loginSettings.allowPasswordRecovery) {
                             <div>
                                 <a [routerLink]="['/restore-password']">{{
@@ -118,7 +118,7 @@
                         }
                     </div>
                     @if (loginSettings.oAuthSettings?.enabled) {
-                        <div fxLayout="column" class="mt-10">
+                        <div class="mt-10 flex-col">
                             <div class="separator">
                                 <span>{{ 'or' | translate }}</span>
                             </div>
@@ -127,7 +127,7 @@
                                     .supportedProviders;
                                 track provider
                             ) {
-                                <div fxLayout="column" class="mt-10">
+                                <div class="mt-10 flex-col">
                                     <button
                                         mat-flat-button
                                         data-cy="login-button"

@@ -23,30 +23,17 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ImageBarPreviewComponent } from './image-bar-preview/image-bar-preview.component';
 
 @Component({
     selector: 'sp-image-bar',
+    host: { class: 'flex-row' },
     templateUrl: './image-bar.component.html',
     styleUrls: ['./image-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        MatIconButton,
-        MatIcon,
-        ImageBarPreviewComponent,
-    ],
+    imports: [MatIconButton, MatIcon, ImageBarPreviewComponent],
 })
 export class ImageBarComponent {
     public _imageRoutes;

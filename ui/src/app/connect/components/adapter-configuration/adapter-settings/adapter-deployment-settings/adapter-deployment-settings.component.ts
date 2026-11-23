@@ -34,7 +34,6 @@ import {
     MatRadioChange,
     MatRadioGroup,
 } from '@angular/material/radio';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
     FormFieldComponent,
@@ -43,11 +42,10 @@ import {
 
 @Component({
     selector: 'sp-adapter-deployment-settings',
+    host: { class: 'flex-row' },
     templateUrl: './adapter-deployment-settings.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         MatRadioGroup,
         FormsModule,
         MatRadioButton,

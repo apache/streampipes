@@ -29,7 +29,6 @@ import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 import { Subscription } from 'rxjs';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     FormFieldComponent,
     SplitSectionComponent,
@@ -42,12 +41,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-appearance-settings',
+    host: { class: 'flex-row' },
     templateUrl: './chart-appearance-settings.component.html',
     styleUrls: ['./chart-appearance-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         SplitSectionComponent,
         FormFieldComponent,
         MatRadioGroup,

@@ -24,11 +24,6 @@ import {
 } from '@angular/core';
 import { DialogRef, SpLabelComponent } from '@streampipes/shared-ui';
 import { Certificate } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -37,15 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-certificate-details-dialog',
     templateUrl: './certificate-details-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        FlexDirective,
-        SpLabelComponent,
-        MatDivider,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [SpLabelComponent, MatDivider, MatButton, TranslatePipe],
 })
 export class CertificateDetailsDialogComponent {
     dialogRef = inject(DialogRef<CertificateDetailsDialogComponent>);
