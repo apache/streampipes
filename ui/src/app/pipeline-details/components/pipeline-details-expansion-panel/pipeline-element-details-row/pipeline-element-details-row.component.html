@@ -16,12 +16,12 @@
   ~
   -->
 
-<div fxLayout="row" fxFlex="100">
-    <div fxFlex>
+<div class="flex-row flex-100">
+    <div class="flex-1">
         <sp-pipeline-elements-row [pipelineElement]="pipelineElement">
         </sp-pipeline-elements-row>
     </div>
-    <div fxLayoutAlign="end center">
+    <div class="flex-row justify-end items-center">
         <button
             (click)="openLogsDialog()"
             mat-icon-button

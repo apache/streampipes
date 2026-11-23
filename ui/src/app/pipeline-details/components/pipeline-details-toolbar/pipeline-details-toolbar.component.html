@@ -17,14 +17,10 @@
 -->
 
 <div
-    class="pipeline-details-toolbar"
-    fxLayout="row wrap"
-    fxLayoutAlign="space-between center"
+    class="pipeline-details-toolbar flex-row flex-wrap justify-between items-center content-center"
 >
     <div
-        class="pipeline-details-toolbar__views"
-        fxLayout="row wrap"
-        fxLayoutAlign="start center"
+        class="pipeline-details-toolbar__views flex-row flex-wrap items-center content-center"
     >
         @if (hasPipelineWritePrivileges) {
             <button
@@ -62,9 +58,7 @@
         }
     </div>
     <div
-        class="pipeline-details-toolbar__refresh"
-        fxLayout="row wrap"
-        fxLayoutAlign="end center"
+        class="pipeline-details-toolbar__refresh flex-row flex-wrap justify-end items-center content-center"
     >
         <button
             type="button"

@@ -18,24 +18,17 @@
 
 <sp-split-section [level]="3" [title]="sectionTitle | translate">
     <div
-        fxLayout="column"
-        class="selected-field-list"
+        class="selected-field-list flex-col"
         cdkDropList
         [cdkDropListData]="selectedFields"
         (cdkDropListDropped)="dropSelectedField($event)"
     >
         @for (field of selectedFields; track fieldKey(field); let i = $index) {
             <div
-                class="selected-field-row"
-                fxLayout="row"
-                fxLayoutAlign="space-between center"
+                class="selected-field-row flex-row justify-between items-center"
                 cdkDrag
             >
-                <div
-                    class="selected-field-main"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                >
+                <div class="selected-field-main flex-row items-center">
                     <button
                         mat-icon-button
                         type="button"
@@ -52,9 +45,7 @@
                     </div>
                 </div>
                 <div
-                    class="selected-field-actions"
-                    fxLayout="row"
-                    fxLayoutAlign="end center"
+                    class="selected-field-actions flex-row justify-end items-center"
                 >
                     <button
                         mat-icon-button

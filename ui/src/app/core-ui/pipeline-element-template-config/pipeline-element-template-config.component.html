@@ -17,8 +17,8 @@
 -->
 
 @if (templateConfigs) {
-    <div class="p-15">
-        <div fxFlex="100" fxLayout="column">
+    <div class="p-15 flex-row">
+        <div class="flex-col flex-100">
             <sp-alert-banner
                 type="info"
                 [title]="'Shared pipeline element templates' | translate"
@@ -34,7 +34,7 @@
                     [level]="3"
                     [label]="'Template name' | translate"
                 >
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <input
                             [(ngModel)]="template.templateName"
                             matInput
@@ -49,7 +49,7 @@
                     [level]="3"
                     [label]="'Template description' | translate"
                 >
-                    <mat-form-field fxFlex color="accent">
+                    <mat-form-field class="flex-1" color="accent">
                         <input
                             [(ngModel)]="template.templateDescription"
                             matInput
@@ -71,14 +71,13 @@
                     track config
                 ) {
                     <div
-                        fxLayout="column"
-                        class="static-property-panel static-property-panel-border"
+                        class="static-property-panel static-property-panel-border flex-col"
                     >
-                        <div fxLayout="row">
-                            <div fxFlex="50">
+                        <div class="flex-row">
+                            <div class="basis-50">
                                 {{ config.label }}
                             </div>
-                            <div fxFlex="50">
+                            <div class="basis-50">
                                 <sp-pipeline-element-template-config-item
                                     [sp]="config"
                                     [templateConfigs]="templateConfigs"
@@ -95,14 +94,13 @@
             >
                 @for (template of existingTemplates; track template) {
                     <div
-                        fxLayout="column"
-                        class="static-property-panel static-property-panel-border"
+                        class="static-property-panel static-property-panel-border flex-col"
                     >
-                        <div fxFlex="100" fxLayout="row">
-                            <div fxFlex fxLayoutAlign="start center">
+                        <div class="flex-row flex-100">
+                            <div class="flex-row items-center flex-1">
                                 {{ template.templateName }}
                             </div>
-                            <div fxLayoutAlign="end center">
+                            <div class="flex-row justify-end items-center">
                                 <button
                                     mat-icon-button
                                     color="accent"

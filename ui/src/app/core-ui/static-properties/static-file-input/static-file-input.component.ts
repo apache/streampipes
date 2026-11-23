@@ -39,7 +39,6 @@ import {
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FileRenameDialogComponent } from '../../../configuration/dialog/file-rename/file-rename-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import {
     MatError,
@@ -58,12 +57,11 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
     selector: 'sp-static-file-input',
+    host: { class: 'flex-row' },
     templateUrl: './static-file-input.component.html',
     styleUrls: ['./static-file-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         MatRadioGroup,

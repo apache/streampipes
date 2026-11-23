@@ -24,11 +24,6 @@ import {
 } from '@angular/core';
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import { ExportProviderService } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -37,15 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-delete-export-provider-dialog',
     templateUrl: './delete-export-provider-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        MatButton,
-        SpSpinnerComponent,
-        MatDivider,
-        TranslatePipe,
-    ],
+    imports: [MatButton, SpSpinnerComponent, MatDivider, TranslatePipe],
 })
 export class DeleteExportProviderComponent {
     @Input()

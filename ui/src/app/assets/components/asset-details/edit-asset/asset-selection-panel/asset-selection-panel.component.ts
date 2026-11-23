@@ -44,11 +44,6 @@ import {
     MatTreeNodeOutlet,
     MatTreeNodeToggle,
 } from '@angular/material/tree';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpBasicViewComponent } from '@streampipes/shared-ui';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
@@ -72,10 +67,7 @@ const HOVER_EXPAND_DELAY_MS = 500;
     styleUrls: ['./asset-selection-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         SpBasicViewComponent,
-        LayoutAlignDirective,
         MatTree,
         MatTreeNodeDef,
         MatTreeNode,

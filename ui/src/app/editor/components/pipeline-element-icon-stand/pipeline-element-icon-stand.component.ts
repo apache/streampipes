@@ -32,15 +32,9 @@ import { EditorService } from '../../services/editor.service';
 import { CdkDropList } from '@angular/cdk/drag-drop';
 import { zip } from 'rxjs';
 import { Router } from '@angular/router';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { NgClass, NgStyle } from '@angular/common';
-import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatTooltip } from '@angular/material/tooltip';
 import { PipelineElementIconStandRowComponent } from './pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -50,21 +44,17 @@ import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-t
 
 @Component({
     selector: 'sp-pipeline-element-icon-stand',
+    host: { class: 'flex-row' },
     templateUrl: './pipeline-element-icon-stand.component.html',
     styleUrls: ['./pipeline-element-icon-stand.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CdkDropList,
-        FlexDirective,
-        LayoutDirective,
         MatIcon,
         MatIconButton,
-        LayoutAlignDirective,
         NgStyle,
-        StyleDirective,
         MatTooltip,
         NgClass,
-        ClassDirective,
         PipelineElementIconStandRowComponent,
         TranslatePipe,
         PipelineElementGroupFilterPipe,

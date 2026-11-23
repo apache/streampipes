@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
 -->
-<div class="move-asset-content" fxLayout="column">
+<div class="move-asset-content flex-col">
     <p class="move-intro">
         {{ 'Choose the new location for this asset.' | translate }}
     </p>
@@ -109,12 +109,7 @@
     }
 </div>
 
-<div
-    fxLayout="row"
-    fxLayoutAlign="end center"
-    fxLayoutGap="var(--space-sm)"
-    class="dialog-actions"
->
+<div class="dialog-actions flex-row justify-end items-center gap-sm">
     <button
         mat-flat-button
         class="btn-secondary"

@@ -25,7 +25,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     DataExplorerField,
     DataSeries,
@@ -48,12 +47,11 @@ import { ChartNumberFormatService } from '../../../services/formatting';
 
 @Component({
     selector: 'sp-data-explorer-indicator-widget',
+    host: { class: 'flex-row' },
     templateUrl: './indicator-widget.component.html',
     styleUrls: ['./indicator-widget.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         NgStyle,
         NoDataInDateRangeComponent,
         TooMuchDataComponent,

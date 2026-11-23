@@ -15,8 +15,8 @@
 ~ limitations under the License.
 ~
 -->
-<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-    <div fxLayoutAlign="start center">
+<div class="flex-row items-center gap-sm">
+    <div class="flex-row items-center">
         @if (editorMode === 'tree') {
             <button
                 mat-flat-button
@@ -45,11 +45,7 @@
         }
     </div>
     @if (loading && editorMode === 'tree') {
-        <div
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            data-cy="reloading-nodes"
-        >
+        <div class="flex-row items-center" data-cy="reloading-nodes">
             <sp-spinner [diameter]="15"></sp-spinner>
             <span class="reloading-nodes-label">{{
                 'Reloading nodes' | translate
@@ -57,8 +53,8 @@
         </div>
     }
 
-    <div fxFlex fxLayoutAlign="end center">
-        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end center">
+    <div class="flex-row justify-end items-center flex-1">
+        <div class="flex-row justify-end items-center gap-sm">
             @if (editorMode === 'tree' && showFullscreenToggle) {
                 <button
                     mat-icon-button

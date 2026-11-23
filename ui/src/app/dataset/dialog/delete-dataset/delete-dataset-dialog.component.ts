@@ -26,11 +26,6 @@ import {
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import { DatalakeRestService } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { catchError, from, map, mergeMap, of, toArray } from 'rxjs';
 import { MatDivider } from '@angular/material/divider';
@@ -39,15 +34,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-delete-dataset-dialog',
     templateUrl: './delete-dataset-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        MatButton,
-        SpSpinnerComponent,
-        MatDivider,
-        TranslatePipe,
-    ],
+    imports: [MatButton, SpSpinnerComponent, MatDivider, TranslatePipe],
 })
 export class DeleteDatasetDialogComponent implements OnInit {
     @Input()

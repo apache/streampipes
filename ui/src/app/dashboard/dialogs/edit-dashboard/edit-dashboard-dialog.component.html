@@ -17,13 +17,9 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <div fxFlex="100">
-            <div
-                fxFlex="100"
-                fxLayout="column"
-                style="margin: 5px; width: 100%"
-            >
+    <div class="sp-dialog-content p-15 flex-row">
+        <div class="flex-100 flex-row">
+            <div class="flex-col flex-100" style="margin: 5px; width: 100%">
                 <sp-form-field
                     [level]="3"
                     [label]="'Dashboard title' | translate"
@@ -110,7 +106,7 @@
                         />
                     </mat-form-field>
                 </sp-form-field>
-                <div class="mt-10" fxLayout="column">
+                <div class="mt-10 flex-col">
                     <sp-form-field
                         [level]="3"
                         [label]="'Widget border thickness' | translate"
@@ -150,7 +146,7 @@
                 </div>
 
                 @if (isAssetAdmin) {
-                    <div class="mt-10" fxLayout="column">
+                    <div class="mt-10 flex-col">
                         <mat-checkbox
                             [(ngModel)]="addToAssets"
                             color="accent"
@@ -188,7 +184,7 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions actions-align-left" fxLayoutGap="10px">
+    <div class="sp-dialog-actions actions-align-left">
         <button
             [disabled]="dvname.invalid"
             mat-button

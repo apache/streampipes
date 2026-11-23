@@ -20,10 +20,6 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 export interface DailyEventCount {
     label: string;
@@ -35,12 +31,7 @@ export interface DailyEventCount {
     templateUrl: './daily-event-counts-chart.component.html',
     styleUrls: ['./daily-event-counts-chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        NgxEchartsDirective,
-        TranslatePipe,
-    ],
+    imports: [NgxEchartsDirective, TranslatePipe],
 })
 export class DailyEventCountsChartComponent {
     chartOptions: EChartsOption = this.makeChartOptions([]);

@@ -21,7 +21,7 @@
         <mat-expansion-panel-header class="expansion-panel-header">
             {{ 'Logs' | translate }}
         </mat-expansion-panel-header>
-        <div fxLayout="column" fxFlex="100" class="p-10">
+        <div class="p-10 flex-col flex-100">
             @for (element of allPipelineElements; track element) {
                 <div class="details-row">
                     <sp-pipeline-element-details-row

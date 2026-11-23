@@ -60,7 +60,6 @@ import { PipelinePreviewComponent } from './components/preview/pipeline-preview.
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { PipelineDetailsToolbarComponent } from './components/pipeline-details-toolbar/pipeline-details-toolbar.component';
 import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-details-expansion-panel/pipeline-details-expansion-panel.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -86,7 +85,6 @@ import { MeasurementUpdateAction } from '../pipelines/model/pipeline-model';
         MatIcon,
         MatMenuModule,
         PipelineDetailsToolbarComponent,
-        LayoutDirective,
         PipelinePreviewComponent,
         PipelineDetailsExpansionPanelComponent,
         TranslatePipe,

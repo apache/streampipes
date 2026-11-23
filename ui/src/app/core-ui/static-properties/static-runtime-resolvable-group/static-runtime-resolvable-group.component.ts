@@ -32,10 +32,6 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import {
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { GroupRenderCtx } from '../static-group/static-group.component';
@@ -45,13 +41,7 @@ import { NgTemplateOutlet } from '@angular/common';
     selector: 'sp-app-static-runtime-resolvable-group',
     templateUrl: './static-runtime-resolvable-group.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        MatButton,
-        TranslatePipe,
-        LayoutGapDirective,
-        NgTemplateOutlet,
-    ],
+    imports: [MatButton, TranslatePipe, NgTemplateOutlet],
 })
 export class StaticRuntimeResolvableGroupComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableGroupStaticProperty>

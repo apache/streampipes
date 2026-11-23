@@ -17,14 +17,10 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content p-15 flex-row">
         @if (!isInProgress) {
-            <div fxLayout="column">
-                <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                >
+            <div class="flex-col">
+                <div class="flex-col justify-center items-center flex-100">
                     <b
                         ><h4>
                             {{
@@ -42,11 +38,7 @@
                         </h5></b
                     >
                 </div>
-                <div
-                    fxFlex="100"
-                    fxLayoutAlign="center center"
-                    fxLayout="column"
-                >
+                <div class="flex-col justify-center items-center flex-100">
                     <button
                         mat-button
                         mat-flat-button
@@ -61,12 +53,10 @@
         }
         @if (isInProgress) {
             <div
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                fxLayout="column"
+                class="flex-col justify-center items-center flex-100"
                 data-cy="adapter-deletion-in-progress"
             >
-                <div fxLayout="row" fxLayoutAlign="space-around">
+                <div class="flex-row justify-around">
                     <sp-spinner [text]="currentStatus"></sp-spinner>
                 </div>
             </div>

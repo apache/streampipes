@@ -17,13 +17,13 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15" fxLayout="column">
-        <div fxLayout="row" fxFlex="100">
-            <div fxLayout="column" fxFlex>
+    <div class="sp-dialog-content p-15 flex-col">
+        <div class="flex-row flex-100">
+            <div class="flex-col flex-1">
                 <h4>{{ pipelineElement?.name }}</h4>
                 <small>{{ pipelineElement?.description }}</small>
             </div>
-            <div class="element-id" fxLayoutAlign="end start">
+            <div class="element-id flex-row justify-end items-start">
                 <span>{{ 'ID' | translate }}</span
                 >&nbsp;
                 <b>{{
@@ -64,8 +64,7 @@
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="space-between center"
+                                    class="flex-row justify-between items-center"
                                 >
                                     <span>{{
                                         element?.topicDefinition
@@ -111,8 +110,7 @@
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="space-between center"
+                                    class="flex-row justify-between items-center"
                                 >
                                     <span>{{
                                         element?.eventGrounding
@@ -162,8 +160,7 @@
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="space-between center"
+                                    class="flex-row justify-between items-center"
                                 >
                                     <span>{{
                                         element?.topicDefinition
@@ -211,8 +208,7 @@
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <div
-                                    fxLayout="row"
-                                    fxLayoutAlign="space-between center"
+                                    class="flex-row justify-between items-center"
                                 >
                                     <span>{{
                                         element?.eventGrounding

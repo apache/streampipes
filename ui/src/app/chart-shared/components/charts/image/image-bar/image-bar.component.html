@@ -16,18 +16,12 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="center center" class="mb-10">
+<div class="flex-col flex-100">
+    <div class="mb-10 flex-row justify-center items-center">
         <div>{{ selectedIndex + 1 }} / {{ maxImages }}</div>
     </div>
 
-    <div
-        fxFlex
-        fxLayout="row"
-        fxLayoutAlign="center center"
-        class="imageBar"
-        fxLayoutGap="10px"
-    >
+    <div class="imageBar flex-row justify-center items-center gap-sm flex-1">
         <button mat-icon-button (click)="goToStart()">
             <mat-icon>skip_previous</mat-icon>
         </button>

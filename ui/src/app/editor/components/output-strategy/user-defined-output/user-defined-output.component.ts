@@ -31,12 +31,6 @@ import {
 } from '@streampipes/platform-services';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -47,15 +41,12 @@ import { FormFieldComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-user-defined-output-strategy',
+    host: { class: 'flex-row' },
     templateUrl: './user-defined-output.component.html',
     styleUrls: ['./user-defined-output.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatButton,
-        LayoutGapDirective,
         FormFieldComponent,
         MatFormField,
         MatInput,

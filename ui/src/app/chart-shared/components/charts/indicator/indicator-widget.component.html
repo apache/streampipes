@@ -17,9 +17,7 @@
   -->
 
 <div
-    class="indicator-widget"
-    fxLayout="column"
-    fxFlex="100"
+    class="indicator-widget flex-col flex-100"
     [ngStyle]="widgetStyles"
     data-cy="indicator-chart"
 >
@@ -46,9 +44,9 @@
     }
 
     @if (showData) {
-        <div class="indicator-shell" fxLayout="column" fxFlex="100">
+        <div class="indicator-shell flex-col flex-100">
             @if (titleText || descriptionText) {
-                <div class="indicator-copy" fxLayout="column">
+                <div class="indicator-copy flex-col">
                     @if (titleText) {
                         <div
                             class="indicator-title"
@@ -70,8 +68,7 @@
             }
 
             <div
-                class="indicator-grid"
-                fxFlex
+                class="indicator-grid flex-1"
                 [class.grouped]="hasMultipleCards"
                 [ngStyle]="gridStyles"
             >

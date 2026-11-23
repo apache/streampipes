@@ -16,8 +16,8 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column" class="small-form-field-density">
-    <div fxFlex="100" fxLayout="column" class="static-property-panel">
+<div class="small-form-field-density flex-col flex-100">
+    <div class="static-property-panel flex-col flex-100">
         @if (showLabel) {
             <sp-form-label
                 [level]="2"
@@ -26,7 +26,7 @@
             >
             </sp-form-label>
         }
-        <div fxFlex="100">
+        <div class="flex-100">
             @if (isCodeInputStaticProperty(staticProperty)) {
                 <sp-static-code-input
                     (completedConfigurationsEmitter)="

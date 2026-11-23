@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="column">
+<div class="flex-col flex-100">
     <mat-radio-group
         [(ngModel)]="deploymentMode"
         (change)="handleSelectionChange($event)"
@@ -35,7 +35,7 @@
     </mat-radio-group>
 
     @if (deploymentMode === 'filter') {
-        <div fxFlex="100" fxLayout="column" class="mt-10">
+        <div class="mt-10 flex-col flex-100">
             <sp-form-field [level]="3" label="Service Tags">
                 <sp-search-select
                     [items]="availableServiceTags"

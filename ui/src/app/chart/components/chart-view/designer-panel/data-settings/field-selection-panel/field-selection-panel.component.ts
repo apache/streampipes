@@ -33,11 +33,6 @@ import {
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -58,13 +53,10 @@ import { MatInput } from '@angular/material/input';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
-        LayoutAlignDirective,
-        FlexDirective,
         MatButton,
         MatIconButton,
         MatTooltip,
         MatIcon,
-        LayoutDirective,
         FieldSelectionComponent,
         TranslatePipe,
         FormsModule,

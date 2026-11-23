@@ -17,20 +17,26 @@
   -->
 
 <sp-split-section [level]="3" [title]="'Data Zoom' | translate">
-    <div fxLayout="column">
+    <div class="flex-col">
         <mat-checkbox
             [(ngModel)]="appearanceConfig.dataZoom.show"
             (ngModelChange)="configChangedEmitter.emit()"
             >{{ 'Active' | translate }}
         </mat-checkbox>
 
-        <div fxFlex="100" fxLayoutAlign="start center" class="ml-10">
-            <div fxLayoutAlign="start center">
+        <div class="ml-10 flex-row items-center flex-100">
+            <div class="flex-row items-center">
                 <span>{{ 'Type' | translate }}</span>
             </div>
-            <span fxFlex></span>
-            <div class="form-field-small w-100" fxLayoutAlign="end center">
-                <mat-form-field appearance="outline" color="accent" fxFlex="30">
+            <span class="flex-1"></span>
+            <div
+                class="form-field-small w-100 flex-row justify-end items-center"
+            >
+                <mat-form-field
+                    appearance="outline"
+                    color="accent"
+                    class="basis-30"
+                >
                     <mat-select
                         (ngModelChange)="configChangedEmitter.emit()"
                         [(ngModel)]="appearanceConfig.dataZoom.type"

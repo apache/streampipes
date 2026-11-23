@@ -57,11 +57,6 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
@@ -69,6 +64,7 @@ import { DashboardOverviewCardComponent } from '../dashboard-overview-card/dashb
 
 @Component({
     selector: 'sp-dashboard-overview-table',
+    host: { class: 'flex-row' },
     templateUrl: './dashboard-overview-table.component.html',
     styleUrls: [
         '../dashboard-overview.component.scss',
@@ -76,9 +72,6 @@ import { DashboardOverviewCardComponent } from '../dashboard-overview-card/dashb
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         SpTableComponent,
         MatSort,
         MatColumnDef,

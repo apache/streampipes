@@ -72,16 +72,10 @@ import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { UserRole } from '../../../core/auth/user-role.enum';
 import { CsvImportDialogComponent } from '../../dialog/csv-import-dialog/csv-import-dialog.component';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
 import { DatasetLastEventLabelComponent } from './dataset-last-event-label/dataset-last-event-label.component';
@@ -94,12 +88,9 @@ import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-ov
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         DatePipe,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
         MatTooltip,
         MatIcon,
-        LayoutGapDirective,
         MatSort,
         MatColumnDef,
         MatHeaderCellDef,
@@ -109,7 +100,6 @@ import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-ov
         MatCell,
         SpSpinnerComponent,
         NgStyle,
-        StyleDirective,
         MatMenuItem,
         MatButton,
         TranslatePipe,

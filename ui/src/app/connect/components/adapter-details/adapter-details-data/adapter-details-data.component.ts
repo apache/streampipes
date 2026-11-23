@@ -28,7 +28,6 @@ import {
     PipelineElementService,
     SpDataStream,
 } from '@streampipes/platform-services';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapter-details-layout.component';
 
 @Component({
@@ -38,8 +37,6 @@ import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapt
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpAdapterDetailsLayoutComponent,
-        LayoutDirective,
-        FlexDirective,
         PipelineElementRuntimeInfoComponent,
     ],
 })

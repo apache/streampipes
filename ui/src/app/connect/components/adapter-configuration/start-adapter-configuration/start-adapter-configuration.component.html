@@ -16,14 +16,14 @@
 ~
 -->
 
-<div [formGroup]="startAdapterForm" fxLayout="column" fxFlex="100">
+<div [formGroup]="startAdapterForm" class="flex-col flex-100">
     @if (!isEditMode) {
         <sp-basic-inner-panel
             [panelTitle]="'Adapter settings' | translate"
             outerMargin="20px 0px 10px 0px"
         >
-            <div fxFlex="100">
-                <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
+            <div class="flex-100 flex-row">
+                <div class="flex-col justify-center flex-100">
                     <sp-form-field [level]="2" [label]="'Name' | translate">
                         <mat-form-field color="accent">
                             <input
@@ -99,7 +99,7 @@
             </div>
         </sp-basic-inner-panel>
     }
-    <div fxFlex="100" fxLayout="column">
+    <div class="flex-col flex-100">
         @if (isAssetAdmin && !isEditMode) {
             <sp-adapter-options-panel
                 [optionTitle]="'Add to Asset' | translate"
@@ -299,7 +299,7 @@
         }
     </div>
 
-    <div fxLayoutAlign="end" style="margin-top: 10px">
+    <div class="flex-row justify-end" style="margin-top: 10px">
         <button class="mat-basic" mat-flat-button (click)="cancel()">
             {{ 'Cancel' | translate }}
         </button>

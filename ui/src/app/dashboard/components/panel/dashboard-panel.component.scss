@@ -65,7 +65,10 @@
     overflow-y: hidden;
 }
 
+// The projected content used to make the inner container a flex row (ngx-layout).
+// Material still hides it while the drawer is closed; that rule is more specific.
 .designer-panel ::ng-deep .mat-drawer-inner-container {
+    display: flex;
     overflow: hidden;
 }
 

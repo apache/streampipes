@@ -28,11 +28,6 @@ import {
 import { PipelineOperationsService } from '../../../../pipelines/services/pipeline-operations.service';
 import { Pipeline } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -40,17 +35,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-actions',
+    host: { class: 'flex-row' },
     templateUrl: './pipeline-actions.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        TranslatePipe,
-    ],
+    imports: [MatIconButton, MatTooltip, MatIcon, TranslatePipe],
 })
 export class PipelineActionsComponent implements OnInit {
     pipelineOperationsService = inject(PipelineOperationsService);

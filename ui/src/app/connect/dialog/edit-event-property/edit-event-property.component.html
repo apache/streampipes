@@ -17,10 +17,10 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <div fxFlex="100" fxLayout="column">
-            <form #propertyForm="ngForm" fxLayout="column">
-                <div fxLayout="column" fxLayoutAlign="start" fxFlex="100">
+    <div class="sp-dialog-content p-15 flex-row">
+        <div class="flex-col flex-100">
+            <form #propertyForm="ngForm" class="flex-col">
+                <div class="flex-col flex-100">
                     <sp-split-section
                         [level]="3"
                         [title]="'Basics' | translate"
@@ -75,7 +75,7 @@
                                 [attr.id]="
                                     'input-runtime-name-' + cachedProperty.label
                                 "
-                                fxFlex="100"
+                                class="flex-100"
                             >
                                 <mat-form-field class="w-100" color="accent">
                                     <input

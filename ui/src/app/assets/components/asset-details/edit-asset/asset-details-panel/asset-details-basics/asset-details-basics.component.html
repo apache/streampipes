@@ -16,7 +16,7 @@
 ~
 -->
 
-<div class="page-container-padding-inner" fxLayout="column">
+<div class="page-container-padding-inner flex-col">
     <sp-split-section [level]="2" [title]="'Basics' | translate">
         @if (!rootNode || isNewAsset) {
             <sp-form-field
@@ -34,7 +34,7 @@
                 </mat-form-field>
             </sp-form-field>
             <sp-form-field
-                fxFlex="100"
+                class="flex-100"
                 [level]="2"
                 [label]="'Description' | translate"
                 [description]="'A longer description of this asset' | translate"
@@ -49,7 +49,7 @@
             </sp-form-field>
         }
         <sp-form-field
-            fxFlex="100"
+            class="flex-100"
             [level]="2"
             label="Asset ID"
             [description]="'A unique id for this asset in one word' | translate"
@@ -63,7 +63,7 @@
             </mat-form-field>
         </sp-form-field>
         <sp-form-field
-            fxFlex="100"
+            class="flex-100"
             [level]="2"
             [label]="'Asset Type' | translate"
             [description]="'The ISA95 type of this asset' | translate"

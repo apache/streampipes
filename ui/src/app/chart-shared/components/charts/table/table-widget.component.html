@@ -17,8 +17,7 @@
 -->
 
 <div
-    fxLayout="column"
-    fxFlex="100"
+    class="flex-col flex-100"
     [ngStyle]="{
         background: dataExplorerWidget.baseAppearanceConfig.backgroundColor,
         color: dataExplorerWidget.baseAppearanceConfig.textColor,
@@ -40,8 +39,8 @@
     }
 
     @if (showData) {
-        <div class="analytics-table-shell" fxLayout="column" fxFlex>
-            <div class="analytics-table-scroll" fxFlex>
+        <div class="analytics-table-shell flex-col flex-1">
+            <div class="analytics-table-scroll flex-1">
                 <table
                     data-cy="data-explorer-table"
                     class="analytics-table"

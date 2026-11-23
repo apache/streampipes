@@ -25,11 +25,6 @@ import {
 import { PipelineService } from '@streampipes/platform-services';
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 
@@ -37,15 +32,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-delete-pipeline-dialog',
     templateUrl: './delete-pipeline-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        MatButton,
-        SpSpinnerComponent,
-        MatDivider,
-        TranslatePipe,
-    ],
+    imports: [MatButton, SpSpinnerComponent, MatDivider, TranslatePipe],
 })
 export class DeletePipelineDialogComponent {
     // @Input()

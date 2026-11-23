@@ -16,19 +16,19 @@
 ~
 -->
 
-<div fxLayout="column" fxFlex="100">
-    <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
-        <div fxLayout="row" fxLayoutAlign="start center">
+<div class="flex-col flex-100">
+    <div class="flex-row gap-sm flex-100">
+        <div class="flex-row items-center">
             <div>
                 <b style="white-space: nowrap">
                     {{ label }}
                 </b>
             </div>
             @if (originalRuntimeName) {
-                <div fxLayoutAlign="start center" class="ml-5">
+                <div class="ml-5 flex-row items-center">
                     <span class="runtime-info">{{ originalRuntimeName }}</span>
                     @if (originalRuntimeName !== eventProperty.runtimeName) {
-                        <span fxLayoutAlign="center center">
+                        <span class="flex-row justify-center items-center">
                             <i class="material-icons">arrow_right</i>
                         </span>
                     }
@@ -44,29 +44,21 @@
             }
         </div>
 
-        <div
-            fxLayout="row"
-            fxLayoutAlign="end center"
-            fxFlex="100"
-            fxLayoutGap="20px"
-        >
+        <div class="flex-row justify-end items-center gap-lg flex-100">
             @if (isPrimitive && isNumber && isTimestampProperty()) {
                 <mat-icon
                     [matTooltip]="'marked as timestamp' | translate"
                     [style.color]="'var(--color-success)'"
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
+                    class="flex-row items-center"
                 >
                     access_time
                 </mat-icon>
             }
-            <div fxLayoutAlign="end center" class="runtime-type-info-outer">
+            <div
+                class="runtime-type-info-outer flex-row justify-end items-center"
+            >
                 @if (runtimeType) {
-                    <div
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        fxFlex="100"
-                    >
+                    <div class="flex-row items-center flex-100">
                         @if (originalRuntimeType) {
                             <span class="runtime-info runtime-type-info">{{
                                 originalRuntimeType
@@ -77,7 +69,7 @@
                             originalRuntimeType &&
                             originalRuntimeType !== runtimeType
                         ) {
-                            <span fxLayoutAlign="center center"
+                            <span class="flex-row justify-center items-center"
                                 ><i class="material-icons">arrow_right</i></span
                             >
                         }
@@ -90,7 +82,7 @@
                 }
             </div>
             @if (isEventPropertyPrimitive(eventProperty)) {
-                <div fxLayoutAlign="center center">
+                <div class="flex-row justify-center items-center">
                     <sp-event-property-scope
                         [eventProperty]="eventProperty"
                         [isNumber]="isNumber"
@@ -104,7 +96,7 @@
             }
 
             @if (isNested || isPrimitive || isList) {
-                <div fxLayoutAlign="end center" class="ml-5 mr-5">
+                <div class="ml-5 mr-5 flex-row justify-end items-center">
                     <button
                         mat-flat-button
                         class="mat-basic"
@@ -118,7 +110,7 @@
         </div>
     </div>
     @if (isNested) {
-        <div fxLayout="column" fxFlex="100" class="nested-properties">
+        <div class="nested-properties flex-col flex-100">
             @for (
                 property of asNestedProperty(eventProperty).eventProperties;
                 track property.elementId

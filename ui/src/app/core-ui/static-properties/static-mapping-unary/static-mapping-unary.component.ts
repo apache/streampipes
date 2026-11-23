@@ -25,7 +25,6 @@ import {
 } from '@angular/forms';
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyUnary } from '@streampipes/platform-services';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
@@ -38,8 +37,6 @@ import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        FlexDirective,
-        LayoutDirective,
         MatFormField,
         MatSelect,
         MatOption,

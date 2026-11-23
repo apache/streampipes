@@ -18,15 +18,12 @@
 
 <div
     data-cy="data-explorer-no-data-in-date-range"
-    fxLayout="column"
-    fxLayoutAlign="center center"
-    fxFlex="100"
-    fxLayoutGap="10px"
+    class="flex-col justify-center items-center gap-sm flex-100"
 >
-    <div fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex-row justify-center items-center">
         <i class="material-icons warning-icon">warning</i>
     </div>
-    <div fxLayout="column" fxLayoutAlign="center center">
+    <div class="flex-col justify-center items-center">
         <div class="default-text text-xl">
             {{ 'Found no data in selected time range' | translate }}
         </div>

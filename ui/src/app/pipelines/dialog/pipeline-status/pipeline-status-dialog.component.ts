@@ -30,11 +30,6 @@ import {
 } from '@angular/core';
 import { PipelineAction } from '../../model/pipeline-model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -47,9 +42,6 @@ import { PipelineStartService } from '../../services/pipeline-start.service';
     styleUrls: ['./pipeline-status-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         SpSpinnerComponent,
         MatIcon,
         MatDivider,

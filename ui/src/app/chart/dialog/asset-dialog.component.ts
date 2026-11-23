@@ -28,11 +28,6 @@ import {
     AssetLinkConfigurationComponent,
     DialogRef,
 } from '@streampipes/shared-ui';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
@@ -43,13 +38,10 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './asset-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutGapDirective,
         MatCheckbox,
         FormsModule,
         AssetLinkConfigurationComponent,
         MatDivider,
-        LayoutAlignDirective,
         MatButton,
     ],
 })

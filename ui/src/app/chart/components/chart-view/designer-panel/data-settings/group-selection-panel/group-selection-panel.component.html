@@ -37,12 +37,12 @@
             {{ 'Deselect all' | translate }}
         </button>
     </div>
-    <div fxLayout="column" class="field-scroll-panel">
+    <div class="field-scroll-panel flex-col">
         @for (
             groupByField of sourceConfig.queryConfig.groupBy;
             track groupByField
         ) {
-            <div fxLayout="column">
+            <div class="flex-col">
                 <mat-checkbox
                     [(ngModel)]="groupByField.selected"
                     [attr.data-cy]="

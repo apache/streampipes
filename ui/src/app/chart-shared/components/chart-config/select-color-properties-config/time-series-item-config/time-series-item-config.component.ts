@@ -31,14 +31,8 @@ import {
     TimeSeriesGroupColorMapping,
     TimeSeriesGroupedColorMode,
 } from '../../../charts/time-series-chart/model/time-series-chart-widget.model';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ColorPickerDirective } from 'ngx-color-picker';
@@ -48,7 +42,6 @@ import { FormsModule } from '@angular/forms';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ColorMappingOptionsConfigComponent } from '../../color-mapping-options-config/color-mapping-options-config.component';
-import { LayoutDirective } from '@ngbracket/ngx-layout';
 import { ResultLabelService } from '../../../../services/result-label.service';
 import { MatIcon } from '@angular/material/icon';
 
@@ -58,15 +51,10 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./time-series-item-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutGapDirective,
-        LayoutAlignDirective,
         MatCheckbox,
-        FlexDirective,
         NgStyle,
-        StyleDirective,
         MatIconButton,
         MatTooltip,
-        LayoutGapDirective,
         ColorPickerDirective,
         MatFormField,
         MatInput,
@@ -75,7 +63,6 @@ import { MatIcon } from '@angular/material/icon';
         MatOption,
         TranslatePipe,
         ColorMappingOptionsConfigComponent,
-        LayoutDirective,
         MatIcon,
     ],
 })

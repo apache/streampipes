@@ -17,9 +17,9 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15 mt-10">
+    <div class="sp-dialog-content p-15 mt-10 flex-row">
         @if (clonedAssetLink) {
-            <div fxFlex="100" fxLayout="column">
+            <div class="flex-col flex-100">
                 @if (unsupportedLinkType) {
                     <sp-alert-banner
                         class="w-100"
@@ -36,7 +36,7 @@
                 <sp-form-field [level]="3" [label]="'Link Type' | translate">
                     <mat-form-field color="accent">
                         <mat-select
-                            fxFlex
+                            class="flex-1"
                             [(value)]="selectedLinkType"
                             required
                             (selectionChange)="onLinkTypeChanged($event)"
@@ -55,7 +55,7 @@
                 @if (resourceSelectionLabel; as label) {
                     <sp-form-field [level]="3" [label]="label">
                         <sp-search-select
-                            fxFlex="100"
+                            class="flex-100"
                             [items]="selectableResources"
                             [value]="currentResource"
                             (valueChange)="onResourceChanged($event)"

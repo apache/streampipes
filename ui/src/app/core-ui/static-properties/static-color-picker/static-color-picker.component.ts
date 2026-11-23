@@ -31,7 +31,6 @@ import {
 } from '@angular/forms';
 import { ColorPickerStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { ColorPickerDirective } from 'ngx-color-picker';
 
@@ -40,14 +39,7 @@ import { ColorPickerDirective } from 'ngx-color-picker';
     templateUrl: './static-color-picker.component.html',
     styleUrls: ['./static-color-picker.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        FlexDirective,
-        LayoutDirective,
-        MatInput,
-        ColorPickerDirective,
-    ],
+    imports: [FormsModule, ReactiveFormsModule, MatInput, ColorPickerDirective],
 })
 export class StaticColorPickerComponent
     extends AbstractValidatedStaticPropertyRenderer<ColorPickerStaticProperty>

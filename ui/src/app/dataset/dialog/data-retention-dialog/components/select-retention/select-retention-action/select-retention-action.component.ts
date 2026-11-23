@@ -22,7 +22,6 @@ import {
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -34,7 +33,6 @@ import { SplitSectionComponent } from '@streampipes/shared-ui';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatRadioGroup,
-        LayoutDirective,
         FormsModule,
         MatRadioButton,
         TranslatePipe,

@@ -32,7 +32,6 @@ import {
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DataRetentionNowDialogComponent } from '../data-retention-now-dialog/data-retention-now-dialog.component';
-import { FlexDirective, LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
 import { SelectDataComponent } from './components/select-retention/select-data.component';
 import { SelectDataExportComponent } from './components/select-export/select-format.component';
 import { MatDivider } from '@angular/material/divider';
@@ -44,11 +43,9 @@ import { MatButton } from '@angular/material/button';
     styleUrls: ['./data-retention-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
         SelectDataComponent,
         SelectDataExportComponent,
         MatDivider,
-        LayoutGapDirective,
         MatButton,
         TranslatePipe,
     ],

@@ -44,11 +44,6 @@ import {
     FormFieldComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
@@ -63,10 +58,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./edit-event-property.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormsModule,
-        LayoutAlignDirective,
         SplitSectionComponent,
         FormFieldComponent,
         MatFormField,

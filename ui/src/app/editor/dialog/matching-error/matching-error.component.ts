@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { Notification } from '@streampipes/platform-services';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -33,13 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-matching-error',
     templateUrl: './matching-error.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        MatButton,
-        SpAlertBannerComponent,
-        MatDivider,
-        TranslatePipe,
-    ],
+    imports: [MatButton, SpAlertBannerComponent, MatDivider, TranslatePipe],
 })
 export class MatchingErrorComponent {
     private dialogRef = inject<DialogRef<MatchingErrorComponent>>(DialogRef);

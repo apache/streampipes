@@ -19,12 +19,11 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div
-            fxLayoutAlign="center center"
-            fxLayout="column"
+            class="flex-col justify-center items-center"
             data-cy="connection-testing-in-progress"
         >
             @if (!isInProgress) {
-                <div fxLayout="row" fxLayoutAlign="space-around">
+                <div class="flex-row justify-around">
                     <h4>
                         <b>{{ currentStatus }}</b>
                     </h4>
@@ -33,11 +32,10 @@
         </div>
 
         <div
-            fxLayoutAlign="center center"
-            fxLayout="column"
+            class="flex-col justify-center items-center"
             data-cy="connection-testing-in-progress"
         >
-            <div fxLayout="row" fxLayoutAlign="space-around">
+            <div class="flex-row justify-around">
                 {{ filePath }}
             </div>
         </div>
@@ -54,11 +52,10 @@
 
         @if (isInProgress) {
             <div
-                fxLayoutAlign="center center"
-                fxLayout="column"
+                class="flex-col justify-center items-center"
                 data-cy="connection-testing-in-progress"
             >
-                <div fxLayout="row" fxLayoutAlign="space-around">
+                <div class="flex-row justify-around">
                     <sp-spinner [diameter]="25"></sp-spinner>
                 </div>
             </div>

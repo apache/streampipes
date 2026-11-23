@@ -30,11 +30,6 @@ import { checkPasswords } from '../../utils/check-password';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
 import { AuthBoxComponent } from '../auth-box/auth-box.component';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     FormFieldComponent,
     SpAlertBannerComponent,
     SpSpinnerComponent,
@@ -52,9 +47,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         FormFieldComponent,

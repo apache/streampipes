@@ -16,15 +16,12 @@
 ~
 -->
 
-<div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+<div class="flex-col justify-center items-center flex-100">
     <div
-        class="success-message"
-        fxFlex="100"
-        fxLayoutAlign="center center"
-        fxLayout="column"
+        class="success-message flex-col justify-center items-center flex-100"
         data-cy="sp-pipeline-started-dialog"
     >
-        <div fxLayout="row">
+        <div class="flex-row">
             @if (pipelineOperationStatus()?.success) {
                 <mat-icon data-cy="sp-pipeline-started" color="accent"
                     >done</mat-icon
@@ -48,7 +45,7 @@
             }}</span>
         }
     </div>
-    <div fxLayout="row">
+    <div class="flex-row">
         <button
             mat-button
             mat-flat-button
@@ -84,9 +81,9 @@
     </div>
 
     @if (statusDetailsVisible()) {
-        <div fxFlex="100" fxLayout="column" class="w-100">
+        <div class="w-100 flex-col flex-100">
             <sp-pipeline-operation-status
-                fxLayout="column"
+                class="flex-col"
                 [pipelineOperationStatus]="pipelineOperationStatus()"
             >
             </sp-pipeline-operation-status>

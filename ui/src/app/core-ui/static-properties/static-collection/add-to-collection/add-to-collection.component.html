@@ -16,7 +16,7 @@
 ~
 -->
 @if (!showFileSelecion) {
-    <div fxLayoutGap="10px">
+    <div class="flex-row gap-sm">
         <button mat-button mat-flat-button (click)="add()">
             <mat-icon class="icon">add</mat-icon>
             <span>{{ 'Add' | translate }}</span>
@@ -28,12 +28,12 @@
     </div>
 }
 @if (showFileSelecion) {
-    <div>
+    <div class="flex-row">
         <button mat-button mat-flat-button (click)="closeFileSelection()">
             <mat-icon class="icon">arrow_back</mat-icon>
             <span>{{ 'Back' | translate }}</span>
         </button>
-        <div fxFlex="100" style="margin: 5px; width: 100%">
+        <div class="flex-100" style="margin: 5px; width: 100%">
             @if (!hasError) {
                 <mat-form-field
                     style="width: 95%"

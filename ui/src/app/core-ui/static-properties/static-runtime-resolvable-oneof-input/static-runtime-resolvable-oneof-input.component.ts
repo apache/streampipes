@@ -33,7 +33,6 @@ import {
     ReactiveFormsModule,
     UntypedFormControl,
 } from '@angular/forms';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import {
     SpExceptionMessageComponent,
@@ -44,12 +43,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-oneof-input',
+    host: { class: 'flex-row' },
     templateUrl: './static-runtime-resolvable-oneof-input.component.html',
     styleUrls: ['./static-runtime-resolvable-oneof-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         MatButton,

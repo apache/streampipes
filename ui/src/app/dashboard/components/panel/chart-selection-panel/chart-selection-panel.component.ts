@@ -23,30 +23,18 @@ import {
     Output,
 } from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
-import {
-    FlexDirective,
-    FlexFillDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { ChartSelectionComponent } from './chart-selection/chart-selection.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-dashboard-chart-selection-panel',
+    host: { class: 'flex-row' },
     templateUrl: './chart-selection-panel.component.html',
     styleUrls: [
         './chart-selection-panel.component.scss',
         '../../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
     ],
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        MatTabGroup,
-        FlexFillDirective,
-        MatTab,
-        ChartSelectionComponent,
-        TranslatePipe,
-    ],
+    imports: [MatTabGroup, MatTab, ChartSelectionComponent, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartSelectionPanelComponent {

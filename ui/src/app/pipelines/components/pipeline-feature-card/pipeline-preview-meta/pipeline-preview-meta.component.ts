@@ -23,11 +23,6 @@ import {
     OnInit,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout';
 import { MatIcon } from '@angular/material/icon';
 import {
     FeatureCardMetaCreationComponent,
@@ -47,9 +42,6 @@ import { PipelineHealthStatus } from '@streampipes/platform-services';
         TranslatePipe,
         FeatureCardMetaCreationComponent,
         FeatureCardMetaSectionComponent,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         SpLabelComponent,
     ],
 })

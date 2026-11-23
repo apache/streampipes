@@ -26,12 +26,11 @@
                     | translate
             "
         >
-            <div fxLayout="row">
-                <div class="w-100" fxLayoutAlign="start center" fxFlex="45">
+            <div class="flex-row">
+                <div class="w-100 flex-row items-center basis-45">
                     <mat-form-field
-                        class="w-100"
+                        class="w-100 flex-100"
                         color="accent"
-                        fxFlex="100"
                         subscriptSizing="dynamic"
                     >
                         <input
@@ -58,14 +57,13 @@
                         </mat-autocomplete>
                     </mat-form-field>
                 </div>
-                <div fxFlex="10" fxLayoutAlign="center center">
+                <div class="flex-row justify-center items-center basis-10">
                     <button
                         mat-icon-button
                         [disabled]="!this.cachedProperty.measurementUnit"
                         (click)="transformUnit()"
                         color="accent"
-                        class="form-group"
-                        fxFlexAlign="center"
+                        class="form-group self-center"
                         data-cy="connect-schema-unit-transform-btn"
                     >
                         @if (!transformUnitEnable) {
@@ -78,12 +76,11 @@
                         }
                     </button>
                 </div>
-                <div fxFlex="45" fxLayoutAlign="start center">
+                <div class="flex-row items-center basis-45">
                     @if (transformUnitEnable) {
                         <mat-form-field
-                            class="w-100"
+                            class="w-100 flex-100"
                             color="accent"
-                            fxFlex="100"
                             subscriptSizing="dynamic"
                         >
                             <mat-select

@@ -45,11 +45,6 @@ import {
     SpAlertBannerComponent,
     SpSecondaryToolbarComponent,
 } from '@streampipes/shared-ui';
-import {
-    LayoutDirective,
-    LayoutAlignDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
@@ -76,9 +71,6 @@ declare const monaco: typeof monacoType;
     imports: [
         SchemaPreviewStatusComponent,
         SpAlertBannerComponent,
-        LayoutAlignDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         MatMenuTrigger,
         MatIcon,

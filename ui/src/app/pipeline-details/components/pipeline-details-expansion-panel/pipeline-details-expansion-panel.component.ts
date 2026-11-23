@@ -31,7 +31,6 @@ import {
     MatExpansionPanel,
     MatExpansionPanelHeader,
 } from '@angular/material/expansion';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { PipelineElementDetailsRowComponent } from './pipeline-element-details-row/pipeline-element-details-row.component';
 import { PipelineStatusComponent } from './status/pipeline-status.component';
 import { PipelineActionsComponent } from './actions/pipeline-actions.component';
@@ -46,8 +45,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatAccordion,
         MatExpansionPanel,
         MatExpansionPanelHeader,
-        LayoutDirective,
-        FlexDirective,
         PipelineElementDetailsRowComponent,
         PipelineStatusComponent,
         PipelineActionsComponent,

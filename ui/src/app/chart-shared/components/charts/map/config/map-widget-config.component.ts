@@ -22,7 +22,6 @@ import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     FormFieldComponent,
     SplitSectionComponent,
@@ -41,11 +40,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
-        LayoutDirective,
         SplitSectionComponent,
         FormFieldComponent,
         SelectSinglePropertyConfigComponent,
-        FlexDirective,
         MatFormField,
         MatInput,
         FormsModule,

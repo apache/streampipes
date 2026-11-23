@@ -17,13 +17,11 @@
 -->
 
 <div
-    class="full-background setup-container light-mode"
-    fxLayout="row"
-    fxLayoutAlign="center center"
+    class="full-background setup-container light-mode flex-row justify-center items-center"
 >
-    <div fxFlex="80" fxLayout="column" fxLayoutAlign="center center">
-        <div fxFlex="100" fxLayout="column" class="box-shadow-login setup-card">
-            <form #setupForm="ngForm" fxFlex="100" fxLayout="column">
+    <div class="flex-col justify-center items-center basis-80">
+        <div class="box-shadow-login setup-card flex-col flex-100">
+            <form #setupForm="ngForm" class="flex-col flex-100">
                 <div class="setup-header p-20">
                     <img
                         class="sp-logo"
@@ -39,11 +37,11 @@
                     >
                 </div>
                 @if (!installationRunning) {
-                    <div fxFlex="100" fxLayout="column">
+                    <div class="flex-col flex-100">
                         <div class="setup-inline-content">
                             <h3>Initial User</h3>
-                            <div fxLayout="column">
-                                <mat-form-field fxFlex color="accent">
+                            <div class="flex-col">
+                                <mat-form-field class="flex-1" color="accent">
                                     <mat-label>Email</mat-label>
                                     <input
                                         [(ngModel)]="setup.adminEmail"
@@ -54,7 +52,7 @@
                                         required
                                     />
                                 </mat-form-field>
-                                <mat-form-field fxFlex color="accent">
+                                <mat-form-field class="flex-1" color="accent">
                                     <mat-label>Password</mat-label>
                                     <input
                                         [(ngModel)]="setup.adminPassword"
@@ -81,16 +79,22 @@
                 }
                 @if (installationRunning) {
                     <div #scroll class="installation-status-container">
-                        <div fxLayout="column" class="setup-inline-content">
+                        <div class="setup-inline-content flex-col">
                             @for (msg of installationResults; track msg) {
-                                <div>
-                                    <div fxFlex fxLayout="row">
-                                        <div fxFlex="80" style="width: 50%">
+                                <div class="flex-row">
+                                    <div class="flex-row flex-1">
+                                        <div
+                                            class="basis-80"
+                                            style="width: 50%"
+                                        >
                                             <h4>
                                                 {{ msg.notifications[0].title }}
                                             </h4>
                                         </div>
-                                        <div fxFlex="20" style="width: 50%">
+                                        <div
+                                            class="basis-20"
+                                            style="width: 50%"
+                                        >
                                             @if (msg.success) {
                                                 <mat-icon
                                                     class="md-accent"
@@ -118,11 +122,11 @@
                                 </div>
                             }
                             @if (nextTaskTitle !== '') {
-                                <div fxFlex fxLayout="row">
-                                    <div fxFlex="80" style="width: 50%">
+                                <div class="flex-row flex-1">
+                                    <div class="basis-80" style="width: 50%">
                                         <h4>{{ nextTaskTitle }}</h4>
                                     </div>
-                                    <div fxFlex="20" style="width: 50%">
+                                    <div class="basis-20" style="width: 50%">
                                         @if (loading) {
                                             <sp-spinner
                                                 class="md-accent"
@@ -137,9 +141,9 @@
                     </div>
                 }
                 <mat-divider></mat-divider>
-                <div fxLayout="row" fxLayoutAlign="center center">
+                <div class="flex-row justify-center items-center">
                     <div
-                        fxLayout="row"
+                        class="flex-row"
                         style="margin-top: 10px; margin-bottom: 10px"
                     >
                         @if (!installationFinished) {

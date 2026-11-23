@@ -18,11 +18,11 @@
 
 @if (editMode) {
     <div>
-        <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
-            <div fxFlex fxLayoutAlign="start center">
+        <div class="flex-row items-center gap-md">
+            <div class="flex-row items-center flex-1">
                 @if (labelsAvailable) {
                     <sp-form-field
-                        fxFlex="100"
+                        class="flex-100"
                         [level]="2"
                         [label]="'Labels' | translate"
                         [description]="
@@ -30,7 +30,7 @@
                                 | translate
                         "
                     >
-                        <div form-field-actions fxLayoutAlign="start center">
+                        <div form-field-actions class="flex-row items-center">
                             <a
                                 mat-flat-button
                                 class="mat-basic"
@@ -66,7 +66,7 @@
     </div>
 }
 @if (!editMode && labelsAvailable) {
-    <div fxLayout="row wrap" fxLayoutGap="10px">
+    <div class="flex-row flex-wrap gap-sm">
         @for (label of labels; track label) {
             <sp-label
                 [labelText]="label.label"

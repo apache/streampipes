@@ -17,10 +17,10 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+    <div class="sp-dialog-content p-15 flex-row">
         @if (clonedAssetLinks) {
             <sp-manage-asset-link-table
-                fxFlex="100"
+                class="flex-100"
                 [resources]="resourceRows"
                 [selectedResourceIds]="selectedResourceIds"
                 [assetLinkTypes]="assetLinkTypes"

@@ -17,8 +17,8 @@
   -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <div fxFlex="100" fxLayout="column">
+    <div class="sp-dialog-content p-15 flex-row">
+        <div class="flex-col flex-100">
             <sp-split-section
                 [level]="3"
                 [title]="'Advanced filter' | translate"
@@ -56,7 +56,7 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions" fxLayoutGap="10px">
+    <div class="sp-dialog-actions">
         <button
             mat-flat-button
             (click)="save()"
@@ -125,11 +125,7 @@
         <div class="advanced-filter-group-children">
             @for (child of group.children; track child; let i = $index) {
                 @if (child.type === 'group') {
-                    <div
-                        fxLayout="row"
-                        fxLayoutGap="10px"
-                        fxLayoutAlign="start center"
-                    >
+                    <div class="flex-row items-center gap-sm">
                         <button
                             mat-icon-button
                             color="accent"

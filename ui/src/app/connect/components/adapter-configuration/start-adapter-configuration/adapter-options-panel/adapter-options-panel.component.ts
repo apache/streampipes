@@ -23,28 +23,16 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-adapter-options-panel',
+    host: { class: 'flex-row' },
     templateUrl: './adapter-options-panel.component.html',
     styleUrls: ['./adapter-options-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        MatIcon,
-        MatCheckbox,
-    ],
+    imports: [MatIcon, MatCheckbox],
 })
 export class SpAdapterOptionsPanelComponent {
     @Input()

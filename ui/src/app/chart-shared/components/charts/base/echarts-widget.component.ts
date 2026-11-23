@@ -39,7 +39,6 @@ import { TooMuchDataComponent } from './too-much-data/too-much-data.component';
 import { SpInvalidConfigurationComponent } from './invalid-configuration/invalid-configuration.component';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-data-explorer-echarts-widget',
@@ -52,7 +51,6 @@ import { StyleDirective } from '@ngbracket/ngx-layout/extended';
         SpInvalidConfigurationComponent,
         NgxEchartsDirective,
         NgStyle,
-        StyleDirective,
     ],
 })
 export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>

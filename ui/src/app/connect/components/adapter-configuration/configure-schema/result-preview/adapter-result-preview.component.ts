@@ -33,10 +33,6 @@ import {
     SpLabelComponent,
 } from '@streampipes/shared-ui';
 import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     MatButtonToggle,
     MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
@@ -52,10 +48,8 @@ import { SchemaPreviewStatusComponent } from '../schema-preview-status.component
     styleUrl: '../schema-preview.scss',
     imports: [
         SchemaPreviewStatusComponent,
-        LayoutAlignDirective,
         MatButtonToggleGroup,
         MatButtonToggle,
-        LayoutDirective,
         SpSpinnerComponent,
         SpLabelComponent,
         SpExceptionMessageComponent,

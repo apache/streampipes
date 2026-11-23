@@ -19,7 +19,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractFunctionDetailsDirective } from '../abstract-function-details.directive';
 import { SpLogEntry } from '@streampipes/platform-services';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -35,8 +34,6 @@ import { finalize } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpFunctionDetailsLayoutComponent,
-        FlexDirective,
-        LayoutDirective,
         MatIconButton,
         MatIcon,
         MatTooltip,

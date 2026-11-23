@@ -40,11 +40,6 @@ import {
 } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.model';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MultiStepStatusIndicatorComponent } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.component';
 import { MatDivider } from '@angular/material/divider';
 import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
@@ -63,9 +58,6 @@ export interface SavePipelineDialogResult {
     styleUrls: ['./save-pipeline.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         MultiStepStatusIndicatorComponent,
         MatDivider,
         PipelineStartedStatusComponent,

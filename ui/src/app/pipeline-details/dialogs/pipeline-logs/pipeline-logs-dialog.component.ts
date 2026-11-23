@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -36,8 +35,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./pipeline-logs-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         SpExceptionMessageComponent,
         MatDivider,
         MatButton,

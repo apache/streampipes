@@ -32,11 +32,6 @@ import {
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterConfigurationStateService } from '../adapter-configuration-state-service/adapter-configuration-state.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { NoTimestampErrorHintComponent } from './no-timestamp-error-hint/no-timestamp-error-hint.component';
 import { SpBasicInnerPanelComponent } from '@streampipes/shared-ui';
 import { ConfigureFieldsHeaderComponent } from './configure-fields-header/configure-fields-header.component';
@@ -55,9 +50,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./configure-fields.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
         NoTimestampErrorHintComponent,
         SpBasicInnerPanelComponent,
         ConfigureFieldsHeaderComponent,

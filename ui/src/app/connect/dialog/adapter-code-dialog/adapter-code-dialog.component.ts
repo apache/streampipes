@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { AdapterCodePanelComponent } from '../../components/adapter-code-panel/adapter-code-panel.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -34,14 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-code-dialog',
     templateUrl: './adapter-code-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        AdapterCodePanelComponent,
-        MatDivider,
-        MatButton,
-        TranslatePipe,
-    ],
+    imports: [AdapterCodePanelComponent, MatDivider, MatButton, TranslatePipe],
 })
 export class AdapterCodeDialogComponent {
     private dialogRef =

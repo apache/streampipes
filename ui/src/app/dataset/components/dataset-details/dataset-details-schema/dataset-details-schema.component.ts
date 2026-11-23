@@ -27,7 +27,6 @@ import {
     PropertyScopeBadgeComponent,
 } from '@streampipes/shared-ui';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     MatCell,
     MatCellDef,
@@ -65,8 +64,6 @@ interface SchemaRow {
     imports: [
         SpDatasetDetailsLayoutComponent,
         PropertyScopeBadgeComponent,
-        LayoutDirective,
-        FlexDirective,
         MatTable,
         MatColumnDef,
         MatHeaderCellDef,

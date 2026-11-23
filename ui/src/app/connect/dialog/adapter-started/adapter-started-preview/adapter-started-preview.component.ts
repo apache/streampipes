@@ -25,18 +25,14 @@ import {
 } from '@angular/core';
 import { AdapterService, SpDataStream } from '@streampipes/platform-services';
 import { RestService } from '../../../services/rest.service';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { PipelineElementRuntimeInfoComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-adapter-started-preview',
+    host: { class: 'flex-row' },
     templateUrl: './adapter-started-preview.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        PipelineElementRuntimeInfoComponent,
-    ],
+    imports: [PipelineElementRuntimeInfoComponent],
 })
 export class SpAdapterStartedPreviewComponent implements OnInit {
     private adapterService = inject(AdapterService);

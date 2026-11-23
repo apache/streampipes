@@ -43,7 +43,6 @@ import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-valida
 import { QuillEditorComponent } from 'ngx-quill';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
@@ -51,12 +50,11 @@ import { MatChip, MatChipSet } from '@angular/material/chips';
 
 @Component({
     selector: 'sp-app-static-free-input',
+    host: { class: 'flex-row' },
     templateUrl: './static-free-input.component.html',
     styleUrls: ['./static-free-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         MatFormField,

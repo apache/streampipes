@@ -17,9 +17,9 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content">
-        <div fxFlex="100" fxLayout="column">
-            <div fxFlex="100" fxLayout="column" class="p-10">
+    <div class="sp-dialog-content flex-row">
+        <div class="flex-col flex-100">
+            <div class="p-10 flex-col flex-100">
                 @for (logEntry of logInfo; track logEntry) {
                     <div>
                         @if (logEntry.errorMessage) {

@@ -33,11 +33,6 @@ import {
     PipelineService,
 } from '@streampipes/platform-services';
 import { forkJoin } from 'rxjs';
-import {
-    FlexDirective,
-    FlexFillDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout';
 import { FeatureCardHeaderComponent } from '@streampipes/shared-ui';
 import { PipelinePreviewMetaComponent } from './pipeline-preview-meta/pipeline-preview-meta.component';
 import { MatDivider } from '@angular/material/list';
@@ -51,11 +46,8 @@ import { PipelinePreviewComponent } from '../../../pipeline-details/components/p
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         PipelinePreviewMetaComponent,
-        FlexFillDirective,
         MatDivider,
-        LayoutDirective,
         FeatureCardHeaderComponent,
-        FlexDirective,
         PipelinePreviewComponent,
     ],
 })

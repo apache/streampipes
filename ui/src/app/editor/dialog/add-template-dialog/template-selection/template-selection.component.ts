@@ -24,10 +24,6 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { CompactPipelineTemplate } from '@streampipes/platform-services';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { FormLabelComponent } from '@streampipes/shared-ui';
 import { MatDivider } from '@angular/material/divider';
 
@@ -36,12 +32,7 @@ import { MatDivider } from '@angular/material/divider';
     templateUrl: './template-selection.component.html',
     styleUrls: ['./template-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FormLabelComponent,
-        MatDivider,
-    ],
+    imports: [FormLabelComponent, MatDivider],
 })
 export class TemplateSelectionComponent {
     @Input()

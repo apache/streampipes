@@ -17,8 +17,8 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <div fxFlex="100" fxLayout="column">
+    <div class="sp-dialog-content p-15 flex-row">
+        <div class="flex-col flex-100">
             @for (
                 possibleElement of possibleElements;
                 track possibleElement;
@@ -26,9 +26,7 @@
             ) {
                 <div (click)="create(possibleElement)">
                     <div
-                        fxLayout="row"
-                        class="m-10"
-                        fxLayoutAlign="start center"
+                        class="m-10 flex-row items-center"
                         [style]="styles[i]"
                         (mouseenter)="changeStyle(i, true)"
                         (mouseleave)="changeStyle(i, false)"
@@ -51,7 +49,7 @@
                                 [iconSize]="true"
                             ></sp-pipeline-element>
                         </div>
-                        <div fxLayout="column" fxLayoutAlign="center start">
+                        <div class="flex-col justify-center items-start">
                             <sp-form-label
                                 [label]="possibleElement.name"
                                 [description]="possibleElement.description"

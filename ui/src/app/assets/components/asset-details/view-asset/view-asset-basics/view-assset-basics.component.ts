@@ -28,11 +28,6 @@ import {
     Isa95TypeService,
     SpAsset,
 } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpLabelComponent } from '@streampipes/shared-ui';
 import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels.component';
 
@@ -40,13 +35,7 @@ import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels
     selector: 'sp-view-asset-basics',
     templateUrl: './view-asset-basics.component.html',
     styleUrls: ['./view-asset-basics.component.scss'],
-    imports: [
-        LayoutDirective,
-        LayoutGapDirective,
-        FlexDirective,
-        SpLabelComponent,
-        ViewAssetLabelsComponent,
-    ],
+    imports: [SpLabelComponent, ViewAssetLabelsComponent],
 })
 export class ViewAssetBasicsComponent implements OnChanges {
     private isa95TypeService = inject(Isa95TypeService);

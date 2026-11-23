@@ -17,8 +17,8 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
-        <div fxFlex="100">
+    <div class="sp-dialog-content p-15 flex-row">
+        <div class="flex-100">
             @if (retentionConfig?.dataRetentionConfig) {
                 <div class="retention-step-content">
                     <sp-select-data
@@ -44,7 +44,7 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions" fxLayoutGap="10px">
+    <div class="sp-dialog-actions">
         <button
             mat-flat-button
             color="accent"

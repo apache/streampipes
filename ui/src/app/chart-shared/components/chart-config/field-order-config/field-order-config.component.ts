@@ -31,10 +31,6 @@ import {
     CdkDropList,
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { SpAlertBannerComponent } from '@streampipes/shared-ui';
@@ -51,8 +47,6 @@ import { SplitSectionComponent } from '@streampipes/shared-ui';
         CdkDropList,
         CdkDrag,
         CdkDragHandle,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatIcon,
         MatIconButton,
         SpAlertBannerComponent,

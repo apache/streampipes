@@ -16,9 +16,9 @@
 ~
 -->
 
-<div id="formWrapper" fxFlex="100" fxLayout="column">
+<div id="formWrapper" class="flex-col flex-100">
     @if (!staticProperty.horizontalRendering) {
-        <div fxLayout="column">
+        <div class="flex-col">
             @for (option of staticProperty.options; track option) {
                 <mat-checkbox
                     color="accent"

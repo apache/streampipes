@@ -33,13 +33,6 @@ import { AuthService } from '../../../../../services/auth.service';
 import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 import { ChartRoutingService } from '../../../../../chart-shared/services/chart-routing.service';
-import {
-    FlexDirective,
-    FlexFillDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { ChartPreviewComponent } from './chart-preview/chart-preview.component';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -62,16 +55,12 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-chart-selection',
+    host: { class: 'flex-row' },
     templateUrl: './chart-selection.component.html',
     styleUrls: ['./chart-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        FlexDirective,
-        FlexFillDirective,
-        LayoutGapDirective,
-        LayoutDirective,
         ChartPreviewComponent,
-        LayoutAlignDirective,
         MatButton,
         MatIconButton,
         MatIcon,

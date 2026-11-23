@@ -17,10 +17,7 @@
 -->
 
 <div
-    fxFlex="100"
-    fxLayout="row wrap"
-    fxLayoutAlign="start center"
-    class="assembly-options"
+    class="assembly-options flex-row flex-wrap items-center content-center flex-100"
 >
     <ng-content></ng-content>
     <button
@@ -53,9 +50,7 @@
     </sp-pipeline-assembly-options-pipeline-cache>
 
     <div
-        class="assembly-options__view-controls"
-        fxLayout="row"
-        fxLayoutAlign="end center"
+        class="assembly-options__view-controls flex-row justify-end items-center"
     >
         @if (canPreview) {
             <button
@@ -71,7 +66,7 @@
                 "
                 data-cy="sp-editor-toggle-live-preview"
             >
-                <div fxLayoutAlign="start center" fxLayout="row">
+                <div class="flex-row items-center">
                     @switch (previewState) {
                         @case ('starting') {
                             <sp-spinner [diameter]="16"></sp-spinner>

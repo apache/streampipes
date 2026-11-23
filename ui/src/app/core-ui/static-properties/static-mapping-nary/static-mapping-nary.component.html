@@ -16,8 +16,8 @@
 ~
 -->
 
-<div id="formWrapper" fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayoutAlign="start center">
+<div id="formWrapper" class="flex-col flex-100">
+    <div class="flex-row items-center flex-100">
         <button
             mat-button
             mat-flat-button
@@ -37,7 +37,7 @@
             {{ 'Select none' | translate }}
         </button>
     </div>
-    <div fxFlex="100" fxLayout="column" style="margin-top: 10px">
+    <div class="flex-col flex-100" style="margin-top: 10px">
         @for (
             property of availableProperties
                 | displayRecommendedPipe

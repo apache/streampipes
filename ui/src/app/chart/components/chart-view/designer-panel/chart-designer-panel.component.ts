@@ -31,12 +31,6 @@ import {
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { ChartDataSettingsComponent } from './data-settings/chart-data-settings.component';
-import {
-    FlexDirective,
-    FlexFillDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { ChartVisualisationSettingsComponent } from './visualisation-settings/chart-visualisation-settings.component';
 import { ChartAppearanceSettingsComponent } from './appearance-settings/chart-appearance-settings.component';
@@ -45,22 +39,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-designer-panel',
+    host: { class: 'flex-row' },
     templateUrl: './chart-designer-panel.component.html',
     styleUrls: ['./chart-designer-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexFillDirective,
-        LayoutDirective,
         MatTabGroup,
-        FlexFillDirective,
         MatTab,
         ChartDataSettingsComponent,
         ChartVisualisationSettingsComponent,
         ChartAppearanceSettingsComponent,
-        LayoutAlignDirective,
         MatButton,
         TranslatePipe,
-        FlexDirective,
     ],
 })
 export class ChartDesignerPanelComponent {

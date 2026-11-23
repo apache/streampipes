@@ -24,17 +24,13 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-error-hint',
     templateUrl: './error-hint.component.html',
     styleUrls: ['./error-hint.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [LayoutDirective, LayoutAlignDirective],
+    imports: [],
 })
 export class ErrorHintComponent {
     readonly errorMessages = input<UserErrorMessage[]>([]);

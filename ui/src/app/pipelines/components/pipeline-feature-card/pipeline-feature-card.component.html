@@ -17,7 +17,7 @@
   -->
 
 @if (pipeline && pipelineCanvasMetadata) {
-    <div fxFlexFill fxLayout="column" class="feature-card-outer">
+    <div class="feature-card-outer flex-col flex-fill">
         <sp-feature-card-header
             [title]="pipeline.name"
             [description]="pipeline.description"
@@ -38,7 +38,7 @@
 
         <mat-divider></mat-divider>
 
-        <div fxFlex fxLayout="column" class="feature-preview-wrapper">
+        <div class="feature-preview-wrapper flex-col flex-1">
             <div class="feature-preview-scale">
                 <div class="pipeline-preview-inner">
                     <sp-pipeline-preview

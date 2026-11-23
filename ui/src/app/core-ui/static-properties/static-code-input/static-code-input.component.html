@@ -16,8 +16,8 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+<div class="flex-col flex-100">
+    <div class="flex-row items-center flex-100">
         <button
             mat-button
             mat-flat-button
@@ -38,7 +38,7 @@
             {{ 'Clean code' | translate }}
         </button>
     </div>
-    <div fxFlex="100" fxLayout="row">
+    <div class="flex-row flex-100">
         <div class="code-editor-resizable">
             <ngx-monaco-editor
                 class="code-editor"

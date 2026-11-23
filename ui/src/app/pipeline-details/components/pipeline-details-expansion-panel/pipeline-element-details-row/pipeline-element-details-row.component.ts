@@ -26,11 +26,6 @@ import { PipelineElementUnion } from '../../../../editor/model/editor.model';
 import { SpLogEntry } from '@streampipes/platform-services';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { PipelineLogsDialogComponent } from '../../../dialogs/pipeline-logs/pipeline-logs-dialog.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { PipelineElementsRowComponent } from './elements/pipeline-elements-row.component';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -39,13 +34,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-element-details-row',
+    host: { class: 'flex-row' },
     templateUrl: './pipeline-element-details-row.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        FlexDirective,
         PipelineElementsRowComponent,
-        LayoutAlignDirective,
         MatIconButton,
         MatTooltip,
         MatIcon,

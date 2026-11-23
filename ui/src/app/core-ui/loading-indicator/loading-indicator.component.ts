@@ -19,22 +19,13 @@
 import { Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-loading-indicator',
+    host: { class: 'flex-row' },
     templateUrl: './loading-indicator.component.html',
     styleUrls: ['./loading-indicator.component.scss'],
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        SpSpinnerComponent,
-    ],
+    imports: [SpSpinnerComponent],
 })
 export class LoadingIndicatorComponent {
     private readonly translateService = inject(TranslateService);

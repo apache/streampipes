@@ -25,11 +25,6 @@ import {
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyNary } from '@streampipes/platform-services';
 import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
@@ -37,13 +32,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-app-static-mapping-nary',
+    host: { class: 'flex-row' },
     templateUrl: './static-mapping-nary.component.html',
     styleUrls: ['./static-mapping-nary.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatButton,
         MatCheckbox,
         FormsModule,

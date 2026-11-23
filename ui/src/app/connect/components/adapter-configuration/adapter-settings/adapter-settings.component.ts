@@ -39,11 +39,6 @@ import {
     SpBasicInnerPanelComponent,
 } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpAdapterDeploymentSettingsComponent } from './adapter-deployment-settings/adapter-deployment-settings.component';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -55,15 +50,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-settings',
+    host: { class: 'flex-row' },
     templateUrl: './adapter-settings.component.html',
     styleUrls: ['./adapter-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutDirective,
         SpBasicInnerPanelComponent,
         SpAdapterDeploymentSettingsComponent,
-        LayoutAlignDirective,
         MatFormField,
         MatLabel,
         MatSelect,

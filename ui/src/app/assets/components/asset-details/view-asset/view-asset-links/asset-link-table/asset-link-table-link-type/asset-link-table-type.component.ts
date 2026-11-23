@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -33,7 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './asset-link-table-type.component.html',
     styleUrls: ['./asset-link-table-type.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgStyle, StyleDirective, MatIcon, TranslatePipe],
+    imports: [NgStyle, MatIcon, TranslatePipe],
 })
 export class AssetLinkTableTypeComponent implements OnChanges {
     @Input()

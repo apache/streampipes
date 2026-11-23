@@ -23,10 +23,6 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
@@ -41,8 +37,6 @@ import { LivePreviewState } from '../../../editor/model/editor.model';
     styleUrls: ['./pipeline-details-toolbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
         MatButtonModule,
         MatTooltip,
         MatSlideToggle,

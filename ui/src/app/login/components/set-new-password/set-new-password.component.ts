@@ -32,11 +32,6 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
 import { AuthBoxComponent } from '../auth-box/auth-box.component';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     FormFieldComponent,
     SpAlertBannerComponent,
     SpSpinnerComponent,
@@ -53,9 +48,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         FormsModule,
         ReactiveFormsModule,
         FormFieldComponent,

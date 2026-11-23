@@ -32,7 +32,6 @@ import {
 } from '@streampipes/platform-services';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
-import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -44,7 +43,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         SplitSectionComponent,
         MatButton,
-        LayoutDirective,
         MatCheckbox,
         FormsModule,
         TranslatePipe,

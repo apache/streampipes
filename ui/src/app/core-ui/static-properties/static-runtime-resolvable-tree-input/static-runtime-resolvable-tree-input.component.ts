@@ -39,12 +39,6 @@ import {
 } from '@angular/forms';
 import { StaticTreeInputServiceService } from './static-tree-input-service.service';
 import { StaticTreeInputBrowseNodesComponent } from './static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -58,18 +52,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-static-runtime-resolvable-tree-input',
+    host: { class: 'flex-row' },
     templateUrl: './static-runtime-resolvable-tree-input.component.html',
     styleUrls: ['./static-runtime-resolvable-tree-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         StaticTreeInputButtonMenuComponent,
         SpExceptionMessageComponent,
-        LayoutGapDirective,
         CdkDrag,
         MatIconButton,
         MatIcon,

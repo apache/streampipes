@@ -33,13 +33,6 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin } from 'rxjs';
 import {
-    FlexDirective,
-    FlexFillDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout';
-import {
     FeatureCardHeaderComponent,
     FeatureCardMetaCreationComponent,
     FeatureCardMetaSectionComponent,
@@ -55,16 +48,11 @@ import { ChartContainerComponent } from '../../../chart-shared/components/chart-
     selector: 'sp-chart-feature-card',
     templateUrl: './chart-feature-card.component.html',
     imports: [
-        FlexFillDirective,
         MatIcon,
         TranslatePipe,
         FeatureCardHeaderComponent,
-        LayoutDirective,
         FeatureCardMetaCreationComponent,
         FeatureCardMetaSectionComponent,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        FlexDirective,
         ChartContainerComponent,
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
