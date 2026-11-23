@@ -29,7 +29,7 @@
 
     <groupId>org.apache.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.99.1-SNAPSHOT</version>
+    <version>0.99.0</version>
     <packaging>pom</packaging>
 
     <name>Apache StreamPipes</name>
@@ -1434,7 +1434,7 @@
         <developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
         <connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
         <url>https://github.com/apache/streampipes</url>
-      <tag>rel/0.99.0</tag>
+      <tag>release/0.99.0</tag>
   </scm>
 
     <issueManagement>

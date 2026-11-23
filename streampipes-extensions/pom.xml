@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.99.1-SNAPSHOT</version>
+        <version>0.99.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -119,7 +119,7 @@
             <plugin>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-maven-plugin</artifactId>
-                <version>0.99.1-SNAPSHOT</version>
+                <version>0.99.0</version>
             </plugin>
         </plugins>
     </build>
