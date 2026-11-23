@@ -16,343 +16,314 @@
 ~
 -->
 
-<div class="form-field-small flex-col flex-100">
-    <mat-accordion class="data-source-selection-panel flex-100">
-        @if (sourceConfig) {
-            <mat-expansion-panel
-                [expanded]="step === 0"
-                hideToggle
-                class="expansion-panel"
-            >
-                <mat-expansion-panel-header class="expansion-panel-header">
-                    <div class="flex-row flex-100">
-                        <span class="text-sm flex-row items-center flex-1">
-                            {{
-                                sourceConfig.measureName ||
-                                    ('Dataset' | translate)
-                            }}
-                        </span>
-                    </div>
-                </mat-expansion-panel-header>
-                <div class="mt-10 p-sm flex-col flex-100">
-                    <sp-split-section
-                        [level]="3"
-                        [title]="'Dataset' | translate"
+<div class="form-field-small flex-col flex-100 p-lg">
+    @if (sourceConfig) {
+        <sp-form-field [level]="2" [label]="'Dataset' | translate">
+            @if (datasetAssets().length) {
+                <button
+                    data-cy="chart-browse-assets"
+                    form-field-actions
+                    mat-button
+                    type="button"
+                    class="small-button"
+                    [attr.aria-expanded]="browsingAssets"
+                    (click)="toggleAssetBrowser()"
+                >
+                    {{
+                        (browsingAssets
+                            ? 'Search all datasets'
+                            : 'Browse by asset'
+                        ) | translate
+                    }}
+                </button>
+            }
+            @if (availableDatasets().length === 0) {
+                <sp-alert-banner
+                    type="warning"
+                    icon="warning"
+                    [title]="'No datasets available' | translate"
+                    [description]="
+                        'Please connect an adapter or verify your pipeline is running'
+                            | translate
+                    "
+                >
+                </sp-alert-banner>
+                <div class="warning-container flex-col">
+                    <div
+                        class="mt-10 flex-row justify-end items-end gap-sm flex-1"
                     >
-                        @if (availableDatasets.length === 0) {
-                            <sp-alert-banner
-                                type="warning"
-                                icon="warning"
-                                [title]="'No datasets available' | translate"
-                                [description]="
-                                    'Please connect an adapter or verify your pipeline is running'
-                                        | translate
-                                "
-                            >
-                            </sp-alert-banner>
-                            <div class="warning-container flex-col">
-                                <div
-                                    class="mt-10 flex-row justify-end items-end gap-sm flex-1"
-                                >
-                                    <button
-                                        mat-flat-button
-                                        class="mat-basic small-button"
-                                        (click)="navigateToConnect()"
-                                    >
-                                        {{ 'Connect Adapter' | translate }}
-                                    </button>
-                                    <button
-                                        mat-flat-button
-                                        class="mat-basic small-button"
-                                        (click)="navigateToPipelines()"
-                                    >
-                                        {{ 'Start Pipeline' | translate }}
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                        @if (availableDatasets.length !== 0) {
-                            <sp-search-select
-                                class="flex-100"
-                                [items]="availableDatasets"
-                                [value]="selectedDataset"
-                                [placeholder]="'Search datasets' | translate"
-                                dataCy="data-explorer-select-data-set"
-                                (valueChange)="
-                                    onDatasetSelectionChange(
-                                        sourceConfig,
-                                        $event
-                                    )
-                                "
-                            >
-                            </sp-search-select>
-                        }
-                    </sp-split-section>
-                    @if (sourceConfig.measureName) {
-                        <sp-split-section
-                            [level]="3"
-                            [title]="'Query' | translate"
+                        <button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="navigateToConnect()"
                         >
-                            <div
-                                section-actions
-                                class="header-container flex-1 flex-row"
+                            {{ 'Connect Adapter' | translate }}
+                        </button>
+                        <button
+                            mat-flat-button
+                            class="mat-basic small-button"
+                            (click)="navigateToPipelines()"
+                        >
+                            {{ 'Start Pipeline' | translate }}
+                        </button>
+                    </div>
+                </div>
+            }
+            @if (browsingAssets && datasetAssets().length) {
+                <div class="flex-col gap-sm">
+                    <sp-search-select
+                        dataCy="chart-asset-search"
+                        [items]="datasetAssets()"
+                        [value]="selectedAsset()"
+                        [placeholder]="'Search assets' | translate"
+                        (valueChange)="selectAsset($event)"
+                    />
+                    @if (selectedAsset(); as asset) {
+                        @if (assetDatasets().length > 5) {
+                            <mat-form-field
+                                appearance="outline"
+                                subscriptSizing="dynamic"
                             >
-                                <span class="flex-1"></span>
-                                <button
-                                    mat-icon-button
-                                    class="pull-btn-right"
-                                    [matTooltip]="
-                                        expandFieldsDataSource
-                                            ? ('Expand Less' | translate)
-                                            : ('Expand More' | translate)
+                                <input
+                                    matInput
+                                    [placeholder]="
+                                        'Search datasets' | translate
                                     "
-                                    (click)="toggleExpandFieldsQuery()"
+                                    [attr.aria-label]="
+                                        'Search datasets' | translate
+                                    "
+                                    [ngModel]="assetSearch()"
+                                    (ngModelChange)="assetSearch.set($event)"
+                                />
+                            </mat-form-field>
+                        }
+                        <div class="asset-results">
+                            @for (
+                                dataset of filteredAssetDatasets();
+                                track dataset.elementId
+                            ) {
+                                <button
+                                    type="button"
+                                    class="asset-result"
+                                    [attr.data-cy]="
+                                        'chart-asset-dataset-' +
+                                        dataset.measureName
+                                    "
+                                    (click)="
+                                        onDatasetSelectionChange(
+                                            sourceConfig,
+                                            dataset
+                                        )
+                                    "
                                 >
-                                    <mat-icon>{{
-                                        expandFieldsQuery
-                                            ? 'expand_less'
-                                            : 'expand_more'
-                                    }}</mat-icon>
+                                    <strong>{{ dataset.measureName }}</strong>
+                                    @for (
+                                        path of asset.paths.get(
+                                            dataset.elementId
+                                        );
+                                        track path
+                                    ) {
+                                        @if (path !== asset.label) {
+                                            <small>{{ path }}</small>
+                                        }
+                                    }
                                 </button>
-                            </div>
-                            <div>
-                                <mat-radio-group
-                                    class="selection-radio-group"
-                                    [(ngModel)]="sourceConfig.queryType"
-                                    (change)="changeDataAggregation()"
-                                >
-                                    @if (
-                                        expandFieldsQuery ||
-                                        sourceConfig.queryType === 'raw'
-                                    ) {
-                                        <div
-                                            class="radio-option-box flex-col"
-                                            [ngClass]="{
-                                                'radio-option-box-accent':
-                                                    sourceConfig.queryType ===
-                                                    'raw',
-                                            }"
-                                        >
-                                            <mat-radio-button
-                                                class="selection-radio-button"
-                                                [value]="'raw'"
-                                            >
-                                                <span
-                                                    class="font-emphasized text-sm"
-                                                    >{{
-                                                        'Raw' | translate
-                                                    }}</span
-                                                >
-                                            </mat-radio-button>
-                                            <p class="description">
-                                                {{
-                                                    'Show raw data from your data source.'
-                                                        | translate
-                                                }}
-                                            </p>
-                                            @if (
-                                                sourceConfig.queryType === 'raw'
-                                            ) {
-                                                <div
-                                                    class="selection-form-field flex-col flex-100"
-                                                >
-                                                    <sp-form-field
-                                                        class="form-field-small"
-                                                        [level]="3"
-                                                        [label]="
-                                                            'Limit' | translate
-                                                        "
-                                                    >
-                                                        <mat-form-field
-                                                            class="flex-100"
-                                                            color="accent"
-                                                            appearance="outline"
-                                                        >
-                                                            <input
-                                                                [(ngModel)]="
-                                                                    sourceConfig
-                                                                        .queryConfig
-                                                                        .limit
-                                                                "
-                                                                matInput
-                                                                (change)="
-                                                                    triggerDataRefresh()
-                                                                "
-                                                            />
-                                                        </mat-form-field>
-                                                    </sp-form-field>
-                                                    <sp-form-field
-                                                        class="form-field-small"
-                                                        [level]="3"
-                                                        [label]="
-                                                            'Page' | translate
-                                                        "
-                                                    >
-                                                        <mat-form-field
-                                                            class="flex-100"
-                                                            color="accent"
-                                                            appearance="outline"
-                                                        >
-                                                            <input
-                                                                [(ngModel)]="
-                                                                    sourceConfig
-                                                                        .queryConfig
-                                                                        .page
-                                                                "
-                                                                matInput
-                                                                (change)="
-                                                                    triggerDataRefresh()
-                                                                "
-                                                            />
-                                                        </mat-form-field>
-                                                    </sp-form-field>
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                    @if (
-                                        expandFieldsQuery ||
-                                        sourceConfig.queryType === 'aggregated'
-                                    ) {
-                                        <div
-                                            data-cy="data-explorer-query-type-aggregated"
-                                            class="radio-option-box flex-col"
-                                            [ngClass]="{
-                                                'radio-option-box-accent':
-                                                    sourceConfig.queryType ===
-                                                    'aggregated',
-                                            }"
-                                        >
-                                            <mat-radio-button
-                                                class="selection-radio-button"
-                                                [value]="'aggregated'"
-                                            >
-                                                {{ 'Aggregated' | translate }}
-                                            </mat-radio-button>
-                                            <p class="description">
-                                                {{
-                                                    'Aggregate raw data by time unit or value.'
-                                                        | translate
-                                                }}
-                                            </p>
-                                            @if (
-                                                sourceConfig.queryType ===
-                                                'aggregated'
-                                            ) {
-                                                <div
-                                                    class="selection-form-field flex-col flex-100"
-                                                >
-                                                    <div
-                                                        data-cy="data-explorer-auto-aggregate-checkbox"
-                                                    >
-                                                        <mat-checkbox
-                                                            color="accent"
-                                                            [(ngModel)]="
-                                                                sourceConfig
-                                                                    .queryConfig
-                                                                    .autoAggregate
-                                                            "
-                                                            (change)="
-                                                                triggerDataRefresh()
-                                                            "
-                                                        >
-                                                            {{
-                                                                'Auto-Aggregate'
-                                                                    | translate
-                                                            }}
-                                                        </mat-checkbox>
-                                                    </div>
-                                                    @if (
-                                                        !sourceConfig
-                                                            .queryConfig
-                                                            .autoAggregate
-                                                    ) {
-                                                        <sp-aggregate-configuration
-                                                            class="aggregate-config"
-                                                            [queryConfig]="
-                                                                sourceConfig.queryConfig
-                                                            "
-                                                            [widgetId]="
-                                                                widgetId
-                                                            "
-                                                        >
-                                                        </sp-aggregate-configuration>
-                                                    }
-                                                    <sp-fill-configuration
-                                                        class="mt-10"
-                                                        [queryConfig]="
-                                                            sourceConfig.queryConfig
-                                                        "
-                                                        [widgetId]="widgetId"
-                                                    >
-                                                    </sp-fill-configuration>
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                    @if (
-                                        expandFieldsQuery ||
-                                        sourceConfig.queryType === 'single'
-                                    ) {
-                                        <div
-                                            class="radio-option-box flex-col"
-                                            [ngClass]="{
-                                                'radio-option-box-accent':
-                                                    sourceConfig.queryType ===
-                                                    'single',
-                                            }"
-                                        >
-                                            <mat-radio-button
-                                                class="selection-radio-button"
-                                                [value]="'single'"
-                                            >
-                                                {{ 'Single' | translate }}
-                                            </mat-radio-button>
-                                            <p class="description">
-                                                {{
-                                                    'Show single data entry.'
-                                                        | translate
-                                                }}
-                                            </p>
-                                        </div>
-                                    }
-                                </mat-radio-group>
-                            </div>
-                        </sp-split-section>
-                    }
-                    @if (sourceConfig.queryType && sourceConfig.measure) {
-                        <div class="flex-col">
-                            <sp-field-selection-panel
-                                #fieldSelectionPanel
-                                [sourceConfig]="sourceConfig"
-                                (initialFieldSelectionEvent)="
-                                    onInitialFieldSelection()
-                                "
-                            ></sp-field-selection-panel>
-                            <sp-filter-selection-panel
-                                [sourceConfig]="sourceConfig"
-                            ></sp-filter-selection-panel>
-                            <sp-group-selection-panel
-                                #groupSelectionPanel
-                                [sourceConfig]="sourceConfig"
-                            ></sp-group-selection-panel>
-                            <sp-result-label-configuration
-                                [sourceConfig]="sourceConfig"
-                                [sourceIndex]="0"
-                            >
-                            </sp-result-label-configuration>
-                            <sp-order-selection-panel
-                                [sourceConfig]="sourceConfig"
-                            >
-                            </sp-order-selection-panel>
+                            } @empty {
+                                <small>{{
+                                    'No results found' | translate
+                                }}</small>
+                            }
                         </div>
                     }
                 </div>
-            </mat-expansion-panel>
+            } @else if (availableDatasets().length !== 0) {
+                <sp-search-select
+                    class="flex-100"
+                    [items]="availableDatasets()"
+                    [value]="selectedDataset"
+                    [placeholder]="'Search datasets' | translate"
+                    dataCy="data-explorer-select-data-set"
+                    (valueChange)="
+                        onDatasetSelectionChange(sourceConfig, $event)
+                    "
+                >
+                </sp-search-select>
+            }
+        </sp-form-field>
+        @if (reviewFields.length) {
+            <sp-alert-banner
+                type="warning"
+                icon="info"
+                [title]="'Review filters and chart mappings' | translate"
+                [description]="
+                    ((filtersRemoved
+                        ? 'Incompatible filters removed. Check these fields'
+                        : 'Fields to review for this dataset'
+                    ) | translate) +
+                    ' · ' +
+                    reviewFields.join(', ')
+                "
+            />
         }
-    </mat-accordion>
-    <div class="p-10">
-        <div data-cy="data-explorer-ignore-too-much-data-warning-checkbox">
+        @if (sourceConfig.measureName) {
+            <sp-chart-settings-section
+                [heading]="'Query' | translate"
+                [description]="
+                    sourceConfig.queryType === 'aggregated'
+                        ? ('Aggregated' | translate) +
+                          ' · ' +
+                          (sourceConfig.queryConfig.autoAggregate
+                              ? ('Auto-Aggregate' | translate)
+                              : sourceConfig.queryConfig.aggregationValue +
+                                ' ' +
+                                sourceConfig.queryConfig.aggregationTimeUnit)
+                        : sourceConfig.queryType === 'single'
+                          ? ('Single' | translate)
+                          : ('Raw' | translate)
+                "
+                [initiallyOpen]="true"
+            >
+                <mat-radio-group
+                    class="query-modes"
+                    [attr.aria-label]="'Query' | translate"
+                    [(ngModel)]="sourceConfig.queryType"
+                    (change)="changeDataAggregation()"
+                >
+                    <mat-radio-button value="raw">{{
+                        'Raw' | translate
+                    }}</mat-radio-button>
+                    <mat-radio-button
+                        value="aggregated"
+                        data-cy="data-explorer-query-type-aggregated"
+                        >{{ 'Aggregated' | translate }}</mat-radio-button
+                    >
+                    <mat-radio-button value="single">{{
+                        'Single' | translate
+                    }}</mat-radio-button>
+                </mat-radio-group>
+                <small class="query-help">
+                    @switch (sourceConfig.queryType) {
+                        @case ('raw') {
+                            {{
+                                'Show raw data from your data source.'
+                                    | translate
+                            }}
+                        }
+                        @case ('aggregated') {
+                            {{
+                                'Aggregate raw data by time unit or value.'
+                                    | translate
+                            }}
+                        }
+                        @case ('single') {
+                            {{ 'Show single data entry.' | translate }}
+                        }
+                    }
+                </small>
+                @switch (sourceConfig.queryType) {
+                    @case ('raw') {
+                        <div class="query-pagination">
+                            <sp-form-field
+                                class="form-field-small"
+                                [level]="3"
+                                [label]="'Limit' | translate"
+                            >
+                                <mat-form-field
+                                    class="flex-100"
+                                    color="accent"
+                                    appearance="outline"
+                                >
+                                    <input
+                                        [attr.aria-label]="'Limit' | translate"
+                                        [(ngModel)]="
+                                            sourceConfig.queryConfig.limit
+                                        "
+                                        matInput
+                                        (change)="triggerDataRefresh()"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
+                            <sp-form-field
+                                class="form-field-small"
+                                [level]="3"
+                                [label]="'Page' | translate"
+                            >
+                                <mat-form-field
+                                    class="flex-100"
+                                    color="accent"
+                                    appearance="outline"
+                                >
+                                    <input
+                                        [attr.aria-label]="'Page' | translate"
+                                        [(ngModel)]="
+                                            sourceConfig.queryConfig.page
+                                        "
+                                        matInput
+                                        (change)="triggerDataRefresh()"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
+                        </div>
+                    }
+                    @case ('aggregated') {
+                        <div data-cy="data-explorer-auto-aggregate-checkbox">
+                            <mat-checkbox
+                                color="accent"
+                                [(ngModel)]="
+                                    sourceConfig.queryConfig.autoAggregate
+                                "
+                                (change)="triggerDataRefresh()"
+                            >
+                                {{ 'Auto-Aggregate' | translate }}
+                            </mat-checkbox>
+                        </div>
+                        @if (!sourceConfig.queryConfig.autoAggregate) {
+                            <sp-aggregate-configuration
+                                [queryConfig]="sourceConfig.queryConfig"
+                                [widgetId]="widgetId"
+                            >
+                            </sp-aggregate-configuration>
+                        }
+                        <sp-fill-configuration
+                            [queryConfig]="sourceConfig.queryConfig"
+                            [widgetId]="widgetId"
+                        >
+                        </sp-fill-configuration>
+                    }
+                }
+            </sp-chart-settings-section>
+        }
+        @if (sourceConfig.queryType && sourceConfig.measure) {
+            <div class="flex-col">
+                <sp-field-selection-panel
+                    #fieldSelectionPanel
+                    [sourceConfig]="sourceConfig"
+                    (initialFieldSelectionEvent)="onInitialFieldSelection()"
+                ></sp-field-selection-panel>
+                <sp-filter-selection-panel
+                    [sourceConfig]="sourceConfig"
+                ></sp-filter-selection-panel>
+                <sp-group-selection-panel
+                    #groupSelectionPanel
+                    [sourceConfig]="sourceConfig"
+                ></sp-group-selection-panel>
+                <sp-result-label-configuration
+                    [sourceConfig]="sourceConfig"
+                    [sourceIndex]="0"
+                >
+                </sp-result-label-configuration>
+                <sp-order-selection-panel [sourceConfig]="sourceConfig">
+                </sp-order-selection-panel>
+            </div>
+        }
+    }
+    <sp-chart-settings-section
+        [heading]="'Advanced data options' | translate"
+        [description]="
+            'Missing values and browser overload warning' | translate
+        "
+        data-cy="chart-section-advanced"
+        ><div data-cy="data-explorer-ignore-too-much-data-warning-checkbox">
             <mat-checkbox [(ngModel)]="dataConfig.ignoreTooMuchDataWarning">
                 {{ 'Deactivate browser overload warning' | translate }}
             </mat-checkbox>
@@ -364,5 +335,5 @@
         >
             {{ 'Ignore Events with missing values' | translate }}
         </mat-checkbox>
-    </div>
+    </sp-chart-settings-section>
 </div>

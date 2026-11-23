@@ -34,7 +34,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { FormFieldComponent } from '@streampipes/shared-ui';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -43,10 +43,27 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-color-mapping-options-config',
     templateUrl: './color-mapping-options-config.component.html',
-    styles: [
-        '.mapping-value { flex: 1 1 40px; box-sizing: border-box; min-width: 40px; max-width: 40px; }',
-        '.mapping-color { flex: 1 1 70px; box-sizing: border-box; min-width: 70px; max-width: 70px; }',
-    ],
+    styles: `
+        :host {
+            display: block;
+            container-type: inline-size;
+        }
+        .mapping-row {
+            display: grid;
+            align-items: end;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) 2rem auto;
+            gap: var(--space-sm);
+        }
+        .boolean-mapping {
+            grid-template-columns: auto minmax(0, 1fr) 2rem;
+            align-items: center;
+        }
+        @container (max-width: 20rem) {
+            .mapping-row:not(.boolean-mapping) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatCheckbox,
@@ -59,7 +76,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         ColorPickerDirective,
         MatIconButton,
         MatTooltip,
-        MatLabel,
         TranslatePipe,
     ],
 })

@@ -16,22 +16,32 @@
   ~
   -->
 
+@let config = currentlyConfiguredWidget.visualizationConfig;
 <sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    [requirement]="
+        'Select at least one numeric field for this chart.' | translate
     "
+    [configurationValid]="config.configurationValid"
 >
-    <sp-split-section [level]="3" [title]="'Field' | translate">
+    <sp-chart-settings-section
+        [heading]="'Heatmap value' | translate"
+        [description]="
+            config.selectedProperty?.fullDbName ||
+            ('No fields selected' | translate)
+        "
+        [initiallyOpen]="true"
+    >
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            "
+            [selectedProperty]="config.selectedProperty"
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-split-section>
-    <sp-split-section [level]="3" [title]="'Settings' | translate">
+    </sp-chart-settings-section>
+    <sp-chart-settings-section
+        [heading]="'Value resolution' | translate"
+        [description]="'' + config.resolution"
+    >
         <sp-form-field [level]="3" [label]="'Resolution' | translate">
             <mat-form-field
                 class="flex-100"
@@ -39,13 +49,11 @@
                 appearance="outline"
             >
                 <input
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig.resolution
-                    "
+                    [(ngModel)]="config.resolution"
                     matInput
                     (input)="onResolutionChange($event.target.valueAsNumber)"
                 />
             </mat-form-field>
         </sp-form-field>
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

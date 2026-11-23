@@ -48,6 +48,7 @@ describe('Test missing properties in data lake', () => {
         ChartWidgetTableUtils.checkAmountOfRows(5);
 
         ChartUtils.selectDataConfig();
+        ChartUtils.openSettingsSection('advanced');
         cy.dataCy('data-explorer-ignore-missing-values-checkbox')
             .children()
             .click();

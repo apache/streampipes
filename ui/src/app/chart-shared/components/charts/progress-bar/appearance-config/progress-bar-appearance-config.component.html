@@ -16,31 +16,31 @@
   ~
   -->
 
-<sp-split-section [level]="3" [title]="'Bar settings' | translate">
-    <div class="progress-color-list">
-        <sp-form-field [level]="3" [label]="'Progress color' | translate">
-            <input
-                class="progress-color-picker"
-                [colorPicker]="config.progressColor"
-                [style.background]="config.progressColor"
-                [cpPosition]="'auto'"
-                [cpPresetColors]="presetColors"
-                (colorPickerChange)="setColor('progressColor', $event)"
-            />
-        </sp-form-field>
+<sp-chart-settings-section
+    [heading]="'Bar colors' | translate"
+    [description]="config.progressColor + ' / ' + config.trackColor"
+>
+    <sp-form-field [level]="3" [label]="'Progress color' | translate">
+        <input
+            class="progress-color-picker"
+            [colorPicker]="config.progressColor"
+            [style.background]="config.progressColor"
+            [cpPosition]="'auto'"
+            [cpPresetColors]="presetColors"
+            (colorPickerChange)="setColor('progressColor', $event)"
+        />
+    </sp-form-field>
 
-        <sp-form-field [level]="3" [label]="'Track color' | translate">
-            <input
-                class="progress-color-picker"
-                [colorPicker]="config.trackColor"
-                [style.background]="config.trackColor"
-                [cpPosition]="'auto'"
-                [cpPresetColors]="presetColors"
-                (colorPickerChange)="setColor('trackColor', $event)"
-            />
-        </sp-form-field>
-    </div>
-
-    <sp-number-format-config [appearanceConfig]="appearanceConfig">
-    </sp-number-format-config>
-</sp-split-section>
+    <sp-form-field [level]="3" [label]="'Track color' | translate">
+        <input
+            class="progress-color-picker"
+            [colorPicker]="config.trackColor"
+            [style.background]="config.trackColor"
+            [cpPosition]="'auto'"
+            [cpPresetColors]="presetColors"
+            (colorPickerChange)="setColor('trackColor', $event)"
+        />
+    </sp-form-field>
+</sp-chart-settings-section>
+<sp-number-format-config [appearanceConfig]="appearanceConfig">
+</sp-number-format-config>

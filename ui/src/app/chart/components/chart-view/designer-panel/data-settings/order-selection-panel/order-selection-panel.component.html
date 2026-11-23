@@ -16,7 +16,15 @@
   ~
   -->
 
-<sp-split-section [level]="3" [title]="'Order' | translate">
+<sp-chart-settings-section
+    [heading]="'Sort order' | translate"
+    [description]="
+        sourceConfig.queryConfig.order === 'ASC'
+            ? ('Oldest (ascending)' | translate)
+            : ('Newest (descending)' | translate)
+    "
+    data-cy="chart-section-sort"
+>
     <mat-radio-group
         class="selection-radio-group"
         (change)="triggerConfigurationUpdate()"
@@ -35,4 +43,4 @@
             >{{ 'Oldest (ascending)' | translate }}
         </mat-radio-button>
     </mat-radio-group>
-</sp-split-section>
+</sp-chart-settings-section>

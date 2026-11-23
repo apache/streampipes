@@ -112,6 +112,16 @@
         color-mix(in srgb, var(--color-primary) 38%, transparent);
 }
 
+// In the designer drawer the tab labels line up with the selectors below.
+sp-chart-designer-panel .sp-page-tabs .mat-mdc-tab-label-container {
+    padding-inline: calc(var(--space-lg) - var(--space-sm));
+}
+
+sp-chart-designer-panel .mat-mdc-tab-group.sp-page-tabs .mat-mdc-tab {
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
 @media (max-width: 40rem) {
     .mat-mdc-tab-group.sp-page-tabs .mat-mdc-tab-labels {
         gap: 0;

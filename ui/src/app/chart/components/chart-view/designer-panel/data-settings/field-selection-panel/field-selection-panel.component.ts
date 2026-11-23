@@ -32,9 +32,7 @@ import {
 } from '@streampipes/platform-services';
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { FieldSelectionComponent } from '../field-selection/field-selection.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -45,6 +43,7 @@ import {
     MatSuffix,
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-field-selection-panel',
@@ -52,10 +51,9 @@ import { MatInput } from '@angular/material/input';
     styleUrls: ['./field-selection-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         MatButton,
         MatIconButton,
-        MatTooltip,
         MatIcon,
         FieldSelectionComponent,
         TranslatePipe,
@@ -77,7 +75,6 @@ export class FieldSelectionPanelComponent implements OnInit {
     @Output()
     initialFieldSelectionEvent: EventEmitter<void> = new EventEmitter();
 
-    expandFields = false;
     fieldSearch = '';
 
     get filteredFields(): FieldConfig[] {
@@ -87,16 +84,26 @@ export class FieldSelectionPanelComponent implements OnInit {
         );
     }
 
+    get selectedNames(): string[] {
+        return (
+            this.sourceConfig.queryConfig.fields
+                ?.filter(field => field.selected)
+                .map(field => field.runtimeName) ?? []
+        );
+    }
+
     ngOnInit() {
         this.applyDefaultFields();
         this.initialFieldSelectionEvent.emit();
     }
 
-    applyDefaultFields() {
+    applyDefaultFields(selectDefaults = true) {
         this.fieldSearch = '';
         if (this.sourceConfig.queryConfig.fields.length === 0) {
             this.addAllFields();
-            this.selectInitialFields();
+            if (selectDefaults) {
+                this.selectInitialFields();
+            }
         } else {
             const oldFields = this.sourceConfig.queryConfig.fields;
             this.sourceConfig.queryConfig.fields = [];
@@ -152,6 +159,7 @@ export class FieldSelectionPanelComponent implements OnInit {
         fieldConfig: FieldConfig,
     ) {
         const selection: FieldConfig = {
+            ...fieldConfig,
             runtimeName: property.runtimeName,
             selected: isSelected,
             numeric: this.fieldProvider.isNumber(property),
@@ -173,9 +181,5 @@ export class FieldSelectionPanelComponent implements OnInit {
         ) {
             return 'MODE';
         }
-    }
-
-    toggleExpandFields() {
-        this.expandFields = !this.expandFields;
     }
 }

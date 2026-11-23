@@ -16,41 +16,39 @@
   ~
   -->
 
-<sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
-    "
->
+@let config = currentlyConfiguredWidget.visualizationConfig;
+<sp-visualization-config-outer [configurationValid]="config.configurationValid">
     <sp-select-properties-config
-        [title]="'Fields' | translate"
+        [title]="'Displayed values' | translate"
         [availableProperties]="fieldProvider.allFields"
-        [selectedProperties]="
-            currentlyConfiguredWidget.visualizationConfig.selectedFields
-        "
+        [selectedProperties]="config.selectedFields"
         (changeSelectedProperties)="updateSelectedFields($event)"
     >
     </sp-select-properties-config>
 
     <sp-field-order-config
-        [sectionTitle]="'Field Order'"
-        [selectedFields]="
-            currentlyConfiguredWidget.visualizationConfig.selectedFields
-        "
+        [sectionTitle]="'Value order' | translate"
+        [selectedFields]="config.selectedFields"
         (selectedFieldsChange)="setSelectedFieldOrder($event)"
     >
     </sp-field-order-config>
 
-    <sp-split-section [level]="3" [title]="'Content' | translate">
+    <sp-chart-settings-section
+        [heading]="'Title and timestamp' | translate"
+        [description]="
+            config.title ||
+            (config.showTimestamp
+                ? ('Timestamp' | translate)
+                : ('No title' | translate))
+        "
+        data-cy="chart-section-caption"
+    >
         <sp-form-field [level]="3" [label]="'Timestamp' | translate">
             <mat-checkbox
                 data-cy="data-explorer-value-card-show-timestamp"
-                [checked]="
-                    currentlyConfiguredWidget.visualizationConfig.showTimestamp
-                "
+                [checked]="config.showTimestamp"
                 (change)="
-                    currentlyConfiguredWidget.visualizationConfig.showTimestamp =
-                        $event.checked;
-                    triggerViewRefresh()
+                    config.showTimestamp = $event.checked; triggerViewRefresh()
                 "
             >
                 {{ 'Show latest time above card' | translate }}
@@ -63,9 +61,7 @@
                     data-cy="data-explorer-value-card-title-input"
                     matInput
                     type="text"
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig.title
-                    "
+                    [(ngModel)]="config.title"
                     (ngModelChange)="triggerViewRefresh()"
                 />
             </mat-form-field>
@@ -77,13 +73,10 @@
                     data-cy="data-explorer-value-card-description-input"
                     matInput
                     rows="3"
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .description
-                    "
+                    [(ngModel)]="config.description"
                     (ngModelChange)="triggerViewRefresh()"
                 ></textarea>
             </mat-form-field>
         </sp-form-field>
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

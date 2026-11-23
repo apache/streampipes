@@ -16,29 +16,40 @@
 ~
 -->
 
-<mat-form-field
-    color="accent"
-    appearance="outline"
-    class="form-field-small flex-100"
->
-    <mat-label>{{ this.label }}</mat-label>
-    <mat-select
-        [ngModel]="selectedProperty"
-        (selectionChange)="triggerSelectedProperty($event.value)"
-        [compareWith]="compare"
+@if (label) {
+    <sp-form-field class="flex-100" [level]="3" [label]="label">
+        <ng-container *ngTemplateOutlet="propertySelect" />
+    </sp-form-field>
+} @else {
+    <ng-container *ngTemplateOutlet="propertySelect" />
+}
+<ng-template #propertySelect>
+    <mat-form-field
+        color="accent"
+        appearance="outline"
+        class="form-field-small w-100"
     >
-        @for (column of availableProperties; track column) {
-            <mat-option [value]="column" style="background-color: #ffffff">
-                <b>{{ column.runtimeName }}</b>
-                {{
-                    '(' +
-                        (column.aggregation ? column.aggregation + ', ' : '') +
-                        column.measure +
-                        ' #' +
-                        (column.sourceIndex + 1).toString() +
-                        ')'
-                }}
-            </mat-option>
-        }
-    </mat-select>
-</mat-form-field>
+        <mat-select
+            [aria-label]="label || ('Field' | translate)"
+            [ngModel]="selectedProperty"
+            (selectionChange)="triggerSelectedProperty($event.value)"
+            [compareWith]="compare"
+        >
+            @for (column of availableProperties; track column) {
+                <mat-option [value]="column">
+                    <b>{{ column.runtimeName }}</b>
+                    {{
+                        '(' +
+                            (column.aggregation
+                                ? column.aggregation + ', '
+                                : '') +
+                            column.measure +
+                            ' #' +
+                            (column.sourceIndex + 1).toString() +
+                            ')'
+                    }}
+                </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</ng-template>

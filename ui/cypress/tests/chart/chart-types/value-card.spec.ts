@@ -29,6 +29,7 @@ describe('Test Value Card View in Charts', () => {
         ChartUtils.createChart(PrepareTestDataUtils.dataName, 'value-card');
 
         ChartUtils.openVisualizationConfig();
+        ChartUtils.openSettingsSection('caption');
         ChartBtns.valueCardShowTimestampCheckbox()
             .check({ force: true })
             .should('be.checked');

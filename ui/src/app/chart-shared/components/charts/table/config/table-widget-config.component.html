@@ -16,48 +16,49 @@
   ~
   -->
 
-<sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
-    "
->
+@let config = currentlyConfiguredWidget.visualizationConfig;
+<sp-visualization-config-outer [configurationValid]="config.configurationValid">
     <sp-select-properties-config
+        [title]="'Columns' | translate"
         [label]="'Select Fields' | translate"
         [multiple]="true"
         (changeSelectedProperties)="setSelectedColumn($event)"
         [availableProperties]="fieldProvider.allFields"
-        [selectedProperties]="
-            currentlyConfiguredWidget.visualizationConfig.selectedColumns
-        "
+        [selectedProperties]="config.selectedColumns"
     >
     </sp-select-properties-config>
     <sp-field-order-config
-        [sectionTitle]="'Column Order'"
-        [selectedFields]="
-            currentlyConfiguredWidget.visualizationConfig.selectedColumns
-        "
+        [sectionTitle]="'Column order' | translate"
+        [selectedFields]="config.selectedColumns"
         (selectedFieldsChange)="setSelectedColumnOrder($event)"
     >
     </sp-field-order-config>
-    <sp-split-section [level]="3" [title]="'Settings' | translate">
+    <sp-chart-settings-section
+        [heading]="'Table filter and pagination' | translate"
+        [description]="('Page size' | translate) + ' · ' + config.pageSize"
+        data-cy="chart-section-table-layout"
+    >
         <sp-form-field [level]="3" [label]="'Filter' | translate">
-            <mat-form-field class="flex-100">
+            <mat-form-field
+                appearance="outline"
+                subscriptSizing="dynamic"
+                class="w-100"
+            >
                 <input
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .searchValue
-                    "
+                    [(ngModel)]="config.searchValue"
                     matInput
                     (input)="onFilterChange($event.target.value)"
                 />
             </mat-form-field>
         </sp-form-field>
         <sp-form-field [level]="3" [label]="'Page size' | translate">
-            <mat-form-field class="flex-100">
+            <mat-form-field
+                appearance="outline"
+                subscriptSizing="dynamic"
+                class="w-100"
+            >
                 <mat-select
-                    [value]="
-                        currentlyConfiguredWidget.visualizationConfig.pageSize
-                    "
+                    [value]="config.pageSize"
                     (valueChange)="setPageSize($event)"
                 >
                     @for (pageSize of pageSizeOptions; track pageSize) {
@@ -70,16 +71,22 @@
         </sp-form-field>
         <sp-form-field [level]="3" [label]="'Sticky headers' | translate">
             <mat-checkbox
-                [checked]="
-                    currentlyConfiguredWidget.visualizationConfig.stickyHeaders
-                "
+                [checked]="config.stickyHeaders"
                 (change)="setStickyHeaders($event.checked)"
             >
                 {{ 'Keep table header visible while scrolling' | translate }}
             </mat-checkbox>
         </sp-form-field>
-    </sp-split-section>
-    <sp-split-section [level]="3" [title]="'Value Highlighting' | translate">
+    </sp-chart-settings-section>
+    <sp-chart-settings-section
+        [heading]="'Value highlighting' | translate"
+        [description]="
+            ('Selected fields' | translate) +
+            ' · ' +
+            (config.highlightedColumns?.length || 0)
+        "
+        data-cy="chart-section-highlighting"
+    >
         <div class="highlight-color-list flex-col">
             @for (field of highlightableFields; track colorKey(field)) {
                 <div
@@ -125,5 +132,5 @@
                 ></sp-alert-banner>
             }
         </div>
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

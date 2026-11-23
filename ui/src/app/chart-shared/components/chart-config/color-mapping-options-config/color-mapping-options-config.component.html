@@ -29,8 +29,8 @@
     }
 
     @if (!isSelectedPropertyBoolean && showCustomColorMapping) {
-        <div>
-            <div style="margin-bottom: 20px">
+        <div class="flex-col gap-sm">
+            <div>
                 <button
                     mat-flat-button
                     class="small-button"
@@ -42,11 +42,10 @@
             </div>
             <div class="flex-col gap-sm">
                 @for (mapping of colorMapping; track mapping; let i = $index) {
-                    <div class="flex-row items-center gap-sm flex-100">
+                    <div class="mapping-row">
                         <sp-form-field
                             [level]="3"
                             [label]="'Value' | translate"
-                            class="basis-35"
                         >
                             <mat-form-field color="accent" appearance="outline">
                                 <input
@@ -59,7 +58,6 @@
                         <sp-form-field
                             [level]="3"
                             [label]="'Label' | translate"
-                            class="basis-35"
                         >
                             <mat-form-field color="accent">
                                 <input
@@ -69,9 +67,7 @@
                                 />
                             </mat-form-field>
                         </sp-form-field>
-                        <div
-                            class="mt-10 flex-row justify-center items-center basis-15"
-                        >
+                        <div class="flex-row items-center">
                             <input
                                 [(colorPicker)]="mapping.color"
                                 [style.background]="mapping.color"
@@ -85,9 +81,7 @@
                                 (colorPickerChange)="updateColor(i, $event)"
                             />
                         </div>
-                        <div
-                            class="mt-10 flex-row justify-end items-center basis-15"
-                        >
+                        <div class="flex-row justify-end items-center">
                             <button
                                 mat-icon-button
                                 [matTooltip]="'Remove Mapping' | translate"
@@ -105,31 +99,30 @@
 
     @if (isSelectedPropertyBoolean && showCustomColorMapping) {
         <div>
-            <div
-                class="flex-col gap-sm"
-                style="margin-top: 10px; margin-right: 10px"
-            >
+            <div class="flex-col gap-sm">
                 @for (mapping of colorMapping; track mapping; let i = $index) {
-                    <div
-                        class="flex-row items-center gap-sm"
-                        style="margin-top: 10px; align-items: center"
-                    >
-                        <div class="mapping-value">{{ mapping.value }}</div>
-                        <div class="flex-1">
-                            <mat-form-field
-                                class="w-100"
-                                color="accent"
-                                appearance="outline"
+                    <div class="mapping-row boolean-mapping">
+                        <div>{{ mapping.value }}</div>
+                        <div>
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Label' | translate"
                             >
-                                <mat-label>Label</mat-label>
-                                <input
-                                    matInput
-                                    [(ngModel)]="mapping.label"
-                                    (ngModelChange)="updateMapping()"
-                                />
-                            </mat-form-field>
+                                <mat-form-field
+                                    class="w-100"
+                                    color="accent"
+                                    appearance="outline"
+                                >
+                                    <input
+                                        [attr.aria-label]="'Label' | translate"
+                                        matInput
+                                        [(ngModel)]="mapping.label"
+                                        (ngModelChange)="updateMapping()"
+                                    />
+                                </mat-form-field>
+                            </sp-form-field>
                         </div>
-                        <div class="mapping-color">
+                        <div>
                             <input
                                 [(colorPicker)]="mapping.color"
                                 [style.background]="mapping.color"

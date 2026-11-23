@@ -16,37 +16,40 @@
   ~
   -->
 
-<sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
-    "
->
-    <sp-split-section [level]="3" [title]="'Field' | translate">
+@let config = currentlyConfiguredWidget.visualizationConfig;
+<sp-visualization-config-outer [configurationValid]="config.configurationValid">
+    <sp-chart-settings-section
+        [heading]="'Status field' | translate"
+        [description]="
+            config.selectedProperty?.fullDbName ||
+            ('No fields selected' | translate)
+        "
+        [initiallyOpen]="true"
+    >
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            "
+            [selectedProperty]="config.selectedProperty"
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-split-section>
+    </sp-chart-settings-section>
 
-    <sp-split-section [level]="3" [title]="'Settings' | translate">
+    <sp-chart-settings-section
+        [heading]="'Status colors' | translate"
+        [description]="
+            config.showCustomColorMappingStatusHeatmap
+                ? ('Custom' | translate)
+                : ('Automatic' | translate)
+        "
+    >
         <sp-color-mapping-options-config
-            [(colorMapping)]="
-                currentlyConfiguredWidget.visualizationConfig
-                    .colorMappingsStatusHeatmap
-            "
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            "
+            [(colorMapping)]="config.colorMappingsStatusHeatmap"
+            [selectedProperty]="config.selectedProperty"
             [(showCustomColorMapping)]="
-                currentlyConfiguredWidget.visualizationConfig
-                    .showCustomColorMappingStatusHeatmap
+                config.showCustomColorMappingStatusHeatmap
             "
             (viewRefreshEmitter)="triggerViewUpdate()"
         >
         </sp-color-mapping-options-config>
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

@@ -16,18 +16,35 @@
  *
  */
 
+.series-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--color-bg-1);
+    border-radius: var(--radius-sm);
+}
+
 .color-field {
-    width: 100%;
-    height: 20px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: 2rem;
+    background: var(--color-bg-0);
+    color: var(--color-default-text);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-xs);
+    cursor: pointer;
 }
 
 .color-indicator {
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
+    flex-shrink: 0;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--color-border-subtle);
 }
 
-.ml-10 {
-    margin-left: 10px;
+.series-row > .color-indicator {
+    margin-inline-end: var(--space-sm);
 }

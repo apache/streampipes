@@ -44,6 +44,7 @@ describe('Test Table View in Charts', () => {
         );
 
         ChartUtils.selectDataConfig();
+        ChartUtils.openSettingsSection('labels');
         ChartBtns.resultLabelInput('randomnumber')
             .clear()
             .type('Random Number Label');

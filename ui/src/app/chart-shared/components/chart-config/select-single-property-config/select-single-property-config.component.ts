@@ -24,9 +24,13 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FormFieldComponent } from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+
+import { NgTemplateOutlet } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-single-property-config',
@@ -34,7 +38,15 @@ import { FormsModule } from '@angular/forms';
     templateUrl: './select-single-property-config.component.html',
     styleUrls: [],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [MatFormField, MatLabel, MatSelect, FormsModule, MatOption],
+    imports: [
+        NgTemplateOutlet,
+        TranslatePipe,
+        MatFormField,
+        FormFieldComponent,
+        MatSelect,
+        FormsModule,
+        MatOption,
+    ],
 })
 export class SelectSinglePropertyConfigComponent {
     @Output() changeSelectedProperty: EventEmitter<DataExplorerField> =

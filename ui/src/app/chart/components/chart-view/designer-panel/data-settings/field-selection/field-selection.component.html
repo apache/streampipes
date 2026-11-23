@@ -19,6 +19,7 @@
 <div class="flex-row items-center">
     <mat-checkbox
         color="accent"
+        [attr.data-cy]="'chart-field-' + field.runtimeName"
         [(ngModel)]="field.selected"
         (change)="triggerConfigurationUpdate()"
     >

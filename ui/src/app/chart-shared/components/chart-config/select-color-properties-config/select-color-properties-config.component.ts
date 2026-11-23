@@ -28,10 +28,10 @@ import {
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../charts/time-series-chart/model/time-series-chart-widget.model';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { SpTimeseriesItemConfigComponent } from './time-series-item-config/time-series-item-config.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSettingsSectionComponent } from '../settings-section.component';
 
 @Component({
     selector: 'sp-select-color-properties-config',
@@ -39,7 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./select-color-properties-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         MatButton,
         SpTimeseriesItemConfigComponent,
         TranslatePipe,

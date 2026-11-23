@@ -15,17 +15,21 @@
   ~ limitations under the License.
   ~
   -->
-<mat-form-field color="accent" class="w-140-px mr-5" appearance="outline">
-    <mat-label>{{ 'Field' | translate }}</mat-label>
-    <mat-select
-        [(value)]="filter.field"
-        (selectionChange)="updateParentComponent()"
-        [compareWith]="compare"
-        panelClass="form-field-small min-w-200"
-        data-cy="design-panel-data-settings-filter-field"
-    >
-        @for (field of possibleFields; track field) {
-            <mat-option [value]="field">{{ field.runtimeName }} </mat-option>
-        }
-    </mat-select>
-</mat-form-field>
+<sp-form-field [level]="3" [label]="'Field' | translate">
+    <mat-form-field color="accent" class="w-140-px" appearance="outline">
+        <mat-select
+            [aria-label]="'Field' | translate"
+            [(value)]="filter.field"
+            (selectionChange)="updateParentComponent()"
+            [compareWith]="compare"
+            panelClass="form-field-small min-w-200"
+            data-cy="design-panel-data-settings-filter-field"
+        >
+            @for (field of possibleFields; track field) {
+                <mat-option [value]="field"
+                    >{{ field.runtimeName }}
+                </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</sp-form-field>

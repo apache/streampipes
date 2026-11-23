@@ -16,26 +16,33 @@
 ~
 -->
 
+@let config = currentlyConfiguredWidget.visualizationConfig;
 <sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    [requirement]="
+        'Select at least one numeric field for this chart.' | translate
     "
+    [configurationValid]="config.configurationValid"
 >
-    <sp-split-section [level]="3" [title]="'Field' | translate">
+    <sp-chart-settings-section
+        [heading]="'Gauge value' | translate"
+        [description]="
+            config.selectedProperty?.fullDbName ||
+            ('No fields selected' | translate)
+        "
+        [initiallyOpen]="true"
+    >
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.numericFields"
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            "
+            [selectedProperty]="config.selectedProperty"
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-split-section>
-    @if (
-        currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            ?.fieldCharacteristics.numeric
-    ) {
-        <sp-split-section [level]="3" [title]="'Settings' | translate">
+    </sp-chart-settings-section>
+    @if (config.selectedProperty?.fieldCharacteristics.numeric) {
+        <sp-chart-settings-section
+            [heading]="'Dial range and scale' | translate"
+            [description]="config.min + ' – ' + config.max"
+        >
             <sp-form-field
                 [level]="3"
                 [label]="'Min' | translate"
@@ -43,13 +50,11 @@
                     'Lower bound of the gauge value range.' | translate
                 "
             >
-                <mat-form-field class="basis-30">
+                <mat-form-field class="w-100">
                     <input
                         matInput
                         type="number"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig.min
-                        "
+                        [(ngModel)]="config.min"
                         (ngModelChange)="triggerViewRefresh()"
                     />
                 </mat-form-field>
@@ -61,13 +66,11 @@
                     'Upper bound of the gauge value range.' | translate
                 "
             >
-                <mat-form-field class="basis-30">
+                <mat-form-field class="w-100">
                     <input
                         matInput
                         type="number"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig.max
-                        "
+                        [(ngModel)]="config.max"
                         (ngModelChange)="triggerViewRefresh()"
                     />
                 </mat-form-field>
@@ -79,7 +82,7 @@
                     'Label shown below the current gauge value.' | translate
                 "
             >
-                <mat-form-field class="basis-60">
+                <mat-form-field class="w-100">
                     <input
                         matInput
                         type="text"
@@ -96,14 +99,11 @@
                     'Angle where the gauge arc begins (in degrees).' | translate
                 "
             >
-                <mat-form-field class="basis-30">
+                <mat-form-field class="w-100">
                     <input
                         matInput
                         type="number"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .startAngle
-                        "
+                        [(ngModel)]="config.startAngle"
                         (ngModelChange)="triggerViewRefresh()"
                     />
                 </mat-form-field>
@@ -116,14 +116,11 @@
                     'Angle where the gauge arc ends (in degrees).' | translate
                 "
             >
-                <mat-form-field class="basis-30">
+                <mat-form-field class="w-100">
                     <input
                         matInput
                         type="number"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .endAngle
-                        "
+                        [(ngModel)]="config.endAngle"
                         (ngModelChange)="triggerViewRefresh()"
                     />
                 </mat-form-field>
@@ -137,43 +134,39 @@
                         | translate
                 "
             >
-                <mat-form-field class="basis-30">
+                <mat-form-field class="w-100">
                     <input
                         matInput
                         type="number"
                         min="1"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .splitNumber
-                        "
+                        [(ngModel)]="config.splitNumber"
                         (ngModelChange)="triggerViewRefresh()"
                     />
                 </mat-form-field>
             </sp-form-field>
 
             <mat-checkbox
-                [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig.showPointer
-                "
+                [(ngModel)]="config.showPointer"
                 (change)="triggerViewRefresh()"
                 >{{ 'Show Pointer' | translate }}
             </mat-checkbox>
-        </sp-split-section>
+        </sp-chart-settings-section>
 
-        <sp-split-section [level]="3" [title]="'Threshold Colors' | translate">
+        <sp-chart-settings-section
+            [heading]="'Threshold colors' | translate"
+            [description]="
+                config.enableThresholdColors
+                    ? config.thresholdLow + ' / ' + config.thresholdHigh
+                    : ('Off' | translate)
+            "
+        >
             <mat-checkbox
-                [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .enableThresholdColors
-                "
+                [(ngModel)]="config.enableThresholdColors"
                 (change)="triggerViewRefresh()"
                 >{{ 'Enable threshold colors' | translate }}
             </mat-checkbox>
 
-            @if (
-                currentlyConfiguredWidget.visualizationConfig
-                    .enableThresholdColors
-            ) {
+            @if (config.enableThresholdColors) {
                 <sp-form-field
                     [level]="3"
                     [label]="'Low Threshold' | translate"
@@ -181,14 +174,11 @@
                         'Value where the low color range ends.' | translate
                     "
                 >
-                    <mat-form-field class="basis-30">
+                    <mat-form-field class="w-100">
                         <input
                             matInput
                             type="number"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .thresholdLow
-                            "
+                            [(ngModel)]="config.thresholdLow"
                             (ngModelChange)="triggerViewRefresh()"
                         />
                     </mat-form-field>
@@ -202,14 +192,11 @@
                             | translate
                     "
                 >
-                    <mat-form-field class="basis-30">
+                    <mat-form-field class="w-100">
                         <input
                             matInput
                             type="number"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .thresholdHigh
-                            "
+                            [(ngModel)]="config.thresholdHigh"
                             (ngModelChange)="triggerViewRefresh()"
                         />
                     </mat-form-field>
@@ -223,14 +210,11 @@
                             | translate
                     "
                 >
-                    <mat-form-field class="basis-30">
+                    <mat-form-field class="w-100">
                         <input
                             matInput
                             type="color"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .thresholdColorLow
-                            "
+                            [(ngModel)]="config.thresholdColorLow"
                             (ngModelChange)="triggerViewRefresh()"
                         />
                     </mat-form-field>
@@ -244,14 +228,11 @@
                             | translate
                     "
                 >
-                    <mat-form-field class="basis-30">
+                    <mat-form-field class="w-100">
                         <input
                             matInput
                             type="color"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .thresholdColorMedium
-                            "
+                            [(ngModel)]="config.thresholdColorMedium"
                             (ngModelChange)="triggerViewRefresh()"
                         />
                     </mat-form-field>
@@ -264,19 +245,16 @@
                         'Color used above the high threshold.' | translate
                     "
                 >
-                    <mat-form-field class="basis-30">
+                    <mat-form-field class="w-100">
                         <input
                             matInput
                             type="color"
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .thresholdColorHigh
-                            "
+                            [(ngModel)]="config.thresholdColorHigh"
                             (ngModelChange)="triggerViewRefresh()"
                         />
                     </mat-form-field>
                 </sp-form-field>
             }
-        </sp-split-section>
+        </sp-chart-settings-section>
     }
 </sp-visualization-config-outer>

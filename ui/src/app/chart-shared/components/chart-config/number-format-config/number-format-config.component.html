@@ -16,28 +16,41 @@
   ~
   -->
 
-<sp-form-field
-    [level]="3"
-    [label]="'Decimals' | translate"
+<sp-chart-settings-section
+    [heading]="'Number format' | translate"
     [description]="
-        'Optional fixed number of decimal places. Leave empty for automatic formatting.'
-            | translate
+        rawValues
+            ? ('Original values' | translate)
+            : decimals === null
+              ? ('Automatic' | translate)
+              : ('Decimals' | translate) + ' · ' + decimals
     "
 >
-    <mat-form-field>
-        <input
-            matInput
-            type="number"
-            [ngModel]="decimals"
-            [disabled]="rawValues"
-            min="0"
-            max="10"
-            step="1"
-            [placeholder]="'Automatic' | translate"
-            (ngModelChange)="updateDecimals($event)"
-        />
-    </mat-form-field>
-</sp-form-field>
-<mat-checkbox [ngModel]="rawValues" (ngModelChange)="updateRawValues($event)"
-    >{{ 'Show original values without formatting' | translate }}
-</mat-checkbox>
+    <sp-form-field
+        [level]="3"
+        [label]="'Decimals' | translate"
+        [description]="
+            'Optional fixed number of decimal places. Leave empty for automatic formatting.'
+                | translate
+        "
+    >
+        <mat-form-field>
+            <input
+                matInput
+                type="number"
+                [ngModel]="decimals"
+                [disabled]="rawValues"
+                min="0"
+                max="10"
+                step="1"
+                [placeholder]="'Automatic' | translate"
+                (ngModelChange)="updateDecimals($event)"
+            />
+        </mat-form-field>
+    </sp-form-field>
+    <mat-checkbox
+        [ngModel]="rawValues"
+        (ngModelChange)="updateRawValues($event)"
+        >{{ 'Show original values without formatting' | translate }}
+    </mat-checkbox>
+</sp-chart-settings-section>

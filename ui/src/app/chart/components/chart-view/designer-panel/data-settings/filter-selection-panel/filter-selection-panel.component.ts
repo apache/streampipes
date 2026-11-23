@@ -35,7 +35,6 @@ import {
     DialogService,
     PanelType,
     SpAlertBannerComponent,
-    SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { FilterSelectionPanelRowComponent } from './filter-selection-panel-row/filter-selection-panel-row.component';
@@ -45,13 +44,14 @@ import {
     AdvancedFilterDialogResult,
 } from './advanced-filter-dialog/advanced-filter-dialog.component';
 import { FilterExpressionPreviewService } from './filter-expression-preview.service';
+import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-filter-selection-panel',
     templateUrl: './filter-selection-panel.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         MatButton,
         FilterSelectionPanelRowComponent,
         TranslatePipe,

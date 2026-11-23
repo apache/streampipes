@@ -16,19 +16,24 @@
   ~
   -->
 
+@let config = currentlyConfiguredWidget.visualizationConfig;
 <sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
-    "
+    [requirement]="'Select a field with the image semantic type.' | translate"
+    [configurationValid]="config.configurationValid"
 >
-    <sp-split-section [level]="3" [title]="'Field' | translate">
+    <sp-chart-settings-section
+        [heading]="'Image source' | translate"
+        [description]="
+            config.selectedField?.fullDbName ||
+            ('No fields selected' | translate)
+        "
+        [initiallyOpen]="true"
+    >
         <sp-select-single-property-config
             [availableProperties]="imageFields"
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedField
-            "
+            [selectedProperty]="config.selectedField"
             (changeSelectedProperty)="setSelectedImageProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

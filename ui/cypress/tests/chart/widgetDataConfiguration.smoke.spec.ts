@@ -100,6 +100,7 @@ describe('Test Table View in Charts', () => {
             .contains('c', { timeout: 10000 });
         ChartWidgetTableUtils.checkAmountOfRows(10);
         ChartUtils.saveAndReEditChart('NewWidget');
+        ChartUtils.openSettingsSection('group');
         cy.dataCy('data-explorer-group-by-randomtext')
             .find('input')
             .should('be.checked');

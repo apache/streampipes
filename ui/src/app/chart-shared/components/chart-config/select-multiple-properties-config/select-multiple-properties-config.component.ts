@@ -27,16 +27,22 @@ import {
 } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+
+import { ChartSettingsSectionComponent } from '../settings-section.component';
 
 @Component({
     selector: 'sp-select-properties-config',
     templateUrl: './select-multiple-properties-config.component.html',
     styleUrls: ['./select-multiple-properties-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SplitSectionComponent, MatButton, MatCheckbox, TranslatePipe],
+    imports: [
+        ChartSettingsSectionComponent,
+        MatButton,
+        MatCheckbox,
+        TranslatePipe,
+    ],
 })
 export class SelectMultiplePropertiesConfigComponent implements OnInit {
     @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =
@@ -48,6 +54,7 @@ export class SelectMultiplePropertiesConfigComponent implements OnInit {
     @Input() selectedProperties: DataExplorerField[];
     @Input() label: string;
     @Input() multiple: boolean;
+    @Input() initiallyOpen = true;
     @Input() title = this.translateService.instant('Fields');
 
     constructor() {}

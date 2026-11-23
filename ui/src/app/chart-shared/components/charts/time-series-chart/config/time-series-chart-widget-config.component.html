@@ -17,6 +17,9 @@
   -->
 
 <sp-visualization-config-outer
+    [requirement]="
+        'Select at least one numeric field for this chart.' | translate
+    "
     [configurationValid]="
         currentlyConfiguredWidget.visualizationConfig.configurationValid
     "
@@ -32,7 +35,10 @@
     >
     </sp-select-color-properties-config>
 
-    <sp-split-section [level]="3" [title]="'Axes' | translate" marginTop="5px">
+    <sp-chart-settings-section
+        [heading]="'Axes' | translate"
+        [description]="'Left and right axis settings' | translate"
+    >
         <sp-select-axis-options-config
             (viewRefreshEmitter)="triggerViewRefresh()"
             [title]="'left axis' | translate"
@@ -50,15 +56,13 @@
             "
         >
         </sp-select-axis-options-config>
-    </sp-split-section>
 
-    <sp-split-section [level]="3" [title]="'Axis Pointer' | translate">
         <mat-checkbox
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showSpike
             "
             (change)="setShowSpikeProperty($event.checked)"
-            >{{ 'Enable' | translate }}
+            >{{ 'Axis Pointer' | translate }}
         </mat-checkbox>
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

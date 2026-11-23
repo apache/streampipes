@@ -16,85 +16,64 @@
 ~
 -->
 
-<div class="form-field-small mt-10 p-sm flex-col flex-100">
-    <sp-split-section [level]="3" [title]="'Color' | translate">
-        <sp-form-field [level]="3" [label]="'Background' | translate">
-            <mat-radio-group
-                [(ngModel)]="backgroundOption"
-                (ngModelChange)="onBackgroundChange($event)"
-                class="flex-row"
-            >
-                <mat-radio-button value="default">{{
-                    'Default' | translate
-                }}</mat-radio-button>
-                <mat-radio-button value="custom"
-                    >{{ 'Custom' }}
-                    @if (backgroundOption === 'custom') {
-                        <input
-                            class="ml-5 color-picker"
-                            [(colorPicker)]="
-                                currentlyConfiguredWidget.baseAppearanceConfig
-                                    .backgroundColor
-                            "
-                            [cpPosition]="'left'"
-                            [style.background]="
-                                currentlyConfiguredWidget.baseAppearanceConfig
-                                    .backgroundColor
-                            "
-                            required
-                            [cpPresetColors]="presetColors"
-                            (colorPickerSelect)="triggerViewUpdate()"
-                            autocomplete="off"
-                        />
-                    }
-                </mat-radio-button>
-            </mat-radio-group>
-        </sp-form-field>
-        <sp-form-field [level]="3" [label]="'Text' | translate">
-            <mat-radio-group
-                [(ngModel)]="textOption"
-                (ngModelChange)="onTextChange($event)"
-                class="flex-row"
-            >
-                <mat-radio-button value="default">{{
-                    'Default' | translate
-                }}</mat-radio-button>
-                <mat-radio-button value="custom"
-                    >{{ 'Custom' }}
-                    @if (textOption === 'custom') {
-                        <input
-                            class="ml-5 color-picker"
-                            [(colorPicker)]="
-                                currentlyConfiguredWidget.baseAppearanceConfig
-                                    .textColor
-                            "
-                            [cpPosition]="'left'"
-                            [style.background]="
-                                currentlyConfiguredWidget.baseAppearanceConfig
-                                    .textColor
-                            "
-                            required
-                            [cpPresetColors]="presetColors"
-                            (colorPickerSelect)="triggerViewUpdate()"
-                            autocomplete="off"
-                        />
-                    }
-                </mat-radio-button>
-            </mat-radio-group>
-        </sp-form-field>
-    </sp-split-section>
-
-    @if (extendedAppearanceConfigComponent) {
-        <div>
-            <ng-container
-                *ngComponentOutlet="
-                    extendedAppearanceConfigComponent;
-                    inputs: {
-                        appearanceConfig:
-                            currentlyConfiguredWidget.baseAppearanceConfig,
-                    }
-                "
-            />
-        </div>
-    }
-</div>
+<sp-chart-settings-section
+    [heading]="'Chart colors' | translate"
+    [description]="
+        backgroundOption === 'default' && textOption === 'default'
+            ? ('Theme defaults' | translate)
+            : ('Custom' | translate)
+    "
+>
+    <sp-form-field [level]="3" [label]="'Background' | translate">
+        <mat-radio-group
+            [(ngModel)]="backgroundOption"
+            (ngModelChange)="onBackgroundChange($event)"
+            class="flex-row"
+        >
+            <mat-radio-button value="default">{{
+                'Default' | translate
+            }}</mat-radio-button>
+            <mat-radio-button value="custom"
+                >{{ 'Custom' | translate }}
+                @if (backgroundOption === 'custom') {
+                    <input
+                        class="ml-5 color-picker"
+                        [(colorPicker)]="appearanceConfig.backgroundColor"
+                        [cpPosition]="'left'"
+                        [style.background]="appearanceConfig.backgroundColor"
+                        required
+                        [cpPresetColors]="presetColors"
+                        (colorPickerSelect)="triggerViewUpdate()"
+                        autocomplete="off"
+                    />
+                }
+            </mat-radio-button>
+        </mat-radio-group>
+    </sp-form-field>
+    <sp-form-field [level]="3" [label]="'Text' | translate">
+        <mat-radio-group
+            [(ngModel)]="textOption"
+            (ngModelChange)="onTextChange($event)"
+            class="flex-row"
+        >
+            <mat-radio-button value="default">{{
+                'Default' | translate
+            }}</mat-radio-button>
+            <mat-radio-button value="custom"
+                >{{ 'Custom' | translate }}
+                @if (textOption === 'custom') {
+                    <input
+                        class="ml-5 color-picker"
+                        [(colorPicker)]="appearanceConfig.textColor"
+                        [cpPosition]="'left'"
+                        [style.background]="appearanceConfig.textColor"
+                        required
+                        [cpPresetColors]="presetColors"
+                        (colorPickerSelect)="triggerViewUpdate()"
+                        autocomplete="off"
+                    />
+                }
+            </mat-radio-button>
+        </mat-radio-group>
+    </sp-form-field>
+</sp-chart-settings-section>

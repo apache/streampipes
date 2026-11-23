@@ -16,27 +16,31 @@
 ~
 -->
 
-<sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
-    "
->
-    <sp-split-section [level]="3" [title]="'Field' | translate">
+@let config = currentlyConfiguredWidget.visualizationConfig;
+<sp-visualization-config-outer [configurationValid]="config.configurationValid">
+    <sp-chart-settings-section
+        [heading]="'Slice categories' | translate"
+        [description]="
+            config.selectedProperty?.fullDbName ||
+            ('No fields selected' | translate)
+        "
+        [initiallyOpen]="true"
+    >
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            "
+            [selectedProperty]="config.selectedProperty"
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-split-section>
+    </sp-chart-settings-section>
 
-    <sp-split-section [level]="3" [title]="'Settings' | translate">
-        @if (
-            currentlyConfiguredWidget.visualizationConfig.selectedProperty
-                ?.fieldCharacteristics.numeric
-        ) {
+    <sp-chart-settings-section
+        [heading]="'Slice geometry' | translate"
+        [description]="
+            ('Inner Radius' | translate) + ' · ' + config.selectedRadius + '%'
+        "
+    >
+        @if (config.selectedProperty?.fieldCharacteristics.numeric) {
             <sp-form-field
                 [level]="3"
                 [label]="'Rounding' | translate"
@@ -46,10 +50,7 @@
             >
                 <mat-form-field class="marginColorField">
                     <mat-select
-                        [(value)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .roundingValue
-                        "
+                        [(value)]="config.roundingValue"
                         (selectionChange)="updateRoundingValue($event.value)"
                     >
                         <mat-option [value]="100">100</mat-option>
@@ -73,10 +74,7 @@
             <mat-slider min="0" max="80" step="1">
                 <input
                     matSliderThumb
-                    [ngModel]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .selectedRadius
-                    "
+                    [ngModel]="config.selectedRadius"
                     (ngModelChange)="updateInnerRadius($event)"
                     #slider
                 />
@@ -95,18 +93,14 @@
                 <input
                     matInput
                     type="number"
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig.startAngle
-                    "
+                    [(ngModel)]="config.startAngle"
                     (ngModelChange)="triggerViewUpdate()"
                 />
             </mat-form-field>
         </sp-form-field>
 
         <mat-checkbox
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.clockwise
-            "
+            [(ngModel)]="config.clockwise"
             (change)="triggerViewUpdate()"
             >{{ 'Clockwise' | translate }}
         </mat-checkbox>
@@ -125,14 +119,20 @@
                     type="number"
                     min="0"
                     max="360"
-                    [(ngModel)]="
-                        currentlyConfiguredWidget.visualizationConfig.minAngle
-                    "
+                    [(ngModel)]="config.minAngle"
                     (ngModelChange)="triggerViewUpdate()"
                 />
             </mat-form-field>
         </sp-form-field>
-
+    </sp-chart-settings-section>
+    <sp-chart-settings-section
+        [heading]="'Slice labels' | translate"
+        [description]="
+            config.labelPosition === 'inside'
+                ? ('Inside' | translate)
+                : ('Outside' | translate)
+        "
+    >
         <sp-form-field
             [level]="3"
             [label]="'Label Content' | translate"
@@ -142,9 +142,7 @@
         >
             <mat-form-field class="marginColorField">
                 <mat-select
-                    [(value)]="
-                        currentlyConfiguredWidget.visualizationConfig.labelMode
-                    "
+                    [(value)]="config.labelMode"
                     (selectionChange)="triggerViewUpdate()"
                 >
                     <mat-option [value]="'name'">{{
@@ -178,10 +176,7 @@
         >
             <mat-form-field class="marginColorField">
                 <mat-select
-                    [(value)]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .labelPosition
-                    "
+                    [(value)]="config.labelPosition"
                     (selectionChange)="triggerViewUpdate()"
                 >
                     <mat-option [value]="'outside'">{{
@@ -194,10 +189,7 @@
             </mat-form-field>
         </sp-form-field>
 
-        @if (
-            currentlyConfiguredWidget.visualizationConfig.labelPosition ===
-            'outside'
-        ) {
+        @if (config.labelPosition === 'outside') {
             <sp-form-field
                 [level]="3"
                 [label]="'Label Align' | translate"
@@ -208,10 +200,7 @@
             >
                 <mat-form-field class="marginColorField">
                     <mat-select
-                        [(value)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .labelAlignTo
-                        "
+                        [(value)]="config.labelAlignTo"
                         (selectionChange)="triggerViewUpdate()"
                     >
                         <mat-option [value]="'edge'">{{
@@ -229,30 +218,32 @@
         }
 
         <mat-checkbox
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.avoidLabelOverlap
-            "
+            [(ngModel)]="config.avoidLabelOverlap"
             (change)="triggerViewUpdate()"
             >{{ 'Avoid Label Overlap' | translate }}
         </mat-checkbox>
 
         <mat-checkbox
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.showLabelLine
-            "
+            [(ngModel)]="config.showLabelLine"
             (change)="triggerViewUpdate()"
             >{{ 'Show Label Line' | translate }}
         </mat-checkbox>
-
+    </sp-chart-settings-section>
+    <sp-chart-settings-section
+        [heading]="'Category grouping' | translate"
+        [description]="
+            config.topNEnabled
+                ? ('Top N' | translate) + ' · ' + config.topN
+                : ('All values' | translate)
+        "
+    >
         <mat-checkbox
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.topNEnabled
-            "
+            [(ngModel)]="config.topNEnabled"
             (change)="triggerViewUpdate()"
             >{{ 'Enable Top-N' | translate }}
         </mat-checkbox>
 
-        @if (currentlyConfiguredWidget.visualizationConfig.topNEnabled) {
+        @if (config.topNEnabled) {
             <sp-form-field
                 [level]="3"
                 [label]="'Top N' | translate"
@@ -266,9 +257,7 @@
                         matInput
                         type="number"
                         min="1"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig.topN
-                        "
+                        [(ngModel)]="config.topN"
                         (ngModelChange)="triggerViewUpdate()"
                     />
                 </mat-form-field>
@@ -285,30 +274,27 @@
                     <input
                         matInput
                         type="text"
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .othersLabel
-                        "
+                        [(ngModel)]="config.othersLabel"
                         (ngModelChange)="triggerViewUpdate()"
                     />
                 </mat-form-field>
             </sp-form-field>
         }
-
+    </sp-chart-settings-section>
+    <sp-chart-settings-section
+        [heading]="'Slice colors' | translate"
+        [description]="
+            config.showCustomColorMappingPieChart
+                ? ('Custom' | translate)
+                : ('Automatic' | translate)
+        "
+    >
         <sp-color-mapping-options-config
-            [(colorMapping)]="
-                currentlyConfiguredWidget.visualizationConfig
-                    .colorMappingsPieChart
-            "
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            "
-            [(showCustomColorMapping)]="
-                currentlyConfiguredWidget.visualizationConfig
-                    .showCustomColorMappingPieChart
-            "
+            [(colorMapping)]="config.colorMappingsPieChart"
+            [selectedProperty]="config.selectedProperty"
+            [(showCustomColorMapping)]="config.showCustomColorMappingPieChart"
             (viewRefreshEmitter)="triggerViewUpdate()"
         >
         </sp-color-mapping-options-config>
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

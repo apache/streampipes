@@ -32,6 +32,7 @@ describe('Advanced Filter Expressions in Charts', () => {
         ChartWidgetTableUtils.checkAmountOfRows(10);
         ChartUtils.selectDataConfig();
 
+        ChartUtils.openSettingsSection('filters');
         ChartBtns.advancedFilterBtn().click();
 
         // Root condition: randomtext = a
@@ -67,6 +68,7 @@ describe('Advanced Filter Expressions in Charts', () => {
         ChartUtils.saveAndEditChart('AdvancedFilterWidget');
         ChartWidgetTableUtils.checkAmountOfRows(2);
         ChartUtils.selectDataConfig();
+        ChartUtils.openSettingsSection('filters');
         ChartBtns.advancedFilterBtn().should('be.visible');
         ChartBtns.filterAlertBanner()
             .should('be.visible')

@@ -16,36 +16,42 @@
 ~
 -->
 
-<sp-visualization-config-outer
-    [configurationValid]="
-        currentlyConfiguredWidget.visualizationConfig.configurationValid
-    "
->
-    <sp-split-section [level]="3" [title]="'Field' | translate">
+@let config = currentlyConfiguredWidget.visualizationConfig;
+<sp-visualization-config-outer [configurationValid]="config.configurationValid">
+    <sp-chart-settings-section
+        [heading]="'Distribution field' | translate"
+        [description]="
+            config.selectedProperty?.fullDbName ||
+            ('No fields selected' | translate)
+        "
+        [initiallyOpen]="true"
+    >
         <sp-select-single-property-config
             [availableProperties]="fieldProvider.allFields"
-            [selectedProperty]="
-                currentlyConfiguredWidget.visualizationConfig.selectedProperty
-            "
+            [selectedProperty]="config.selectedProperty"
             (changeSelectedProperty)="setSelectedProperty($event)"
         >
         </sp-select-single-property-config>
-    </sp-split-section>
-    <sp-split-section [level]="3" [title]="'Settings' | translate">
+    </sp-chart-settings-section>
+    <sp-chart-settings-section
+        [heading]="'Bins and value range' | translate"
+        [description]="
+            config.autoBin
+                ? ('Auto-compute number of bins' | translate)
+                : ('Number of bins' | translate) + ' · ' + config.numberOfBins
+        "
+    >
         <mat-checkbox
-            [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.autoBin"
+            [(ngModel)]="config.autoBin"
             (change)="triggerViewRefresh()"
         >
             {{ 'Auto-compute number of bins' | translate }}
         </mat-checkbox>
-        @if (!currentlyConfiguredWidget.visualizationConfig.autoBin) {
+        @if (!config.autoBin) {
             <sp-form-field [level]="3" [label]="'Number of bins' | translate">
                 <mat-form-field color="accent">
                     <input
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .numberOfBins
-                        "
+                        [(ngModel)]="config.numberOfBins"
                         matInput
                         (input)="onNumBinChange($event.target.valueAsNumber)"
                     />
@@ -53,40 +59,32 @@
             </sp-form-field>
         }
         <mat-checkbox
-            [(ngModel)]="
-                currentlyConfiguredWidget.visualizationConfig.autoDomain
-            "
+            [(ngModel)]="config.autoDomain"
             (change)="triggerViewRefresh()"
         >
             {{ 'All values' | translate }}
         </mat-checkbox>
-        @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
+        @if (!config.autoDomain) {
             <sp-form-field [level]="3" [label]="'Minimum value' | translate">
                 <mat-form-field color="accent">
                     <input
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .domainMin
-                        "
+                        [(ngModel)]="config.domainMin"
                         matInput
                         (input)="onDomainMinChange($event.target.valueAsNumber)"
                     />
                 </mat-form-field>
             </sp-form-field>
         }
-        @if (!currentlyConfiguredWidget.visualizationConfig.autoDomain) {
+        @if (!config.autoDomain) {
             <sp-form-field [level]="3" [label]="'Maximum value' | translate">
                 <mat-form-field color="accent">
                     <input
-                        [(ngModel)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .domainMax
-                        "
+                        [(ngModel)]="config.domainMax"
                         matInput
                         (input)="onDomainMaxChange($event.target.valueAsNumber)"
                     />
                 </mat-form-field>
             </sp-form-field>
         }
-    </sp-split-section>
+    </sp-chart-settings-section>
 </sp-visualization-config-outer>

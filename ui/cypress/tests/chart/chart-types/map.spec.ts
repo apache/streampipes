@@ -50,6 +50,7 @@ describe('Test Map View in Charts', () => {
 
         // Change from markers to trace
         ChartUtils.openVisualizationConfig();
+        ChartUtils.openSettingsSection('map-view');
         cy.dataCy('chart-map-select-marker-or-trace').click();
         cy.dataCy('chart-map-option-trace').click();
         cy.dataCy('chart-map-option-trace').should('not.exist');

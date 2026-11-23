@@ -17,20 +17,28 @@
 -->
 
 <div class="flex-col">
-    <div class="flex-row items-center">
+    <div class="series-row flex-row items-center">
         <mat-checkbox
             color="accent"
             [checked]="isSelected(field)"
             (change)="toggleFieldSelection(field)"
         >
-            <b>{{ field.runtimeName }}</b
-            ><br />
-            <small>
-                {{
-                    (field.aggregation ? field.aggregation + ', ' : '') +
-                        field.measure
-                }}</small
-            >
+            <b>{{ field.runtimeName }}</b>
+            @if (
+                field.aggregation ||
+                currentlyConfiguredWidget.dataConfig.sourceConfigs?.length > 1
+            ) {
+                <br />
+                <small
+                    >{{ field.aggregation }}
+                    @if (
+                        currentlyConfiguredWidget.dataConfig.sourceConfigs
+                            .length > 1
+                    ) {
+                        {{ field.aggregation ? ' · ' : '' }}{{ field.measure }}
+                    }
+                </small>
+            }
         </mat-checkbox>
         <span class="flex-1"></span>
         <span
@@ -46,6 +54,10 @@
             mat-icon-button
             color="accent"
             [matTooltip]="'Field settings' | translate"
+            [attr.aria-label]="
+                ('Field settings' | translate) + ' · ' + field.runtimeName
+            "
+            [attr.aria-expanded]="expanded && isSelected(field)"
             data-cy="time-series-item-config-toggle"
             (click)="toggleExpand()"
             [disabled]="!isSelected(field)"
@@ -54,41 +66,17 @@
         </button>
     </div>
     @if (isSelected(field) && expanded) {
-        <div class="ml-10 flex-col gap-2xs flex-100">
-            <div class="flex-row flex-100">
-                <div class="basis-30">
-                    <small>{{ 'Color' | translate }}</small>
-                </div>
-                <div class="flex-row items-center basis-70">
-                    <input
-                        class="color-field"
-                        [(colorPicker)]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .chosenColor[getFieldKey(field)]
-                        "
-                        [style.background]="
-                            currentlyConfiguredWidget.visualizationConfig
-                                .chosenColor[getFieldKey(field)]
-                        "
-                        required
-                        [cpPosition]="'bottom'"
-                        [cpPresetColors]="presetColors"
-                        (colorPickerSelect)="viewRefreshEmitter.emit()"
-                        autocomplete="off"
-                    />
-                </div>
-            </div>
-            <div class="flex-row flex-100">
-                <div class="flex-row items-center basis-30">
-                    <small>{{ 'Label' | translate }}</small>
-                </div>
-                <div class="flex-row items-center basis-70">
+        <div class="flex-col gap-sm">
+            <div class="series-fields">
+                <sp-form-field [level]="3" [label]="'Label' | translate">
                     <mat-form-field
                         appearance="outline"
+                        subscriptSizing="dynamic"
                         color="accent"
                         class="w-100"
                     >
                         <input
+                            [attr.aria-label]="'Label' | translate"
                             [ngModel]="getDisplayName(field)"
                             matInput
                             (input)="
@@ -96,20 +84,45 @@
                             "
                         />
                     </mat-form-field>
-                </div>
-            </div>
-            <div class="flex-row flex-100">
-                <div class="flex-row items-center basis-30">
-                    <small>{{ 'Type' | translate }}</small>
-                </div>
-                <div class="flex-row items-center basis-70">
+                </sp-form-field>
+                <sp-form-field [level]="3" [label]="'Color' | translate">
+                    <button
+                        type="button"
+                        class="color-field"
+                        [attr.aria-label]="
+                            ('Color' | translate) + ' · ' + field.runtimeName
+                        "
+                        [(colorPicker)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .chosenColor[getFieldKey(field)]
+                        "
+                        [cpPosition]="'bottom'"
+                        [cpPresetColors]="presetColors"
+                        (colorPickerSelect)="viewRefreshEmitter.emit()"
+                    >
+                        <span
+                            class="color-indicator"
+                            [style.background]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .chosenColor[getFieldKey(field)]
+                            "
+                        ></span>
+                        {{
+                            currentlyConfiguredWidget.visualizationConfig
+                                .chosenColor[getFieldKey(field)]
+                        }}
+                    </button>
+                </sp-form-field>
+                <sp-form-field [level]="3" [label]="'Type' | translate">
                     <mat-form-field
                         appearance="outline"
+                        subscriptSizing="dynamic"
                         color="accent"
                         class="w-100"
                         data-cy="time-series-item-config-type"
                     >
                         <mat-select
+                            [aria-label]="'Type' | translate"
                             [(value)]="
                                 currentlyConfiguredWidget.visualizationConfig
                                     .displayType[getFieldKey(field)]
@@ -133,19 +146,16 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-            </div>
-            <div class="flex-row flex-100">
-                <div class="flex-row items-center basis-30">
-                    <small>{{ 'Axis' | translate }}</small>
-                </div>
-                <div class="flex-row items-center basis-70">
+                </sp-form-field>
+                <sp-form-field [level]="3" [label]="'Axis' | translate">
                     <mat-form-field
                         appearance="outline"
+                        subscriptSizing="dynamic"
                         color="accent"
                         class="w-100"
                     >
                         <mat-select
+                            [aria-label]="'Axis' | translate"
                             [(value)]="
                                 currentlyConfiguredWidget.visualizationConfig
                                     .chosenAxis[getFieldKey(field)]
@@ -160,35 +170,33 @@
                             }}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
+                </sp-form-field>
             </div>
             @if (hasGrouping(field)) {
-                <div class="flex-row flex-100">
-                    <div class="flex-row items-center basis-30">
-                        <small>{{ 'Grouped colors' | translate }}</small>
-                    </div>
-                    <div class="flex-row items-center basis-70">
-                        <mat-form-field
-                            appearance="outline"
-                            color="accent"
-                            class="w-100"
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Grouped colors' | translate"
+                    ><mat-form-field
+                        appearance="outline"
+                        color="accent"
+                        class="w-100"
+                    >
+                        <mat-select
+                            [aria-label]="'Grouped colors' | translate"
+                            [value]="getGroupedColorMode(field)"
+                            (selectionChange)="
+                                setGroupedColorMode(field, $event.value)
+                            "
                         >
-                            <mat-select
-                                [value]="getGroupedColorMode(field)"
-                                (selectionChange)="
-                                    setGroupedColorMode(field, $event.value)
-                                "
-                            >
-                                <mat-option [value]="'stable_palette'">{{
-                                    'Stable palette' | translate
-                                }}</mat-option>
-                                <mat-option [value]="'custom_mapping'">{{
-                                    'Custom color mapping' | translate
-                                }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
+                            <mat-option [value]="'stable_palette'">{{
+                                'Stable palette' | translate
+                            }}</mat-option>
+                            <mat-option [value]="'custom_mapping'">{{
+                                'Custom color mapping' | translate
+                            }}</mat-option>
+                        </mat-select>
+                    </mat-form-field></sp-form-field
+                >
                 @if (getGroupedColorMode(field) === 'custom_mapping') {
                     <sp-color-mapping-options-config
                         class="mt-sm"

@@ -176,6 +176,10 @@ export class AssetBtns {
         return cy.dataCy('asset-image-viewer-close', { timeout: 10000 });
     }
 
+    public static datasetCheckbox(name: string) {
+        return cy.dataCy('select-dataset-checkbox-' + name).find('input');
+    }
+
     public static updateAssetLinksBtn() {
         return cy.dataCy('assets-update-links-button', { timeout: 10000 });
     }
