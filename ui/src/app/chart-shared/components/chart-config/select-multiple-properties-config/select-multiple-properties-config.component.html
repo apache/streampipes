@@ -25,25 +25,7 @@
         (selectedProperties?.length || 0)
     "
 >
-    <div class="flex-row flex-wrap gap-sm">
-        <button
-            mat-button
-            mat-flat-button
-            color="accent"
-            class="small-button"
-            (click)="selectAllFields()"
-        >
-            {{ 'Select all' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-flat-button
-            class="small-button mat-basic"
-            (click)="deselectAllFields()"
-        >
-            {{ 'Deselect all' | translate }}
-        </button>
-    </div>
+    <sp-field-selection-actions (selectionChange)="selectFields($event)" />
     <div class="field-scroll-panel flex-col">
         @for (field of availableProperties; track field) {
             <mat-checkbox

@@ -369,6 +369,10 @@ export class ChartBtns {
         return cy.dataCy('close-dashboard');
     }
 
+    public static coordinateSelect(coordinate: 'latitude' | 'longitude') {
+        return cy.dataCy('chart-map-select-' + coordinate).find('mat-select');
+    }
+
     public static datasetInput() {
         return cy.dataCy('data-explorer-select-data-set');
     }

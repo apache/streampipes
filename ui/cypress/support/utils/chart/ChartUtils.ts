@@ -587,6 +587,14 @@ export class ChartUtils {
         ChartBtns.addNewChartBtn().click();
     }
 
+    public static selectCoordinateField(
+        coordinate: 'latitude' | 'longitude',
+        field: string,
+    ) {
+        ChartBtns.coordinateSelect(coordinate).click();
+        cy.contains('[role=listbox] mat-option', field).click();
+    }
+
     public static selectDataSet(dataSet: string) {
         ChartBtns.datasetInput().should('be.visible').clear().type(dataSet);
         this.chooseSearchOption(dataSet);

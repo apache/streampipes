@@ -33,30 +33,20 @@
             "
             [initiallyOpen]="true"
         >
-            <sp-form-field [level]="3" [label]="'Latitude' | translate">
-                <sp-select-single-property-config
-                    class="flex-1"
-                    [availableProperties]="fieldProvider.numericFields"
-                    [selectedProperty]="config.selectedLatitudeProperty"
-                    (changeSelectedProperty)="
-                        setSelectedLatitudeProperty($event)
-                    "
-                    data-cy="chart-map-select-latitude"
-                >
-                </sp-select-single-property-config>
-            </sp-form-field>
-            <sp-form-field [level]="3" [label]="'Longitude' | translate">
-                <sp-select-single-property-config
-                    class="flex-1"
-                    [availableProperties]="fieldProvider.numericFields"
-                    [selectedProperty]="config.selectedLongitudeProperty"
-                    (changeSelectedProperty)="
-                        setSelectedLongitudeProperty($event)
-                    "
-                    data-cy="chart-map-select-longitude"
-                >
-                </sp-select-single-property-config>
-            </sp-form-field>
+            <sp-select-single-property-config
+                [label]="'Latitude' | translate"
+                [availableProperties]="fieldProvider.numericFields"
+                [selectedProperty]="config.selectedLatitudeProperty"
+                (changeSelectedProperty)="setSelectedLatitudeProperty($event)"
+                data-cy="chart-map-select-latitude"
+            />
+            <sp-select-single-property-config
+                [label]="'Longitude' | translate"
+                [availableProperties]="fieldProvider.numericFields"
+                [selectedProperty]="config.selectedLongitudeProperty"
+                (changeSelectedProperty)="setSelectedLongitudeProperty($event)"
+                data-cy="chart-map-select-longitude"
+            />
         </sp-chart-settings-section>
         <sp-chart-settings-section
             [heading]="'Map view and markers' | translate"

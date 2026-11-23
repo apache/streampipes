@@ -32,7 +32,7 @@ import {
 } from '@streampipes/platform-services';
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { FieldSelectionComponent } from '../field-selection/field-selection.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -43,6 +43,7 @@ import {
     MatSuffix,
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { FieldSelectionActionsComponent } from '../../../../../../chart-shared/components/chart-config/field-selection-actions.component';
 import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
@@ -52,7 +53,7 @@ import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/co
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ChartSettingsSectionComponent,
-        MatButton,
+        FieldSelectionActionsComponent,
         MatIconButton,
         MatIcon,
         FieldSelectionComponent,
@@ -135,14 +136,6 @@ export class FieldSelectionPanelComponent implements OnInit {
                 field.selected = true;
             }
         });
-    }
-
-    selectAllFields() {
-        this.selectFields(true);
-    }
-
-    deselectAllFields() {
-        this.selectFields(false);
     }
 
     selectFields(selected: boolean) {

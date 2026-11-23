@@ -32,15 +32,12 @@
         "
         [initiallyOpen]="true"
     >
-        <sp-form-field [level]="3" [label]="'X' | translate">
-            <sp-select-single-property-config
-                class="flex-1"
-                [availableProperties]="fieldProvider.numericFields"
-                [selectedProperty]="config.firstField"
-                (changeSelectedProperty)="updateFirstField($event)"
-            >
-            </sp-select-single-property-config>
-        </sp-form-field>
+        <sp-select-single-property-config
+            [label]="'X' | translate"
+            [availableProperties]="fieldProvider.numericFields"
+            [selectedProperty]="config.firstField"
+            (changeSelectedProperty)="updateFirstField($event)"
+        />
         <sp-form-field [level]="3" [label]="'X Label' | translate">
             <mat-form-field appearance="outline" color="accent">
                 <input
@@ -51,15 +48,12 @@
                 />
             </mat-form-field>
         </sp-form-field>
-        <sp-form-field [level]="3" [label]="'Y' | translate">
-            <sp-select-single-property-config
-                class="flex-1"
-                [availableProperties]="fieldProvider.numericFields"
-                [selectedProperty]="config.secondField"
-                (changeSelectedProperty)="updateSecondField($event)"
-            >
-            </sp-select-single-property-config>
-        </sp-form-field>
+        <sp-select-single-property-config
+            [label]="'Y' | translate"
+            [availableProperties]="fieldProvider.numericFields"
+            [selectedProperty]="config.secondField"
+            (changeSelectedProperty)="updateSecondField($event)"
+        />
         <sp-form-field [level]="3" [label]="'Y Label' | translate">
             <mat-form-field appearance="outline" color="accent">
                 <input

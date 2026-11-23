@@ -26,13 +26,11 @@ import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
 import { FormFieldComponent } from '@streampipes/shared-ui';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FieldOrderConfigComponent } from '../../../chart-config/field-order-config/field-order-config.component';
 import { MatCheckbox } from '@angular/material/checkbox';
 
+import { ChartCaptionFieldsComponent } from '../../../chart-config/chart-caption-fields.component';
 import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
 
 @Component({
@@ -42,13 +40,11 @@ import { ChartSettingsSectionComponent } from '../../../chart-config/settings-se
     imports: [
         SpVisualizationConfigOuterComponent,
         ChartSettingsSectionComponent,
+        ChartCaptionFieldsComponent,
         SelectMultiplePropertiesConfigComponent,
         FormFieldComponent,
         FieldOrderConfigComponent,
-        MatFormField,
-        MatInput,
         MatCheckbox,
-        FormsModule,
         TranslatePipe,
     ],
 })

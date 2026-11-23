@@ -27,9 +27,9 @@ import {
 } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 
+import { FieldSelectionActionsComponent } from '../field-selection-actions.component';
 import { ChartSettingsSectionComponent } from '../settings-section.component';
 
 @Component({
@@ -39,7 +39,7 @@ import { ChartSettingsSectionComponent } from '../settings-section.component';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ChartSettingsSectionComponent,
-        MatButton,
+        FieldSelectionActionsComponent,
         MatCheckbox,
         TranslatePipe,
     ],
@@ -67,14 +67,6 @@ export class SelectMultiplePropertiesConfigComponent implements OnInit {
 
     triggerSelectedProperties() {
         this.changeSelectedProperties.emit(this.selectedProperties);
-    }
-
-    selectAllFields() {
-        this.selectFields(true);
-    }
-
-    deselectAllFields() {
-        this.selectFields(false);
     }
 
     selectFields(selected: boolean) {

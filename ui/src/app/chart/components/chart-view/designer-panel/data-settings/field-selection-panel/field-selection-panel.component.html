@@ -53,37 +53,13 @@
             </button>
         }
     </mat-form-field>
-    <div class="flex-row flex-wrap items-center gap-sm">
-        <button
-            mat-button
-            mat-flat-button
-            color="accent"
-            class="small-button"
-            data-cy="data-explorer-data-set-field-select-all"
-            [disabled]="!matches.length"
-            (click)="selectAllFields()"
-        >
-            {{
-                fieldSearch.trim()
-                    ? ('Select matches' | translate)
-                    : ('Select all' | translate)
-            }}
-        </button>
-        <button
-            mat-button
-            mat-flat-button
-            class="small-button mat-basic"
-            [disabled]="!matches.length"
-            data-cy="chart-deselect-fields"
-            (click)="deselectAllFields()"
-        >
-            {{
-                fieldSearch.trim()
-                    ? ('Deselect matches' | translate)
-                    : ('Deselect all' | translate)
-            }}
-        </button>
-    </div>
+    <sp-field-selection-actions
+        [filtered]="!!fieldSearch.trim()"
+        [disabled]="!matches.length"
+        selectDataCy="data-explorer-data-set-field-select-all"
+        deselectDataCy="chart-deselect-fields"
+        (selectionChange)="selectFields($event)"
+    />
     <div
         class="field-list flex-col"
         role="group"

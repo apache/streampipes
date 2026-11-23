@@ -28,9 +28,9 @@ import {
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../charts/time-series-chart/model/time-series-chart-widget.model';
-import { MatButton } from '@angular/material/button';
 import { SpTimeseriesItemConfigComponent } from './time-series-item-config/time-series-item-config.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FieldSelectionActionsComponent } from '../field-selection-actions.component';
 import { ChartSettingsSectionComponent } from '../settings-section.component';
 
 @Component({
@@ -40,7 +40,7 @@ import { ChartSettingsSectionComponent } from '../settings-section.component';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ChartSettingsSectionComponent,
-        MatButton,
+        FieldSelectionActionsComponent,
         SpTimeseriesItemConfigComponent,
         TranslatePipe,
     ],
@@ -63,14 +63,6 @@ export class SelectColorPropertiesConfigComponent implements OnInit {
 
     triggerSelectedProperties() {
         this.changeSelectedProperties.emit(this.selectedProperties);
-    }
-
-    selectAllFields() {
-        this.selectFields(true);
-    }
-
-    deselectAllFields() {
-        this.selectFields(false);
     }
 
     selectFields(selected: boolean) {

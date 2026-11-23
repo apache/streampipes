@@ -30,10 +30,10 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FieldSelectionActionsComponent } from '../../../../../../chart-shared/components/chart-config/field-selection-actions.component';
 import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
@@ -42,7 +42,7 @@ import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/co
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ChartSettingsSectionComponent,
-        MatButton,
+        FieldSelectionActionsComponent,
         MatCheckbox,
         FormsModule,
         TranslatePipe,
@@ -91,14 +91,6 @@ export class GroupSelectionPanelComponent implements OnInit {
                 }
             },
         );
-    }
-
-    selectAllFields() {
-        this.selectFields(true);
-    }
-
-    deselectAllFields() {
-        this.selectFields(false);
     }
 
     selectFields(selected: boolean) {

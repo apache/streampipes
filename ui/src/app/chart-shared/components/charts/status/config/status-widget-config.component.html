@@ -71,16 +71,12 @@
         }
 
         @if (config.selectedDataType === 'boolean') {
-            <sp-form-field [level]="3" [label]="'Field' | translate">
-                <sp-select-single-property-config
-                    [availableProperties]="fieldProvider.booleanFields"
-                    [selectedProperty]="config.selectedBooleanFieldToObserve"
-                    (changeSelectedProperty)="
-                        selectBooleanFieldToObserve($event)
-                    "
-                    class="flex-1"
-                ></sp-select-single-property-config>
-            </sp-form-field>
+            <sp-select-single-property-config
+                [label]="'Field' | translate"
+                [availableProperties]="fieldProvider.booleanFields"
+                [selectedProperty]="config.selectedBooleanFieldToObserve"
+                (changeSelectedProperty)="selectBooleanFieldToObserve($event)"
+            />
             <sp-form-field [level]="3" [label]="'Select Mapping' | translate">
                 <mat-radio-group
                     [(ngModel)]="config.selectedMappingGreenTrue"

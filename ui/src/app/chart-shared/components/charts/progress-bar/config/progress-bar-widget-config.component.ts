@@ -35,6 +35,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { ChartCaptionFieldsComponent } from '../../../chart-config/chart-caption-fields.component';
 import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
 
 @Component({
@@ -44,6 +45,7 @@ import { ChartSettingsSectionComponent } from '../../../chart-config/settings-se
     imports: [
         SpVisualizationConfigOuterComponent,
         ChartSettingsSectionComponent,
+        ChartCaptionFieldsComponent,
         FormFieldComponent,
         SelectSinglePropertyConfigComponent,
         MatFormField,
