@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.99.0</version>
+        <version>0.99.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-connect-transformer-api</artifactId>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.99.0</version>
+            <version>0.99.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
