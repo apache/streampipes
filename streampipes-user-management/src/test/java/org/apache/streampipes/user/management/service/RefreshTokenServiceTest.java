@@ -20,6 +20,7 @@ package org.apache.streampipes.user.management.service;
 
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.client.user.RefreshToken;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
@@ -32,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -68,7 +71,43 @@ class RefreshTokenServiceTest {
     assertNotNull(replacement);
     assertNotNull(existing.getRevokedAtMillis());
     assertEquals(replacement.tokenId(), existing.getReplacedByTokenId());
-    verify(storage).updateElement(existing);
+    var order = inOrder(storage);
+    order.verify(storage).updateElement(existing);
+    order.verify(storage).persist(any());
+  }
+
+  @Test
+  void losingAConcurrentRotationIssuesNoReplacement() {
+    var existing = token();
+    when(storage.findByHashedToken(TokenUtil.hashToken("test-token"))).thenReturn(existing);
+    doThrow(new StorageConflictException("conflict")).when(storage).updateElement(existing);
+
+    assertThrows(RefreshTokenConcurrentlyRotatedException.class, () -> service.rotateRefreshToken("test-token"));
+    verify(storage, never()).persist(any());
+  }
+
+  @Test
+  void tokenRotatedMomentsAgoIsReportedAsConcurrentRotation() {
+    var existing = token();
+    existing.setRevokedAtMillis(System.currentTimeMillis() - 1_000);
+    existing.setReplacedByTokenId("replacement");
+    when(storage.findByHashedToken(TokenUtil.hashToken("test-token"))).thenReturn(existing);
+
+    assertThrows(RefreshTokenConcurrentlyRotatedException.class, () -> service.rotateRefreshToken("test-token"));
+    verify(storage, never()).persist(any());
+    verify(storage, never()).updateElement(any());
+  }
+
+  @Test
+  void tokenRotatedLongAgoIsRejected() {
+    var existing = token();
+    existing.setRevokedAtMillis(
+        System.currentTimeMillis() - RefreshTokenService.CONCURRENT_ROTATION_WINDOW_MILLIS - 1_000);
+    existing.setReplacedByTokenId("replacement");
+    when(storage.findByHashedToken(TokenUtil.hashToken("test-token"))).thenReturn(existing);
+
+    assertNull(service.rotateRefreshToken("test-token"));
+    verify(storage, never()).persist(any());
   }
 
   @Test
