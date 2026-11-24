@@ -51,6 +51,7 @@ import { EditUnitTransformationComponent } from './components/edit-unit-transfor
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-edit-event-property',
@@ -58,6 +59,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./edit-event-property.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        MatTooltip,
         FormsModule,
         SplitSectionComponent,
         FormFieldComponent,

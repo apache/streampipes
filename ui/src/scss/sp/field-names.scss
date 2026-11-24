@@ -1,0 +1,123 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+// Loaded by main.scss. Component tags and classes below exist in their templates;
+// Material adds the mdc-* classes when it renders checkboxes and select options.
+// Scope overrides to field displays so unrelated controls retain their styling.
+@mixin wrap-field-name {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+// Schema descriptions, validation messages and pipeline output selection.
+sp-input-schema-property > div > div,
+sp-event-property-row .property-names,
+sp-result-label-configuration .text-xs,
+sp-show-field-status-infos .font-bold,
+sp-configure-schema sp-alert-banner .font-bold,
+sp-property-selection .property-selection > div > div {
+    @include wrap-field-name;
+}
+
+// Field checkboxes, including labels beside aggregation and colour controls.
+:is(
+    sp-app-static-mapping-nary,
+    sp-field-selection,
+    sp-group-selection-panel,
+    sp-select-properties-config,
+    sp-time-series-item-config,
+    sp-data-explorer-table-widget-config .highlight-color-row
+) {
+    mat-checkbox {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .mdc-form-field {
+        max-width: 100%;
+    }
+
+    .mdc-label {
+        @include wrap-field-name;
+    }
+}
+
+sp-time-series-item-config .color-indicator,
+sp-data-explorer-table-widget-config .highlight-color-picker,
+sp-data-explorer-table-widget .sort-icon {
+    flex-shrink: 0;
+}
+
+// Retain field-order controls and the existing row structure, including drag previews.
+sp-field-order-config .selected-field-main .selected-field-label,
+.cdk-drag-preview .selected-field-main .selected-field-label {
+    @include wrap-field-name;
+    overflow: visible;
+}
+
+// Schema names and labels share the same presentation in adapter and dataset tables.
+:is(sp-live-preview-table, sp-dataset-details-schema) .mat-mdc-table {
+    .runtime-name-row {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .runtime-name,
+    :is(.mat-column-runtimeName, .mat-column-label, .mat-column-description) {
+        @include wrap-field-name;
+    }
+
+    sp-property-scope-badge {
+        flex-shrink: 0;
+    }
+}
+
+// Use the existing scroll container and column widths for data previews.
+:is(sp-chart-data-preview, sp-dataset-details-events)
+    .preview-shell
+    .preview-table-scroll
+    .preview-table
+    th,
+sp-live-preview-panel
+    .live-preview-panel
+    .live-preview-panel__detail
+    .live-preview-panel__table
+    th {
+    @include wrap-field-name;
+}
+
+// Only the name inside a sortable header wraps; sort/filter buttons keep their space.
+sp-data-explorer-table-widget .analytics-table .sort-trigger > span {
+    @include wrap-field-name;
+    max-width: 16rem;
+}
+
+sp-csv-import-preview-table .preview-table .header-cell {
+    max-width: 20rem;
+}
+
+sp-csv-import-preview-table .preview-table .header-title {
+    @include wrap-field-name;
+}
+
+// panelClass puts this class on Material's overlay, outside the component host.
+// Material already supports multiline option heights; allow unbroken names too.
+.sp-field-options .mat-mdc-option .mdc-list-item__primary-text {
+    @include wrap-field-name;
+}

@@ -28,6 +28,7 @@ import { MappingPropertyUnary } from '@streampipes/platform-services';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-app-static-mapping-unary',
@@ -35,6 +36,7 @@ import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
     styleUrls: ['./static-mapping-unary.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        MatTooltip,
         FormsModule,
         ReactiveFormsModule,
         MatFormField,

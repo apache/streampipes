@@ -18,9 +18,11 @@
 
 <div class="flex-col flex-100">
     <div class="flex-row gap-sm flex-100">
-        <div class="flex-row items-center">
+        <div
+            class="property-names flex-row flex-wrap items-center content-center flex-1"
+        >
             <div>
-                <b style="white-space: nowrap">
+                <b>
                     {{ label }}
                 </b>
             </div>
@@ -44,7 +46,7 @@
             }
         </div>
 
-        <div class="flex-row justify-end items-center gap-lg flex-100">
+        <div class="flex-row justify-end items-center gap-lg flex-none">
             @if (isPrimitive && isNumber && isTimestampProperty()) {
                 <mat-icon
                     [matTooltip]="'marked as timestamp' | translate"
