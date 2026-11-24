@@ -36,7 +36,7 @@ type FillMode = 'none' | 'previous' | 'linear' | 'null' | 'number';
 
 @Component({
     selector: 'sp-fill-configuration',
-    host: { class: 'flex-row' },
+    host: { class: 'flex-col gap-sm' },
     templateUrl: './fill-configuration.component.html',
     styleUrls: ['./fill-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,

@@ -23,6 +23,7 @@ import {
     Output,
     ViewChild,
     ChangeDetectionStrategy,
+    forwardRef,
 } from '@angular/core';
 import {
     DataExplorerWidgetModel,
@@ -37,7 +38,15 @@ import { ChartAppearanceSettingsComponent } from './appearance-settings/chart-ap
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { CHART_FIELD_NAVIGATION } from '../../../../chart-shared/components/chart-config/visualization-config-outer/visualization-config-outer.component';
+
 @Component({
+    providers: [
+        {
+            provide: CHART_FIELD_NAVIGATION,
+            useExisting: forwardRef(() => ChartDesignerPanelComponent),
+        },
+    ],
     selector: 'sp-chart-designer-panel',
     host: { class: 'flex-row' },
     templateUrl: './chart-designer-panel.component.html',
@@ -67,6 +76,20 @@ export class ChartDesignerPanelComponent {
     selectedIndex = 0;
 
     dataSettingsPanel: ChartDataSettingsComponent;
+
+    private fieldsRequested = false;
+
+    chooseFields(): void {
+        this.fieldsRequested = true;
+        this.selectedIndex = 0;
+    }
+
+    focusRequestedFields(): void {
+        if (this.fieldsRequested && this.selectedIndex === 0) {
+            this.fieldsRequested = false;
+            this.dataSettingsPanel?.focusFields();
+        }
+    }
 
     selectOptionsPanel(index: number) {
         this.selectedIndex = index;

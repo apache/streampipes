@@ -16,47 +16,44 @@
 ~
 -->
 
-<div class="flex-col flex-100">
-    <div class="ml-0 mr-5 form-field-small flex-col items-center flex-100">
-        <sp-form-field
-            [level]="3"
-            [label]="'Fill' | translate"
+<sp-form-field
+    [level]="3"
+    [label]="'Fill' | translate"
+    class="w-100"
+    [description]="'Handle empty values' | translate"
+>
+    <mat-form-field
+        subscriptSizing="dynamic"
+        appearance="outline"
+        class="w-100"
+    >
+        <mat-select
+            [(ngModel)]="fillMode"
             class="w-100"
-            [description]="'Handle empty values' | translate"
+            (selectionChange)="updateFillMode(fillMode)"
         >
-            <mat-form-field appearance="outline" class="w-100 flex-100">
-                <mat-select
-                    [(ngModel)]="fillMode"
-                    class="w-100"
-                    (selectionChange)="updateFillMode(fillMode)"
-                >
-                    @for (option of fillOptions; track option.value) {
-                        <mat-option [value]="option.value">{{
-                            option.label | translate
-                        }}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        </sp-form-field>
-        @if (fillMode === 'number') {
-            <sp-form-field
-                [level]="3"
-                [label]="'Fill Value' | translate"
-                class="w-100"
-            >
-                <mat-form-field
-                    appearance="outline"
-                    class="w-100 flex-100"
-                    color="accent"
-                >
-                    <input
-                        matInput
-                        type="number"
-                        [(ngModel)]="customFillValue"
-                        (ngModelChange)="updateCustomFillValue()"
-                    />
-                </mat-form-field>
-            </sp-form-field>
-        }
-    </div>
-</div>
+            @for (option of fillOptions; track option.value) {
+                <mat-option [value]="option.value">{{
+                    option.label | translate
+                }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</sp-form-field>
+@if (fillMode === 'number') {
+    <sp-form-field [level]="3" [label]="'Fill Value' | translate" class="w-100">
+        <mat-form-field
+            subscriptSizing="dynamic"
+            appearance="outline"
+            class="w-100"
+            color="accent"
+        >
+            <input
+                matInput
+                type="number"
+                [(ngModel)]="customFillValue"
+                (ngModelChange)="updateCustomFillValue()"
+            />
+        </mat-form-field>
+    </sp-form-field>
+}

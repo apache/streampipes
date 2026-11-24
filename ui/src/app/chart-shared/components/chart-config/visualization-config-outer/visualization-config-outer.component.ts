@@ -16,17 +16,31 @@
  *
  */
 
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    Input,
+    ChangeDetectionStrategy,
+    inject,
+    InjectionToken,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { MatButton } from '@angular/material/button';
+
+export const CHART_FIELD_NAVIGATION = new InjectionToken<{
+    chooseFields(): void;
+}>('Chart field navigation');
 
 @Component({
     selector: 'sp-visualization-config-outer',
     host: { class: 'flex-row' },
     templateUrl: './visualization-config-outer.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [TranslatePipe],
+    imports: [TranslatePipe, MatButton],
 })
 export class SpVisualizationConfigOuterComponent {
+    readonly navigation = inject(CHART_FIELD_NAVIGATION, { optional: true });
+    @Input() requirement: string;
     @Input()
     configurationValid: boolean;
 }

@@ -16,41 +16,32 @@
   ~
   -->
 
-<sp-split-section [level]="3" [title]="'Data Zoom' | translate">
-    <div class="flex-col">
-        <mat-checkbox
-            [(ngModel)]="appearanceConfig.dataZoom.show"
-            (ngModelChange)="configChangedEmitter.emit()"
-            >{{ 'Active' | translate }}
-        </mat-checkbox>
-
-        <div class="ml-10 flex-row items-center flex-100">
-            <div class="flex-row items-center">
-                <span>{{ 'Type' | translate }}</span>
-            </div>
-            <span class="flex-1"></span>
-            <div
-                class="form-field-small w-100 flex-row justify-end items-center"
+<div class="flex-col gap-sm">
+    <mat-checkbox
+        [(ngModel)]="appearanceConfig.dataZoom.show"
+        (ngModelChange)="configChangedEmitter.emit()"
+    >
+        {{ 'Data Zoom' | translate }}
+    </mat-checkbox>
+    <sp-form-field [level]="3" [label]="'Type' | translate">
+        <mat-form-field
+            appearance="outline"
+            color="accent"
+            subscriptSizing="dynamic"
+        >
+            <mat-select
+                [aria-label]="'Type' | translate"
+                (ngModelChange)="configChangedEmitter.emit()"
+                [(ngModel)]="appearanceConfig.dataZoom.type"
+                [disabled]="!appearanceConfig.dataZoom.show"
             >
-                <mat-form-field
-                    appearance="outline"
-                    color="accent"
-                    class="basis-30"
-                >
-                    <mat-select
-                        (ngModelChange)="configChangedEmitter.emit()"
-                        [(ngModel)]="appearanceConfig.dataZoom.type"
-                        [disabled]="!appearanceConfig.dataZoom.show"
-                    >
-                        <mat-option value="inside">{{
-                            'Wheel' | translate
-                        }}</mat-option>
-                        <mat-option value="slider">{{
-                            'Slider' | translate
-                        }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-    </div>
-</sp-split-section>
+                <mat-option value="inside">{{
+                    'Wheel' | translate
+                }}</mat-option>
+                <mat-option value="slider">{{
+                    'Slider' | translate
+                }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </sp-form-field>
+</div>

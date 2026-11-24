@@ -18,11 +18,10 @@
 
 <div class="flex-col">
     <sp-echarts-widget-appearance-config [appearanceConfig]="appearanceConfig">
+        <sp-data-zoom-config
+            [appearanceConfig]="appearanceConfig"
+            (configChangedEmitter)="triggerViewUpdate()"
+        >
+        </sp-data-zoom-config>
     </sp-echarts-widget-appearance-config>
-
-    <sp-data-zoom-config
-        [appearanceConfig]="appearanceConfig"
-        (configChangedEmitter)="triggerViewUpdate()"
-    >
-    </sp-data-zoom-config>
 </div>

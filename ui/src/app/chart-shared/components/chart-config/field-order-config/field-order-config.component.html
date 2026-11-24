@@ -16,7 +16,11 @@
   ~
   -->
 
-<sp-split-section [level]="3" [title]="sectionTitle | translate">
+<sp-chart-settings-section
+    [heading]="sectionTitle || ('Field order' | translate)"
+    [description]="orderSummary || ('No fields selected' | translate)"
+    data-cy="chart-section-field-order"
+>
     <div
         class="selected-field-list flex-col"
         cdkDropList
@@ -78,4 +82,4 @@
             ></sp-alert-banner>
         }
     </div>
-</sp-split-section>
+</sp-chart-settings-section>

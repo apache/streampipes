@@ -16,15 +16,26 @@
   ~
   -->
 
-<sp-split-section [level]="3" [title]="'Filter' | translate">
-    <div section-actions class="flex-row items-center flex-100">
+<sp-chart-settings-section
+    [heading]="'Filters' | translate"
+    [description]="
+        hasAdvancedFilterExpression()
+            ? ('Advanced filter active' | translate)
+            : sourceConfig.queryConfig.selectedFilters.length
+              ? ('Active filters' | translate) +
+                ' · ' +
+                sourceConfig.queryConfig.selectedFilters.length
+              : ('No filters' | translate)
+    "
+    data-cy="chart-section-filters"
+>
+    <div class="flex-row flex-wrap items-center gap-sm">
         <button
             mat-flat-button
             color="accent"
             class="small-button"
             data-cy="design-panel-data-settings-add-filter"
             (click)="addFilter()"
-            style="margin-right: 10px"
         >
             {{ 'Add Filter' | translate }}
         </button>
@@ -38,14 +49,13 @@
             {{ 'Advanced Filter' | translate }}
         </button>
     </div>
-    <div class="flex-col">
+    <div class="flex-col gap-sm">
         @if (hasAdvancedFilterExpression()) {
             <sp-alert-banner
                 data-cy="filter-alert-banner"
                 type="info"
                 [title]="'Advanced filter active' | translate"
                 [description]="advancedFilterSummary()"
-                style="margin-bottom: 10px"
             >
                 <div
                     style="font-size: 12px; margin-top: 6px; margin-bottom: 6px"
@@ -83,4 +93,4 @@
             </sp-filter-selection-panel-row>
         }
     </div>
-</sp-split-section>
+</sp-chart-settings-section>

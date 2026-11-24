@@ -30,19 +30,19 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
-import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FieldSelectionActionsComponent } from '../../../../../../chart-shared/components/chart-config/field-selection-actions.component';
+import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-group-selection-panel',
     templateUrl: './group-selection-panel.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
-        MatButton,
+        ChartSettingsSectionComponent,
+        FieldSelectionActionsComponent,
         MatCheckbox,
         FormsModule,
         TranslatePipe,
@@ -54,6 +54,14 @@ export class GroupSelectionPanelComponent implements OnInit {
 
     @Input() sourceConfig: SourceConfig;
 
+    get selectedNames(): string[] {
+        return (
+            this.sourceConfig.queryConfig.groupBy
+                ?.filter(field => field.selected)
+                .map(field => field.runtimeName) ?? []
+        );
+    }
+
     ngOnInit() {
         const groupByFields = this.sourceConfig.queryConfig.groupBy;
 
@@ -63,8 +71,16 @@ export class GroupSelectionPanelComponent implements OnInit {
     }
 
     applyDefaultFields() {
+        const selected = new Set(
+            this.sourceConfig.queryConfig.groupBy
+                ?.filter(field => field.selected)
+                .map(field => field.runtimeName),
+        );
         this.sourceConfig.queryConfig.groupBy = [];
         this.addAllFields();
+        this.sourceConfig.queryConfig.groupBy.forEach(
+            field => (field.selected = selected.has(field.runtimeName)),
+        );
     }
 
     addAllFields() {
@@ -75,14 +91,6 @@ export class GroupSelectionPanelComponent implements OnInit {
                 }
             },
         );
-    }
-
-    selectAllFields() {
-        this.selectFields(true);
-    }
-
-    deselectAllFields() {
-        this.selectFields(false);
     }
 
     selectFields(selected: boolean) {

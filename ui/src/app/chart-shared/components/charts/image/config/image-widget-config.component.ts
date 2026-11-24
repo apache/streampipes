@@ -24,9 +24,10 @@ import {
 } from '../model/image-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-data-explorer-image-widget-config',
@@ -35,7 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         SelectSinglePropertyConfigComponent,
         TranslatePipe,
     ],

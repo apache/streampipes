@@ -23,7 +23,6 @@ import {
     inject,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpNumberFormatConfigComponent } from '../../../chart-config/number-format-config/number-format-config.component';
 import { ValueCardAppearanceConfig } from '../model/value-card-widget.model';
@@ -32,13 +31,14 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
+import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-value-card-widget-appearance-config',
     templateUrl: './value-card-appearance-config.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         TranslatePipe,
         SpNumberFormatConfigComponent,
         FormFieldComponent,

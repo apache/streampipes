@@ -15,28 +15,19 @@
 ~ limitations under the License.
 ~
 -->
-<sp-split-section [level]="3" [title]="'Group by' | translate">
-    <div section-actions>
-        <button
-            mat-button
-            mat-flat-button
-            color="accent"
-            class="small-button"
-            style="margin-right: 10px"
-            (click)="selectAllFields()"
-        >
-            {{ 'Select all' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-flat-button
-            class="small-button mat-basic"
-            style="margin-right: 10px"
-            (click)="deselectAllFields()"
-        >
-            {{ 'Deselect all' | translate }}
-        </button>
-    </div>
+@let names = selectedNames;
+<sp-chart-settings-section
+    [heading]="'Group by' | translate"
+    [description]="
+        names.length
+            ? ('{{count}} selected' | translate: { count: names.length }) +
+              ' · ' +
+              names.join(', ')
+            : ('No grouping' | translate)
+    "
+    data-cy="chart-section-group"
+>
+    <sp-field-selection-actions (selectionChange)="selectFields($event)" />
     <div class="field-scroll-panel flex-col">
         @for (
             groupByField of sourceConfig.queryConfig.groupBy;
@@ -56,4 +47,4 @@
             </div>
         }
     </div>
-</sp-split-section>
+</sp-chart-settings-section>

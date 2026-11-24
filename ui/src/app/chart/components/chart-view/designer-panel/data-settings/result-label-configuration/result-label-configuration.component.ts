@@ -29,11 +29,12 @@ import {
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ResultLabelService } from '../../../../../../chart-shared/services/result-label.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-result-label-configuration',
@@ -41,9 +42,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./result-label-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         MatFormField,
         MatInput,
+        FormFieldComponent,
         FormsModule,
         TranslatePipe,
     ],
@@ -55,6 +57,12 @@ export class ResultLabelConfigurationComponent {
 
     @Input() sourceConfig: SourceConfig;
     @Input() sourceIndex = 0;
+
+    get customLabels(): string {
+        return Object.values(
+            this.sourceConfig.queryConfig.resultLabelOverrides ?? {},
+        ).join(', ');
+    }
 
     get selectedResultFields(): DataExplorerField[] {
         if (!this.sourceConfig?.measure) {

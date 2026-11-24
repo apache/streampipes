@@ -19,49 +19,39 @@
 import {
     Component,
     Input,
-    OnDestroy,
-    OnInit,
+    OnChanges,
     inject,
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
-import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
-import { Subscription } from 'rxjs';
-import {
-    FormFieldComponent,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerDirective } from 'ngx-color-picker';
-import { NgComponentOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSettingsSectionComponent } from '../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-chart-appearance-settings',
-    host: { class: 'flex-row' },
+    host: { class: 'flex-col' },
     templateUrl: './chart-appearance-settings.component.html',
     styleUrls: ['./chart-appearance-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         FormFieldComponent,
         MatRadioGroup,
         FormsModule,
         MatRadioButton,
         ColorPickerDirective,
-        NgComponentOutlet,
         TranslatePipe,
     ],
 })
-export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
-    private widgetTypeService = inject(ChartTypeService);
-    private widgetRegistryService = inject(ChartRegistry);
+export class ChartAppearanceSettingsComponent implements OnChanges {
     private widgetConfigurationService = inject(ChartConfigurationService);
 
-    @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
+    @Input() appearanceConfig: DataExplorerWidgetModel['baseAppearanceConfig'];
 
     backgroundOption: 'default' | 'custom' = 'default';
     textOption: 'default' | 'custom' = 'default';
@@ -79,41 +69,22 @@ export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
         '#000000',
     ];
 
-    widgetTypeSubscription: Subscription;
-    extendedAppearanceConfigComponent: any;
-
-    ngOnInit(): void {
-        this.findWidget(this.currentlyConfiguredWidget.widgetType);
-        this.widgetTypeSubscription =
-            this.widgetTypeService.chartTypeChangeSubject.subscribe(() => {
-                this.findWidget(this.currentlyConfiguredWidget.widgetType);
-            });
-        if (
-            !this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor
-        ) {
+    ngOnChanges(): void {
+        if (!this.appearanceConfig.backgroundColor) {
             this.applyDefaultBackground();
         }
-        if (!this.currentlyConfiguredWidget.baseAppearanceConfig.textColor) {
+        if (!this.appearanceConfig.textColor) {
             this.applyDefaultText();
         }
         this.backgroundOption =
-            this.currentlyConfiguredWidget.baseAppearanceConfig
-                ?.backgroundColor === this.defaultBackgroundColor
+            this.appearanceConfig?.backgroundColor ===
+            this.defaultBackgroundColor
                 ? 'default'
                 : 'custom';
         this.textOption =
-            this.currentlyConfiguredWidget.baseAppearanceConfig?.textColor ===
-            this.defaultTextColor
+            this.appearanceConfig?.textColor === this.defaultTextColor
                 ? 'default'
                 : 'custom';
-    }
-
-    findWidget(widgetType: string): void {
-        const widget = this.widgetRegistryService.getChartTemplate(widgetType);
-        if (widget) {
-            this.extendedAppearanceConfigComponent =
-                widget.widgetAppearanceConfigurationComponent;
-        }
     }
 
     triggerViewUpdate() {
@@ -123,29 +94,25 @@ export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
-        this.widgetTypeSubscription?.unsubscribe();
-    }
-
     onBackgroundChange(option: string) {
         if (option === 'default') {
             this.applyDefaultBackground();
+            this.triggerViewUpdate();
         }
     }
 
     onTextChange(option: string): void {
         if (option === 'default') {
             this.applyDefaultText();
+            this.triggerViewUpdate();
         }
     }
 
     applyDefaultBackground(): void {
-        this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
-            this.defaultBackgroundColor;
+        this.appearanceConfig.backgroundColor = this.defaultBackgroundColor;
     }
 
     applyDefaultText(): void {
-        this.currentlyConfiguredWidget.baseAppearanceConfig.textColor =
-            this.defaultTextColor;
+        this.appearanceConfig.textColor = this.defaultTextColor;
     }
 }

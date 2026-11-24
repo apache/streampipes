@@ -25,7 +25,6 @@ import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/s
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
-    SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -36,6 +35,8 @@ import { ColorPickerDirective } from 'ngx-color-picker';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FieldOrderConfigComponent } from '../../../chart-config/field-order-config/field-order-config.component';
 
+import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
+
 @Component({
     selector: 'sp-data-explorer-table-widget-config',
     templateUrl: './table-widget-config.component.html',
@@ -44,7 +45,7 @@ import { FieldOrderConfigComponent } from '../../../chart-config/field-order-con
     imports: [
         SpVisualizationConfigOuterComponent,
         SelectMultiplePropertiesConfigComponent,
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         MatFormField,
         MatInput,
         FormsModule,

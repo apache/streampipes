@@ -25,10 +25,10 @@ import {
 } from '@angular/core';
 import { SourceConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSettingsSectionComponent } from '../../../../../../chart-shared/components/chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-order-selection-panel',
@@ -36,7 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./order-selection-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         MatRadioGroup,
         FormsModule,
         MatRadioButton,

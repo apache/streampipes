@@ -26,10 +26,7 @@ import {
 } from '../model/progress-bar-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
-import {
-    FormFieldComponent,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -38,13 +35,17 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { ChartCaptionFieldsComponent } from '../../../chart-config/chart-caption-fields.component';
+import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
+
 @Component({
     selector: 'sp-data-explorer-progress-bar-widget-config',
     templateUrl: './progress-bar-widget-config.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
+        ChartCaptionFieldsComponent,
         FormFieldComponent,
         SelectSinglePropertyConfigComponent,
         MatFormField,

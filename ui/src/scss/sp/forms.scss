@@ -250,3 +250,29 @@ mat-form-field.mat-mdc-form-field.form-field-size-smaller {
 .fix-input-label {
     margin-bottom: 20px;
 }
+
+// The designer section owns spacing between its controls, including projected
+// fields supplied by the selected chart type.
+sp-chart-designer-panel {
+    sp-chart-settings-section {
+        sp-form-field,
+        sp-form-label,
+        mat-checkbox {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .form-field-outer {
+            margin-block-end: 0;
+            row-gap: var(--space-2xs);
+        }
+
+        mat-radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            column-gap: var(--space-md);
+            row-gap: var(--space-xs);
+        }
+    }
+}

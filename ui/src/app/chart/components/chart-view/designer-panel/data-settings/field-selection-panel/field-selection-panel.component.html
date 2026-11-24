@@ -15,52 +15,23 @@
 ~ limitations under the License.
 ~
 -->
-<sp-split-section [level]="3" [title]="'Fields' | translate">
-    <div section-actions class="flex-row items-center flex-100">
-        <button
-            mat-button
-            mat-flat-button
-            color="accent"
-            class="small-button btn-margin"
-            data-cy="data-explorer-data-set-field-select-all"
-            (click)="selectAllFields()"
-        >
-            {{ 'Select all' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-flat-button
-            class="small-button mat-basic btn-margin"
-            (click)="deselectAllFields()"
-        >
-            {{ 'Deselect all' | translate }}
-        </button>
-        <span class="flex-1"></span>
-        @if (!expandFields) {
-            <button
-                mat-icon-button
-                class="pull-btn-right"
-                [matTooltip]="'Expand More' | translate"
-                (click)="toggleExpandFields()"
-            >
-                <mat-icon>expand_more</mat-icon>
-            </button>
-        }
-        @if (expandFields) {
-            <button
-                mat-icon-button
-                class="pull-btn-right"
-                [matTooltip]="'Expand Less' | translate"
-                (click)="toggleExpandFields()"
-            >
-                <mat-icon>expand_less</mat-icon>
-            </button>
-        }
-    </div>
+@let names = selectedNames;
+<sp-chart-settings-section
+    [heading]="'Fields' | translate"
+    [description]="
+        names.length
+            ? ('{{count}} selected' | translate: { count: names.length }) +
+              ' · ' +
+              names.join(', ')
+            : ('No fields selected' | translate)
+    "
+    data-cy="chart-section-fields"
+>
+    @let matches = filteredFields;
     <mat-form-field
         appearance="outline"
         subscriptSizing="dynamic"
-        class="w-100 mb-sm"
+        class="w-100"
     >
         <mat-icon matPrefix>search</mat-icon>
         <input
@@ -82,21 +53,25 @@
             </button>
         }
     </mat-form-field>
+    <sp-field-selection-actions
+        [filtered]="!!fieldSearch.trim()"
+        [disabled]="!matches.length"
+        selectDataCy="data-explorer-data-set-field-select-all"
+        deselectDataCy="chart-deselect-fields"
+        (selectionChange)="selectFields($event)"
+    />
     <div
-        class="flex-col"
-        [class.field-scroll-panel]="!expandFields"
+        class="field-list flex-col"
+        role="group"
+        [attr.aria-label]="'Fields' | translate"
         data-cy="data-explorer-field-selection-panel"
     >
-        @for (field of filteredFields; track field) {
-            <div class="flex-col">
-                <sp-field-selection
-                    [field]="field"
-                    [sourceConfig]="sourceConfig"
-                >
-                </sp-field-selection>
-            </div>
+        @for (field of matches; track field) {
+            <sp-field-selection [field]="field" [sourceConfig]="sourceConfig" />
         } @empty {
-            <p role="status">{{ 'No matching fields' | translate }}</p>
+            <p class="m-0" role="status">
+                {{ 'No matching fields' | translate }}
+            </p>
         }
     </div>
-</sp-split-section>
+</sp-chart-settings-section>

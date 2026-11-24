@@ -32,9 +32,11 @@ describe('Test Indicator View in Charts', () => {
         );
 
         ChartUtils.openVisualizationConfig();
+        ChartUtils.openSettingsSection('delta');
         ChartBtns.indicatorChartDeltaCheckbox()
             .check({ force: true })
             .should('be.checked');
+        ChartUtils.openSettingsSection('caption');
         ChartBtns.indicatorChartTitleInput().type('Current Metric');
         ChartBtns.indicatorChartDescriptionInput().type(
             'Live value compared to the previous event.',

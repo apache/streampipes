@@ -33,11 +33,14 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
 import { normalizeDecimals } from '../../../services/formatting';
 
+import { ChartSettingsSectionComponent } from '../settings-section.component';
+
 @Component({
     selector: 'sp-number-format-config',
     templateUrl: './number-format-config.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        ChartSettingsSectionComponent,
         FormFieldComponent,
         FormsModule,
         MatCheckbox,

@@ -16,28 +16,16 @@
 ~
 -->
 
-<sp-split-section [level]="3" [title]="title">
-    <div section-actions>
-        <button
-            mat-button
-            mat-flat-button
-            color="accent"
-            class="small-button"
-            style="margin-right: 10px"
-            (click)="selectAllFields()"
-        >
-            {{ 'Select all' | translate }}
-        </button>
-        <button
-            mat-button
-            mat-flat-button
-            class="small-button mat-basic"
-            style="margin-right: 10px"
-            (click)="deselectAllFields()"
-        >
-            {{ 'Deselect all' | translate }}
-        </button>
-    </div>
+<sp-chart-settings-section
+    [heading]="title"
+    [initiallyOpen]="initiallyOpen"
+    [description]="
+        ('Selected fields' | translate) +
+        ' · ' +
+        (selectedProperties?.length || 0)
+    "
+>
+    <sp-field-selection-actions (selectionChange)="selectFields($event)" />
     <div class="field-scroll-panel flex-col">
         @for (field of availableProperties; track field) {
             <mat-checkbox
@@ -55,4 +43,4 @@
             </mat-checkbox>
         }
     </div>
-</sp-split-section>
+</sp-chart-settings-section>

@@ -35,7 +35,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
+
+import { ChartSettingsSectionComponent } from '../settings-section.component';
 
 @Component({
     selector: 'sp-field-order-config',
@@ -43,7 +44,7 @@ import { SplitSectionComponent } from '@streampipes/shared-ui';
     styleUrls: ['./field-order-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         CdkDropList,
         CdkDrag,
         CdkDragHandle,
@@ -55,8 +56,15 @@ import { SplitSectionComponent } from '@streampipes/shared-ui';
 })
 export class FieldOrderConfigComponent {
     @Input() selectedFields: DataExplorerField[] = [];
-    @Input() sectionTitle = 'Field Order';
+    @Input() sectionTitle: string;
     @Input() emptyMessage = 'No fields selected.';
+
+    get orderSummary(): string {
+        return (
+            this.selectedFields?.map(field => field.fullDbName).join(' → ') ??
+            ''
+        );
+    }
 
     @Output() selectedFieldsChange = new EventEmitter<DataExplorerField[]>();
 

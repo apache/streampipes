@@ -21,10 +21,12 @@
         <div class="designer-panel-content flex-col flex-100">
             <div class="no-overflow flex-col flex-100">
                 <mat-tab-group
+                    [mat-stretch-tabs]="false"
                     [selectedIndex]="selectedIndex"
+                    (animationDone)="focusRequestedFields()"
                     (selectedIndexChange)="selectOptionsPanel($event)"
                     color="accent"
-                    class="small-tab-headers mat-tab-fill-height flex-fill"
+                    class="sp-page-tabs mat-tab-fill-height flex-fill"
                 >
                     <mat-tab
                         data-cy="designer-panel-data-config"
@@ -49,13 +51,11 @@
                         data-cy="designer-panel-visualization-config"
                         [label]="'Visualization' | translate"
                         [disabled]="
-                            !currentlyConfiguredWidget.dataConfig
-                                .sourceConfigs ||
-                            currentlyConfiguredWidget.dataConfig.sourceConfigs
-                                .length === 0
+                            newWidgetMode &&
+                            !dataConfig.sourceConfigs?.[0]?.measureName
                         "
                     >
-                        <div class="scroll-tab-content flex-row">
+                        <div class="scroll-tab-content">
                             @if (currentlyConfiguredWidget.widgetType) {
                                 <sp-chart-visualisation-settings
                                     class="flex-col flex-100"
@@ -64,21 +64,15 @@
                                     "
                                 >
                                 </sp-chart-visualisation-settings>
+                            } @else {
+                                <div class="p-lg">
+                                    <sp-chart-appearance-settings
+                                        [appearanceConfig]="
+                                            currentlyConfiguredWidget.baseAppearanceConfig
+                                        "
+                                    />
+                                </div>
                             }
-                        </div>
-                    </mat-tab>
-                    <mat-tab
-                        data-cy="designer-panel-appearance-config"
-                        [label]="'Appearance' | translate"
-                    >
-                        <div class="scroll-tab-content flex-row">
-                            <sp-chart-appearance-settings
-                                class="flex-col flex-100"
-                                [currentlyConfiguredWidget]="
-                                    currentlyConfiguredWidget
-                                "
-                            >
-                            </sp-chart-appearance-settings>
                         </div>
                     </mat-tab>
                 </mat-tab-group>

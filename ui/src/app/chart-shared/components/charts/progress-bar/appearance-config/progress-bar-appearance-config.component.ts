@@ -23,15 +23,13 @@ import {
     OnInit,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-    FormFieldComponent,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpNumberFormatConfigComponent } from '../../../chart-config/number-format-config/number-format-config.component';
 import { ProgressBarAppearanceConfig } from '../model/progress-bar-widget.model';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { ColorPickerDirective } from 'ngx-color-picker';
+import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-progress-bar-widget-appearance-config',
@@ -39,7 +37,7 @@ import { ColorPickerDirective } from 'ngx-color-picker';
     styleUrls: ['./progress-bar-appearance-config.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         FormFieldComponent,
         TranslatePipe,
         SpNumberFormatConfigComponent,

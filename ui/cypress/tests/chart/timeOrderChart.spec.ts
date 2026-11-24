@@ -52,7 +52,6 @@ describe('Test Time Order in Charts', () => {
         });
 
         // Save and leave view, edit view again and check ascending order
-        ChartUtils.selectAppearanceConfig();
         ChartUtils.saveChartConfiguration(false, false, chartName);
         ChartUtils.editChart(chartName);
         ChartUtils.clickOrderBy('ascending');

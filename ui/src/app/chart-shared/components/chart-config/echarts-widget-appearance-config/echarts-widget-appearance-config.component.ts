@@ -25,18 +25,18 @@ import {
 } from '@angular/core';
 import { WidgetEchartsAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpNumberFormatConfigComponent } from '../number-format-config/number-format-config.component';
+import { ChartSettingsSectionComponent } from '../settings-section.component';
 
 @Component({
     selector: 'sp-echarts-widget-appearance-config',
     templateUrl: './echarts-widget-appearance-config.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         MatCheckbox,
         FormsModule,
         TranslatePipe,

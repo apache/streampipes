@@ -16,10 +16,16 @@
 ~
 -->
 
-<div class="form-field-small mt-10 p-sm flex-col flex-100">
-    <sp-split-section [level]="3" [title]="'Chart Type' | translate">
-        <mat-form-field appearance="outline" color="accent" class="flex-100">
+<div class="form-field-small p-lg flex-col flex-100">
+    <sp-form-field [level]="2" [label]="'Chart Type' | translate">
+        <mat-form-field
+            appearance="outline"
+            color="accent"
+            subscriptSizing="dynamic"
+            class="w-100"
+        >
             <mat-select
+                [aria-label]="'Chart Type' | translate"
                 [(value)]="currentlyConfiguredWidget.widgetType"
                 (selectionChange)="triggerWidgetTypeChange($event)"
                 data-cy="data-explorer-select-visualization-type"
@@ -43,7 +49,7 @@
                 }
             </mat-select>
         </mat-form-field>
-    </sp-split-section>
+    </sp-form-field>
 
     @if (activeWidgetType) {
         <div>
@@ -56,5 +62,19 @@
                 "
             />
         </div>
+        <sp-chart-appearance-settings
+            [appearanceConfig]="currentlyConfiguredWidget.baseAppearanceConfig"
+        />
+        @if (activeWidgetType.widgetAppearanceConfigurationComponent) {
+            <ng-container
+                *ngComponentOutlet="
+                    activeWidgetType.widgetAppearanceConfigurationComponent;
+                    inputs: {
+                        appearanceConfig:
+                            currentlyConfiguredWidget.baseAppearanceConfig,
+                    }
+                "
+            />
+        }
     }
 </div>

@@ -33,7 +33,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-aggregate-configuration',
-    host: { class: 'flex-row' },
+    host: { class: 'flex-col gap-sm' },
     templateUrl: './aggregate-configuration.component.html',
     styleUrls: ['./aggregate-configuration.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,

@@ -369,6 +369,45 @@ export class ChartBtns {
         return cy.dataCy('close-dashboard');
     }
 
+    public static coordinateSelect(coordinate: 'latitude' | 'longitude') {
+        return cy.dataCy('chart-map-select-' + coordinate).find('mat-select');
+    }
+
+    public static datasetInput() {
+        return cy.dataCy('data-explorer-select-data-set');
+    }
+
+    public static browseAssets() {
+        return cy.dataCy('chart-browse-assets');
+    }
+
+    public static assetSearch() {
+        return cy.dataCy('chart-asset-search');
+    }
+
+    public static linkedDataset(name: string) {
+        return cy.dataCy('chart-asset-dataset-' + name);
+    }
+
+    public static deselectFields() {
+        return cy.dataCy('chart-deselect-fields');
+    }
+
+    public static field(name: string) {
+        return cy.dataCy('chart-field-' + name).find('input');
+    }
+
+    public static chooseFields() {
+        return cy.dataCy('chart-choose-fields');
+    }
+
+    public static settingsSection(section: string) {
+        return cy
+            .dataCy('chart-section-' + section)
+            .find('details')
+            .first();
+    }
+
     public static advancedFilterBtn() {
         return cy.dataCy('design-panel-data-settings-advanced-filter');
     }

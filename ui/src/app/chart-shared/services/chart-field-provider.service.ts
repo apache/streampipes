@@ -231,14 +231,11 @@ export class ChartFieldProviderService {
         availableFields: DataExplorerField[],
         getDefaultField: () => DataExplorerField,
     ): DataExplorerField {
-        if (
-            currentlySelectedField !== undefined &&
-            this.existsField(currentlySelectedField, availableFields)
-        ) {
-            return currentlySelectedField;
-        } else {
-            return getDefaultField();
-        }
+        return (
+            (currentlySelectedField &&
+                this.matchSelection(currentlySelectedField, availableFields)) ??
+            getDefaultField()
+        );
     }
 
     getSelectedFields(
@@ -247,12 +244,24 @@ export class ChartFieldProviderService {
         getDefaultFields: () => DataExplorerField[],
     ): DataExplorerField[] {
         if (currentlySelectedFields !== undefined) {
-            return currentlySelectedFields.filter(field =>
-                availableFields.find(f => f.fullDbName === field.fullDbName),
-            );
+            return currentlySelectedFields
+                .map(field => this.matchSelection(field, availableFields))
+                .filter((field): field is DataExplorerField => !!field);
         } else {
             return getDefaultFields();
         }
+    }
+
+    private matchSelection(
+        selected: DataExplorerField,
+        fields: DataExplorerField[],
+    ): DataExplorerField | undefined {
+        return fields.find(
+            field =>
+                this.isEqualField(selected, field) &&
+                (selected.sourceIndex === undefined ||
+                    field.sourceIndex === selected.sourceIndex),
+        );
     }
 
     existsField(

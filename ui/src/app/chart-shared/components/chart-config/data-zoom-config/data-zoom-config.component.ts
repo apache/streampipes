@@ -26,7 +26,7 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../models/dataview-dashboard.model';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './data-zoom-config.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        FormFieldComponent,
         MatCheckbox,
         FormsModule,
         MatFormField,

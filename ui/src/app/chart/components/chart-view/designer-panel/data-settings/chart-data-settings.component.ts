@@ -18,6 +18,9 @@
 
 import {
     Component,
+    ElementRef,
+    computed,
+    signal,
     EventEmitter,
     Input,
     OnDestroy,
@@ -34,6 +37,9 @@ import {
     DatasetSummaryDto,
     DatalakeRestService,
     SourceConfig,
+    SpAsset,
+    EventPropertyUnion,
+    FilterExpressionGroup,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,24 +50,18 @@ import { TableVisConfig } from '../../../../../chart-shared/components/charts/ta
 import { ChartFieldProviderService } from '../../../../../chart-shared/services/chart-field-provider.service';
 import { FieldProvider } from '../../../../../chart-shared/models/dataview-dashboard.model';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
-import {
-    MatAccordion,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-} from '@angular/material/expansion';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
+    SpAssetBrowserService,
     SearchSelectComponent,
-    SplitSectionComponent,
 } from '@streampipes/shared-ui';
+import { Subscription } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatFormField } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatInput } from '@angular/material/input';
 import { AggregateConfigurationComponent } from './aggregate-configuration/aggregate-configuration.component';
@@ -70,6 +70,13 @@ import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-s
 import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
 import { ResultLabelConfigurationComponent } from './result-label-configuration/result-label-configuration.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSettingsSectionComponent } from '../../../../../chart-shared/components/chart-config/settings-section.component';
+
+interface DatasetAssetOption {
+    id: string;
+    label: string;
+    paths: Map<string, string[]>;
+}
 
 @Component({
     selector: 'sp-chart-data-settings',
@@ -78,19 +85,13 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./chart-data-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        MatAccordion,
-        MatExpansionPanel,
-        MatExpansionPanelHeader,
-        MatIconButton,
-        MatTooltip,
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
+
         SpAlertBannerComponent,
         MatButton,
         MatFormField,
-        MatIcon,
         MatRadioGroup,
         FormsModule,
-        NgClass,
         MatRadioButton,
         FormFieldComponent,
         MatCheckbox,
@@ -134,16 +135,70 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     @ViewChild('groupSelectionPanel')
     groupSelectionPanel: GroupSelectionPanelComponent;
 
-    availableDatasets: DatasetSummaryDto[] = [];
+    readonly availableDatasets = signal<DatasetSummaryDto[]>([]);
+    private readonly assetData = toSignal(
+        inject(SpAssetBrowserService).assetData$,
+    );
+    readonly datasetAssets = computed(() => {
+        const datasetIds = new Set(
+            this.availableDatasets().map(dataset => dataset.elementId),
+        );
+        const options: DatasetAssetOption[] = [];
+        const visit = (
+            asset: SpAsset,
+            parentPath: string,
+        ): Map<string, string[]> => {
+            const label = parentPath
+                ? parentPath + ' / ' + asset.assetName
+                : asset.assetName;
+            const paths = new Map<string, string[]>();
+            for (const link of asset.assetLinks ?? []) {
+                if (
+                    link.linkType === 'dataset' &&
+                    datasetIds.has(link.resourceId)
+                ) {
+                    paths.set(link.resourceId, [label]);
+                }
+            }
+            for (const child of asset.assets ?? []) {
+                for (const [id, childPaths] of visit(child, label)) {
+                    paths.set(id, [...(paths.get(id) ?? []), ...childPaths]);
+                }
+            }
+            if (paths.size) options.push({ id: asset.assetId, label, paths });
+            return paths;
+        };
+        for (const asset of this.assetData()?.assets ?? []) {
+            visit(asset, '');
+        }
+        return options.sort((a, b) => a.label.localeCompare(b.label));
+    });
+    browsingAssets = false;
+    readonly selectedAssetId = signal<string | undefined>(undefined);
+    readonly selectedAsset = computed(() =>
+        this.datasetAssets().find(asset => asset.id === this.selectedAssetId()),
+    );
+    readonly assetSearch = signal('');
+    readonly filteredAssetDatasets = computed(() => {
+        const query = this.assetSearch().trim().toLocaleLowerCase();
+        return this.assetDatasets().filter(dataset =>
+            dataset.measureName.toLocaleLowerCase().includes(query),
+        );
+    });
+    readonly assetDatasets = computed(() => {
+        const asset = this.selectedAsset();
+        return this.availableDatasets().filter(dataset =>
+            asset?.paths.has(dataset.elementId),
+        );
+    });
+
     selectedDataset: DatasetSummaryDto | undefined;
 
+    reviewFields: string[] = [];
+    filtersRemoved = false;
+    private measurementRequest?: Subscription;
     private pendingDatasetRefresh = false;
     private dataRefreshTimeout?: ReturnType<typeof setTimeout>;
-
-    step = 0;
-
-    expandFieldsDataSource = true;
-    expandFieldsQuery = true;
 
     get sourceConfig(): SourceConfig | undefined {
         return this.dataConfig?.sourceConfigs?.[0];
@@ -155,13 +210,16 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.measurementRequest?.unsubscribe();
         clearTimeout(this.dataRefreshTimeout);
     }
 
     loadPipelinesAndDatasets() {
         this.datalakeRestService.getMeasurementSummary().subscribe(response => {
-            this.availableDatasets = response.resources.sort((a, b) =>
-                a.measureName.localeCompare(b.measureName),
+            this.availableDatasets.set(
+                response.resources.sort((a, b) =>
+                    a.measureName.localeCompare(b.measureName),
+                ),
             );
             this.syncSelectedDatasetSummary();
 
@@ -196,7 +254,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     } {
         const measureNameFromQueryParams =
             this.route.snapshot.queryParams.measureName;
-        const matchingDataset = this.availableDatasets.find(
+        const matchingDataset = this.availableDatasets().find(
             dataset => dataset.measureName === measureNameFromQueryParams,
         );
         if (matchingDataset) {
@@ -205,17 +263,51 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
             };
         }
 
-        if (this.availableDatasets.length > 0) {
+        if (this.availableDatasets().length > 0) {
             return {
-                measureName: this.availableDatasets[0].measureName,
+                measureName: this.availableDatasets()[0].measureName,
             };
         } else {
             return { measureName: undefined };
         }
     }
 
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    focusFields(): void {
+        const section =
+            this.host.nativeElement.querySelector<HTMLDetailsElement>(
+                'sp-field-selection-panel details',
+            );
+        if (section) {
+            section.open = true;
+            section.querySelector('summary')?.focus();
+        } else {
+            this.host.nativeElement
+                .querySelector<HTMLInputElement>('sp-search-select input')
+                ?.focus();
+        }
+    }
+
+    selectAsset(
+        asset: DatasetAssetOption | DatasetAssetOption[] | undefined,
+    ): void {
+        this.assetSearch.set('');
+        this.selectedAssetId.set(Array.isArray(asset) ? undefined : asset?.id);
+    }
+
+    toggleAssetBrowser(): void {
+        this.assetSearch.set('');
+        this.selectedAssetId.set(undefined);
+        this.browsingAssets = !this.browsingAssets;
+    }
+
     updateMeasure(sourceConfig: SourceConfig, measureName: string) {
-        sourceConfig.measureName = measureName;
+        this.measurementRequest?.unsubscribe();
+        if (sourceConfig.measure?.measureName === measureName) {
+            this.syncSelectedDatasetSummary();
+            return;
+        }
         this.selectedDataset = this.findDatasetSummary(measureName);
         this.loadMeasurement(measureName, true, true);
     }
@@ -233,10 +325,16 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
             return;
         }
 
+        this.browsingAssets = false;
+        this.assetSearch.set('');
+        this.selectedAssetId.set(undefined);
         this.updateMeasure(sourceConfig, selectedDataset.measureName);
     }
 
     private clearMeasure(sourceConfig: SourceConfig): void {
+        this.measurementRequest?.unsubscribe();
+        this.reviewFields = [];
+        this.filtersRemoved = false;
         sourceConfig.measureName = '';
         sourceConfig.measure = undefined;
         sourceConfig.queryConfig.fields = [];
@@ -249,7 +347,8 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         resetQueryConfig: boolean,
         refreshData: boolean,
     ): void {
-        this.datalakeRestService
+        this.measurementRequest?.unsubscribe();
+        this.measurementRequest = this.datalakeRestService
             .getMeasurementByName(measureName)
             .subscribe(measure =>
                 this.applySelectedMeasurement(
@@ -270,6 +369,10 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
             return;
         }
 
+        const previousMeasure = sourceConfig.measure;
+        if (resetQueryConfig && previousMeasure) {
+            this.reconcileDataset(sourceConfig, previousMeasure, measure);
+        }
         this.dataLakeMeasure = measure;
         this.dataLakeMeasureChange.emit(measure);
         sourceConfig.measureName = measure.measureName;
@@ -281,12 +384,11 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         }
 
         this.pendingDatasetRefresh = refreshData;
-        sourceConfig.queryConfig.fields = [];
+        sourceConfig.queryConfig.fields ??= [];
         if (this.fieldSelectionPanel) {
-            this.fieldSelectionPanel.applyDefaultFields();
+            this.fieldSelectionPanel.applyDefaultFields(!previousMeasure);
         }
 
-        sourceConfig.queryConfig.groupBy = [];
         if (this.groupSelectionPanel) {
             this.groupSelectionPanel.applyDefaultFields();
         }
@@ -294,6 +396,86 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         if (refreshData && this.fieldSelectionPanel) {
             this.scheduleDataRefresh();
         }
+    }
+
+    private reconcileDataset(
+        source: SourceConfig,
+        previous: DatasetMetadata,
+        next: DatasetMetadata,
+    ): void {
+        const properties = (measure: DatasetMetadata) =>
+            new Map(
+                measure.eventSchema.eventProperties.map(
+                    property => [property.runtimeName, property] as const,
+                ),
+            );
+        const before = properties(previous);
+        const after = properties(next);
+        const affected = new Set<string>();
+        const compatible = (name: string): boolean => {
+            const old = before.get(name);
+            const current = after.get(name);
+            if (!old || !current) return false;
+            const type = (p: EventPropertyUnion) =>
+                'runtimeType' in p ? p.runtimeType : p['@class'];
+            return (
+                (type(old) === type(current) ||
+                    (this.fieldProviderService.isNumber(old) &&
+                        this.fieldProviderService.isNumber(current))) &&
+                old.propertyScope === current.propertyScope
+            );
+        };
+        const query = source.queryConfig;
+        query.fields = (query.fields ?? []).filter(field => {
+            if (compatible(field.runtimeName)) {
+                if (
+                    field.selected &&
+                    before.get(field.runtimeName)?.semanticType !==
+                        after.get(field.runtimeName)?.semanticType
+                )
+                    affected.add(field.runtimeName);
+                return true;
+            }
+            if (field.selected) affected.add(field.runtimeName);
+            return false;
+        });
+        query.groupBy = (query.groupBy ?? []).filter(field => {
+            if (compatible(field.runtimeName)) return true;
+            if (field.selected) affected.add(field.runtimeName);
+            return false;
+        });
+        this.filtersRemoved = false;
+        query.selectedFilters = (query.selectedFilters ?? []).filter(filter => {
+            const name = filter.field?.runtimeName;
+            if (!name) return true;
+            if (compatible(name)) {
+                filter.field = { ...filter.field, measure: next.measureName };
+                return true;
+            }
+            this.filtersRemoved = true;
+            affected.add(name);
+            return false;
+        });
+        const checkExpression = (group: FilterExpressionGroup): boolean => {
+            let valid = true;
+            for (const child of group.children) {
+                if (child.type === 'group') {
+                    if (!checkExpression(child)) valid = false;
+                } else if (!compatible(child.field)) {
+                    affected.add(child.field);
+                    valid = false;
+                }
+            }
+            return valid;
+        };
+        if (
+            query.filterExpression &&
+            !checkExpression(query.filterExpression)
+        ) {
+            this.filtersRemoved = true;
+            delete query.filterExpression;
+        }
+        this.reviewFields = [...affected];
     }
 
     private syncCurrentMeasure(): void {
@@ -321,7 +503,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     private findDatasetSummary(
         measureName: string,
     ): DatasetSummaryDto | undefined {
-        return this.availableDatasets.find(
+        return this.availableDatasets().find(
             dataset => dataset.measureName === measureName,
         );
     }
@@ -415,14 +597,6 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         this.pendingDatasetRefresh = false;
         clearTimeout(this.dataRefreshTimeout);
         this.dataRefreshTimeout = setTimeout(() => this.triggerDataRefresh());
-    }
-
-    toggleExpandFieldsDataSource() {
-        this.expandFieldsDataSource = !this.expandFieldsDataSource;
-    }
-
-    toggleExpandFieldsQuery() {
-        this.expandFieldsQuery = !this.expandFieldsQuery;
     }
 
     navigateToConnect(): void {

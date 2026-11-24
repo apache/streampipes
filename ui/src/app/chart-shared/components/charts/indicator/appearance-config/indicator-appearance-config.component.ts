@@ -25,21 +25,19 @@ import {
 } from '@angular/core';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { IndicatorAppearanceConfig } from '../model/indicator-chart-widget.model';
-import {
-    FormFieldComponent,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-indicator-appearance-config',
     templateUrl: './indicator-appearance-config.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartSettingsSectionComponent,
         FormFieldComponent,
         MatFormField,
         MatInput,

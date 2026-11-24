@@ -17,33 +17,33 @@
 -->
 
 @if (selectedResultFields.length > 0) {
-    <sp-split-section [level]="3" [title]="'Result Labels' | translate">
+    <sp-chart-settings-section
+        [heading]="'Result Labels' | translate"
+        [description]="customLabels || ('Use field names' | translate)"
+        data-cy="chart-section-labels"
+    >
         <div class="flex-col gap-sm">
             @for (field of selectedResultFields; track field.fullDbName) {
-                <div class="flex-row items-center gap-sm">
-                    <div class="text-xs basis-35">
-                        {{ field.fullDbName }}
-                    </div>
-                    <div class="basis-65">
-                        <mat-form-field
-                            appearance="outline"
-                            color="accent"
-                            class="w-100 form-field-small"
-                        >
-                            <input
-                                matInput
-                                [attr.data-cy]="
-                                    'data-explorer-result-label-input-' +
-                                    field.fullDbName
-                                "
-                                [ngModel]="getLabel(field)"
-                                (ngModelChange)="updateLabel(field, $event)"
-                                [placeholder]="field.fullDbName"
-                            />
-                        </mat-form-field>
-                    </div>
-                </div>
+                <sp-form-field [level]="3" [label]="field.fullDbName">
+                    <mat-form-field
+                        appearance="outline"
+                        color="accent"
+                        class="w-100 form-field-small"
+                    >
+                        <input
+                            matInput
+                            [attr.aria-label]="field.fullDbName"
+                            [attr.data-cy]="
+                                'data-explorer-result-label-input-' +
+                                field.fullDbName
+                            "
+                            [ngModel]="getLabel(field)"
+                            (ngModelChange)="updateLabel(field, $event)"
+                            [placeholder]="field.fullDbName"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
             }
         </div>
-    </sp-split-section>
+    </sp-chart-settings-section>
 }

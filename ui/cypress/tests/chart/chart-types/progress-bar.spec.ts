@@ -29,11 +29,13 @@ describe('Test Progress Bar View in Charts', () => {
         ChartUtils.createChart(PrepareTestDataUtils.dataName, 'progress-bar');
 
         ChartUtils.openVisualizationConfig();
+        ChartUtils.openSettingsSection('caption');
         ChartBtns.progressBarTitleInput().type('Job Progress');
         ChartBtns.progressBarDescriptionInput().type(
             'Progress against the configured target value.',
         );
         ChartBtns.progressBarTargetValueInput().clear().type('50');
+        ChartUtils.openSettingsSection('progress-display');
         ChartBtns.progressBarInvertCheckbox()
             .check({ force: true })
             .should('be.checked');

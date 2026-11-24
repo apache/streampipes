@@ -36,6 +36,7 @@ import { NgStyle } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ColorPickerDirective } from 'ngx-color-picker';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -57,6 +58,7 @@ import { MatIcon } from '@angular/material/icon';
         MatTooltip,
         ColorPickerDirective,
         MatFormField,
+        FormFieldComponent,
         MatInput,
         FormsModule,
         MatSelect,

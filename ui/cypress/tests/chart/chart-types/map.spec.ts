@@ -29,16 +29,14 @@ describe('Test Map View in Charts', () => {
 
         // Change marker positions
         ChartUtils.openVisualizationConfig();
-        cy.dataCy('chart-map-select-latitude')
-            .click()
-            .find('mat-option')
-            .contains('count (prepared_data #1)')
-            .click();
-        cy.dataCy('chart-map-select-longitude')
-            .click()
-            .find('mat-option')
-            .contains('randomnumber (prepared_data #1)')
-            .click();
+        ChartUtils.selectCoordinateField(
+            'latitude',
+            'count (prepared_data #1)',
+        );
+        ChartUtils.selectCoordinateField(
+            'longitude',
+            'randomnumber (prepared_data #1)',
+        );
 
         // Check if map with markers is visible
         cy.get('sp-data-explorer-map-widget').should('be.visible');
@@ -50,6 +48,7 @@ describe('Test Map View in Charts', () => {
 
         // Change from markers to trace
         ChartUtils.openVisualizationConfig();
+        ChartUtils.openSettingsSection('map-view');
         cy.dataCy('chart-map-select-marker-or-trace').click();
         cy.dataCy('chart-map-option-trace').click();
         cy.dataCy('chart-map-option-trace').should('not.exist');

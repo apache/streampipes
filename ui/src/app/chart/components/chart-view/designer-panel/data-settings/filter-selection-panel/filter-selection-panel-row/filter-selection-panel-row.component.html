@@ -17,13 +17,9 @@
   -->
 
 <div class="form-field-small flex-col flex-100">
-    <div class="flex-row items-center flex-100">
+    <div class="flex-row flex-wrap items-center gap-sm">
         @if (index > 0) {
-            <mat-form-field
-                color="accent"
-                class="w-80-px mr-5"
-                appearance="outline"
-            >
+            <mat-form-field color="accent" class="w-80-px" appearance="outline">
                 <mat-select
                     [(value)]="filter.chainingOperator"
                     panelClass="form-field-small min-w-100"

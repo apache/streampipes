@@ -18,13 +18,24 @@
 
 <div class="h-100 form-field-small flex-col flex-100">
     @if (!configurationValid) {
-        <div class="flex-row justify-center items-center">
-            <h5>
+        <div class="flex-col items-start gap-sm">
+            <p class="m-0">
                 {{
-                    "The current data selection can't be displayed by this chart."
-                        | translate
+                    requirement ||
+                        ('Select at least one field for this chart.'
+                            | translate)
                 }}
-            </h5>
+            </p>
+            @if (navigation) {
+                <button
+                    type="button"
+                    mat-button
+                    data-cy="chart-choose-fields"
+                    (click)="navigation.chooseFields()"
+                >
+                    {{ 'Choose fields' | translate }}
+                </button>
+            }
         </div>
     }
     @if (configurationValid) {

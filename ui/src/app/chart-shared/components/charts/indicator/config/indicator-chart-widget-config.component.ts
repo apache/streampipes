@@ -25,15 +25,12 @@ import {
 import { DataExplorerField } from '@streampipes/platform-services';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
-import {
-    FormFieldComponent,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
 import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+
+import { ChartCaptionFieldsComponent } from '../../../chart-config/chart-caption-fields.component';
+import { ChartSettingsSectionComponent } from '../../../chart-config/settings-section.component';
 
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
@@ -41,12 +38,10 @@ import { MatInput } from '@angular/material/input';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
-        SplitSectionComponent,
-        FormFieldComponent,
+        ChartSettingsSectionComponent,
+        ChartCaptionFieldsComponent,
         SelectSinglePropertyConfigComponent,
         MatCheckbox,
-        MatFormField,
-        MatInput,
         FormsModule,
         TranslatePipe,
     ],

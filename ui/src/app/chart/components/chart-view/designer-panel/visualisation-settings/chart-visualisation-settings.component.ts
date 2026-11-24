@@ -35,11 +35,12 @@ import {
 } from '@angular/material/select';
 import { IWidget } from '../../../../../chart-shared/models/dataview-dashboard.model';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { NgComponentOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChartAppearanceSettingsComponent } from '../appearance-settings/chart-appearance-settings.component';
 
 @Component({
     selector: 'sp-chart-visualisation-settings',
@@ -48,7 +49,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./chart-visualisation-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        SplitSectionComponent,
+        ChartAppearanceSettingsComponent,
+        FormFieldComponent,
         MatFormField,
         MatSelect,
         MatSelectTrigger,

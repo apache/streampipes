@@ -16,7 +16,18 @@
   ~
   -->
 
-<sp-split-section [level]="3" [title]="'Typography' | translate">
+<sp-chart-settings-section
+    [heading]="'Text sizes' | translate"
+    [description]="
+        (config.valueFontSize
+            ? config.valueFontSize + ' px'
+            : ('Auto' | translate)) +
+        ' / ' +
+        (config.deltaFontSize
+            ? config.deltaFontSize + ' px'
+            : ('Auto' | translate))
+    "
+>
     <sp-form-field [level]="3" [label]="'Indicator font size' | translate">
         <mat-form-field appearance="outline" color="accent" class="flex-100">
             <input
@@ -42,4 +53,4 @@
             />
         </mat-form-field>
     </sp-form-field>
-</sp-split-section>
+</sp-chart-settings-section>

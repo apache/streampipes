@@ -16,16 +16,8 @@
  *
  */
 
-.field-scroll-panel {
-    max-height: 100px;
+.field-list {
+    max-block-size: min(14rem, 35vh);
     overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.pull-btn-right {
-    margin-left: auto;
-}
-
-.btn-margin {
-    margin-right: 10px;
+    scrollbar-gutter: stable;
 }

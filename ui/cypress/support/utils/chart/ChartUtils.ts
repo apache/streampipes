@@ -148,8 +148,6 @@ export class ChartUtils {
         ChartUtils.selectDataSet(dataSet);
         ChartUtils.dataConfigSelectAllFields();
 
-        ChartUtils.selectAppearanceConfig();
-
         ChartUtils.openVisualizationConfig();
         ChartUtils.selectVisualizationType(widgetType);
 
@@ -589,22 +587,36 @@ export class ChartUtils {
         ChartBtns.addNewChartBtn().click();
     }
 
+    public static selectCoordinateField(
+        coordinate: 'latitude' | 'longitude',
+        field: string,
+    ) {
+        ChartBtns.coordinateSelect(coordinate).click();
+        cy.contains('[role=listbox] mat-option', field).click();
+    }
+
     public static selectDataSet(dataSet: string) {
-        cy.get('body').then($body => {
-            if (
-                $body.find('[data-cy="data-explorer-select-data-set"]').length
-            ) {
-                cy.dataCy('data-explorer-select-data-set')
-                    .clear()
-                    .type(dataSet);
-                cy.get('mat-option').contains(dataSet).click();
-            }
-        });
+        ChartBtns.datasetInput().should('be.visible').clear().type(dataSet);
+        this.chooseSearchOption(dataSet);
+        ChartBtns.datasetInput().should('have.value', dataSet);
     }
 
     public static assertSelectDataSet(dataSet: string) {
-        cy.dataCy('data-explorer-select-data-set').clear().type(dataSet);
+        ChartBtns.datasetInput().clear().type(dataSet);
         cy.get('mat-option').should('contain.text', dataSet);
+    }
+
+    public static browseAsset(name: string) {
+        ChartBtns.browseAssets().click();
+        ChartBtns.assetSearch().type(name);
+        this.chooseSearchOption(name);
+    }
+
+    private static chooseSearchOption(name: string) {
+        cy.contains(
+            'mat-option .mdc-list-item__primary-text',
+            new RegExp('^\\s*' + Cypress._.escapeRegExp(name) + '\\s*$'),
+        ).click();
     }
 
     /**
@@ -612,6 +624,7 @@ export class ChartUtils {
      * @param amountOfFilter the amount of filters that should be set. 0 if no filter should be visible
      */
     public static checkIfFilterIsSet(amountOfFilter: number) {
+        this.openSettingsSection('filters');
         cy.wait(1000);
         if (amountOfFilter === 0) {
             cy.dataCy('design-panel-data-settings-filter-field').should(
@@ -678,10 +691,12 @@ export class ChartUtils {
      * In the data set panel select all property fields
      */
     public static dataConfigSelectAllFields() {
+        this.openSettingsSection('fields');
         cy.dataCy('data-explorer-data-set-field-select-all').click();
     }
 
     public static dataConfigAddFilter(filterConfig: DatasetFilterConfig) {
+        this.openSettingsSection('filters');
         cy.dataCy('design-panel-data-settings-add-filter').click();
 
         // Select field
@@ -705,18 +720,21 @@ export class ChartUtils {
     }
 
     public static dataConfigRemoveFilter() {
+        this.openSettingsSection('filters');
         cy.dataCy('design-panel-data-settings-remove-filter')
             .first()
             .click({ force: true });
     }
 
     public static clickGroupBy(propertyName: string) {
+        this.openSettingsSection('group');
         cy.dataCy('data-explorer-group-by-' + propertyName)
             .children()
             .click();
     }
 
     public static clickOrderBy(order: string) {
+        this.openSettingsSection('sort');
         if (order == 'ascending') {
             cy.dataCy('ascending-radio-button').click();
         } else {
@@ -761,14 +779,18 @@ export class ChartUtils {
         this.selectChartConfigTab(1);
     }
 
-    public static selectAppearanceConfig() {
-        this.selectChartConfigTab(2);
+    public static openSettingsSection(section: string) {
+        ChartBtns.settingsSection(section).then($details => {
+            if (!$details.prop('open')) {
+                cy.wrap($details).children('summary').click();
+            }
+        });
     }
 
     // Workaround: mat-tab does not render the data-cy attribute, so we select tabs by index.
     // Using the label is not reliable due to multi-language support.
     private static selectChartConfigTab(tabNumber: number) {
-        cy.get('div[role=tab]').eq(tabNumber).click();
+        cy.get('sp-chart-designer-panel [role=tab]').eq(tabNumber).click();
     }
 
     public static selectChartNameAndSave(chartName: string) {
