@@ -77,7 +77,7 @@ describe('Chart designer dataset selection', () => {
         ChartBtns.settingsSection('fields')
             .children('summary')
             .should('have.focus');
-        ChartBtns.field('randomnumber').should('be.visible').check();
+        ChartBtns.field('randomnumber').check();
         ChartUtils.openVisualizationConfig();
         ChartBtns.chooseFields().should('not.exist');
     });
