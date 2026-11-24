@@ -23,6 +23,7 @@ describe('CSV import happy path', () => {
     const stringTimestampDatasetName = 'csv_machine_data_import_string_ts';
     const existingDatasetName = 'csv_machine_data_existing_import';
     const missingValuesDatasetName = 'csv_machine_data_missing_values';
+    const extraColumnDatasetName = 'csv_machine_data_extra_column';
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -100,8 +101,34 @@ describe('CSV import happy path', () => {
         DatasetUtils.continueCsvImportToPreview();
         DatasetUtils.selectCsvImportDelimiterComma();
         DatasetUtils.expectCsvImportSchemaMismatch(
-            'Imported columns must exactly match the existing measurement schema.',
+            'Imported columns must match the existing measurement schema.',
             'Timestamp column must be "timestamp" but is "event_time".',
         );
+    });
+
+    it('Appends data to an existing dataset after ignoring an unknown column', () => {
+        DatasetUtils.openCsvImportDialog();
+        DatasetUtils.uploadCsvImportFile(
+            'datalake/machine-data-simulator-import.csv',
+        );
+        DatasetUtils.createNewDatasetFromCsv(extraColumnDatasetName);
+        DatasetUtils.continueCsvImportToPreview();
+        DatasetUtils.selectCsvImportDelimiterComma();
+        DatasetUtils.selectCsvImportTimestampColumn(0);
+        DatasetUtils.uploadCsvImport();
+        DatasetUtils.expectDatasetNotEmpty(extraColumnDatasetName);
+
+        DatasetUtils.openCsvImportDialog();
+        DatasetUtils.uploadCsvImportFile(
+            'datalake/machine-data-simulator-import-extra-column.csv',
+        );
+        DatasetUtils.useExistingDatasetForCsvImport(extraColumnDatasetName);
+        DatasetUtils.continueCsvImportToPreview();
+        DatasetUtils.selectCsvImportDelimiterComma();
+        DatasetUtils.expectCsvImportUnknownColumns('status');
+        DatasetUtils.ignoreCsvImportUnknownColumns();
+        DatasetUtils.expectNoCsvImportUnknownColumns();
+        DatasetUtils.uploadCsvImport();
+        DatasetUtils.expectDatasetNotEmpty(extraColumnDatasetName);
     });
 });

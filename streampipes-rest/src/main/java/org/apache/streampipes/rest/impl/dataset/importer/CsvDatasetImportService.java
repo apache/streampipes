@@ -207,15 +207,17 @@ public class CsvDatasetImportService {
       throw new CsvImportValidationException(validationMessages);
     }
 
+    var convertedRows = parser.toImportRows(request);
+    requireImportedRows(convertedRows.rows().size(), convertedRows.skippedRows());
+
     var measure = resolveTargetMeasurement(request, principalSid, eventSchema);
-    var rows = parser.toImportRows(request);
     dataWriter.writeData(
         measure.measure(),
-        request.getColumns().stream().map(CsvImportColumn::getRuntimeName).collect(Collectors.toList()),
-        rows);
-    progressConsumer.accept(rows.size());
+        parser.importedRuntimeNames(request.getColumns()),
+        convertedRows.rows());
+    progressConsumer.accept(convertedRows.rows().size() + convertedRows.skippedRows().count());
 
-    return buildImportResult(measure, rows.size());
+    return buildImportResult(measure, convertedRows.rows().size(), convertedRows.skippedRows());
   }
 
   public CsvImportJobStartResult startImportJob(CsvImportRequest request, String principalSid) {
@@ -254,13 +256,14 @@ public class CsvDatasetImportService {
     var measure = resolveTargetMeasurement(request, principalSid, eventSchema);
 
     try {
-      var importedRowCount = parser.importCsvFile(
+      var outcome = parser.importCsvFile(
           upload.path(),
           request,
           measure.measure(),
           dataWriter,
           progressConsumer);
-      return buildImportResult(measure, importedRowCount);
+      requireImportedRows(outcome.importedRows(), outcome.skippedRows());
+      return buildImportResult(measure, outcome.importedRows(), outcome.skippedRows());
     } catch (IOException | UncheckedIOException e) {
       throw new CsvImportValidationException(List.of(
           message("file", "The CSV file could not be parsed with the current settings.")));
@@ -386,13 +389,26 @@ public class CsvDatasetImportService {
         false);
   }
 
-  private CsvImportResult buildImportResult(StoredMeasure measure, int importedRowCount) {
+  private void requireImportedRows(int importedRowCount, CsvImportParser.SkippedRows skippedRows) {
+    if (importedRowCount == 0 && skippedRows.count() > 0) {
+      var messages = new ArrayList<CsvImportValidationMessage>();
+      messages.add(message("rows", "No rows were imported because all rows contain invalid values."));
+      messages.addAll(skippedRows.messages());
+      throw new CsvImportValidationException(messages);
+    }
+  }
+
+  private CsvImportResult buildImportResult(
+      StoredMeasure measure,
+      int importedRowCount,
+      CsvImportParser.SkippedRows skippedRows) {
     var result = new CsvImportResult();
     result.setMeasurementId(measure.measure().getElementId());
     result.setMeasurementName(measure.measure().getMeasureName());
     result.setCreatedNewMeasurement(measure.createdNewMeasurement());
     result.setImportedRowCount(importedRowCount);
-    result.setValidationMessages(List.of());
+    result.setSkippedRowCount(skippedRows.count());
+    result.setValidationMessages(new ArrayList<>(skippedRows.messages()));
     return result;
   }
 

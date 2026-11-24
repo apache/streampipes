@@ -223,6 +223,7 @@
                         [columnModels]="columnModels()"
                         [timestampFormat]="timestampFormat()"
                         [hasSchemaMismatch]="hasSchemaMismatch()"
+                        [unknownColumns]="unknownColumns()"
                         [schemaMismatchSummary]="schemaMismatchSummary()"
                         [schemaMismatchDetails]="schemaMismatchDetails()"
                         [showTimestampWarning]="showTimestampWarning()"
@@ -233,6 +234,10 @@
                             setColumnRole($event.model, $event.role)
                         "
                         (timestampFormatChange)="updateTimestampFormat($event)"
+                        (columnIgnoredChange)="
+                            setColumnIgnored($event.model, $event.ignored)
+                        "
+                        (ignoreColumns)="ignoreColumns($event)"
                     ></sp-csv-import-preview-table>
                 </sp-split-section>
 

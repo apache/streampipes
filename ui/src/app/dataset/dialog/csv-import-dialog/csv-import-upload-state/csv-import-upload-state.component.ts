@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    computed,
+    input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -47,4 +52,15 @@ export class CsvImportUploadStateComponent {
     readonly uploadErrors = input<CsvImportValidationMessage[]>([]);
     readonly processedRows = input(0);
     readonly totalRows = input(0);
+
+    readonly skippedRowCount = computed(
+        () => this.importResult()?.skippedRowCount ?? 0,
+    );
+    readonly skippedRowMessages = computed(
+        () => this.importResult()?.validationMessages ?? [],
+    );
+    readonly skippedRowsNoteParams = computed(() => ({
+        shown: this.skippedRowMessages().length,
+        count: this.skippedRowCount(),
+    }));
 }

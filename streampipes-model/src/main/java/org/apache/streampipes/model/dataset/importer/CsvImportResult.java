@@ -27,6 +27,7 @@ public class CsvImportResult {
   private String measurementId;
   private boolean createdNewMeasurement;
   private int importedRowCount;
+  private int skippedRowCount;
   private List<CsvImportValidationMessage> validationMessages = new ArrayList<>();
 
   public String getMeasurementName() {
@@ -59,6 +60,14 @@ public class CsvImportResult {
 
   public void setImportedRowCount(int importedRowCount) {
     this.importedRowCount = importedRowCount;
+  }
+
+  public int getSkippedRowCount() {
+    return skippedRowCount;
+  }
+
+  public void setSkippedRowCount(int skippedRowCount) {
+    this.skippedRowCount = skippedRowCount;
   }
 
   public List<CsvImportValidationMessage> getValidationMessages() {

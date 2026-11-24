@@ -35,6 +35,11 @@ export interface CsvImportColumnTypeChange {
     type: CsvRuntimeType;
 }
 
+export interface CsvImportColumnIgnoredChange {
+    model: CsvImportColumnModel;
+    ignored: boolean;
+}
+
 export interface CsvImportColumnRoleChange {
     model: CsvImportColumnModel;
     role: CsvImportColumnRole;

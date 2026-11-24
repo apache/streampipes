@@ -221,19 +221,27 @@ export class CsvImportDialogComponent {
     readonly isTargetValid = computed(
         () => this.validateLocalTarget().length === 0,
     );
-    readonly hasSchemaMismatch = computed(
-        () =>
-            this.targetMode() === 'EXISTING' &&
-            !!this.schemaValidationResult()?.issues?.length,
+    private readonly schemaIssues = computed(() =>
+        this.targetMode() === 'EXISTING'
+            ? (this.schemaValidationResult()?.issues ?? [])
+            : [],
     );
-    readonly schemaMismatchSummary = computed(
-        () =>
-            'Imported columns must exactly match the existing measurement schema.',
+    /** CSV columns that the existing dataset does not have; they can only be ignored. */
+    readonly unknownColumns = computed(() =>
+        this.schemaIssues()
+            .filter(issue => issue.type === 'COLUMN_NAME_MISMATCH')
+            .map(issue => issue.columnName),
     );
     readonly schemaMismatchDetails = computed(() =>
-        (this.schemaValidationResult()?.issues ?? []).map(issue =>
-            this.toSchemaIssueText(issue),
-        ),
+        this.schemaIssues()
+            .filter(issue => issue.type !== 'COLUMN_NAME_MISMATCH')
+            .map(issue => this.toSchemaIssueText(issue)),
+    );
+    readonly hasSchemaMismatch = computed(
+        () => this.schemaMismatchDetails().length > 0,
+    );
+    readonly schemaMismatchSummary = computed(
+        () => 'Imported columns must match the existing measurement schema.',
     );
 
     private readonly currentCsvConfig = computed<CsvImportConfiguration>(() => {
@@ -473,6 +481,28 @@ export class CsvImportDialogComponent {
         }
 
         this.syncColumn(model);
+        this.columnModels.update(models => [...models]);
+        this.scheduleSchemaValidation();
+    }
+
+    setColumnIgnored(model: CsvImportColumnModel, ignored: boolean): void {
+        if (ignored && this.isTimestampColumn(model)) {
+            return;
+        }
+
+        model.column.ignored = ignored;
+        this.columnModels.update(models => [...models]);
+        this.scheduleSchemaValidation();
+    }
+
+    ignoreColumns(runtimeNames: string[]): void {
+        this.columnModels()
+            .filter(
+                model =>
+                    runtimeNames.includes(model.column.runtimeName) &&
+                    !this.isTimestampColumn(model),
+            )
+            .forEach(model => (model.column.ignored = true));
         this.columnModels.update(models => [...models]);
         this.scheduleSchemaValidation();
     }
@@ -871,7 +901,7 @@ export class CsvImportDialogComponent {
             case 'COLUMN_SCOPE_MISMATCH':
                 return `Column "${issue.columnName}" must use role "${this.formatScope(issue.expected)}" instead of "${this.formatScope(issue.actual)}".`;
             default:
-                return 'Imported columns must exactly match the existing measurement schema.';
+                return 'Imported columns must match the existing measurement schema.';
         }
     }
 

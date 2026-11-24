@@ -55,6 +55,7 @@ import java.util.stream.Collectors;
 class CsvImportParser {
 
   private static final int IMPORT_BATCH_SIZE = 5000;
+  private static final int MAX_VALUE_LENGTH_IN_MESSAGE = 50;
 
   List<String> sanitizeHeaders(List<String> headers) {
     return headers.stream()
@@ -69,6 +70,18 @@ class CsvImportParser {
     }).collect(Collectors.toList());
   }
 
+  List<CsvImportColumn> importedColumns(List<CsvImportColumn> columns) {
+    return columns.stream()
+        .filter(column -> !column.isIgnored())
+        .collect(Collectors.toList());
+  }
+
+  List<String> importedRuntimeNames(List<CsvImportColumn> columns) {
+    return importedColumns(columns).stream()
+        .map(CsvImportColumn::getRuntimeName)
+        .collect(Collectors.toList());
+  }
+
   EventSchema buildEventSchema(
       List<CsvImportColumn> columns,
       List<List<String>> rows,
@@ -77,6 +90,9 @@ class CsvImportParser {
   ) {
     var sampleEvent = new LinkedHashMap<String, Object>();
     for (int i = 0; i < columns.size(); i++) {
+      if (columns.get(i).isIgnored()) {
+        continue;
+      }
       sampleEvent.put(columns.get(i).getRuntimeName(), sampleValue(rows, i, columns.get(i), config, selectedTimestampColumn));
     }
 
@@ -106,7 +122,7 @@ class CsvImportParser {
       String selectedTimestampColumn
   ) {
     var properties = new ArrayList<EventProperty>();
-    for (var column : columns) {
+    for (var column : importedColumns(columns)) {
       var property = new EventPropertyPrimitive();
       property.setRuntimeName(column.getRuntimeName());
       property.setRuntimeType(toRuntimeTypeUri(finalRuntimeType(column, selectedTimestampColumn)));
@@ -142,15 +158,20 @@ class CsvImportParser {
     return columns;
   }
 
-  List<List<Object>> toImportRows(CsvImportRequest request) {
+  ConvertedRows toImportRows(CsvImportRequest request) {
     var rows = new ArrayList<List<Object>>();
+    var skippedRows = new SkippedRows();
     for (int rowIndex = 0; rowIndex < request.getRows().size(); rowIndex++) {
-      rows.add(convertRow(request.getRows().get(rowIndex), request, rowIndex + 1));
+      try {
+        rows.add(convertRow(request.getRows().get(rowIndex), request, rowIndex + 1));
+      } catch (CsvImportValidationException e) {
+        skippedRows.add(e.getValidationMessages());
+      }
     }
-    return rows;
+    return new ConvertedRows(rows, skippedRows);
   }
 
-  int importCsvFile(
+  ImportOutcome importCsvFile(
       Path path,
       CsvImportRequest request,
       DatasetMetadata measure,
@@ -160,18 +181,17 @@ class CsvImportParser {
     });
   }
 
-  int importCsvFile(
+  ImportOutcome importCsvFile(
       Path path,
       CsvImportRequest request,
       DatasetMetadata measure,
       DatasetWriter dataWriter,
       IntConsumer progressConsumer
   ) throws IOException {
-    var runtimeHeaders = request.getColumns().stream()
-        .map(CsvImportColumn::getRuntimeName)
-        .collect(Collectors.toList());
+    var runtimeHeaders = importedRuntimeNames(request.getColumns());
     var batch = new ArrayList<List<Object>>();
     var importedRows = new int[]{0};
+    var skippedRows = new SkippedRows();
 
     parseCsvFile(path, request.getCsvConfig(), new CsvRowConsumer() {
       private List<String> parsedHeaders;
@@ -185,16 +205,20 @@ class CsvImportParser {
       @Override
       public void onRow(int rowNumber, List<String> row) {
         if (row.size() != parsedHeaders.size()) {
-          throw new CsvImportValidationException(List.of(
-              message("rows", "Row " + rowNumber + " does not match the header size.")
-          ));
+          skippedRows.add(List.of(message("rows", "Row " + rowNumber + " does not match the header size.")));
+          return;
         }
-        batch.add(convertRow(row, request, rowNumber));
+        try {
+          batch.add(convertRow(row, request, rowNumber));
+        } catch (CsvImportValidationException e) {
+          skippedRows.add(e.getValidationMessages());
+          return;
+        }
         if (batch.size() >= IMPORT_BATCH_SIZE) {
           var batchSize = batch.size();
           dataWriter.writeData(measure, runtimeHeaders, new ArrayList<>(batch));
           importedRows[0] += batchSize;
-          progressConsumer.accept(importedRows[0]);
+          progressConsumer.accept(importedRows[0] + skippedRows.count());
           batch.clear();
         }
       }
@@ -204,10 +228,10 @@ class CsvImportParser {
       var batchSize = batch.size();
       dataWriter.writeData(measure, runtimeHeaders, new ArrayList<>(batch));
       importedRows[0] += batchSize;
-      progressConsumer.accept(importedRows[0]);
     }
+    progressConsumer.accept(importedRows[0] + skippedRows.count());
 
-    return importedRows[0];
+    return new ImportOutcome(importedRows[0], skippedRows);
   }
 
   CsvFileSample readCsvSample(Path path, CsvImportConfiguration config, int maxRows) throws IOException {
@@ -223,13 +247,9 @@ class CsvImportParser {
 
       @Override
       public void onRow(int rowNumber, List<String> row) {
-        if (row.size() != headers.size()) {
-          throw new CsvImportValidationException(List.of(
-              message("rows", "Row " + rowNumber + " does not match the header size.")
-          ));
-        }
         totalRows[0] += 1;
-        if (rows.size() < maxRows) {
+        // malformed rows are counted (they are skipped during the import) but not used for type inference
+        if (row.size() == headers.size() && rows.size() < maxRows) {
           rows.add(row);
         }
       }
@@ -248,9 +268,13 @@ class CsvImportParser {
   private List<Object> convertRow(List<String> row, CsvImportRequest request, int rowNumber) {
     var converted = new ArrayList<Object>();
     for (int i = 0; i < row.size(); i++) {
+      var column = request.getColumns().get(i);
+      if (column.isIgnored()) {
+        continue;
+      }
       converted.add(convertValue(
           row.get(i),
-          request.getColumns().get(i),
+          column,
           request.getCsvConfig(),
           request.getTimestampColumn(),
           rowNumber
@@ -283,9 +307,13 @@ class CsvImportParser {
       String selectedTimestampColumn
   ) {
     for (var row : rows) {
-      var converted = convertValue(row.get(columnIndex), column, config, selectedTimestampColumn, null);
-      if (converted != null) {
-        return converted;
+      try {
+        var converted = convertValue(row.get(columnIndex), column, config, selectedTimestampColumn, null);
+        if (converted != null) {
+          return converted;
+        }
+      } catch (RuntimeException e) {
+        // rows with invalid values are skipped during the import, so they must not break the sample
       }
     }
     return null;
@@ -376,8 +404,9 @@ class CsvImportParser {
     var trimmed = rawValue.trim();
     try {
       if (Objects.equals(column.getRuntimeName(), timestampColumn)
-          || (column.isTimestampCandidate() && !isLong(trimmed, config))) {
-        // formatted timestamps of a candidate column (preview, before a timestamp column is selected)
+          || (timestampColumn == null && column.isTimestampCandidate() && !isLong(trimmed, config))) {
+        // formatted timestamps of a candidate column (preview, before a timestamp column is selected);
+        // once a timestamp column is chosen, other candidate columns are converted by their configured type
         return parseTimestamp(trimmed, config);
       }
 
@@ -397,10 +426,17 @@ class CsvImportParser {
       throw new CsvImportValidationException(List.of(
           message(
               "rows",
-              "Row " + rowNumber + " contains an invalid value for column \"" + column.getCsvColumn() + "\"."
+              "Row " + rowNumber + " contains an invalid value for column \"" + column.getCsvColumn() + "\": \""
+                  + abbreviate(trimmed) + "\"."
           )
       ));
     }
+  }
+
+  private String abbreviate(String value) {
+    return value.length() > MAX_VALUE_LENGTH_IN_MESSAGE
+        ? value.substring(0, MAX_VALUE_LENGTH_IN_MESSAGE) + "..."
+        : value;
   }
 
   private long parseTimestamp(String value, CsvImportConfiguration config) {
@@ -619,6 +655,41 @@ class CsvImportParser {
 
   private boolean isBlankRow(List<String> row) {
     return row.stream().allMatch(cell -> cell == null || cell.trim().isEmpty());
+  }
+
+  record ConvertedRows(List<List<Object>> rows, SkippedRows skippedRows) {
+  }
+
+  record ImportOutcome(int importedRows, SkippedRows skippedRows) {
+  }
+
+  /**
+   * Rows that were not imported because they contain invalid values. Only the first messages are kept so that
+   * a file with many broken rows does not produce an unbounded response.
+   */
+  static final class SkippedRows {
+
+    static final int MAX_MESSAGES = 20;
+
+    private final List<CsvImportValidationMessage> messages = new ArrayList<>();
+    private int count;
+
+    void add(List<CsvImportValidationMessage> rowMessages) {
+      count++;
+      for (var rowMessage : rowMessages) {
+        if (messages.size() < MAX_MESSAGES) {
+          messages.add(rowMessage);
+        }
+      }
+    }
+
+    int count() {
+      return count;
+    }
+
+    List<CsvImportValidationMessage> messages() {
+      return messages;
+    }
   }
 
   @FunctionalInterface

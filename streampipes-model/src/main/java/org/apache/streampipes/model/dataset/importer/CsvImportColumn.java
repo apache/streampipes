@@ -29,6 +29,7 @@ public class CsvImportColumn {
   private String description;
   private String inferredType;
   private boolean timestampCandidate;
+  private boolean ignored;
 
   public String getCsvColumn() {
     return csvColumn;
@@ -100,5 +101,13 @@ public class CsvImportColumn {
 
   public void setTimestampCandidate(boolean timestampCandidate) {
     this.timestampCandidate = timestampCandidate;
+  }
+
+  public boolean isIgnored() {
+    return ignored;
+  }
+
+  public void setIgnored(boolean ignored) {
+    this.ignored = ignored;
   }
 }

@@ -39,17 +39,54 @@
             {{ importResult()?.importedRowCount }}
             {{ 'rows imported' | translate }}
         </div>
+        @if (skippedRowCount() > 0) {
+            <sp-alert-banner
+                class="upload-banner"
+                type="warning"
+                data-cy="csv-import-skipped-rows"
+                [title]="
+                    '{{count}} rows were skipped'
+                        | translate: { count: skippedRowCount() }
+                "
+                [description]="
+                    'These rows contain invalid values and were not imported.'
+                        | translate
+                "
+            >
+                <ul class="upload-messages">
+                    @for (message of skippedRowMessages(); track $index) {
+                        <li data-cy="csv-import-skipped-row">
+                            {{ message.message }}
+                        </li>
+                    }
+                </ul>
+                @if (skippedRowCount() > skippedRowMessages().length) {
+                    <div
+                        class="upload-messages-note"
+                        [textContent]="
+                            'Showing the first {{shown}} of {{count}} skipped rows.'
+                                | translate: skippedRowsNoteParams()
+                        "
+                    ></div>
+                }
+            </sp-alert-banner>
+        }
     } @else if (uploadErrors().length > 0) {
         <sp-alert-banner
+            class="upload-banner"
             type="error"
             [title]="'Error' | translate"
             [description]="'The CSV import failed.' | translate"
             data-cy="csv-import-upload-error"
-        ></sp-alert-banner>
-        <div class="upload-errors" data-cy="csv-import-upload-error-details">
-            @for (message of uploadErrors(); track message.message) {
-                <div class="upload-error-line">{{ message.message }}</div>
-            }
-        </div>
+        >
+            <ul
+                class="upload-messages"
+                data-cy="csv-import-upload-error-details"
+            >
+                @for (message of uploadErrors(); track $index) {
+                    <li>{{ message.message }}</li>
+                }
+            </ul>
+        </sp-alert-banner>
     }
 </div>

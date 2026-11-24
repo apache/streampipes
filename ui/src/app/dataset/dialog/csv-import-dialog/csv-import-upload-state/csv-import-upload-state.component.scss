@@ -47,11 +47,25 @@
     font-weight: 600;
 }
 
-.upload-errors {
-    max-width: 32.5rem;
-    color: var(--color-text-200, #5a6673);
+.upload-banner {
+    width: 100%;
+    max-width: 40rem;
+    text-align: left;
 }
 
-.upload-error-line + .upload-error-line {
+.upload-messages {
+    margin: var(--space-sm) 0 0;
+    padding-left: 1.25rem;
+    max-height: 12rem;
+    overflow-y: auto;
+    font-size: var(--font-size-sm);
+}
+
+.upload-messages li + li {
+    margin-top: 0.25rem;
+}
+
+.upload-messages-note {
     margin-top: var(--space-sm);
+    font-size: var(--font-size-sm);
 }
