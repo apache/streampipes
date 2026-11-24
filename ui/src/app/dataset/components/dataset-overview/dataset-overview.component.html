@@ -82,7 +82,29 @@
                         {{ 'Name' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let configurationEntry">
-                        {{ configurationEntry.name }}
+                        <div class="flex-row items-center gap-xs">
+                            <span>{{ configurationEntry.name }}</span>
+                            <button
+                                type="button"
+                                mat-icon-button
+                                class="dataset-name-copy-button flex-row justify-center items-center"
+                                [cdkCopyToClipboard]="configurationEntry.name"
+                                [matTooltip]="'Copy' | translate"
+                                [attr.aria-label]="
+                                    ('Copy' | translate) +
+                                    ' ' +
+                                    configurationEntry.name
+                                "
+                                data-cy="copy-dataset-name"
+                                (click)="$event.stopPropagation()"
+                            >
+                                <mat-icon
+                                    class="dataset-name-copy-icon"
+                                    aria-hidden="true"
+                                    >content_copy</mat-icon
+                                >
+                            </button>
+                        </div>
                     </td>
                 </ng-container>
 

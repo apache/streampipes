@@ -17,6 +17,7 @@
  */
 
 import { DatePipe } from '@angular/common';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import {
     AfterViewInit,
     Component,
@@ -88,6 +89,7 @@ import { DatasetOverviewCardComponent } from './dataset-overview-card/dataset-ov
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         DatePipe,
+        CdkCopyToClipboard,
         MatIconButton,
         MatTooltip,
         MatIcon,
