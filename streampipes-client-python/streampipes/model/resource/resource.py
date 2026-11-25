@@ -20,6 +20,7 @@ General and abstract implementation for a resource.
 
 A resource defines the data model that is used by a resource container (`model.container.resourceContainer`).
 """
+
 from abc import abstractmethod
 
 from streampipes.model.common import BasicModel

@@ -17,11 +17,10 @@
 
 """Compact payloads used to create adapters and pipelines."""
 
-from typing import Any
+from typing import Any, Self
 
 import yaml  # type: ignore[import-untyped]
 from pydantic import ConfigDict, Field
-from typing_extensions import Self
 
 from streampipes.model.common import BasicModel
 

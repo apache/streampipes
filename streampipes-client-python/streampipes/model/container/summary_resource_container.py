@@ -19,9 +19,9 @@
 
 import json
 from collections.abc import Iterator
+from typing import Self
 
 from pydantic import ValidationError
-from typing_extensions import Self
 
 from streampipes.model.container.resource_container import (
     ResourceContainer,
