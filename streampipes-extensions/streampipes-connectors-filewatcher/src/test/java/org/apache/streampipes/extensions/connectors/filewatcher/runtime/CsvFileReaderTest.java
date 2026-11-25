@@ -39,6 +39,24 @@ class CsvFileReaderTest {
   Path tempDir;
 
   @Test
+  void shouldSkipControlRecordsAndResumeAtPhysicalRecordIndex() throws IOException {
+    Path file = tempDir.resolve("archive.csv");
+    Files.writeString(file, "Time_ms;MsgText\n$RT_COUNT$;1;\n46202379696,956;alarm\n$RT_COUNT$;2;\n");
+    var reader = new CsvFileReader(record -> !"$RT_COUNT$".equals(record.get("Time_ms")));
+    var settings = new CsvParserSettings(true, ';');
+    assertEquals("alarm", reader.firstRecord(file, settings).orElseThrow().get("MsgText"));
+
+    var indices = new ArrayList<Long>();
+    var result = reader.readFrom(file, settings, 0, (index, event) -> indices.add(index));
+    assertEquals(List.of(1L), indices);
+    assertEquals(1, result.emittedEvents());
+    assertEquals(2L, result.lastProcessedRecord());
+    Files.writeString(file, "46202379697;next\n", java.nio.file.StandardOpenOption.APPEND);
+    reader.readFrom(file, settings, result.lastProcessedRecord() + 1, (index, event) -> indices.add(index));
+    assertEquals(List.of(1L, 3L), indices);
+  }
+
+  @Test
   void shouldKeepQuotedSeparatorsInsideOneField() throws IOException {
     Path file = tempDir.resolve("Meldungsarchiv1.csv");
     Files.writeString(file, "Time_ms;MsgText;PLC\n46120366239;\"Alarm; text\";PLC_1\n");

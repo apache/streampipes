@@ -37,15 +37,22 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.function.ToLongFunction;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileSetWatcher {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileSetWatcher.class);
 
-  private final FileWatcherConfig config;
+  private final Path directory;
+  private final Pattern filePattern;
+  private final ToLongFunction<String> fileSequence;
+  private final boolean chronological;
+  private final boolean considerLastModified;
+  private final int interEventDelayMs;
   private final FileWatcherCheckpointStore checkpointStore;
-  private final CsvFileReader csvFileReader;
+  private final FileRecordReader reader;
   private final EventMapper eventMapper;
   private final EventDelayExecutor eventDelayExecutor;
 
@@ -61,23 +68,44 @@ public class FileSetWatcher {
                         CsvFileReader csvFileReader,
                         EventMapper eventMapper,
                         EventDelayExecutor eventDelayExecutor) {
-    this.config = config;
+    this(config.directory(), config.filePattern(), name -> sequence(config.filePattern(), name),
+        (path, start, consumer) -> csvFileReader.readFrom(path, config.parserSettings(), start, consumer),
+        checkpointStore, false, config.considerLastModified(), config.interEventDelayMs(), eventMapper, eventDelayExecutor);
+  }
+
+  public FileSetWatcher(Path directory, Pattern filePattern, ToLongFunction<String> fileSequence,
+                        FileRecordReader reader, FileWatcherCheckpointStore checkpointStore) {
+    this(directory, filePattern, fileSequence, reader, checkpointStore, true, false, 0, EventMapper.identity(), Thread::sleep);
+  }
+
+  private FileSetWatcher(Path directory, Pattern filePattern, ToLongFunction<String> fileSequence,
+                         FileRecordReader reader, FileWatcherCheckpointStore checkpointStore,
+                         boolean chronological, boolean considerLastModified, int interEventDelayMs, EventMapper eventMapper,
+                         EventDelayExecutor eventDelayExecutor) {
+    this.chronological = chronological;
+    this.directory = directory;
+    this.filePattern = filePattern;
+    this.fileSequence = fileSequence;
+    this.reader = reader;
+    this.considerLastModified = considerLastModified;
+    this.interEventDelayMs = interEventDelayMs;
     this.checkpointStore = checkpointStore;
-    this.csvFileReader = csvFileReader;
     this.eventMapper = eventMapper;
     this.eventDelayExecutor = eventDelayExecutor;
   }
 
   public void poll(String adapterElementId, IEventCollector collector) throws IOException {
-    LOG.debug("Polling WinCC archive files in directory '{}' for adapter '{}'.",
-        config.directory(), adapterElementId);
-    var files = discoverFiles();
-    if (files.isEmpty()) {
-      LOG.debug("No matching WinCC archive files found in '{}'.", config.directory());
+    LOG.debug("Polling archive files in directory '{}' for adapter '{}'.",
+        directory, adapterElementId);
+    var checkpoint = checkpointStore.load(adapterElementId);
+    if (chronological) {
+      pollDailyFiles(adapterElementId, collector, checkpoint);
       return;
     }
-
-    var checkpoint = checkpointStore.load(adapterElementId);
+    var files = discoverFiles();
+    if (files.isEmpty()) {
+      return;
+    }
     LOG.debug(
         "Loaded checkpoint for adapter '{}': currentFile='{}', sequence={}, knownGenerations={}.",
         adapterElementId,
@@ -87,6 +115,34 @@ public class FileSetWatcher {
     );
     processCurrentFile(adapterElementId, collector, checkpoint, files);
     processFollowingFiles(adapterElementId, collector, checkpoint, files);
+  }
+
+  private void pollDailyFiles(String adapterId, IEventCollector collector, FileWatcherCheckpoint checkpoint)
+      throws IOException {
+    // Older checkpoints may still contain entries for several daily files.
+    if (checkpoint.getGenerationStates().keySet().removeIf(name ->
+        !filePattern.matcher(name).matches() || precedesCheckpoint(name, checkpoint))) {
+      checkpointStore.save(adapterId, checkpoint);
+    }
+    for (FileSlot slot : discoverFiles(checkpoint)) {
+      long start = determineStartRecord(slot, checkpoint);
+      String previous = checkpoint.getCurrentFileName();
+      if (!slot.fileName().equals(previous)) {
+        checkpoint.getGenerationStates().remove(previous);
+      }
+      if (!readFile(adapterId, collector, checkpoint, slot, start).reachedEndOfFile()) {
+        break;
+      }
+    }
+  }
+
+  private boolean precedesCheckpoint(String name, FileWatcherCheckpoint checkpoint) {
+    if (checkpoint.getCurrentFileName() == null) {
+      return false;
+    }
+    long sequence = fileSequence.applyAsLong(name);
+    return sequence < checkpoint.getCurrentSequence()
+        || (sequence == checkpoint.getCurrentSequence() && name.compareTo(checkpoint.getCurrentFileName()) < 0);
   }
 
   private void processCurrentFile(String adapterElementId,
@@ -105,7 +161,7 @@ public class FileSetWatcher {
 
     if (currentSlot == null) {
       LOG.debug("Checkpoint file '{}' is no longer present in '{}'. Continuing with following files.",
-          checkpoint.getCurrentFileName(), config.directory());
+          checkpoint.getCurrentFileName(), directory);
       return;
     }
 
@@ -145,7 +201,7 @@ public class FileSetWatcher {
     if (previousFingerprint == null || currentFingerprint.getSize() <= previousFingerprint.getSize()) {
       return false;
     }
-    if (config.considerLastModified()
+    if (considerLastModified
         && currentFingerprint.getLastModified() < previousFingerprint.getLastModified()) {
       return false;
     }
@@ -172,7 +228,7 @@ public class FileSetWatcher {
       return false;
     }
 
-    return !config.considerLastModified() || left.getLastModified() == right.getLastModified();
+    return !considerLastModified || left.getLastModified() == right.getLastModified();
   }
 
   private void processFollowingFiles(String adapterElementId,
@@ -206,7 +262,7 @@ public class FileSetWatcher {
     }
   }
 
-  private void readFile(String adapterElementId,
+  private FileWatchReadResult readFile(String adapterElementId,
                         IEventCollector collector,
                         FileWatcherCheckpoint checkpoint,
                         FileSlot fileSlot,
@@ -218,10 +274,10 @@ public class FileSetWatcher {
         fileSlot.fingerprint().getSize(),
         fileSlot.fingerprint().getLastModified(),
         startRecord,
-        config.interEventDelayMs()
+        interEventDelayMs
     );
     final boolean[] firstEvent = {true};
-    var result = csvFileReader.readFrom(fileSlot.path(), config.parserSettings(), startRecord, (recordIndex, event) -> {
+    var result = reader.readFrom(fileSlot.path(), startRecord, (recordIndex, event) -> {
       delayBeforeNextEvent(firstEvent[0], fileSlot.fileName(), recordIndex);
       firstEvent[0] = false;
       if (LOG.isTraceEnabled()) {
@@ -255,21 +311,22 @@ public class FileSetWatcher {
         result.emittedEvents(),
         result.lastProcessedRecord()
     );
+    return result;
   }
 
   private void delayBeforeNextEvent(boolean firstEvent,
                                     String fileName,
                                     long recordIndex) {
-    if (firstEvent || config.interEventDelayMs() <= 0) {
+    if (firstEvent || interEventDelayMs <= 0) {
       return;
     }
 
     try {
       if (LOG.isTraceEnabled()) {
         LOG.trace("Sleeping {} ms before record {} from file '{}'.",
-            config.interEventDelayMs(), recordIndex, fileName);
+            interEventDelayMs, recordIndex, fileName);
       }
-      eventDelayExecutor.sleep(config.interEventDelayMs());
+      eventDelayExecutor.sleep(interEventDelayMs);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException("Interrupted while delaying replay for file " + fileName, e);
@@ -277,16 +334,21 @@ public class FileSetWatcher {
   }
 
   List<FileSlot> discoverFiles() throws IOException {
+    return discoverFiles(null);
+  }
+
+  private List<FileSlot> discoverFiles(FileWatcherCheckpoint lowerBound) throws IOException {
     List<FileSlot> files = new ArrayList<>();
-    try (var stream = Files.list(config.directory())) {
+    try (var stream = Files.list(directory)) {
       stream.filter(Files::isRegularFile)
-          .filter(path -> config.filePattern().matcher(path.getFileName().toString()).matches())
+          .filter(path -> filePattern.matcher(path.getFileName().toString()).matches())
+          .filter(path -> lowerBound == null || !precedesCheckpoint(path.getFileName().toString(), lowerBound))
           .forEach(path -> files.add(toFileSlot(path)));
     }
 
     files.sort(Comparator.comparingLong(FileSlot::sequence).thenComparing(FileSlot::fileName));
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Discovered {} matching WinCC archive files: {}",
+      LOG.debug("Discovered {} matching archive files: {}",
           files.size(),
           files.stream().map(file -> file.fileName() + "@" + file.sequence()).toList());
     }
@@ -318,11 +380,11 @@ public class FileSetWatcher {
 
   private FileSlot toFileSlot(Path path) {
     String fileName = path.getFileName().toString();
-    return new FileSlot(fileName, path, sequence(fileName), fingerprint(path));
+    return new FileSlot(fileName, path, fileSequence.applyAsLong(fileName), fingerprint(path));
   }
 
-  private long sequence(String fileName) {
-    Matcher matcher = config.filePattern().matcher(fileName);
+  private static long sequence(Pattern filePattern, String fileName) {
+    Matcher matcher = filePattern.matcher(fileName);
     if (matcher.matches() && matcher.groupCount() >= 1) {
       try {
         return Long.parseLong(matcher.group(1));

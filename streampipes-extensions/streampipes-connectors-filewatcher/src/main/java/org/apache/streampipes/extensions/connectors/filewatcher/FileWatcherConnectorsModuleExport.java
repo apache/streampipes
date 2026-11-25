@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
+import org.apache.streampipes.extensions.connectors.filewatcher.adapter.DatedTextLogAdapter;
 import org.apache.streampipes.extensions.connectors.filewatcher.adapter.WinCCAlarmArchiveAdapter;
 import org.apache.streampipes.extensions.connectors.filewatcher.migration.WinCCAlarmArchiveAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.filewatcher.migration.WinCCAlarmArchiveAdapterMigrationV2;
@@ -32,7 +33,7 @@ public class FileWatcherConnectorsModuleExport implements IExtensionModuleExport
 
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(new WinCCAlarmArchiveAdapter());
+    return List.of(new WinCCAlarmArchiveAdapter(), new DatedTextLogAdapter());
   }
 
   @Override
