@@ -27,6 +27,7 @@ import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.apache.streampipes.user.management.service.RefreshTokenConcurrentlyRotatedException;
 import org.apache.streampipes.user.management.service.RefreshTokenService;
 
 import org.junit.jupiter.api.AfterEach;
@@ -44,9 +45,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -149,6 +152,17 @@ class AuthenticationAuditTest {
   void anonymousLogoutAndFailedRefreshDoNotInventSessionEvents() {
     controller.logout(request, response);
     controller.refreshToken(request, response);
+    verifyNoInteractions(audit);
+  }
+
+  @Test
+  void concurrentRefreshReturnsConflictAndKeepsTheRefreshCookie() {
+    when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("sp-refresh-token", "cookie-token")});
+    when(refreshTokenService.rotateRefreshToken("cookie-token"))
+        .thenThrow(new RefreshTokenConcurrentlyRotatedException());
+
+    assertEquals(409, controller.refreshToken(request, response).getStatusCode().value());
+    verify(response, never()).addHeader(anyString(), anyString());
     verifyNoInteractions(audit);
   }
 }

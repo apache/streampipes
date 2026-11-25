@@ -38,6 +38,7 @@ import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.apache.streampipes.user.management.service.RefreshTokenConcurrentlyRotatedException;
 import org.apache.streampipes.user.management.service.RefreshTokenService;
 
 import org.springframework.http.HttpHeaders;
@@ -125,7 +126,14 @@ public class Authentication extends AbstractRestResource {
       return unauthorized();
     }
 
-    var issuedRefreshToken = refreshTokenService.rotateRefreshToken(existingToken);
+    RefreshTokenService.IssuedRefreshToken issuedRefreshToken;
+    try {
+      issuedRefreshToken = refreshTokenService.rotateRefreshToken(existingToken);
+    } catch (RefreshTokenConcurrentlyRotatedException e) {
+      // Another request with the same cookie (e.g. a second tab) won the rotation and receives the new cookie.
+      // Clearing the cookie here could overwrite that new cookie in the browser, so leave it untouched.
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
 
     if (issuedRefreshToken == null) {
       clearRefreshCookie(request, response);

@@ -18,6 +18,7 @@
 package org.apache.streampipes.user.management.service;
 
 import org.apache.streampipes.model.client.user.RefreshToken;
+import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
@@ -29,6 +30,12 @@ public class RefreshTokenService {
   private static final long SESSION_REFRESH_TOKEN_TTL_MILLIS = 24L * 60 * 60 * 1000;
   private static final long REMEMBER_ME_REFRESH_TOKEN_TTL_MILLIS = 30L * 24 * 60 * 60 * 1000;
 
+  /**
+   * A token that another request rotated within this window counts as a concurrent rotation (for example a
+   * second browser tab sharing the same cookie) rather than a stale or replayed token.
+   */
+  static final long CONCURRENT_ROTATION_WINDOW_MILLIS = 60_000;
+
   private final IRefreshTokenStorage refreshTokenStorage;
 
   public RefreshTokenService(IRefreshTokenStorage refreshTokenStorage) {
@@ -37,29 +44,25 @@ public class RefreshTokenService {
 
   public IssuedRefreshToken issueRefreshToken(String principalId,
                                               boolean rememberMe) {
-    long createdAtMillis = System.currentTimeMillis();
-    long expiresAtMillis = createdAtMillis + getTokenLifetime(rememberMe);
-
-    String rawToken = TokenUtil.generateToken(REFRESH_TOKEN_LENGTH);
-    String hashedToken = TokenUtil.hashToken(rawToken);
-    String tokenId = UUID.randomUUID().toString();
-    RefreshToken refreshToken = RefreshToken.create(
-        tokenId,
-        principalId,
-        hashedToken,
-        createdAtMillis,
-        expiresAtMillis,
-        rememberMe
-    );
-
-    persistOrThrow(refreshToken);
-
-    return new IssuedRefreshToken(tokenId, principalId, rawToken, expiresAtMillis, rememberMe);
+    return issueRefreshToken(UUID.randomUUID().toString(), principalId, rememberMe);
   }
 
+  /**
+   * Replaces a valid refresh token with a new one. The previous token is revoked first, guarded by its storage
+   * revision, so that only one of several concurrent requests presenting the same token can rotate it; the
+   * replacement is created only after that revocation succeeded.
+   *
+   * @return the replacement, or {@code null} if the token is unknown, expired or no longer valid
+   * @throws RefreshTokenConcurrentlyRotatedException if another request rotated the same token just now
+   */
   public IssuedRefreshToken rotateRefreshToken(String rawToken) {
     String hashedToken = TokenUtil.hashToken(rawToken);
     RefreshToken existingToken = refreshTokenStorage.findByHashedToken(hashedToken);
+    long now = System.currentTimeMillis();
+
+    if (wasRotatedConcurrently(existingToken, now)) {
+      throw new RefreshTokenConcurrentlyRotatedException();
+    }
 
     if (!isValid(existingToken)) {
       return null;
@@ -69,14 +72,16 @@ public class RefreshTokenService {
       return null;
     }
 
-    long now = System.currentTimeMillis();
-    IssuedRefreshToken replacement = issueRefreshToken(existingToken.getPrincipalId(), existingToken.isRememberMe());
-
+    String replacementTokenId = UUID.randomUUID().toString();
     existingToken.setRevokedAtMillis(now);
-    existingToken.setReplacedByTokenId(replacement.tokenId());
-    refreshTokenStorage.updateElement(existingToken);
+    existingToken.setReplacedByTokenId(replacementTokenId);
+    try {
+      refreshTokenStorage.updateElement(existingToken);
+    } catch (StorageConflictException e) {
+      throw new RefreshTokenConcurrentlyRotatedException();
+    }
 
-    return replacement;
+    return issueRefreshToken(replacementTokenId, existingToken.getPrincipalId(), existingToken.isRememberMe());
   }
 
   public void deleteAllRefreshTokens(String principalId) {
@@ -100,6 +105,36 @@ public class RefreshTokenService {
       return actor;
     }
     return null;
+  }
+
+  private IssuedRefreshToken issueRefreshToken(String tokenId,
+                                               String principalId,
+                                               boolean rememberMe) {
+    long createdAtMillis = System.currentTimeMillis();
+    long expiresAtMillis = createdAtMillis + getTokenLifetime(rememberMe);
+
+    String rawToken = TokenUtil.generateToken(REFRESH_TOKEN_LENGTH);
+    String hashedToken = TokenUtil.hashToken(rawToken);
+    RefreshToken refreshToken = RefreshToken.create(
+        tokenId,
+        principalId,
+        hashedToken,
+        createdAtMillis,
+        expiresAtMillis,
+        rememberMe
+    );
+
+    persistOrThrow(refreshToken);
+
+    return new IssuedRefreshToken(tokenId, principalId, rawToken, expiresAtMillis, rememberMe);
+  }
+
+  private boolean wasRotatedConcurrently(RefreshToken token, long now) {
+    return token != null
+        && token.getReplacedByTokenId() != null
+        && token.getRevokedAtMillis() != null
+        && token.getExpiresAtMillis() > now
+        && now - token.getRevokedAtMillis() <= CONCURRENT_ROTATION_WINDOW_MILLIS;
   }
 
   private long getTokenLifetime(boolean rememberMe) {
