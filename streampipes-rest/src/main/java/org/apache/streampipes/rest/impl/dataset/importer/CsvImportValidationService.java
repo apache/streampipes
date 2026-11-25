@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
 import org.apache.streampipes.model.dataset.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.dataset.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
@@ -104,6 +105,7 @@ class CsvImportValidationService {
     if (request.getColumns() == null || request.getColumns().isEmpty()) {
       messages.add(message("columns", "Column configuration must be provided."));
     }
+    validateIgnoredColumns(request.getColumns(), request.getTimestampColumn(), messages);
     if (!hasUploadId(request)
         && (request.getRows() == null || request.getRows().isEmpty())
         && (request.getHeaders() == null || request.getHeaders().isEmpty())) {
@@ -127,6 +129,7 @@ class CsvImportValidationService {
     if (request.getColumns() == null || request.getColumns().isEmpty()) {
       messages.add(message("columns", "Column configuration must be provided."));
     }
+    validateIgnoredColumns(request.getColumns(), request.getTimestampColumn(), messages);
     return messages;
   }
 
@@ -212,7 +215,7 @@ class CsvImportValidationService {
     if (existingOpt.isEmpty()) {
       messages.add(message("target.measurementName", "The selected measurement does not exist."));
     } else if (importSchema != null && !compareSchemas(existingOpt.get(), importSchema, timestampColumn).isEmpty()) {
-      messages.add(message("columns", "Imported columns must exactly match the existing measurement schema."));
+      messages.add(message("columns", "Imported columns must match the existing measurement schema."));
     }
     return messages;
   }
@@ -286,6 +289,26 @@ class CsvImportValidationService {
     }
 
     return issues;
+  }
+
+  private void validateIgnoredColumns(
+      List<CsvImportColumn> columns,
+      String timestampColumn,
+      List<CsvImportValidationMessage> messages
+  ) {
+    if (columns == null || columns.isEmpty()) {
+      return;
+    }
+    if (columns.stream().allMatch(CsvImportColumn::isIgnored)) {
+      messages.add(message("columns", "At least one column must be imported."));
+      return;
+    }
+    if (timestampColumn != null && columns.stream()
+        .anyMatch(column -> column.isIgnored()
+            && column.getRuntimeName() != null
+            && Objects.equals(column.getRuntimeName().trim(), timestampColumn))) {
+      messages.add(message("timestampColumn", "The timestamp column cannot be ignored."));
+    }
   }
 
   private void validateRowsMatchHeaders(

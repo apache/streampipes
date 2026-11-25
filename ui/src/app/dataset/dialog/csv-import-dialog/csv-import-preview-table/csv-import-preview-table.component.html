@@ -22,9 +22,7 @@
         data-cy="csv-import-schema-mismatch"
         [title]="'Error' | translate"
         [description]="schemaMismatchSummary()"
-    ></sp-alert-banner>
-
-    @if (schemaMismatchDetails().length > 0) {
+    >
         <ul
             class="schema-mismatch-list"
             data-cy="csv-import-schema-mismatch-list"
@@ -38,7 +36,42 @@
                 </li>
             }
         </ul>
-    }
+    </sp-alert-banner>
+}
+
+@if (unknownColumns().length > 0) {
+    <sp-alert-banner
+        type="warning"
+        data-cy="csv-import-unknown-columns"
+        [title]="'Unknown columns' | translate"
+        [description]="
+            'These CSV columns are not part of the existing dataset. Ignore them to import the remaining columns.'
+                | translate
+        "
+    >
+        <div class="unknown-columns flex-row items-center gap-md">
+            <span
+                class="unknown-column-names flex-1"
+                data-cy="csv-import-unknown-column-names"
+            >
+                {{ unknownColumns().join(', ') }}
+            </span>
+            <button
+                mat-flat-button
+                type="button"
+                class="mat-basic"
+                data-cy="csv-import-ignore-unknown-columns"
+                (click)="ignoreColumns.emit(unknownColumns())"
+            >
+                {{
+                    (unknownColumns().length === 1
+                        ? 'Ignore column'
+                        : 'Ignore columns'
+                    ) | translate
+                }}
+            </button>
+        </div>
+    </sp-alert-banner>
 }
 
 @if (showTimestampWarning()) {
@@ -62,11 +95,24 @@
                         model of columnModels();
                         track model.column.csvColumn
                     ) {
-                        <th>
+                        <th [class.ignored-column]="isIgnored(model)">
                             <div class="header-cell">
                                 <div class="header-title">
                                     {{ model.column.csvColumn }}
                                 </div>
+                                <mat-checkbox
+                                    [checked]="!isIgnored(model)"
+                                    [disabled]="isTimestampColumn(model)"
+                                    (change)="
+                                        onColumnIncludedChange(
+                                            model,
+                                            $event.checked
+                                        )
+                                    "
+                                    data-cy="csv-import-column-include"
+                                >
+                                    {{ 'Import column' | translate }}
+                                </mat-checkbox>
                                 @if (isTimestampColumn(model)) {
                                     <mat-form-field
                                         appearance="outline"
@@ -105,7 +151,10 @@
                                                 )
                                             "
                                             data-cy="csv-import-column-type"
-                                            [disabled]="isExisting() !== 'NEW'"
+                                            [disabled]="
+                                                isExisting() !== 'NEW' ||
+                                                isIgnored(model)
+                                            "
                                         >
                                             <mat-option value="STRING">
                                                 STRING
@@ -141,7 +190,10 @@
                                             )
                                         "
                                         data-cy="csv-import-column-scope"
-                                        [disabled]="isExisting() !== 'NEW'"
+                                        [disabled]="
+                                            isExisting() !== 'NEW' ||
+                                            isIgnored(model)
+                                        "
                                     >
                                         <mat-option
                                             value="TIMESTAMP"
@@ -176,8 +228,14 @@
             <tbody>
                 @for (row of previewRows(); track $index) {
                     <tr>
-                        @for (cell of row; track $index) {
-                            <td>{{ cell }}</td>
+                        @for (cell of row; track $index; let i = $index) {
+                            <td
+                                [class.ignored-column]="
+                                    isIgnored(columnModels()[i])
+                                "
+                            >
+                                {{ cell }}
+                            </td>
                         }
                     </tr>
                 }

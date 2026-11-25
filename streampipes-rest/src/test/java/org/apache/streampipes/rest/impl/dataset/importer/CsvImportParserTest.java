@@ -34,7 +34,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CsvImportParserTest {
@@ -88,7 +87,7 @@ class CsvImportParserTest {
   }
 
   @Test
-  void shouldRejectMissingTimestampValuesWhenConvertingRows() {
+  void shouldSkipRowsWithMissingTimestampValues() {
     var request = new CsvImportRequest();
     request.setCsvConfig(makeConfig(",", ".", true));
     request.setTimestampColumn("timestamp");
@@ -101,9 +100,12 @@ class CsvImportParserTest {
         List.of("", "22.1")
     ));
 
-    var exception = assertThrows(CsvImportValidationException.class, () -> parser.toImportRows(request));
+    var result = parser.toImportRows(request);
 
-    assertTrue(exception.getValidationMessages().get(0).getMessage().contains("missing a value for timestamp"));
+    assertEquals(1, result.rows().size());
+    assertEquals(1710000000000L, result.rows().get(0).get(0));
+    assertEquals(1, result.skippedRows().count());
+    assertTrue(result.skippedRows().messages().get(0).getMessage().contains("missing a value for timestamp"));
   }
 
   @Test
@@ -131,7 +133,7 @@ class CsvImportParserTest {
         "value"
     )));
 
-    var row = parser.toImportRows(request).get(0);
+    var row = parser.toImportRows(request).rows().get(0);
 
     assertInstanceOf(Long.class, row.get(0));
     assertEquals(17, row.get(1));
@@ -162,7 +164,7 @@ class CsvImportParserTest {
   }
 
   @Test
-  void shouldRejectValuesThatDoNotMatchConfiguredTypes() {
+  void shouldSkipRowsWithValuesThatDoNotMatchConfiguredTypes() {
     var request = new CsvImportRequest();
     request.setCsvConfig(makeConfig(",", ".", true));
     request.setTimestampColumn("timestamp");
@@ -171,17 +173,53 @@ class CsvImportParserTest {
         makeColumn("integerValue", "integerValue", "INTEGER"),
         makeColumn("booleanValue", "booleanValue", "BOOLEAN")
     ));
-    request.setRows(List.of(List.of("1710000000000", "17.5", "not-a-boolean")));
+    request.setRows(List.of(
+        List.of("1710000000000", "17.5", "true"),
+        List.of("1710000060000", "17.0", "not-a-boolean"),
+        List.of("1710000120000", "18.0", "false")
+    ));
 
-    var exception = assertThrows(CsvImportValidationException.class, () -> parser.toImportRows(request));
+    var result = parser.toImportRows(request);
 
-    assertTrue(exception.getValidationMessages().get(0).getMessage().contains("integerValue"));
+    assertEquals(1, result.rows().size());
+    assertEquals(1710000120000L, result.rows().get(0).get(0));
+    assertEquals(2, result.skippedRows().count());
+    var messages = result.skippedRows().messages();
+    assertTrue(messages.get(0).getMessage().contains("Row 1"));
+    assertTrue(messages.get(0).getMessage().contains("\"integerValue\": \"17.5\""));
+    assertTrue(messages.get(1).getMessage().contains("Row 2"));
+    assertTrue(messages.get(1).getMessage().contains("booleanValue"));
+  }
 
-    request.setRows(List.of(List.of("1710000000000", "17.0", "not-a-boolean")));
+  @Test
+  void shouldNotParseTimestampCandidatesAsTimestampsOnceATimestampColumnIsSelected() {
+    var idColumn = makeColumn("APLID", "APLID", "STRING");
+    idColumn.setTimestampCandidate(true);
+    var request = new CsvImportRequest();
+    request.setCsvConfig(makeConfig(",", ".", true));
+    request.setTimestampColumn("timestamp");
+    request.setColumns(List.of(makeColumn("timestamp", "timestamp", "LONG"), idColumn));
+    request.setRows(List.of(
+        List.of("1710000000000", "4711"),
+        List.of("1710000060000", "A-4712")
+    ));
 
-    exception = assertThrows(CsvImportValidationException.class, () -> parser.toImportRows(request));
+    var result = parser.toImportRows(request);
 
-    assertTrue(exception.getValidationMessages().get(0).getMessage().contains("booleanValue"));
+    assertEquals(0, result.skippedRows().count());
+    assertEquals("4711", result.rows().get(0).get(1));
+    assertEquals("A-4712", result.rows().get(1).get(1));
+  }
+
+  @Test
+  void shouldCountMalformedRowsInSampleWithoutUsingThem() throws Exception {
+    var file = tempDir.resolve("malformed.csv");
+    Files.writeString(file, "timestamp,temperature\n1710000000000,21.3\n1710000060000\n1710000120000,22.1\n");
+
+    var sample = parser.readCsvSample(file, makeConfig(",", ".", true), 10);
+
+    assertEquals(3, sample.totalRows());
+    assertEquals(2, sample.rows().size());
   }
 
   @Test
@@ -198,7 +236,7 @@ class CsvImportParserTest {
         List.of("1767225602000", "3.5")
     ));
 
-    var rows = parser.toImportRows(request);
+    var rows = parser.toImportRows(request).rows();
 
     assertEquals(1767225600000L, rows.get(0).get(0));
     assertEquals(1767225601500L, rows.get(1).get(0));
@@ -246,7 +284,7 @@ class CsvImportParserTest {
         makeColumn("count", "count", "INTEGER")));
     request.setRows(List.of(List.of("1710000000000", "1.234,5", "1.000")));
 
-    var row = parser.toImportRows(request).get(0);
+    var row = parser.toImportRows(request).rows().get(0);
 
     assertEquals(1710000000000L, row.get(0));
     assertEquals(1234.5, row.get(1));

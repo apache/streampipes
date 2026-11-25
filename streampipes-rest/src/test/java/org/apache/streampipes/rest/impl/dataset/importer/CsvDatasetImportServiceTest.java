@@ -52,6 +52,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -303,7 +304,7 @@ class CsvDatasetImportServiceTest {
   }
 
   @Test
-  void shouldRejectMissingTimestampValuesInUploadedCsv() throws Exception {
+  void shouldSkipRowsWithInvalidValuesInUploadedCsv() throws Exception {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
     var uploadStorage = new CsvImportUploadStorage();
@@ -325,10 +326,12 @@ class CsvDatasetImportServiceTest {
     var multipartFile = mock(MultipartFile.class);
     when(multipartFile.getOriginalFilename()).thenReturn("upload.csv");
     when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(
-        "timestamp,temperature\n1710000000000,21.3\n,22.1\n".getBytes()
+        "timestamp,temperature\n1710000000000,21.3\n,22.1\n1710000120000,warm\n1710000180000\n1710000240000,23.4\n"
+            .getBytes()
     ));
 
     var previewResult = service.preview(multipartFile, previewRequest, "sid");
+    previewResult.getColumns().get(1).setRuntimeType("FLOAT");
 
     var importRequest = new CsvImportRequest();
     importRequest.setUploadId(previewResult.getUploadId());
@@ -337,14 +340,39 @@ class CsvDatasetImportServiceTest {
     importRequest.setTimestampColumn("timestamp");
     importRequest.setColumns(previewResult.getColumns());
 
+    var result = service.importData(importRequest, "sid");
+
+    assertEquals(2, result.getImportedRowCount());
+    assertEquals(3, result.getSkippedRowCount());
+    assertEquals(3, result.getValidationMessages().size());
+    assertTrue(result.getValidationMessages().get(0).getMessage().contains("missing a value for timestamp column"));
+    assertTrue(result.getValidationMessages().get(1).getMessage().contains("invalid value for column \"temperature\""));
+    assertTrue(result.getValidationMessages().get(2).getMessage().contains("does not match the header size"));
+    verify(dataWriter).writeData(
+        any(DatasetMetadata.class),
+        eq(List.of("timestamp", "temperature")),
+        eq(List.of(List.of(1710000000000L, 21.3f), List.of(1710000240000L, 23.4f))));
+  }
+
+  @Test
+  void shouldFailWhenAllRowsContainInvalidValues() {
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
+    var dataWriter = mock(DatasetWriter.class);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
+    var request = makeImportRequest(CsvImportTargetMode.NEW, "new-measure");
+    request.setRows(List.of(
+        List.of("1710000000000", "warm"),
+        List.of("", "22.1")
+    ));
+
     var exception = assertThrows(
         CsvImportValidationException.class,
-        () -> service.importData(importRequest, "sid")
+        () -> service.importData(request, "sid")
     );
 
-    assertTrue(exception.getValidationMessages()
-        .stream()
-        .anyMatch(message -> message.getMessage().contains("missing a value for timestamp column")));
+    assertTrue(exception.getValidationMessages().get(0).getMessage().contains("No rows were imported"));
+    assertEquals(3, exception.getValidationMessages().size());
+    verify(schemaManagement, never()).createOrUpdateMeasurement(any(DatasetMetadata.class), any());
   }
 
   @Test
@@ -371,7 +399,7 @@ class CsvDatasetImportServiceTest {
 
     assertTrue(exception.getValidationMessages()
         .stream()
-        .anyMatch(message -> message.getMessage().contains("exactly match")));
+        .anyMatch(message -> message.getMessage().contains("must match the existing measurement schema")));
   }
 
   @Test
@@ -393,6 +421,131 @@ class CsvDatasetImportServiceTest {
     assertFalse(result.isCreatedNewMeasurement());
     assertEquals(2, result.getImportedRowCount());
     verify(dataWriter).writeData(any(DatasetMetadata.class), anyList(), anyList());
+  }
+
+  @Test
+  void shouldReportUnknownColumnUnlessItIsIgnored() {
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
+    var service = new CsvDatasetImportService(schemaManagement, mock(DatasetWriter.class));
+    when(schemaManagement.getExistingMeasureByName("existing-measure"))
+        .thenReturn(Optional.of(makeExistingMeasure()));
+
+    var request = new CsvImportSchemaValidationRequest();
+    request.setTarget(makeTarget(CsvImportTargetMode.EXISTING, "existing-measure"));
+    request.setTimestampColumn("timestamp");
+    request.setColumns(makeImportRequestWithStatusColumn(CsvImportTargetMode.EXISTING, false).getColumns());
+
+    var mismatch = service.validateSchema(request);
+    assertFalse(mismatch.isValid());
+    assertTrue(mismatch.getIssues()
+        .stream()
+        .anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.COLUMN_NAME_MISMATCH
+            && "status".equals(issue.getColumnName())));
+
+    request.getColumns().get(2).setIgnored(true);
+    var ignored = service.validateSchema(request);
+    assertTrue(ignored.isValid());
+  }
+
+  @Test
+  void shouldSkipIgnoredColumnsWhenImportingIntoExistingMeasurement() {
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
+    var dataWriter = mock(DatasetWriter.class);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
+    when(schemaManagement.getExistingMeasureByName("existing-measure"))
+        .thenReturn(Optional.of(makeExistingMeasure()));
+
+    var result = service.importData(makeImportRequestWithStatusColumn(CsvImportTargetMode.EXISTING, true), "sid");
+
+    assertEquals(2, result.getImportedRowCount());
+    verify(dataWriter).writeData(
+        any(DatasetMetadata.class),
+        eq(List.of("timestamp", "temperature")),
+        eq(List.of(List.of(1710000000000L, 21.3f), List.of(1710000060000L, 22.1f))));
+  }
+
+  @Test
+  void shouldSkipIgnoredColumnsWhenImportingFromStoredUpload() throws Exception {
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
+    var dataWriter = mock(DatasetWriter.class);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter, new CsvImportUploadStorage());
+    when(schemaManagement.getExistingMeasureByName("existing-measure"))
+        .thenReturn(Optional.of(makeExistingMeasure()));
+
+    var previewRequest = new CsvImportPreviewRequest();
+    previewRequest.setCsvConfig(makeCsvConfigWithCommaDelimiter());
+    previewRequest.setTarget(makeTarget(CsvImportTargetMode.EXISTING, "existing-measure"));
+
+    var multipartFile = mock(MultipartFile.class);
+    when(multipartFile.getOriginalFilename()).thenReturn("upload.csv");
+    when(multipartFile.getInputStream()).thenReturn(new ByteArrayInputStream(
+        "timestamp,temperature,status\n1710000000000,21.3,ok\n1710000060000,22.1,fail\n".getBytes()
+    ));
+    var previewResult = service.preview(multipartFile, previewRequest, "sid");
+    assertTrue(previewResult.isValid());
+
+    var columns = previewResult.getColumns();
+    columns.get(0).setSemanticType(SO.DATE_TIME);
+    columns.get(0).setPropertyScope("HEADER_PROPERTY");
+    columns.get(2).setIgnored(true);
+
+    var importRequest = new CsvImportRequest();
+    importRequest.setUploadId(previewResult.getUploadId());
+    importRequest.setCsvConfig(makeCsvConfigWithCommaDelimiter());
+    importRequest.setTarget(makeTarget(CsvImportTargetMode.EXISTING, "existing-measure"));
+    importRequest.setTimestampColumn("timestamp");
+    importRequest.setColumns(columns);
+
+    var result = service.importData(importRequest, "sid");
+
+    assertEquals(2, result.getImportedRowCount());
+    verify(dataWriter).writeData(
+        any(DatasetMetadata.class),
+        eq(List.of("timestamp", "temperature")),
+        eq(List.of(List.of(1710000000000L, 21.3f), List.of(1710000060000L, 22.1f))));
+  }
+
+  @Test
+  void shouldRejectIgnoredTimestampColumn() {
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
+    var service = new CsvDatasetImportService(schemaManagement, mock(DatasetWriter.class));
+    var request = makeImportRequest(CsvImportTargetMode.NEW, "new-measure");
+    request.getColumns().get(0).setIgnored(true);
+
+    var exception = assertThrows(
+        CsvImportValidationException.class,
+        () -> service.importData(request, "sid")
+    );
+
+    assertTrue(exception.getValidationMessages()
+        .stream()
+        .anyMatch(message -> "timestampColumn".equals(message.getField())));
+  }
+
+  private DatasetMetadata makeExistingMeasure() {
+    var existingMeasure = new DatasetMetadata();
+    existingMeasure.setMeasureName("existing-measure");
+    existingMeasure.setTimestampField("s0::timestamp");
+    existingMeasure.setEventSchema(makeStoredExistingSchema());
+    return existingMeasure;
+  }
+
+  private CsvImportRequest makeImportRequestWithStatusColumn(CsvImportTargetMode mode, boolean ignoreStatus) {
+    var request = makeImportRequest(mode, "existing-measure");
+    var statusColumn = new CsvImportColumn();
+    statusColumn.setCsvColumn("status");
+    statusColumn.setRuntimeName("status");
+    statusColumn.setRuntimeType("STRING");
+    statusColumn.setPropertyScope("DIMENSION_PROPERTY");
+    statusColumn.setIgnored(ignoreStatus);
+
+    request.setHeaders(List.of("timestamp", "temperature", "status"));
+    request.setRows(List.of(
+        List.of("1710000000000", "21.3", "ok"),
+        List.of("1710000060000", "22.1", "fail")
+    ));
+    request.setColumns(List.of(request.getColumns().get(0), request.getColumns().get(1), statusColumn));
+    return request;
   }
 
   private CsvImportPreviewRequest makePreviewRequest(String measurementName) {

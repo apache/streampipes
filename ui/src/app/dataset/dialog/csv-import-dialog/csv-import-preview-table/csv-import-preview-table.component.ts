@@ -24,6 +24,8 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -31,6 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { SemanticType } from '@streampipes/platform-services';
 import { SpAlertBannerComponent } from '@streampipes/shared-ui';
 import {
+    CsvImportColumnIgnoredChange,
     CsvImportColumnModel,
     CsvImportColumnRole,
     CsvImportColumnRoleChange,
@@ -44,6 +47,8 @@ import {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
+        MatButton,
+        MatCheckbox,
         MatFormField,
         MatInput,
         MatSelect,
@@ -61,11 +66,14 @@ export class CsvImportPreviewTableComponent {
     readonly hasSchemaMismatch = input(false);
     readonly schemaMismatchSummary = input('');
     readonly schemaMismatchDetails = input<string[]>([]);
+    readonly unknownColumns = input<string[]>([]);
     readonly showTimestampWarning = input(false);
 
     readonly columnTypeChange = output<CsvImportColumnTypeChange>();
     readonly columnRoleChange = output<CsvImportColumnRoleChange>();
     readonly timestampFormatChange = output<string>();
+    readonly columnIgnoredChange = output<CsvImportColumnIgnoredChange>();
+    readonly ignoreColumns = output<string[]>();
 
     private readonly selectedTimestampColumnModel = computed(() =>
         this.columnModels().find(model => this.isTimestampColumn(model)),
@@ -80,6 +88,17 @@ export class CsvImportPreviewTableComponent {
             !!this.selectedTimestampColumnModel() &&
             !this.isTimestampColumn(model)
         );
+    }
+
+    isIgnored(model: CsvImportColumnModel | undefined): boolean {
+        return !!model?.column.ignored;
+    }
+
+    onColumnIncludedChange(
+        model: CsvImportColumnModel,
+        included: boolean,
+    ): void {
+        this.columnIgnoredChange.emit({ model, ignored: !included });
     }
 
     getColumnRole(model: CsvImportColumnModel): CsvImportColumnRole {

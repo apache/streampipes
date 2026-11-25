@@ -45,6 +45,7 @@ export interface CsvImportColumn {
     description?: string;
     inferredType?: CsvRuntimeType;
     timestampCandidate?: boolean;
+    ignored?: boolean;
 }
 
 export interface CsvImportValidationMessage {
@@ -113,6 +114,7 @@ export interface CsvImportResult {
     measurementId: string;
     createdNewMeasurement: boolean;
     importedRowCount: number;
+    skippedRowCount?: number;
     validationMessages: CsvImportValidationMessage[];
 }
 

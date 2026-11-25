@@ -129,6 +129,22 @@ export class DatasetUtils {
         }
     }
 
+    public static expectCsvImportUnknownColumns(columnNames: string) {
+        DatasetBtns.csvImportUnknownColumns().should('be.visible');
+        DatasetBtns.csvImportUnknownColumnNames().should(
+            'contain.text',
+            columnNames,
+        );
+    }
+
+    public static expectNoCsvImportUnknownColumns() {
+        DatasetBtns.csvImportUnknownColumns().should('not.exist');
+    }
+
+    public static ignoreCsvImportUnknownColumns() {
+        DatasetBtns.csvImportIgnoreUnknownColumnsBtn().click();
+    }
+
     public static openDatasetPreview(datasetName: string) {
         DatasetBtns.datasetRow(datasetName)
             .find('mat-icon')
