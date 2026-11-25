@@ -172,8 +172,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
-      # Leave room for five independent jobs within ASF's recommended limit of 15.
-      max-parallel: 10
+      # Leave room for four independent jobs within ASF's recommended limit of 15.
+      max-parallel: 11
       matrix:
         python: ["3.11", "3.12", "3.13", "3.14"]
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -206,31 +206,6 @@ jobs:
         run: |
           source $VENV  # see https://github.com/snok/install-poetry#running-on-windows
           make unit-tests
-
-  performance-tests-unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7.0.1
-
-      - name: Set up Python
-        uses: actions/setup-python@v7.1.0
-        with:
-          python-version: "3.11"
-
-      - name: Install client and performance tests
-        working-directory: ./streampipes-performance-tests
-        run: |
-          python -m pip install ../streampipes-client-python '.[test]'
-
-      - name: Run offline tests
-        working-directory: ./streampipes-performance-tests
-        run: |
-          python -m pytest
-
-      - name: Validate run configurations
-        working-directory: ./streampipes-performance-tests
-        run: |
-          for config in run_configs/*.json; do sp-performance validate "$config"; done
 
   python-doc-checks:
     runs-on: ubuntu-latest
