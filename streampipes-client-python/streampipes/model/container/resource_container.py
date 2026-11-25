@@ -27,11 +27,11 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
-from typing import Generic
+from typing import Generic, Self
 
 import pandas as pd
 from pydantic import ValidationError
-from typing_extensions import Self, TypeVar
+from typing_extensions import TypeVar
 
 __all__ = [
     "ResourceContainer",

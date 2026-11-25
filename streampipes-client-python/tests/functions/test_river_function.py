@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, List, Tuple
+from typing import Any
 from unittest import TestCase
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -30,7 +30,7 @@ from tests.functions.test_function_handler import TestMessageIterator
 
 class TestUnsupervisedModel:
     def __init__(self) -> None:
-        self.data_x: List[Dict[str, Any]] = []
+        self.data_x: list[dict[str, Any]] = []
 
     def learn_one(self, x):
         pass
@@ -42,8 +42,8 @@ class TestUnsupervisedModel:
 
 class TestSupervisedModel:
     def __init__(self) -> None:
-        self.data_x: List[Dict[str, Any]] = []
-        self.data_y: List[Dict[str, Any]] = []
+        self.data_x: list[dict[str, Any]] = []
+        self.data_y: list[dict[str, Any]] = []
 
     def learn_one(self, x, y):
         self.data_y.append(y)
@@ -86,7 +86,7 @@ class TestRiverFunction(TestCase):
         pulish_event: MagicMock,
         get_message: MagicMock,
         time: MagicMock,
-        *args: Tuple[AsyncMock]
+        *args: tuple[AsyncMock],
     ):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream
@@ -96,7 +96,7 @@ class TestRiverFunction(TestCase):
 
         output_events = []
 
-        def save_event(self, event: Dict[str, Any]):
+        def save_event(self, event: dict[str, Any]):
             output_events.append(event)
 
         pulish_event.side_effect = save_event
@@ -155,7 +155,7 @@ class TestRiverFunction(TestCase):
         pulish_event: MagicMock,
         get_message: MagicMock,
         time: MagicMock,
-        *args: Tuple[AsyncMock]
+        *args: tuple[AsyncMock],
     ):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream
@@ -165,7 +165,7 @@ class TestRiverFunction(TestCase):
 
         output_events = []
 
-        def save_event(self, event: Dict[str, Any]):
+        def save_event(self, event: dict[str, Any]):
             output_events.append(event)
 
         pulish_event.side_effect = save_event

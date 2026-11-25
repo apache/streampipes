@@ -16,7 +16,7 @@
 #
 import os
 from json.encoder import JSONEncoder
-from typing import Any, Dict, List, Tuple
+from typing import Any
 from unittest import TestCase
 from unittest.mock import AsyncMock, MagicMock, call, patch
 
@@ -41,9 +41,9 @@ from streampipes.model.resource.function_definition import FunctionDefinition
 class TestFunction(StreamPipesFunction):
     def onServiceStarted(self, context: FunctionContext):
         self.context = context
-        self.data: List[Dict[str, Any]] = []
+        self.data: list[dict[str, Any]] = []
 
-    def onEvent(self, event: Dict[str, Any], streamId: str):
+    def onEvent(self, event: dict[str, Any], streamId: str):
         self.data.append(event)
 
     def onServiceStopped(self):
@@ -53,10 +53,10 @@ class TestFunction(StreamPipesFunction):
 class TestFunctionTwoStreams(StreamPipesFunction):
     def onServiceStarted(self, context: FunctionContext):
         self.context = context
-        self.data1: List[Dict[str, Any]] = []
-        self.data2: List[Dict[str, Any]] = []
+        self.data1: list[dict[str, Any]] = []
+        self.data2: list[dict[str, Any]] = []
 
-    def onEvent(self, event: Dict[str, Any], streamId: str):
+    def onEvent(self, event: dict[str, Any], streamId: str):
         if streamId == self.requiredStreamIds()[0]:
             self.data1.append(event)
         else:
@@ -71,7 +71,7 @@ class TestFunctionOutput(StreamPipesFunction):
         self.context = context
         self.i = 0
 
-    def onEvent(self, event: Dict[str, Any], streamId: str):
+    def onEvent(self, event: dict[str, Any], streamId: str):
         self.add_output(self.function_definition.get_output_stream_ids()[0], event={"number": self.i})
         self.i += 1
 
@@ -132,13 +132,13 @@ class TestFunctionHandler(TestCase):
 
         data_stream1 = create_data_stream("Test_NATS", attributes=attributes, stream_id=stream_id)
         data_stream1.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test1"
-        self.data_stream_nats: Dict[str, Any] = data_stream1.to_dict()
+        self.data_stream_nats: dict[str, Any] = data_stream1.to_dict()
 
         data_stream2 = create_data_stream(
             "Test_Kafka", attributes=attributes, stream_id=stream_id, broker=SupportedBroker.KAFKA
         )
         data_stream2.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test1"
-        self.data_stream_kafka: Dict[str, Any] = data_stream2.to_dict()
+        self.data_stream_kafka: dict[str, Any] = data_stream2.to_dict()
 
         data_stream1.event_grounding.transport_protocols[0].class_name = "None"
         self.data_stream_unsupported_broker = data_stream1.to_dict()
@@ -274,7 +274,7 @@ class TestFunctionHandler(TestCase):
     @patch("streampipes.endpoint.api.DataStreamEndpoint.get", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
     def test_two_streams_nats(
-        self, server_version: MagicMock, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]
+        self, server_version: MagicMock, endpoint: MagicMock, nats_broker: MagicMock, *args: tuple[AsyncMock]
     ):
         def get_stream(endpoint, stream_id):
             if stream_id == "urn:streampipes.apache.org:eventstream:uPDKLI":
@@ -349,7 +349,7 @@ class TestFunctionHandler(TestCase):
         pulish_event: MagicMock,
         get_message: MagicMock,
         time: MagicMock,
-        *args: Tuple[AsyncMock],
+        *args: tuple[AsyncMock],
     ):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_nats
@@ -359,7 +359,7 @@ class TestFunctionHandler(TestCase):
 
         output_events = []
 
-        def save_event(self, event: Dict[str, Any]):
+        def save_event(self, event: dict[str, Any]):
             output_events.append(event)
 
         pulish_event.side_effect = save_event
@@ -423,7 +423,7 @@ class TestFunctionHandler(TestCase):
 
         output_events = []
 
-        def save_event(self, event: Dict[str, Any]):
+        def save_event(self, event: dict[str, Any]):
             output_events.append(event)
 
         def get_stream(endpoint, stream_id):
@@ -488,7 +488,7 @@ class TestFunctionHandler(TestCase):
 
         output_events = []
 
-        def save_event(self, event: Dict[str, Any]):
+        def save_event(self, event: dict[str, Any]):
             output_events.append(event)
 
         pulish_event.side_effect = save_event

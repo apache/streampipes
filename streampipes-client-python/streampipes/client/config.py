@@ -19,7 +19,6 @@
 Configuration class for the StreamPipes client.
 """
 
-
 from dataclasses import dataclass, field
 
 __all__ = [
