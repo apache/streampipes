@@ -1,0 +1,958 @@
+<!doctype html>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Run report</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #fbfbfa;
+        --raised: #f3f3f0;
+        --line: #e6e5e0;
+        --track: #ecebe7;
+        --text: #0b0b0b;
+        --text-2: #5a5955;
+        --accent: #2a78d6;
+        --accent-soft: #b7d3f6;
+        --neutral-mark: #a3a29b;
+        --good: #0a8a0a;
+        --critical: #d03b3b;
+        --phase-setup: #1baf7a;
+        --phase-measurement: #2a78d6;
+        --phase-preparation: #eda100;
+        --phase-cleanup: #4a3aa7;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg: #151514;
+          --raised: #1f1f1d;
+          --line: #31312e;
+          --track: #2a2a27;
+          --text: #ffffff;
+          --text-2: #b9b8ae;
+          --accent: #3987e5;
+          --accent-soft: #184f95;
+          --neutral-mark: #77766f;
+          --good: #0ca30c;
+          --critical: #e66767;
+          --phase-setup: #199e70;
+          --phase-measurement: #3987e5;
+          --phase-preparation: #c98500;
+          --phase-cleanup: #9085e9;
+        }
+      }
+      /* Four text sizes: page title 24, section title 16, body 14, label 12. */
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+      h1 { font-size: 24px; line-height: 1.25; margin: 0; font-weight: 650; }
+      h2 { font-size: 16px; margin: 0; font-weight: 650; }
+      h3 { font-size: 14px; margin: 0; font-weight: 650; }
+      p { margin: 0; }
+      a { color: inherit; }
+      button { font: inherit; color: inherit; }
+      :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+      code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--raised); padding: 1px 5px; border-radius: 4px; }
+      pre { background: var(--raised); padding: 12px; border-radius: 6px; overflow-x: auto; margin: 8px 0 0; }
+      pre code { background: none; padding: 0; }
+      .label { font-size: 12px; color: var(--text-2); }
+      .muted { color: var(--text-2); }
+      .unit { font-size: 12px; color: var(--text-2); font-weight: 400; margin-left: 3px; }
+      .num { font-variant-numeric: tabular-nums; }
+      section { margin-top: 40px; }
+      .head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+      .head > :first-child { flex: 1; min-width: 0; }
+      .between { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+      .status { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; }
+      .status i, .icon { font-style: normal; font-weight: 700; color: var(--good); }
+      .status.bad i, .icon.bad { color: var(--critical); }
+      .tag { font-size: 12px; color: var(--text-2); border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; margin-left: 8px; font-weight: 400; vertical-align: 1px; }
+      .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; margin-top: 28px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+      .tiles > div { padding: 14px 20px 14px 0; }
+      .tiles .value { font-size: 24px; font-weight: 650; line-height: 1.3; font-variant-numeric: tabular-nums; }
+      .callout { margin-top: 20px; padding: 12px 16px; border-radius: 8px; background: var(--raised); }
+      .callout ul { margin: 6px 0 0; padding-left: 18px; }
+      details.plain > summary { cursor: pointer; color: var(--text-2); font-size: 12px; margin-top: 10px; }
+      dl.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 24px; margin: 12px 0 0; }
+      dl.grid dt { font-size: 12px; color: var(--text-2); }
+      dl.grid dd { margin: 0; overflow-wrap: anywhere; }
+
+      .scroll { overflow-x: auto; }
+      table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+      th { text-align: right; font-size: 12px; font-weight: 500; color: var(--text-2); padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: bottom; white-space: nowrap; }
+      td { text-align: right; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: middle; }
+      th.left, td.left { text-align: left; white-space: normal; }
+      th:first-child, td:first-child { padding-left: 0; }
+      th:last-child, td:last-child { padding-right: 0; }
+      .query-toggle { display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+      .query-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+      .query-request td { white-space: normal; }
+      .query-request pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      tr.link { cursor: pointer; }
+      tr.link:hover > td { background: var(--raised); }
+      td.test { width: 100%; max-width: 0; }
+      .chev { transition: transform 0.15s; vertical-align: -1px; }
+      details[open] > summary .chev { transform: rotate(90deg); }
+      .desc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .cell { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+      .bar { width: 90px; height: 6px; background: var(--track); border-radius: 3px; flex: none; position: relative; overflow: hidden; }
+      .bar i { position: absolute; top: 0; bottom: 0; left: 0; background: var(--neutral-mark); border-radius: 3px; min-width: 2px; }
+      .strip { position: relative; width: 120px; height: 6px; background: var(--track); border-radius: 3px; flex: none; }
+      .strip .range { position: absolute; top: 0; bottom: 0; min-width: 4px; background: var(--accent-soft); border-radius: 3px; }
+      .strip .mean { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; background: var(--accent); border-radius: 2px; }
+      .box { position: relative; height: 16px; min-width: 150px; margin: 8px 0 6px; background: linear-gradient(var(--track), var(--track)) left center / 100% 2px no-repeat; }
+      .box i { position: absolute; }
+      .box .whisker { top: 7px; height: 2px; background: var(--neutral-mark); }
+      .box .iqr { top: 2px; height: 12px; background: var(--accent-soft); border-radius: 2px; min-width: 3px; }
+      .box .median { top: 0; height: 16px; width: 3px; margin-left: -1.5px; background: var(--accent); border-radius: 1px; }
+      .cell .box { width: 170px; flex: none; margin: 0; }
+      .key { display: inline-flex; align-items: center; gap: 6px; margin-right: 16px; }
+      .key i { display: inline-block; width: 14px; height: 6px; border-radius: 3px; background: var(--accent-soft); }
+      .key i.mean { width: 3px; height: 12px; background: var(--accent); }
+      .key i.line { height: 2px; background: var(--accent); }
+
+      .tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--line); margin-top: 28px; }
+      .tabs a { padding: 8px 0; text-decoration: none; color: var(--text-2); border-bottom: 2px solid transparent; margin-bottom: -1px; font-weight: 600; }
+      .tabs a[aria-current] { color: var(--text); border-color: var(--text); }
+      .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+      .seg button { border: 0; background: none; padding: 4px 10px; cursor: pointer; font-size: 12px; color: var(--text-2); }
+      .seg button[aria-pressed="true"] { background: var(--raised); color: var(--text); font-weight: 600; }
+      .matrix td, .matrix th { text-align: left; vertical-align: middle; border: 1px solid var(--line); padding: 10px 14px; }
+      .matrix td:first-child, .matrix th:first-child { padding-left: 14px; }
+      .matrix td.pick { cursor: pointer; }
+      .matrix td.pick:hover { background: var(--raised); }
+      .matrix .value { font-size: 16px; font-weight: 650; }
+
+      details.config { border-bottom: 1px solid var(--line); }
+      details.config:first-of-type { border-top: 1px solid var(--line); }
+      details.config > summary { list-style: none; cursor: pointer; padding: 12px 0; display: flex; align-items: center; gap: 10px; }
+      details.config > summary::-webkit-details-marker { display: none; }
+      details.config > summary:hover { background: var(--raised); }
+      details.config > summary .name { flex: 1; font-weight: 600; }
+      .body { padding: 4px 0 28px 22px; }
+      .stats { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 14px 40px; }
+      .stats .value { font-size: 16px; font-weight: 650; font-variant-numeric: tabular-nums; }
+      .sub-title { font-size: 12px; font-weight: 600; color: var(--text-2); margin: 24px 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+      .errors { margin-top: 14px; border-left: 2px solid var(--critical); padding-left: 12px; }
+      .chart { position: relative; margin-top: 8px; }
+      .chart svg { display: block; width: 100%; }
+      .chart text { font-size: 12px; fill: var(--text-2); }
+      .tip { position: absolute; pointer-events: none; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 12px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14); white-space: nowrap; display: none; z-index: 5; }
+      #tip { position: fixed; max-width: 360px; }
+      .legend { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
+      .legend span.item { display: inline-flex; align-items: center; font-size: 12px; padding-right: 8px; color: var(--text-2); }
+      .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+      .info { border: 1px solid var(--line); background: none; border-radius: 50%; width: 18px; height: 18px; font-size: 12px; line-height: 1; cursor: help; color: var(--text-2); padding: 0; }
+
+      .phases { display: grid; grid-template-columns: minmax(120px, max-content) 1fr max-content; gap: 10px 12px; align-items: center; margin-top: 16px; }
+      .phases .stack { display: flex; gap: 2px; height: 16px; }
+      .phases .stack i { display: block; min-width: 3px; }
+      .phases .stack i:last-child { border-radius: 0 4px 4px 0; }
+      .phases .axis { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); border-top: 1px solid var(--line); padding-top: 4px; }
+
+      .prose { max-width: 76ch; }
+      .prose h2 { margin: 28px 0 6px; }
+      .prose p, .prose ul { margin: 8px 0; }
+      .prose ul { padding-left: 20px; }
+      dl.defs { display: grid; grid-template-columns: minmax(180px, 280px) 1fr; gap: 10px 24px; margin: 10px 0 0; }
+      dl.defs dt { font-weight: 600; }
+      dl.defs dd { margin: 0; }
+      .back { font-size: 12px; text-decoration: none; color: var(--text-2); }
+      .picker { text-align: center; padding: 80px 20px; }
+      .button { display: inline-block; font-weight: 600; padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+      @media (max-width: 800px) {
+        main { padding: 24px 16px 60px; }
+        td.test { min-width: 220px; }
+        .bar { display: none; }
+        dl.defs { grid-template-columns: 1fr; gap: 2px 0; }
+        dl.defs dd { margin-bottom: 10px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app"></main>
+    <div id="tip" class="tip"></div>
+    <script id="report-data" type="application/json">null</script>
+    <script>
+      "use strict";
+      let DATA = JSON.parse(document.getElementById("report-data").textContent);
+      const app = document.getElementById("app");
+      let matrixMetric = null;
+      let current = null;
+      const PHASES = ["setup", "measurement", "preparation", "cleanup"];
+      const PHASE_HELP =
+        "Setup: create the adapters, pipelines or datasets and wait until they are ready.\nMeasurement: run the workload, including the configured warmup and measurement windows.\nPreparation: collect and summarise the results after the workload.\nCleanup: stop and delete everything the test created.";
+      const CHEVRON =
+        '<svg class="chev" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      // ---------- helpers ----------
+      const esc = (value) =>
+        String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+      const humanize = (text) => {
+        const words = String(text).replace(/_/g, " ").trim();
+        return words.charAt(0).toUpperCase() + words.slice(1);
+      };
+      const paramLabel = (name) => humanize(name.replace(/_ms$/, " (ms)"));
+      const fixed = (value, digits) =>
+        value === null || value === undefined || Number.isNaN(value)
+          ? "–"
+          : value.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+      /** Counts, seconds and other values without a per-metric precision. */
+      function fmt(value) {
+        if (value === null || value === undefined || Number.isNaN(value)) return "–";
+        const abs = Math.abs(value);
+        return fixed(value, Number.isInteger(value) || abs >= 100 ? 0 : abs >= 10 ? 1 : 2);
+      }
+      function duration(ms) {
+        const seconds = Math.round(ms / 1000);
+        if (seconds < 60) return seconds + " s";
+        const minutes = Math.floor(seconds / 60);
+        return minutes < 60 ? `${minutes} min ${seconds % 60} s` : `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
+      }
+      /** Wall-clock style: "42.5 s", "36:27 min", "1:12:05 h". */
+      function clock(ms) {
+        const total = ms / 1000;
+        if (total < 60) return fixed(total, total < 10 ? 2 : 1) + " s";
+        const whole = Math.round(total);
+        const pad = (n) => String(n).padStart(2, "0");
+        if (whole < 3600) return `${Math.floor(whole / 60)}:${pad(whole % 60)} min`;
+        return `${Math.floor(whole / 3600)}:${pad(Math.floor((whole % 3600) / 60))}:${pad(whole % 60)} h`;
+      }
+      const plural = (count, word) => `${count} ${word}${count === 1 ? "" : "s"}`;
+      const phaseTotal = (run) => Object.values(run.phase_durations_ms || {}).reduce((a, b) => a + (b || 0), 0);
+      const passed = (status) => status === "passed";
+      const worst = (statuses) => statuses.find((status) => !passed(status)) || "passed";
+      const statusIcon = (status) => `<span class="icon ${passed(status) ? "" : "bad"}" title="${esc(humanize(status))}">${passed(status) ? "✓" : "✕"}</span>`;
+      const statusBadge = (status) =>
+        `<span class="status ${passed(status) ? "" : "bad"}"><i>${passed(status) ? "✓" : "✕"}</i>${esc(humanize(status))}</span>`;
+      function quantile(sorted, q) {
+        const position = (sorted.length - 1) * q, low = Math.floor(position);
+        return sorted[low] + (sorted[Math.min(low + 1, sorted.length - 1)] - sorted[low]) * (position - low);
+      }
+      function niceStep(max, ticks = 5) {
+        const base = 10 ** Math.floor(Math.log10(max / ticks || 1));
+        return [1, 2, 5, 10].map((f) => f * base).find((step) => max / step <= ticks) || max || 1;
+      }
+
+      // ---------- metrics ----------
+      const LATENCY = "processing_latency_ms";
+      const KNOWN = {
+        processing_latency_ms: ["Event latency", "ms"],
+        event_gaps_ms: ["Event gap", "ms"],
+        throughput_ratio: ["Throughput ratio", "%"],
+        persisted_events_per_second: ["Throughput", "events/s"],
+        uploaded_rows_per_dataset: ["Rows per dataset", ""],
+        error_rate: ["Error rate", "%"],
+      };
+      function metricInfo(key) {
+        const name = key.replace(/^operations\./, "").replace(/^.*\[\]\./, "");
+        if (KNOWN[name]) return { label: KNOWN[name][0], unit: KNOWN[name][1] };
+        if (/_ms$/.test(name)) return { label: humanize(name.replace(/_ms$/, "")), unit: "ms" };
+        if (/ time/.test(name)) return { label: name.replace(" (measurement readiness)", " until ready"), unit: "ms" };
+        if (/_per_second$/.test(name)) return { label: humanize(name.replace(/_per_second$/, "")), unit: "/s" };
+        return { label: humanize(name), unit: "" };
+      }
+      const isStats = (value) => value && typeof value === "object" && !Array.isArray(value) && "mean" in value;
+      /** Raw values of one documented metric key inside a scenario's metrics. */
+      function resolve(metrics, key) {
+        const list = key.match(/^(\w+)\[\]\.(.+)$/);
+        if (list) return (metrics[list[1]] || []).map((entry) => entry[list[2]]);
+        if (key.startsWith("operations.")) return [(metrics.operations || {})[key.slice(11)]];
+        // Readiness waits are stored under their phase name only.
+        return [metrics[key] !== undefined ? metrics[key] : metrics[key.replace(" readiness)", ")")]];
+      }
+      /** Pool distributions by sample count; average plain numbers. */
+      function pool(values) {
+        const stats = values.filter((value) => isStats(value) && value.mean !== null && value.count > 0);
+        if (stats.length) {
+          const count = stats.reduce((sum, s) => sum + s.count, 0);
+          return {
+            stats: true,
+            count,
+            value: stats.reduce((sum, s) => sum + s.mean * s.count, 0) / count,
+            min: Math.min(...stats.map((s) => s.min)),
+            max: Math.max(...stats.map((s) => s.max)),
+          };
+        }
+        const numbers = values.filter((value) => typeof value === "number");
+        if (numbers.length) return { stats: false, value: numbers.reduce((a, b) => a + b, 0) / numbers.length };
+        return null;
+      }
+      // ---------- model ----------
+      const scriptLabel = (value) => (value && typeof value === "object" && typeof value.script === "string" ? value.label : undefined);
+      function paramValue(value) {
+        if (value === null || value === undefined || value === "") return "none";
+        const name = scriptLabel(value);
+        if (name) return name;
+        if (typeof value === "string") return value.length > 48 ? value.split("\n")[0].slice(0, 45) + "…" : value;
+        if (typeof value === "object") return JSON.stringify(value);
+        return fmt(value);
+      }
+      const paramText = (name, value) => scriptLabel(value) || `${paramLabel(name)}: ${paramValue(value)}`;
+      function buildCases() {
+        const byType = new Map();
+        for (const scenario of DATA.scenarios) {
+          const type = scenario.scenario.type;
+          if (!byType.has(type)) byType.set(type, []);
+          byType.get(type).push(scenario);
+        }
+        const products = new Set([...byType.keys()].map((type) => type.split(".")[0]));
+        return [...byType.entries()].map(([type, scenarios]) => {
+          const docs = scenarios[0].scenario.documentation || {};
+          const readme = (DATA.readmes || {})[type];
+          const heading = readme && readme.match(/^#\s+(.+)$/m);
+          const groups = new Map();
+          for (const scenario of scenarios) {
+            const key = JSON.stringify(scenario.scenario.parameters);
+            if (!groups.has(key)) groups.set(key, { parameters: scenario.scenario.parameters, runs: [] });
+            groups.get(key).runs.push(scenario);
+          }
+          const configs = [...groups.values()];
+          const names = Object.keys(configs[0].parameters);
+          const distinct = (name) => [...new Set(configs.map((c) => JSON.stringify(c.parameters[name])))];
+          // A manifest may fix the label parameters (run.label_parameters) so several tests label alike.
+          const forced = Array.isArray(DATA.run.label_parameters) ? DATA.run.label_parameters.filter((name) => names.includes(name)) : null;
+          const varying = forced && forced.length ? forced : names.filter((name) => distinct(name).length > 1);
+          const metricKeys = Object.keys(docs.metrics || {}).filter((key) => scenarios.some((s) => pool(resolve(s.metrics, key))));
+          configs.forEach((config, index) => {
+            config.index = index;
+            config.label = varying.length
+              ? varying.map((name) => paramText(name, config.parameters[name])).join(" · ")
+              : Object.values(config.parameters).map(scriptLabel).filter(Boolean).join(" · ") || "Single configuration";
+            config.status = worst(config.runs.map((run) => run.status));
+            config.metrics = Object.fromEntries(metricKeys.map((key) => [key, pool(config.runs.flatMap((run) => resolve(run.metrics, key)))]));
+            config.duration = config.runs.reduce((sum, run) => sum + phaseTotal(run), 0);
+            const points = config.runs.flatMap((run) => run.metrics.event_latencies || []);
+            if (points.length > 1) {
+              const values = points.map((point) => point[1]).sort((a, b) => a - b);
+              config.latency = {
+                count: values.length,
+                min: values[0],
+                max: values[values.length - 1],
+                mean: values.reduce((a, b) => a + b, 0) / values.length,
+                seconds: points.reduce((top, point) => Math.max(top, point[0]), 0) / 1000,
+              };
+              for (const q of [5, 25, 50, 75, 95, 99]) config.latency["p" + q] = quantile(values, q / 100);
+              // At most 10,000 evenly spaced events are drawn; statistics always use all of them.
+              const every = Math.ceil(points.length / 10000);
+              config.points = every > 1 ? points.filter((_, i) => i % every === 0) : points;
+            }
+          });
+          // One scale and one precision per metric, so values are comparable across configurations.
+          const scale = {}, digits = {};
+          for (const key of metricKeys) {
+            const found = configs.map((c) => c.metrics[key]).filter(Boolean);
+            scale[key] = Math.max(0, ...found.map((m) => (m.stats ? m.max : m.value)));
+            const highest = Math.max(0, ...found.map((m) => m.value));
+            const whole = found.every((m) => !m.stats && Number.isInteger(m.value));
+            digits[key] = metricInfo(key).unit === "%" ? 1 : whole ? 0 : highest < 100 ? 2 : highest < 1000 ? 1 : 0;
+          }
+          const primary = metricKeys.find((key) => configs.some((c) => c.metrics[key] && c.metrics[key].stats)) || metricKeys[0];
+          // Two varying parameters covering every combination form a matrix.
+          let matrix = null;
+          if (varying.length === 2) {
+            const rows = distinct(varying[0]), cols = distinct(varying[1]);
+            if (rows.length * cols.length === configs.length) matrix = { rowName: varying[0], colName: varying[1], rows, cols };
+          }
+          const charted = configs.filter((c) => c.latency);
+          const reach = Math.max(0, ...charted.map((c) => c.latency.p95));
+          const boxStep = niceStep(reach, 4);
+          const tall = Math.max(0, ...charted.map((c) => c.latency.p99)) * 1.2;
+          const tallStep = niceStep(tall);
+          return {
+            type,
+            product: products.size > 1 ? (DATA.products || {})[type.split(".")[0]] || humanize(type.split(".")[0]) : "",
+            title: heading ? heading[1] : humanize(type.split(".").pop()),
+            docs, readme, configs, metricKeys, primary, scale, digits, matrix,
+            seconds: Math.max(0, ...charted.map((c) => c.latency.seconds)),
+            boxed: charted.length > 0 && metricKeys.includes(LATENCY),
+            boxScale: Math.ceil(reach / boxStep) * boxStep || 1,
+            yShared: Math.ceil(tall / tallStep) * tallStep || 1,
+            status: worst(scenarios.map((s) => s.status)),
+            duration: configs.reduce((sum, c) => sum + c.duration, 0),
+            repetitions: Math.max(...configs.map((c) => c.runs.length)),
+          };
+        });
+      }
+      /** Metric value with the precision of its metric; the unit is muted. */
+      function show(item, key, value, unit = true) {
+        const info = metricInfo(key);
+        if (value === null || value === undefined) return "–";
+        if (info.unit === "%") return fixed(value * 100, item.digits[key]) + "%";
+        return fixed(value, item.digits[key]) + (unit && info.unit ? `<span class="unit">${esc(info.unit)}</span>` : "");
+      }
+      /** Unit of a metric as plain text; percentages carry their sign in the value. */
+      const unitOf = (key) => (metricInfo(key).unit === "%" ? "" : metricInfo(key).unit);
+      const plain = (item, key, value) => show(item, key, value, false) + (unitOf(key) ? " " + unitOf(key) : "");
+      const caseLink = (item, tab, index) => `#/case/${encodeURIComponent(item.type)}${tab || index !== undefined ? "/" + (tab || "results") : ""}${index !== undefined ? "/" + index : ""}`;
+      function metricTip(item, key, metric) {
+        const info = metricInfo(key);
+        return metric.stats
+          ? `${info.label}\nmean ${plain(item, key, metric.value)}\nmin ${plain(item, key, metric.min)} · max ${plain(item, key, metric.max)}\n${fmt(metric.count)} samples`
+          : `${info.label}: ${plain(item, key, metric.value)}`;
+      }
+      function strip(metric, scale) {
+        const pct = (v) => Math.max(0, Math.min(100, (v / (scale || 1)) * 100)).toFixed(2);
+        return `<div class="strip"><i class="range" style="left:${pct(metric.min)}%;width:${pct(metric.max - metric.min)}%"></i><i class="mean" style="left:${pct(metric.value)}%"></i></div>`;
+      }
+      const bar = (value, scale) => `<div class="bar"><i style="width:${Math.min(100, (value / (scale || 1)) * 100).toFixed(2)}%"></i></div>`;
+      /** Box plot of all events of one configuration, on the scale shared by the test. */
+      function box(item, config) {
+        const l = config.latency, pct = (v) => Math.min(100, (v / item.boxScale) * 100).toFixed(2);
+        return `<div class="box"><i class="whisker" style="left:${pct(l.p5)}%;width:${pct(l.p95 - l.p5)}%"></i><i class="iqr" style="left:${pct(l.p25)}%;width:${pct(l.p75 - l.p25)}%"></i><i class="median" style="left:${pct(l.p50)}%"></i></div>`;
+      }
+      function boxTip(item, config) {
+        const l = config.latency, ms = (v) => fixed(v, item.digits[LATENCY] ?? 2) + " ms";
+        return `${config.label}\nmedian ${ms(l.p50)}\nmiddle half of the events: ${ms(l.p25)} – ${ms(l.p75)}\n90% of the events: ${ms(l.p5)} – ${ms(l.p95)}\nslowest ${ms(l.max)} · ${fmt(l.count)} events`;
+      }
+      const boxKey = (item) =>
+        `<p class="label" style="margin-top:10px"><span class="key"><i class="mean"></i>median</span><span class="key"><i></i>middle half of the events</span><span class="key"><i class="line" style="background:var(--neutral-mark)"></i>90% of the events (p5 – p95)</span>All boxes share one scale: 0 – ${fmt(item.boxScale)} ms.</p>`;
+      const STRIP_KEY = `<p class="label" style="margin-top:10px"><span class="key"><i class="mean"></i>mean</span><span class="key"><i></i>fastest to slowest observation</span></p>`;
+
+      // ---------- overview ----------
+      function overview(cases) {
+        const run = DATA.run;
+        const scenarios = DATA.scenarios;
+        const done = scenarios.filter((s) => passed(s.status)).length;
+        const planned = run.planned_scenarios || scenarios.length;
+        const total = scenarios.reduce((sum, s) => sum + phaseTotal(s), 0);
+        const started = (run.run_id || "").match(/^(\d{4})(\d\d)(\d\d)T(\d\d)(\d\d)(\d\d)Z/);
+        const startedText = started
+          ? new Date(Date.UTC(+started[1], started[2] - 1, +started[3], +started[4], +started[5], +started[6])).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })
+          : null;
+        const environment = run.environment || {}, timing = run.timing || {};
+        const status = run.status && run.status !== "passed" ? run.status : done === planned ? "passed" : "failed";
+        const line = [startedText, run.target && "Target " + run.target, environment.server_version && "Server " + environment.server_version].filter(Boolean);
+        const info = [
+          ["Run ID", run.run_id],
+          ["Test runner platform", environment.platform],
+          ["Python", environment.python],
+          ["Ingestion warmup / measurement window", timing.duration_seconds !== undefined ? `${timing.warmup_seconds} s / ${timing.duration_seconds} s` : undefined],
+          ["Request timeout", timing.request_timeout_seconds !== undefined ? timing.request_timeout_seconds + " s" : undefined],
+        ].filter(([, value]) => value !== undefined && value !== null);
+        const failures = cases.flatMap((item) => item.configs.filter((c) => !passed(c.status)).map((config) => ({ item, config })));
+        const sorted = cases.slice().sort((a, b) => passed(a.status) - passed(b.status));
+        const longest = Math.max(1, ...cases.map((item) => item.duration));
+        const configurations = cases.reduce((sum, item) => sum + item.configs.length, 0);
+        const repetitions = Math.max(...cases.map((item) => item.repetitions));
+        const failedTests = cases.filter((item) => !passed(item.status)).length;
+        const tile = (label, value, note, bad) =>
+          `<div><div class="label">${label}</div><div class="value">${value}</div><div class="label">${bad ? '<span class="icon bad">✕</span> ' : ""}${note}</div></div>`;
+        const rows = sorted
+          .map((item) => {
+            const key = item.primary, info = key && metricInfo(key);
+            const means = key ? item.configs.map((c) => c.metrics[key]).filter(Boolean).map((m) => m.value) : [];
+            const high = Math.max(...means);
+            const metric = !key
+              ? "<td>–</td>"
+              : `<td data-tip="${esc(item.docs.metrics[key] || "")}"><div>${show(item, key, high)}</div>
+                <div class="label">${esc(info.label)} · ${means.length > 1 ? "highest mean" : "mean"}</div></td>`;
+            return `<tr class="link" tabindex="0" data-href="${caseLink(item)}" aria-label="Open details of ${esc(item.title)}">
+                <td style="width:24px">${statusIcon(item.status)}</td>
+                <td class="left test"><b>${esc(item.title)}</b>${item.product ? `<span class="tag">${esc(item.product)}</span>` : ""}
+                  <div class="label desc" title="${esc(item.docs.description || "")}">${esc(item.docs.description || "")}</div></td>
+                ${metric}
+                <td>${item.configs.length}</td>
+                <td><div class="cell">${bar(item.duration, longest)}<span style="min-width:64px">${duration(item.duration)}</span></div></td>
+                <td class="muted" style="width:20px" aria-hidden="true">${CHEVRON}</td>
+              </tr>`;
+          })
+          .join("");
+        return `
+          <div class="head"><div><h1>Performance report</h1><p class="muted">${line.map(esc).join(" · ")}</p></div>${statusBadge(status)}</div>
+          <details class="plain"><summary>Run info</summary><dl class="grid">${info.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl></details>
+          <div class="tiles">
+            ${tile("Tests", cases.length, failedTests ? `${failedTests} failed` : "all passed", failedTests)}
+            ${tile("Scenarios", planned, `${done < planned ? `${planned - done} failed or not run · ` : ""}${plural(configurations, "configuration")} × ${plural(repetitions, "repetition")}`, done < planned)}
+            ${tile("Duration", duration(total), "including setup and cleanup")}
+          </div>
+          ${run.error ? `<div class="callout"><span class="icon bad">✕</span> Run error: ${esc(run.error.message || JSON.stringify(run.error))}</div>` : ""}
+          ${
+            failures.length || planned > scenarios.length
+              ? `<div class="callout"><b>Needs attention</b><ul>${failures
+                  .map(({ item, config }) => `<li><a href="${caseLink(item, "results", config.index)}">${esc(item.title)} · ${esc(config.label)}</a>: ${esc(humanize(config.status))}${problems(config).length ? " – " + esc(problems(config)[0]) : ""}</li>`)
+                  .join("")}${planned > scenarios.length ? `<li>${planned - scenarios.length} planned scenarios were not run.</li>` : ""}</ul></div>`
+              : ""
+          }
+          <section><h2>Tests</h2><p class="label">Select a test to open its details.</p>
+            <div class="scroll" style="margin-top:8px"><table><thead><tr><th></th><th class="left">Test</th><th>Primary metric</th><th>Configs</th><th>Duration</th><th></th></tr></thead>
+            <tbody>${rows}</tbody></table></div></section>`;
+      }
+
+      // ---------- detail: results ----------
+      function problems(config) {
+        return config.runs.flatMap((run) => [
+          ...(run.errors || []).map((error) => `${error.phase || "error"}: ${error.message || error.type || JSON.stringify(error)}`),
+          ...(run.threshold_failures || []).map((failure) => `threshold: ${failure}`),
+          ...((run.cleanup || {}).errors || []).map((error) => `cleanup: ${error.message || JSON.stringify(error)}`),
+        ]);
+      }
+      function summary(item) {
+        if (item.matrix) {
+          const key = item.metricKeys.includes(matrixMetric) ? matrixMetric : item.primary;
+          const boxes = item.boxed && key === LATENCY;
+          const note = boxes
+            ? ": mean, with the distribution of all events below"
+            : item.configs.some((c) => c.metrics[key] && c.metrics[key].stats)
+              ? ": mean, with fastest – slowest observation below"
+              : "";
+          const { rowName, colName, rows, cols } = item.matrix;
+          const find = (row, col) => item.configs.find((c) => JSON.stringify(c.parameters[rowName]) === row && JSON.stringify(c.parameters[colName]) === col);
+          const picker =
+            item.metricKeys.length > 1
+              ? `<div class="seg" role="group" aria-label="Metric">${item.metricKeys.map((k) => `<button aria-pressed="${k === key}" data-metric="${esc(k)}">${esc(metricInfo(k).label)}</button>`).join("")}</div>`
+              : "";
+          return `<div class="between"><h2>Summary</h2>${picker}</div>
+            <p class="label">${esc(metricInfo(key).label)} per configuration${note}. Select a cell to jump to that configuration.</p>
+            <div class="scroll" style="margin-top:10px"><table class="matrix"><thead><tr><th>${esc(paramLabel(rowName))} ╲ ${esc(paramLabel(colName))}</th>${cols.map((col) => `<th>${esc(paramValue(JSON.parse(col)))}</th>`).join("")}</tr></thead>
+            <tbody>${rows
+              .map(
+                (row) => `<tr><th>${esc(paramValue(JSON.parse(row)))}</th>${cols
+                  .map((col) => {
+                    const config = find(row, col), metric = config && config.metrics[key];
+                    if (!metric) return "<td>–</td>";
+                    const boxed = boxes && config.latency;
+                    return `<td class="pick" tabindex="0" data-goto="${config.index}" data-tip="${esc(boxed ? boxTip(item, config) : metricTip(item, key, metric))}">
+                      <div class="value">${passed(config.status) ? "" : statusIcon(config.status) + " "}${show(item, key, metric.value)}<span class="unit">mean</span></div>
+                      ${
+                        boxed
+                          ? `${box(item, config)}<div class="label">median ${show(item, key, config.latency.p50, false)} · p95 ${show(item, key, config.latency.p95, false)}</div>`
+                          : metric.stats
+                            ? `<div class="label">${show(item, key, metric.min, false)} – ${show(item, key, metric.max, false)}</div>`
+                            : ""
+                      }</td>`;
+                  })
+                  .join("")}</tr>`
+              )
+              .join("")}</tbody></table></div>${boxes ? boxKey(item) : ""}`;
+        }
+        const boxed = (key, config) => item.boxed && key === LATENCY && config.latency;
+        const scaleNote = (key) =>
+          item.boxed && key === LATENCY ? "<div>mean</div>" : ranged.includes(key) ? `<div>bar scale 0 – ${show(item, key, item.scale[key], false)}</div>` : "";
+        const ranged = item.metricKeys.filter((key) => item.configs.some((c) => c.metrics[key] && c.metrics[key].stats));
+        return `<h2>Summary</h2>
+          <div class="scroll" style="margin-top:8px"><table><thead><tr><th class="left">Configuration</th>${item.metricKeys
+            .map((key) => `<th>${esc(metricInfo(key).label)}${unitOf(key) ? ` (${esc(unitOf(key))})` : ""}${scaleNote(key)}</th>`)
+            .join("")}</tr></thead><tbody>${item.configs
+            .map(
+              (config) => `<tr class="link" tabindex="0" data-goto="${config.index}"><td class="left">${passed(config.status) ? "" : statusIcon(config.status) + " "}${esc(config.label)}</td>${item.metricKeys
+                .map((key) => {
+                  const metric = config.metrics[key];
+                  if (!metric) return "<td>–</td>";
+                  const tip = boxed(key, config) ? boxTip(item, config) : metricTip(item, key, metric);
+                  const visual = boxed(key, config) ? box(item, config) : metric.stats ? strip(metric, item.scale[key]) : "";
+                  return `<td data-tip="${esc(tip)}"><div class="cell">${visual}<span>${show(item, key, metric.value, false)}</span></div></td>`;
+                })
+                .join("")}</tr>`
+            )
+            .join("")}</tbody></table></div>${item.boxed ? boxKey(item) : ""}${ranged.some((key) => !(item.boxed && key === LATENCY)) ? STRIP_KEY : ""}`;
+      }
+      function queryBreakdown(runs, configIndex) {
+        const groups = new Map();
+        for (const run of runs)
+          for (const workload of run.metrics.query_workloads || []) {
+            if (!groups.has(workload.query)) groups.set(workload.query, []);
+            groups.get(workload.query).push(workload);
+          }
+        if (!groups.size) return "";
+        const workflows = runs.some((run) => (run.metrics.query_workloads || []).some((w) => w.duration_scope === "asset_workflows"));
+        const rateNote = workflows ? '<p class="label">Queries per second use the elapsed time of the complete asset workflow. Presets run sequentially per asset and overlap across assets.</p>' : "";
+        const rows = [...groups.entries()].map(([query, list]) => ({
+          query: humanize(query),
+          source: runs.flatMap((run) => run.metrics.query_requests || []).find((request) => request.query === query)?.source,
+          time: pool(list.map((w) => w.query_time_ms)),
+          requests: list.reduce((sum, w) => sum + (w.requests || 0), 0),
+          errors: list.reduce((sum, w) => sum + (w.errors || 0), 0),
+          rate: pool(list.map((w) => w.queries_per_second)),
+        }));
+        const scale = Math.max(0, ...rows.map((row) => (row.time ? row.time.max : 0)));
+        const digits = scale < 100 ? 2 : scale < 1000 ? 1 : 0;
+        const ms = (value) => fixed(value, digits);
+        return `<div class="sub-title">Query time by query</div>${rateNote}
+          <div class="scroll"><table><thead><tr><th class="left">Query</th><th>Mean (ms)<div>bar scale 0 – ${ms(scale)}</div></th><th>Min (ms)</th>
+            <th>Max (ms)</th><th>Requests</th><th>Errors</th><th>Queries (/s)</th></tr></thead><tbody>${rows
+              .map(
+                (row, index) => `<tr><td class="left">${row.source ? `<button type="button" class="query-toggle" data-query-toggle aria-expanded="false" aria-controls="query-request-${configIndex}-${index}">${CHEVRON}${esc(row.query)}</button>` : esc(row.query)}</td>
+                <td><div class="cell">${row.time ? strip(row.time, scale) : ""}<span>${ms(row.time && row.time.value)}</span></div></td>
+                <td>${ms(row.time && row.time.min)}</td><td>${ms(row.time && row.time.max)}</td>
+                <td>${fmt(row.requests)}</td><td>${fmt(row.errors)}</td><td>${fixed(row.rate && row.rate.value, 2)}</td></tr>
+                ${row.source ? `<tr class="query-request" id="query-request-${configIndex}-${index}" hidden><td colspan="7" class="left"><pre><code>${esc(row.source)}</code></pre></td></tr>` : ""}`
+              )
+              .join("")}</tbody></table></div>${STRIP_KEY}`;
+      }
+      const EVENT_COUNTS = [
+        ["sent_events", "sent"], ["expected_events", "expected"], ["observed_events", "received"], ["filtered_events", "filtered on purpose"],
+        ["missing_events", "missing"], ["unexpected_events", "unexpected"], ["duplicate_events", "duplicates"],
+        ["malformed_events", "malformed"], ["unmatched_events", "unmatched"],
+      ];
+      const isEventMetric = (key) => /_events$/.test(key) || key === "throughput_ratio";
+      /** One line of event facts; counts that are zero stay behind "All event counts". */
+      function eventLine(item, config) {
+        const metrics = config.runs.map((run) => run.metrics).filter((m) => m.expected_events !== undefined);
+        if (!metrics.length) return "";
+        const sum = (key) => metrics.reduce((total, m) => total + (m[key] || 0), 0);
+        const parts = [`${fmt(sum("observed_events"))} of ${fmt(sum("expected_events"))} events received`];
+        for (const [key, label] of EVENT_COUNTS.slice(3)) if (sum(key)) parts.push(`<b>${fmt(sum(key))} ${label}</b>`);
+        if (config.metrics.throughput_ratio) parts.push(`throughput ratio ${show(item, "throughput_ratio", config.metrics.throughput_ratio.value)}`);
+        const all = EVENT_COUNTS.filter(([key]) => metrics[0][key] !== undefined).map(([key, label]) => `${fmt(sum(key))} ${label}`);
+        return `<div class="sub-title">Events</div><p class="num">${parts.join(" · ")}</p>
+          <details class="plain"><summary>All event counts</summary><p class="muted num">${all.join(" · ")}</p></details>`;
+      }
+      function paramPlain(name, value) {
+        if (scriptLabel(value)) return `${humanize(name)} ${scriptLabel(value)}`;
+        if (/_ms$/.test(name) && typeof value === "number") return `${humanize(name.replace(/_ms$/, ""))} ${fmt(value)} ms`;
+        return `${humanize(name)} ${paramValue(value)}`;
+      }
+      function configSection(item, config) {
+        const big = (label, value, tip) => `<div ${tip ? `data-tip="${esc(tip)}"` : ""}><div class="label">${label}</div><div class="value">${value}</div></div>`;
+        const events = config.runs.some((run) => run.metrics.expected_events !== undefined);
+        // Latency tests lead with percentiles of all events; other metrics show their mean and range.
+        const values = item.metricKeys
+          .filter((key) => !(events && isEventMetric(key)))
+          .map((key) => {
+            const metric = config.metrics[key], info = metricInfo(key), tip = item.docs.metrics[key];
+            if (!metric) return "";
+            if (key === LATENCY && config.latency) return ""; // shown as chart and box plot below
+            return metric.stats
+              ? `<div ${tip ? `data-tip="${esc(tip)}"` : ""}><div class="label">${esc(info.label)} · mean</div><div class="value">${show(item, key, metric.value)}</div>
+                   <div class="label num">min ${show(item, key, metric.min, false)} · max ${show(item, key, metric.max, false)} · ${plural(metric.count, "sample")}</div></div>`
+              : big(esc(info.label), show(item, key, metric.value), tip);
+          })
+          .join("");
+        const scripts = Object.entries(config.parameters)
+          .map(([name, value]) => [name, value && typeof value === "object" ? value.script : value])
+          .filter(([, value]) => typeof value === "string" && value.length > 0);
+        const issues = problems(config);
+        const facts = [
+          ...Object.entries(config.parameters).map(([name, value]) => `<span data-tip="${esc((item.docs.parameter_descriptions || {})[name] || "")}">${esc(paramPlain(name, value))}</span>`),
+          plural(config.runs.length, "repetition"),
+          `${duration(config.duration)} incl. setup and cleanup`,
+        ];
+        return `<details class="config" id="config-${config.index}" ${passed(config.status) ? "" : "open"}>
+          <summary>${CHEVRON}<span class="name">${esc(config.label)}</span>
+            ${item.primary && config.metrics[item.primary] ? `<span class="muted num">${esc(metricInfo(item.primary).label)} ${show(item, item.primary, config.metrics[item.primary].value)}</span>` : ""}
+            ${statusBadge(config.status)}</summary>
+          <div class="body">
+            <p class="muted">${facts.join(" · ")}</p>
+            ${scripts.map(([name, value]) => `<details class="plain"><summary>${scripts.length > 1 ? esc(humanize(name)) + " source" : "Source"}</summary><pre><code>${esc(value)}</code></pre></details>`).join("")}
+            ${issues.length ? `<div class="errors">${issues.map((issue) => `<div>${esc(issue)}</div>`).join("")}</div>` : ""}
+            ${values ? `<div class="sub-title">Results</div><div class="stats">${values}</div>` : ""}
+            ${eventLine(item, config)}
+            ${
+              config.latency
+                ? `<div class="sub-title">Latency during the test</div>
+                   <p class="label">Each dot = one event${config.points.length < config.latency.count ? ` (${fmt(config.points.length)} of ${fmt(config.latency.count)} drawn)` : ""}. The box plot on the right shows their distribution: line = median, box = middle half, whiskers = p5 – p95; hover it for the values. The y-axis is the same for every configuration of this test; slower events are pinned to its top edge.</p>
+                   <div class="chart" data-chart="${config.index}"></div>`
+                : ""
+            }
+            ${queryBreakdown(config.runs, config.index)}
+          </div></details>`;
+      }
+      function results(item) {
+        return `<section>${summary(item)}</section>
+          <section><h2>Configurations</h2><div style="margin-top:10px">${item.configs.map((config) => configSection(item, config)).join("")}</div></section>`;
+      }
+
+      // ---------- detail: phases ----------
+      function phaseInsight(item, rows) {
+        const sums = PHASES.map((_, i) => rows.reduce((sum, row) => sum + (row.values[i] || 0), 0));
+        const all = sums.reduce((a, b) => a + b, 0) || 1;
+        const top = sums.indexOf(Math.max(...sums));
+        let text = `${humanize(PHASES[top])} takes ${Math.round((sums[top] / all) * 100)}% of the total test time.`;
+        const names = Object.keys(item.configs[0].parameters).filter((name) => {
+          const values = new Set(item.configs.map((c) => c.parameters[name]));
+          return values.size > 1 && [...values].every((value) => typeof value === "number");
+        });
+        if (names.length) {
+          const name = names[0];
+          const values = item.configs.map((c) => c.parameters[name]);
+          const low = Math.min(...values), high = Math.max(...values);
+          const mean = (value, i) => {
+            const picked = item.configs.filter((c) => c.parameters[name] === value).flatMap((c) => c.runs.map((run) => (run.phase_durations_ms || {})[PHASES[i]] || 0));
+            return picked.reduce((a, b) => a + b, 0) / (picked.length || 1);
+          };
+          const growth = PHASES.map((_, i) => ({ i, ratio: mean(low, i) > 100 ? mean(high, i) / mean(low, i) : 0 })).sort((a, b) => b.ratio - a.ratio)[0];
+          if (growth.ratio >= 1.5)
+            text += ` ${humanize(PHASES[growth.i])} grows about ${fixed(growth.ratio, growth.ratio < 10 ? 1 : 0)}× from ${paramLabel(name).toLowerCase()} ${fmt(low)} to ${fmt(high)}.`;
+        }
+        return text;
+      }
+      function phases(item) {
+        const rows = item.configs.flatMap((config) =>
+          config.runs.map((run) => ({
+            label: config.label + (config.runs.length > 1 ? ` · repetition ${run.scenario.repetition}` : ""),
+            values: PHASES.map((phase) => (run.phase_durations_ms || {})[phase]),
+            total: phaseTotal(run),
+          }))
+        );
+        // Phases last seconds to hours: show a clock (m:ss, h:mm:ss) and label the axis in minutes past two minutes.
+        const longest = Math.max(1, ...rows.map((row) => row.total)) / 1000;
+        const unit = longest >= 120 ? 60 : 1;
+        const step = niceStep(longest / unit, 6) * unit;
+        const max = Math.ceil(longest / step) * step * 1000;
+        const seconds = (ms) => (ms === undefined || ms === null ? "–" : clock(ms));
+        const tick = (v) => (unit === 60 ? `${fmt(v / 60)} min` : `${fmt(v)} s`);
+        const ticks = [];
+        for (let v = 0; v <= max / 1000 + step / 2; v += step) ticks.push(v);
+        return `<section><h2>Phase durations</h2>
+          <p style="margin-top:6px">${esc(phaseInsight(item, rows))}</p>
+          <p class="label">Wall-clock time per configuration, including waits and warmup. These are not request latencies.</p>
+          <div class="legend" style="margin-top:14px">${PHASES.map((phase) => `<span class="item"><i style="background:var(--phase-${phase})"></i>${humanize(phase)}</span>`).join("")}
+            <button class="info" aria-label="What the phases mean" data-tip="${esc(PHASE_HELP)}">i</button></div>
+          <div class="phases">${rows
+            .map(
+              (row) => `<div class="muted">${esc(row.label)}</div>
+              <div class="stack">${row.values
+                .map((value, i) => (value ? `<i style="width:${((value / max) * 100).toFixed(2)}%;background:var(--phase-${PHASES[i]})" data-tip="${esc(row.label)}\n${humanize(PHASES[i])}: ${seconds(value)}"></i>` : ""))
+                .join("")}</div>
+              <div class="num" style="text-align:right">${seconds(row.total)}</div>`
+            )
+            .join("")}
+            <div></div><div class="axis">${ticks.map((v) => `<span>${tick(v)}</span>`).join("")}</div><div></div></div>
+          <details class="plain" style="margin-top:14px"><summary>Show numbers</summary>
+            <div class="scroll"><table><thead><tr><th class="left">Configuration</th>${PHASES.map((phase) => `<th>${humanize(phase)}</th>`).join("")}<th>Total</th></tr></thead>
+            <tbody>${rows.map((row) => `<tr><td class="left">${esc(row.label)}</td>${row.values.map((value) => `<td>${seconds(value)}</td>`).join("")}<td>${seconds(row.total)}</td></tr>`).join("")}</tbody></table></div>
+          </details></section>`;
+      }
+
+      // ---------- detail: about ----------
+      function markdown(text) {
+        const inline = (line) =>
+          esc(line).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+        const out = [];
+        let list = false;
+        for (const line of text.split("\n")) {
+          const heading = line.match(/^(#{1,4})\s+(.*)$/);
+          const bullet = line.match(/^\s*[-*]\s+(.*)$/);
+          if (list && !bullet) { out.push("</ul>"); list = false; }
+          if (heading) out.push(`<h2>${inline(heading[2])}</h2>`);
+          else if (bullet) { if (!list) { out.push("<ul>"); list = true; } out.push(`<li>${inline(bullet[1])}</li>`); }
+          else if (line.trim()) out.push(`<p>${inline(line)}</p>`);
+        }
+        if (list) out.push("</ul>");
+        return out.join("");
+      }
+      function about(item) {
+        const defs = (title, entries, name) =>
+          Object.keys(entries || {}).length
+            ? `<h2>${title}</h2><dl class="defs">${Object.entries(entries)
+                .map(([key, text]) => `<dt>${esc(name(key))}<div><code>${esc(key)}</code></div></dt><dd>${esc(text)}</dd>`)
+                .join("")}</dl>`
+            : "";
+        // README sections: parameters and metrics come from the saved documentation, code notes go last.
+        const parts = (item.readme || "").split(/^## /m);
+        const intro = parts[0].split(/\n{2,}/).map((p) => p.trim()).filter((p) => p && !p.startsWith("# "));
+        const sections = parts.slice(1).map((part) => ({ title: part.split("\n")[0].trim(), body: part.slice(part.indexOf("\n") + 1) }));
+        const skip = ["Parameters", "Metrics", "Code layout"];
+        const code = sections.find((section) => section.title === "Code layout");
+        return `<section class="prose"><p>${esc(intro[0] || item.docs.description || "No description was saved with this result.")}</p>
+          ${defs("Parameters", item.docs.parameter_descriptions, paramLabel)}
+          ${defs("Metrics", item.docs.metrics, (key) => metricInfo(key).label)}
+          ${sections.filter((section) => !skip.includes(section.title)).map((section) => `<h2>${esc(section.title)}</h2>${markdown(section.body)}`).join("")}
+          <div class="muted"><h2>For developers</h2><p>Case type <code>${esc(item.type)}</code></p>
+            ${intro.slice(1).map((p) => markdown(p)).join("")}${code ? markdown(code.body) : ""}</div></section>`;
+      }
+      function detail(item, tab) {
+        const tabs = [["results", "Results"], ["phases", "Test phases"], ["about", "About"]];
+        return `
+          <a class="back" href="#/">← All tests</a>
+          <div class="head" style="margin-top:8px"><div><h1>${esc(item.title)}</h1><p class="muted">${esc(item.docs.description || "")}</p></div>${statusBadge(item.status)}</div>
+          <p class="label" style="margin-top:8px">${[plural(item.configs.length, "configuration"), plural(item.repetitions, "repetition") + (item.configs.length > 1 ? " each" : ""), duration(item.duration) + " total", item.product].filter(Boolean).map(esc).join(" · ")}</p>
+          <nav class="tabs" aria-label="Test sections">${tabs.map(([id, label]) => `<a href="${caseLink(item, id)}" ${tab === id ? 'aria-current="page"' : ""}>${label}</a>`).join("")}</nav>
+          ${tab === "about" ? about(item) : tab === "phases" ? phases(item) : results(item)}`;
+      }
+
+      // ---------- charts ----------
+      function frame(host, xMax, yMax, height = 240, right = 12) {
+        const width = Math.max(host.clientWidth, 320);
+        const m = { left: 44, right, top: 26, bottom: 30 };
+        const x = (t) => m.left + (t / (xMax || 1)) * (width - m.left - m.right);
+        const y = (v) => height - m.bottom - (Math.min(v, yMax) / yMax) * (height - m.top - m.bottom);
+        let axes = "";
+        const yStep = niceStep(yMax);
+        for (let v = 0; v <= yMax + yStep / 2; v += yStep)
+          axes += `<line x1="${m.left}" x2="${width - m.right}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${m.left - 8}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`;
+        const xStep = niceStep(xMax, 7);
+        for (let v = 0; v <= xMax; v += xStep) axes += `<text x="${x(v)}" y="${height - 8}" text-anchor="middle">${fmt(v)} s</text>`;
+        axes += `<text x="${m.left - 8}" y="10" text-anchor="end">ms</text>`;
+        return { width, height, m, x, y, axes };
+      }
+      function drawLatency(host, item, config) {
+        const points = config.points, l = config.latency;
+        const f = frame(host, item.seconds, item.yShared, 320, 120);
+        const edge = f.width - f.m.right, bx = edge + 28, bw = 30;
+        const dot = ([t, v]) =>
+          v > item.yShared
+            ? `<path d="M${(f.x(t / 1000) - 4).toFixed(1)},${f.m.top + 6}h8l-4,-7z" fill="var(--neutral-mark)"/>`
+            : `<circle cx="${f.x(t / 1000).toFixed(1)}" cy="${f.y(v).toFixed(1)}" r="2.5"/>`;
+        const reference = (label, value) =>
+          `<line x1="${f.m.left}" x2="${bx + bw}" y1="${f.y(value)}" y2="${f.y(value)}" stroke="var(--text-2)" stroke-dasharray="4 4"/>
+           <text x="${bx + bw + 8}" y="${f.y(value) + 4}">${label}</text>`;
+        // Box plot of all events on the chart's own y-axis.
+        const boxPlot = `<line x1="${bx + bw / 2}" x2="${bx + bw / 2}" y1="${f.y(l.p95)}" y2="${f.y(l.p5)}" stroke="var(--neutral-mark)" stroke-width="2"/>
+          <line x1="${bx + 8}" x2="${bx + bw - 8}" y1="${f.y(l.p95)}" y2="${f.y(l.p95)}" stroke="var(--neutral-mark)" stroke-width="2"/>
+          <line x1="${bx + 8}" x2="${bx + bw - 8}" y1="${f.y(l.p5)}" y2="${f.y(l.p5)}" stroke="var(--neutral-mark)" stroke-width="2"/>
+          <rect x="${bx}" y="${f.y(l.p75)}" width="${bw}" height="${Math.max(2, f.y(l.p25) - f.y(l.p75))}" rx="2" fill="var(--accent-soft)"/>
+          <line x1="${bx}" x2="${bx + bw}" y1="${f.y(l.p50)}" y2="${f.y(l.p50)}" stroke="var(--accent)" stroke-width="3"/>`;
+        const ms = (value) => fixed(value, 2) + " ms";
+        const boxText = [
+          `<b>All ${fmt(l.count)} events</b>`,
+          `median (p50) ${ms(l.p50)}`,
+          `middle half ${ms(l.p25)} – ${ms(l.p75)}`,
+          `p5 ${ms(l.p5)} · p95 ${ms(l.p95)}`,
+          `p99 ${ms(l.p99)}`,
+          `slowest ${ms(l.max)} · fastest ${ms(l.min)}`,
+          `mean ${ms(l.mean)}`,
+        ].join("<br>");
+        host.innerHTML = `<svg viewBox="0 0 ${f.width} ${f.height}" height="${f.height}" role="img" aria-label="Latency of each event over test time for ${esc(config.label)}, with a box plot of all events">${f.axes}
+          <g fill="var(--accent)" fill-opacity="0.5">${points.map(dot).join("")}</g>
+          ${reference("p50", l.p50)}${l.p95 <= item.yShared ? reference("p95", l.p95) : ""}${boxPlot}
+          <circle class="cross" r="5" fill="var(--accent)" stroke="var(--bg)" stroke-width="2" visibility="hidden"/></svg><div class="tip"></div>`;
+        const tip = host.querySelector(".tip"), mark = host.querySelector(".cross");
+        host.onmousemove = (event) => {
+          const box = host.getBoundingClientRect();
+          const px = ((event.clientX - box.left) / box.width) * f.width, py = ((event.clientY - box.top) / box.height) * f.height;
+          if (px > edge + 10) {
+            mark.setAttribute("visibility", "hidden");
+            tip.innerHTML = boxText;
+            tip.style.display = "block";
+            tip.style.left = (bx / f.width) * box.width - tip.offsetWidth - 12 + "px";
+            tip.style.top = "30px";
+            return;
+          }
+          let best = null, distance = 400;
+          for (const point of points) {
+            const d = (f.x(point[0] / 1000) - px) ** 2 + (f.y(point[1]) - py) ** 2;
+            if (d < distance) { distance = d; best = point; }
+          }
+          if (!best) { host.onmouseleave(); return; }
+          const x = f.x(best[0] / 1000), y = f.y(best[1]);
+          mark.setAttribute("cx", x); mark.setAttribute("cy", y); mark.setAttribute("visibility", "visible");
+          tip.innerHTML = `<b>${fixed(best[1], 2)} ms</b><br>sent at ${fixed(best[0] / 1000, 2)} s`;
+          tip.style.display = "block";
+          const left = (x / f.width) * box.width;
+          tip.style.left = (left > box.width / 2 ? left - tip.offsetWidth - 12 : left + 12) + "px";
+          tip.style.top = Math.max(0, (y / f.height) * box.height - 20) + "px";
+        };
+        host.onmouseleave = () => { tip.style.display = "none"; mark.setAttribute("visibility", "hidden"); };
+      }
+      function drawCharts() {
+        if (!current) return;
+        for (const host of document.querySelectorAll("[data-chart]"))
+          if (host.clientWidth) drawLatency(host, current, current.configs[+host.dataset.chart]);
+      }
+
+      // ---------- opening a result directory without a generated report ----------
+      function picker(note) {
+        app.innerHTML = `<div class="picker"><h1>Performance report</h1>
+          <p class="muted" style="margin:10px 0 20px">Choose one result directory (the folder containing <code>manifest.json</code>).</p>
+          <label class="button">Open result directory<input id="folder" type="file" webkitdirectory multiple hidden></label>
+          ${note ? `<p style="margin-top:16px"><span class="icon bad">✕</span> ${esc(note)}</p>` : ""}</div>`;
+        document.getElementById("folder").onchange = async (event) => {
+          let manifest = null;
+          const scenarios = [];
+          for (const file of event.target.files) {
+            if (!file.name.endsWith(".json")) continue;
+            try {
+              const content = JSON.parse(await file.text());
+              if (file.name === "manifest.json") manifest = content;
+              else if (content.scenario && content.metrics) scenarios.push(content);
+            } catch (error) { /* partial or unrelated files are ignored */ }
+          }
+          if (!scenarios.length) return picker("No scenario results were found in that directory.");
+          const run = manifest || { run_id: scenarios[0].run_id, environment: scenarios[0].environment, timing: scenarios[0].timing };
+          const order = new Map((run.planned_scenarios || []).map((s, i) => [s.id, i]));
+          scenarios.sort((a, b) => (order.get(a.scenario.id) ?? 1e9) - (order.get(b.scenario.id) ?? 1e9) || a.scenario.id.localeCompare(b.scenario.id));
+          for (const scenario of scenarios)
+            if (scenario.metrics.event_latencies)
+              scenario.metrics.event_latencies = scenario.metrics.event_latencies.map((e) => [e.elapsed_ms, e.latency_ms]);
+          DATA = { run: { ...run, planned_scenarios: (run.planned_scenarios || scenarios).length }, scenarios, readmes: {} };
+          route();
+        };
+      }
+
+      // ---------- routing and interaction ----------
+      function openConfig(index) {
+        const section = document.getElementById("config-" + index);
+        if (!section) return;
+        section.open = true;
+        section.scrollIntoView({ block: "start" });
+      }
+      function route(keepScroll) {
+        if (!DATA) return picker();
+        const cases = buildCases();
+        const match = location.hash.match(/^#\/case\/([^/]+)(?:\/(results|about|phases))?(?:\/(\d+))?$/);
+        const item = match && cases.find((c) => c.type === decodeURIComponent(match[1]));
+        if (!current || !item || current.type !== item.type) matrixMetric = null;
+        current = item || null;
+        document.title = (item ? item.title + " · " : "") + "Run report " + (DATA.run.run_id || "");
+        app.innerHTML = item ? detail(item, match[2] || "results") : overview(cases);
+        if (keepScroll !== true) window.scrollTo(0, 0);
+        if (item && match[3] !== undefined) openConfig(match[3]);
+        drawCharts();
+      }
+      function activate(target) {
+        const query = target.closest("[data-query-toggle]");
+        if (query) {
+          const expanded = query.getAttribute("aria-expanded") !== "true";
+          query.setAttribute("aria-expanded", String(expanded));
+          document.getElementById(query.getAttribute("aria-controls")).hidden = !expanded;
+          return;
+        }
+        const metric = target.closest("[data-metric]");
+        if (metric) {
+          matrixMetric = metric.dataset.metric;
+          route(true);
+          return;
+        }
+        if (target.closest("a, button, summary, input, label")) return;
+        const goto = target.closest("[data-goto]");
+        const link = target.closest("[data-href]");
+        if (goto) openConfig(goto.dataset.goto);
+        else if (link) location.hash = link.dataset.href;
+      }
+      document.addEventListener("click", (event) => activate(event.target));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && event.target.matches("[data-href], [data-goto]")) activate(event.target);
+      });
+      document.addEventListener("toggle", (event) => { if (event.target.open) drawCharts(); }, true);
+      const tip = document.getElementById("tip");
+      function showTip(target, x, y) {
+        if (!target || !target.dataset.tip) { tip.style.display = "none"; return; }
+        tip.innerHTML = esc(target.dataset.tip).replace(/\n/g, "<br>");
+        tip.style.whiteSpace = target.dataset.tip.length > 80 ? "normal" : "nowrap";
+        tip.style.display = "block";
+        tip.style.left = Math.max(8, Math.min(x + 14, window.innerWidth - tip.offsetWidth - 8)) + "px";
+        tip.style.top = y + 16 + "px";
+      }
+      document.addEventListener("mousemove", (event) => showTip(event.target.closest && event.target.closest("[data-tip]"), event.clientX, event.clientY));
+      document.addEventListener("focusin", (event) => {
+        const target = event.target.closest("[data-tip]");
+        if (target) { const box = target.getBoundingClientRect(); showTip(target, box.left, box.bottom - 8); }
+      });
+      document.addEventListener("focusout", () => { tip.style.display = "none"; });
+      window.addEventListener("hashchange", () => route());
+      window.addEventListener("resize", drawCharts);
+      route();
+    </script>
+  </body>
+</html>

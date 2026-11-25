@@ -1,0 +1,119 @@
+{
+  "target": "streampipes",
+  "output_directory": "../results/framework",
+  "execution": {
+    "repetitions": 1,
+    "timing": {
+      "warmup_seconds": 20,
+      "duration_seconds": 120,
+      "readiness_timeout_seconds": 120,
+      "drain_timeout_seconds": 120,
+      "request_timeout_seconds": 120
+    }
+  },
+  "cases": [
+    {
+      "id": "adapter-latency",
+      "type": "streampipes.adapter_latency",
+      "parameters": {
+        "number_of_adapters": [
+          10
+        ],
+        "events_per_resource": [
+          600
+        ],
+        "publish_interval_ms": [
+          100
+        ],
+        "transformation": [
+          {
+            "label": "Pass-through",
+            "script": "function transform(event, out, ctx) { out.collect(event); }"
+          },
+          {
+            "label": "Arithmetic conversion",
+            "script": "function transform(event, out, ctx) {\n  const field = event.value !== undefined ? 'value' : 'mass_flow';\n  event[field] = event[field] * 1.8 + 32.0;\n  out.collect(event);\n}"
+          },
+          {
+            "label": "CPU work (1000 iterations)",
+            "script": "function transform(event, out, ctx) {\n  const field = event.value !== undefined ? 'value' : 'mass_flow';\n  let value = event[field];\n  for (let i = 0; i < 1000; i++) {\n    value = Math.sin(value) + Math.sqrt(Math.abs(value) + 1.0);\n  }\n  event[field] = value;\n  out.collect(event);\n}"
+          }
+        ]
+      }
+    },
+    {
+      "id": "adapter-ingestion",
+      "type": "streampipes.adapter_ingestion",
+      "parameters": {
+        "number_of_adapters": [
+          10
+        ],
+        "wait_time_ms": [
+          100
+        ],
+        "transformation": [
+          {
+            "label": "Pass-through",
+            "script": "function transform(event, out, ctx) { out.collect(event); }"
+          },
+          {
+            "label": "Arithmetic conversion",
+            "script": "function transform(event, out, ctx) {\n  const field = event.value !== undefined ? 'value' : 'mass_flow';\n  event[field] = event[field] * 1.8 + 32.0;\n  out.collect(event);\n}"
+          },
+          {
+            "label": "CPU work (1000 iterations)",
+            "script": "function transform(event, out, ctx) {\n  const field = event.value !== undefined ? 'value' : 'mass_flow';\n  let value = event[field];\n  for (let i = 0; i < 1000; i++) {\n    value = Math.sin(value) + Math.sqrt(Math.abs(value) + 1.0);\n  }\n  event[field] = value;\n  out.collect(event);\n}"
+          }
+        ]
+      }
+    },
+    {
+      "id": "adapter-start-stop",
+      "type": "streampipes.adapter_start_stop",
+      "parameters": {
+        "number_of_adapters": [
+          10
+        ],
+        "wait_time_ms": [
+          1000
+        ],
+        "cycles": [
+          5
+        ]
+      }
+    },
+    {
+      "id": "pipeline-start-stop",
+      "type": "streampipes.pipeline_start_stop",
+      "parameters": {
+        "number_of_pipelines": [
+          10
+        ],
+        "cycles": [
+          5
+        ],
+        "wait_time_ms": [
+          1000
+        ]
+      }
+    },
+    {
+      "id": "dataset-query",
+      "type": "streampipes.dataset_query",
+      "parameters": {
+        "number_of_datasets": [
+          1
+        ],
+        "rows_per_dataset": [
+          1000000
+        ],
+        "parallel_operations": [
+          1
+        ],
+        "sensor_count": [
+          10
+        ]
+      }
+    }
+  ]
+}
