@@ -83,8 +83,26 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
     resourceDeletionManager.delete(resourceManager.getDb(), resourceId);
   }
 
+  /**
+   * Returns the element ids of the charts placed on the given dashboard.
+   *
+   * <p>Charts are referenced by {@link DashboardItem#getDataViewElementId()}; {@link DashboardItem#getId()} is
+   * the id of the dashboard tile itself. Dashboards created before 0.99 stored the chart id in {@code id} and
+   * had no {@code dataViewElementId}. {@code UniqueDashboardIdMigration} rewrites them on core startup, but a
+   * legacy export package imported into a running instance keeps that layout until the next restart, so
+   * {@code id} is used as a fallback for items without {@code dataViewElementId}.
+   */
   public List<String> getCharts(String resourceId) {
     var document = findDocument(resourceId);
-    return document.getWidgets().stream().map(DashboardItem::getId).collect(Collectors.toList());
+    return document.getWidgets()
+        .stream()
+        .map(this::getChartId)
+        .filter(Objects::nonNull)
+        .distinct()
+        .collect(Collectors.toList());
+  }
+
+  private String getChartId(DashboardItem item) {
+    return item.getDataViewElementId() != null ? item.getDataViewElementId() : item.getId();
   }
 }
