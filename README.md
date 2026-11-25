@@ -117,13 +117,21 @@ The fastest way to get a full installation with extensions is to use one of the 
 - [StreamPipes k8s](installer/k8s) for cluster-based operation
 
 For most first-time users, `installer/compose` is the right starting point.
+With Docker running and Compose v2 installed, start it on Linux or macOS with:
 
 ```bash
 cd installer/compose
-docker-compose up -d
+./start
 ```
 
-After the services are up, open `http://localhost` to complete the setup in the browser.
+On Windows, run `.\start.cmd` from `installer/compose` instead. The launcher
+creates `.env` with generated credentials if the file is absent and reuses it
+on subsequent starts.
+
+After the services are up, open `http://localhost` and sign in with
+`admin@streampipes.apache.org` and the initial password in `SP_INITIAL_ADMIN_PASSWORD`
+in `.env`. See [the Compose installation guide](installer/compose/README.md) for
+configuration and existing-deployment instructions.
 
 ### Build StreamPipes as a developer
 
@@ -158,13 +166,19 @@ npm install
 npm run build
 ```
 
-From the repository root, you can start the full stack with:
+For release validation, run these commands from the repository root after
+building the backend and UI:
 
 ```bash
-docker-compose up --build -d
+python3 installer/compose/configure
+docker compose up --build -d
 ```
 
-This will start a development stack with no volumes! Choose the installation options from the `installer` page for production setups.
+This step requires Python 3; on Windows, use `python` instead of `python3`.
+The helper saves credentials in the repository-root `.env`; this stack uses
+`SP_SERVICE_SECRET` for backend and extension authentication. Keep this file
+for subsequent starts. The stack stores data in named volumes. For local
+development, use the dev container setup above.
 
 For backend changes, prefer targeted module validation first, for example:
 
