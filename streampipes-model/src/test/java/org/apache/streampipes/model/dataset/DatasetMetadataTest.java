@@ -40,11 +40,10 @@ public class DatasetMetadataTest {
 
   @Test
   public void setTimestampFieldAssertionError() {
-    try {
-      datasetMetadata.setTimestampField(TIMESTAMP_FIELD);
-    } catch (AssertionError assertionError) {
-      Assertions.assertEquals(DatasetMetadata.ASSERTION_ERROR_MESSAGE, assertionError.getMessage());
-    }
+    var assertionError = Assertions.assertThrows(AssertionError.class,
+        () -> datasetMetadata.setTimestampField(TIMESTAMP_FIELD));
+
+    Assertions.assertEquals(DatasetMetadata.ASSERTION_ERROR_MESSAGE, assertionError.getMessage());
   }
 
   @Test
