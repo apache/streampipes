@@ -35,11 +35,14 @@ import java.nio.charset.MalformedInputException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class CsvFileReader {
@@ -52,15 +55,39 @@ public class CsvFileReader {
       StandardCharsets.ISO_8859_1
   );
 
+  private final Predicate<Map<String, Object>> includeRecord;
+
+  public CsvFileReader() {
+    this(record -> true);
+  }
+
+  public CsvFileReader(Predicate<Map<String, Object>> includeRecord) {
+    this.includeRecord = includeRecord;
+  }
+
+  public Optional<Map<String, Object>> firstRecord(Path path, CsvParserSettings settings) throws IOException {
+    var sample = new ArrayList<Map<String, Object>>(1);
+    readFrom(path, settings, 0, (index, event) -> sample.add(event), true);
+    return sample.stream().findFirst();
+  }
+
   public FileWatchReadResult readFrom(Path path,
                                       CsvParserSettings parserSettings,
                                       long startRecordIndex,
                                       BiConsumer<Long, Map<String, Object>> eventConsumer) throws IOException {
+    return readFrom(path, parserSettings, startRecordIndex, eventConsumer, false);
+  }
+
+  private FileWatchReadResult readFrom(Path path,
+                                       CsvParserSettings parserSettings,
+                                       long startRecordIndex,
+                                       BiConsumer<Long, Map<String, Object>> eventConsumer,
+                                       boolean firstOnly) throws IOException {
     IOException lastException = null;
     for (Charset charset : FALLBACK_CHARSETS) {
       try {
         LOG.debug("Trying to read CSV file '{}' with charset '{}'.", path.getFileName(), charset.name());
-        return readFrom(path, parserSettings, startRecordIndex, eventConsumer, charset);
+        return readFrom(path, parserSettings, startRecordIndex, eventConsumer, charset, firstOnly);
       } catch (MalformedInputException e) {
         LOG.debug("Could not decode CSV file '{}' with charset '{}': {}.",
             path.getFileName(), charset.name(), e.getMessage());
@@ -75,7 +102,8 @@ public class CsvFileReader {
                                        CsvParserSettings parserSettings,
                                        long startRecordIndex,
                                        BiConsumer<Long, Map<String, Object>> eventConsumer,
-                                       Charset charset) throws IOException {
+                                       Charset charset,
+                                       boolean firstOnly) throws IOException {
     try (var bufferedReader = Files.newBufferedReader(path, charset);
          var csvReader = newCsvReader(bufferedReader, parserSettings)) {
       LOG.debug("Reading CSV file '{}' using charset '{}'.", path.getFileName(), charset.name());
@@ -86,6 +114,7 @@ public class CsvFileReader {
       long currentRecordIndex = -1L;
       long lastProcessedRecord = startRecordIndex - 1;
 
+      int emittedEvents = 0;
       while ((row = readNext(records, path)) != null) {
         currentRecordIndex++;
 
@@ -99,13 +128,16 @@ public class CsvFileReader {
           continue;
         }
 
-        eventConsumer.accept(currentRecordIndex, toMap(header, row));
         lastProcessedRecord = currentRecordIndex;
+        var record = toMap(header, row);
+        if (includeRecord.test(record)) {
+          eventConsumer.accept(currentRecordIndex, record);
+          emittedEvents++;
+          if (firstOnly) {
+            break;
+          }
+        }
       }
-
-      int emittedEvents = lastProcessedRecord < startRecordIndex
-          ? 0
-          : (int) (lastProcessedRecord - startRecordIndex + 1);
 
       LOG.debug("Completed reading CSV file '{}'. Emitted {} records starting from record {}.",
           path.getFileName(), emittedEvents, startRecordIndex);

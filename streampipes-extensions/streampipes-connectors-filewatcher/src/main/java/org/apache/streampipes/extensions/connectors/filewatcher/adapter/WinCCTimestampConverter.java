@@ -24,14 +24,17 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public final class WinCCTimestampConverter {
 
-  private static final BigDecimal EXCEL_UNIX_EPOCH_OFFSET_DAYS = BigDecimal.valueOf(25569L);
+  private static final LocalDateTime SERIAL_EPOCH = LocalDateTime.of(1899, 12, 30, 0, 0);
   private static final BigDecimal MILLIS_PER_DAY = BigDecimal.valueOf(86_400_000L);
   private static final BigDecimal SCALED_DAY_DIVISOR = BigDecimal.valueOf(1_000_000L);
   private static final List<DateTimeFormatter> TIME_STRING_FORMATS = List.of(
+      DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss"),
+      DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm"),
       DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss"),
       DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")
   );
@@ -49,11 +52,12 @@ public final class WinCCTimestampConverter {
                                            ZoneId zoneId) {
     BigDecimal serialDays = normalizeSerialDays(winccTimestamp);
     if (serialDays != null) {
-      return serialDays
-          .subtract(EXCEL_UNIX_EPOCH_OFFSET_DAYS)
-          .multiply(MILLIS_PER_DAY)
-          .setScale(0, RoundingMode.HALF_UP)
-          .longValue();
+      try {
+        long millis = serialDays.multiply(MILLIS_PER_DAY).setScale(0, RoundingMode.HALF_UP).longValueExact();
+        return SERIAL_EPOCH.plus(millis, ChronoUnit.MILLIS).atZone(zoneId).toInstant().toEpochMilli();
+      } catch (ArithmeticException ignored) {
+        // An out-of-range serial timestamp can still have a usable TimeString.
+      }
     }
 
     return parseTimeString(timeString, zoneId);
@@ -65,22 +69,11 @@ public final class WinCCTimestampConverter {
       return null;
     }
 
-    if (isScaledDayValue(rawValue, winccTimestamp)) {
-      return rawValue.divide(SCALED_DAY_DIVISOR, 10, RoundingMode.HALF_UP);
+    if (rawValue.compareTo(SCALED_DAY_DIVISOR) > 0) {
+      return rawValue.divide(SCALED_DAY_DIVISOR);
     }
 
     return rawValue;
-  }
-
-  private static boolean isScaledDayValue(BigDecimal rawValue,
-                                          Object originalValue) {
-    if (originalValue instanceof String stringValue) {
-      if (stringValue.contains(",") || stringValue.contains(".")) {
-        return false;
-      }
-    }
-
-    return rawValue.compareTo(BigDecimal.valueOf(1_000_000L)) > 0;
   }
 
   private static BigDecimal toBigDecimal(Object winccTimestamp) {

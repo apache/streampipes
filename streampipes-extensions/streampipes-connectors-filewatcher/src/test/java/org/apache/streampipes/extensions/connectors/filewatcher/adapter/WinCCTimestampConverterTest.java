@@ -40,6 +40,17 @@ class WinCCTimestampConverterTest {
   }
 
   @Test
+  void shouldReadScaledFractionalAndUnscaledSerialDaysInArchiveTimezone() {
+    var zone = ZoneId.of("Europe/Berlin");
+    long expected = LocalDateTime.of(2026, 6, 29, 9, 6, 45, 817_000_000).atZone(zone).toInstant().toEpochMilli();
+    for (String value : new String[]{"46202379696,956", "46202379696.956", "46202.379696956"}) {
+      assertEquals(expected, WinCCTimestampConverter.toUnixTimestampMillis(value, null, zone));
+    }
+    long wholeSecond = LocalDateTime.of(2026, 6, 29, 9, 6, 46).atZone(zone).toInstant().toEpochMilli();
+    assertEquals(wholeSecond, WinCCTimestampConverter.toUnixTimestampMillis("", "29.06.2026 09:06:46", zone));
+  }
+
+  @Test
   void shouldReturnNullForInvalidInput() {
     assertNull(WinCCTimestampConverter.toUnixTimestampMillis(null, null, ZoneId.of("UTC")));
     assertNull(WinCCTimestampConverter.toUnixTimestampMillis("", "", ZoneId.of("UTC")));

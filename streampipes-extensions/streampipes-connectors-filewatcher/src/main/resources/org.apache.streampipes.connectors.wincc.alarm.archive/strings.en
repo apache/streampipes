@@ -31,4 +31,4 @@ poll-interval-seconds.description=Interval used to scan the alarm archive files 
 inter-event-delay-ms.title=Inter-event delay (ms)
 inter-event-delay-ms.description=Delay between replayed alarm events in milliseconds. Use 0 to disable throttling
 timezone-id.title=Timezone
-timezone-id.description=IANA timezone used when WinCC TimeString must be converted, for example Europe/Berlin
+timezone-id.description=IANA timezone used to convert WinCC local timestamps, for example Europe/Berlin
