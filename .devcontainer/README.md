@@ -45,7 +45,7 @@ configurations or terminal commands, not as prebuilt application images.
 2. Click `New Dev Container`.
 3. Select `.devcontainer/idea/devcontainer.json` as the configuration file.
 
-## IDEA Troubleshooting
+### IDEA Troubleshooting
 
 In IntelliJ IDEA 2025.1 and earlier, the Docker plugin may report
 `client version 1.24 is too old` if your Docker Engine requires a newer API
@@ -54,6 +54,31 @@ to a release newer than 2025.2.
 
 If opening an existing Dev Container does nothing, check `idea.log` for a 404
 indicating that `/.jbdevcontainer/config/JetBrains/host-config.json` is missing.
+
+## Start and Stop
+
+- **Windows**: double-click `scripts/start-streampipes.cmd` or
+  `scripts/stop-streampipes.cmd`.
+- **macOS / Linux**: inside the Dev Container, run
+  `bash .devcontainer/scripts/services.sh start` or `stop`.
+
+The scripts are IDE-agnostic: any terminal inside the container runs them, and
+the Windows launcher finds the container through the Compose project rather
+than through an IDE. Use the VS Code or IDEA run configurations above when you
+need Java breakpoints; processes started from an IDE are not tracked by
+`status`, which reports them as port users instead.
+
+Core, IIoT extensions and the UI start on top of the Compose services. Once the
+command returns, open <http://localhost:8082>.
+
+After changing Java code, stop the applications and rebuild with
+`scripts/start-streampipes-build.cmd` on Windows, or
+`bash .devcontainer/scripts/services.sh start --build` in the container.
+Stopping Core or Extensions also cancels a build that is still running.
+
+`status` reports whether each service is running under the launcher. `start`,
+`stop` and `status` accept `core`, `extensions` or `ui` to target a single
+service; Extensions requires a running Core.
 
 ## Services and Ports
 
