@@ -104,6 +104,7 @@ export class StaticAlternativesComponent
                 alternative.elementId === event.value.elementId;
             this.checkFireCompleted(alternative);
         });
+        this.applyCompletedConfiguration(this.alternativeCompleted());
         this.changeDetectorRef.detectChanges();
     }
 
@@ -129,22 +130,18 @@ export class StaticAlternativesComponent
     }
 
     alternativeCompleted(): boolean {
+        const selected = this.staticProperty.alternatives.find(
+            al => al.selected,
+        );
         return (
-            this.staticProperty.alternatives.find(al => {
-                if (al.selected && al.staticProperty === null) {
-                    return true;
-                } else {
-                    if (al.staticProperty === null) {
-                        return false;
-                    } else {
-                        return this.completedAlternativeConfigurations.find(
-                            c =>
-                                c.staticPropertyInternalName ===
-                                al.staticProperty.internalName,
-                        ).configured;
-                    }
-                }
-            }) !== undefined
+            !!selected &&
+            (!selected.staticProperty ||
+                this.completedAlternativeConfigurations.some(
+                    c =>
+                        c.staticPropertyInternalName ===
+                            selected.staticProperty.internalName &&
+                        c.configured,
+                ))
         );
     }
 }
