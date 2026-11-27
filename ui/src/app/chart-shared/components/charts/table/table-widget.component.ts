@@ -37,7 +37,10 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
-import { TableWidgetModel } from './model/table-widget.model';
+import {
+    isValidHighlightRange,
+    TableWidgetModel,
+} from './model/table-widget.model';
 import {
     DataExplorerField,
     SpQueryResult,
@@ -923,7 +926,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         if (!this.isHighlightedColumn(column)) return {};
         const highlightValue = this.getHighlightStrength(row[column], column);
         if (highlightValue === undefined) return {};
-        const intensity = Math.round(8 + highlightValue * 26);
+        const intensity = Math.round(highlightValue * 100);
         const color = this.getHighlightColor(column);
         return {
             background: `color-mix(in srgb, ${color} ${intensity}%, var(--color-bg-0))`,
@@ -1233,11 +1236,23 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         const bool = this.toBoolean(value);
         if (bool !== undefined) return bool ? 1 : 0;
         const n = this.toNumber(value);
-        const stats = this.numericColumnStats[column];
+        const field = this.getFieldByColumnName(column);
+        const customRange =
+            this.dataExplorerWidget.visualizationConfig
+                .highlightedColumnRanges?.[
+                `${field?.fullDbName}:${field?.sourceIndex}`
+            ];
+        const stats =
+            customRange && isValidHighlightRange(customRange)
+                ? customRange
+                : this.numericColumnStats[column];
         if (n === undefined || !stats) return undefined;
         return stats.max === stats.min
             ? 0.5
-            : (n - stats.min) / (stats.max - stats.min);
+            : Math.max(
+                  0,
+                  Math.min(1, (n - stats.min) / (stats.max - stats.min)),
+              );
     }
 
     private getFieldByColumnName(

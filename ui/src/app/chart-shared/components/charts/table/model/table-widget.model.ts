@@ -27,9 +27,23 @@ export interface TableVisConfig extends DataExplorerVisConfig {
     selectedColumns: DataExplorerField[];
     highlightedColumns?: DataExplorerField[];
     highlightedColumnColors?: Record<string, string>;
+    highlightedColumnRanges?: Record<string, TableHighlightRange>;
     pageSize?: number;
     stickyHeaders?: boolean;
     searchValue: string;
+}
+
+export interface TableHighlightRange {
+    min: number | null;
+    max: number | null;
+}
+
+export function isValidHighlightRange(range: TableHighlightRange): boolean {
+    return (
+        Number.isFinite(range.min) &&
+        Number.isFinite(range.max) &&
+        range.min < range.max
+    );
 }
 
 export interface TableWidgetModel extends DataExplorerWidgetModel {

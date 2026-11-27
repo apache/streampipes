@@ -18,7 +18,12 @@
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
+import {
+    isValidHighlightRange,
+    TableHighlightRange,
+    TableVisConfig,
+    TableWidgetModel,
+} from '../model/table-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
@@ -62,6 +67,9 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
     TableWidgetModel,
     TableVisConfig
 > {
+    private readonly highlightRangeDrafts: Record<string, TableHighlightRange> =
+        {};
+
     readonly pageSizeOptions = [10, 20, 50, 100, 250, 500];
     readonly presetColors = [
         '#39B54A',
@@ -122,9 +130,9 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
     }
 
     setHighlightColor(field: DataExplorerField, color: string): void {
-        this.currentlyConfiguredWidget.visualizationConfig.highlightedColumnColors[
-            this.colorKey(field)
-        ] = color;
+        const config = this.currentlyConfiguredWidget.visualizationConfig;
+        config.highlightedColumnColors ??= {};
+        config.highlightedColumnColors[this.colorKey(field)] = color;
         this.triggerViewRefresh();
     }
 
@@ -170,6 +178,54 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerViewRefresh();
     }
 
+    getHighlightRange(
+        field: DataExplorerField,
+    ): TableHighlightRange | undefined {
+        return (
+            this.highlightRangeDrafts[this.colorKey(field)] ??
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumnRanges?.[this.colorKey(field)]
+        );
+    }
+
+    setCustomHighlightRange(field: DataExplorerField, custom: boolean): void {
+        const config = this.currentlyConfiguredWidget.visualizationConfig;
+        delete this.highlightRangeDrafts[this.colorKey(field)];
+        config.highlightedColumnRanges ??= {};
+        if (custom) {
+            config.highlightedColumnRanges[this.colorKey(field)] = {
+                min: 0,
+                max: 100,
+            };
+        } else {
+            delete config.highlightedColumnRanges[this.colorKey(field)];
+        }
+        this.triggerViewRefresh();
+    }
+
+    setHighlightBound(
+        field: DataExplorerField,
+        bound: 'min' | 'max',
+        value: number | null,
+    ): void {
+        const range = this.getHighlightRange(field);
+        if (range) {
+            const draft = { ...range, [bound]: value };
+            if (isValidHighlightRange(draft)) {
+                this.currentlyConfiguredWidget.visualizationConfig.highlightedColumnRanges[
+                    this.colorKey(field)
+                ] = { ...draft };
+                delete this.highlightRangeDrafts[this.colorKey(field)];
+                this.triggerViewRefresh();
+            } else {
+                // Keep incomplete edits out of the persisted chart configuration.
+                this.highlightRangeDrafts[this.colorKey(field)] = draft;
+            }
+        }
+    }
+
+    isValidHighlightRange = isValidHighlightRange;
+
     protected applyWidgetConfig(config: TableVisConfig): void {
         config.selectedColumns = this.fieldService.getSelectedFields(
             config.selectedColumns,
@@ -186,6 +242,14 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
             () => [],
         );
         config.highlightedColumnColors ??= {};
+        for (const [key, range] of Object.entries(
+            config.highlightedColumnRanges ?? {},
+        )) {
+            if (!isValidHighlightRange(range)) {
+                this.highlightRangeDrafts[key] = { ...range };
+                delete config.highlightedColumnRanges[key];
+            }
+        }
         this.syncHighlightColorMap();
         config.pageSize ??= 20;
         config.stickyHeaders ??= true;
@@ -223,6 +287,17 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
         this.currentlyConfiguredWidget.visualizationConfig.highlightedColumnColors =
             nextColorMap;
+        const config = this.currentlyConfiguredWidget.visualizationConfig;
+        for (const map of [
+            config.highlightedColumnRanges,
+            this.highlightRangeDrafts,
+        ]) {
+            for (const key of Object.keys(map ?? {})) {
+                if (!activeColorKeys.has(key)) {
+                    delete map[key];
+                }
+            }
+        }
     }
 
     private defaultHighlightColor(field: DataExplorerField): string {
