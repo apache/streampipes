@@ -31,7 +31,7 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
@@ -172,7 +172,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
       return ok();
     } catch (IllegalArgumentException e) {
       LOG.warn("Refusing migration request since the service {} is not registered.", serviceId);
-      throw new SpMessageException(org.springframework.http.HttpStatus.NOT_FOUND, e);
+      throw SpProblemException.notFound(e.getMessage());
     }
   }
 

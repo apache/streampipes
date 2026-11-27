@@ -21,11 +21,11 @@ import org.apache.streampipes.audit.events.settings.SettingsAuditRecorder;
 import org.apache.streampipes.mail.MailTester;
 import org.apache.streampipes.model.configuration.EmailConfig;
 import org.apache.streampipes.model.configuration.EmailTemplateConfig;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.ProblemType;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
@@ -121,12 +121,14 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
     } catch (MailException | IllegalArgumentException | IOException e) {
       var mailExceptionDetails = getMailExceptionDetails(e);
       LOG.warn("Unable to send test email. {}", mailExceptionDetails, e);
-      throw new SpMessageException(
+      throw new SpProblemException(
           HttpStatus.BAD_REQUEST,
-          Notifications.error(
-              "Unable to send test email",
-              "Please verify the SMTP server, port, transport strategy, credentials, proxy settings, "
-                  + "and recipient address. Server response: " + mailExceptionDetails));
+          ProblemType.BAD_REQUEST,
+          "Unable to send test email",
+          "Please verify the SMTP server, port, transport strategy, credentials, proxy settings, "
+              + "and recipient address. Server response: " + mailExceptionDetails,
+          null,
+          e);
     }
   }
 

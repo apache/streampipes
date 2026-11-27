@@ -27,7 +27,7 @@ import org.apache.streampipes.resource.management.ChartResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.BadRequestException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +76,7 @@ public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
     if (widget != null) {
       return ok(widget);
     } else {
-      throw new BadRequestException("Could not find widget");
+      throw SpProblemException.notFound("Chart", elementId);
     }
   }
 

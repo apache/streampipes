@@ -42,7 +42,8 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { TimeRangeSelectorMenuComponent } from './time-selector-menu/time-selector-menu.component';
 import { TimeSelectorLabel } from './time-selector.model';
-import { differenceInMilliseconds, isSameDay } from 'date-fns';
+import { isSameDay } from 'date-fns';
+import { shiftTimeRange } from './shift-time-range';
 import { DataExplorerRefreshIntervalSettingsComponent } from './refresh-interval-settings/refresh-interval-settings.component';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -171,13 +172,13 @@ export class TimeRangeSelectorComponent
 
     applyPreviousInterval(): void {
         this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
-        this.changeTimeByInterval((a, b) => a - b);
+        this.changeTimeByInterval(-1);
         this.changeLiveRefreshEnabled();
     }
 
     applyNextInterval(): void {
         this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
-        this.changeTimeByInterval((a, b) => a + b);
+        this.changeTimeByInterval(1);
         this.changeLiveRefreshEnabled();
     }
 
@@ -207,19 +208,14 @@ export class TimeRangeSelectorComponent
         this.reloadData();
     }
 
-    private changeTimeByInterval(func: (a: number, b: number) => number) {
-        const timeDiff =
-            (differenceInMilliseconds(
-                this.timeSettings.startTime,
-                this.timeSettings.endTime,
-            ) -
-                1) *
-            -1;
-        const newStartTime = func(this.timeSettings.startTime, timeDiff);
-        const newEndTime = func(this.timeSettings.endTime, timeDiff);
-
-        this.timeSettings.startTime = newStartTime;
-        this.timeSettings.endTime = newEndTime;
+    private changeTimeByInterval(direction: -1 | 1) {
+        const { startTime, endTime } = shiftTimeRange(
+            this.timeSettings.startTime,
+            this.timeSettings.endTime,
+            direction,
+        );
+        this.timeSettings.startTime = startTime;
+        this.timeSettings.endTime = endTime;
         this.timeSettings.timeSelectionId = TimeSelectionConstants.CUSTOM;
         this.timeSelectorMenu.triggerDisplayUpdate();
         this.createDateString();

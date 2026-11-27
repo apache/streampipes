@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.exceptions.StorageConflictException;
 import org.apache.streampipes.storage.api.exceptions.StorageException;
 import org.apache.streampipes.storage.api.exceptions.StorageNotFoundException;
@@ -28,7 +28,6 @@ import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -119,12 +118,12 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     try {
       return storageCall.get();
     } catch (StorageNotFoundException e) {
-      throw new SpMessageException(HttpStatus.NOT_FOUND, e);
+      throw SpProblemException.notFound(e.getMessage());
     } catch (StorageConflictException e) {
-      throw new SpMessageException(HttpStatus.CONFLICT, e);
+      throw SpProblemException.conflict(e.getMessage());
     } catch (StorageException e) {
       LOG.error("Could not connect to storage", e);
-      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+      throw SpProblemException.internalError(e.getMessage(), e);
     }
   }
 }

@@ -19,13 +19,18 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -40,8 +45,20 @@ class TransformationScriptTemplateResourceTest {
     var template = new ConnectTransformationScriptTemplate();
     template.setElementId("body-id");
 
-    assertThrows(IllegalArgumentException.class, () -> resource.update("path-id", template));
+    var problem = assertThrows(SpProblemException.class, () -> resource.update("path-id", template));
+    assertEquals(HttpStatus.BAD_REQUEST, problem.getStatus());
     verifyNoInteractions(storage);
+  }
+
+  @Test
+  void answersNotFoundForUnknownTemplate() {
+    when(storage.getElementById("missing")).thenReturn(null);
+
+    assertEquals(HttpStatus.NOT_FOUND,
+        assertThrows(SpProblemException.class, () -> resource.findById("missing")).getStatus());
+    assertEquals(HttpStatus.NOT_FOUND,
+        assertThrows(SpProblemException.class, () -> resource.delete("missing")).getStatus());
+    verify(storage, never()).deleteElement(any());
   }
 
   @Test

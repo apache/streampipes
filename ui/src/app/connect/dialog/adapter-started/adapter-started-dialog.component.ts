@@ -32,10 +32,9 @@ import {
     CompactPipelineElement,
     CompactPipelineService,
     DatalakeRestService,
-    ErrorMessage,
     LinkageData,
-    Message,
     Permission,
+    ProblemDetail,
     PipelineOperationStatus,
     PermissionsService,
     PipelineTemplateService,
@@ -129,7 +128,7 @@ export class AdapterStartedDialog implements OnInit {
     @Output() linkageDataEmitter: EventEmitter<LinkageData[]> =
         new EventEmitter<LinkageData[]>();
 
-    templateErrorMessage: ErrorMessage;
+    templateErrorMessage: ProblemDetail;
     adapterUpdatePreflight = false;
     adapterPipelineUpdateInfos: PipelineUpdateInfo[];
     loading = false;
@@ -189,18 +188,12 @@ export class AdapterStartedDialog implements OnInit {
 
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
-            next: async status => {
-                if (status.success) {
-                    try {
-                        await this.persistManageMetadata();
-                        this.finishAdapterUpdate();
-                    } catch (error) {
-                        this.onAssetSaveFailure(error);
-                    }
-                } else {
-                    const errorLogMessage = this.getErrorLogMessage(status);
-
-                    this.onAdapterFailure(errorLogMessage);
+            next: async () => {
+                try {
+                    await this.persistManageMetadata();
+                    this.finishAdapterUpdate();
+                } catch (error) {
+                    this.onAssetSaveFailure(error);
                 }
             },
             error: error => {
@@ -247,41 +240,20 @@ export class AdapterStartedDialog implements OnInit {
         this.loading = true;
         this.adapterService.addAdapter(this.adapter).subscribe(
             status => {
-                if (status.success) {
-                    const adapterElementId = status.notifications[0].title;
-                    this.adapterElementId = adapterElementId;
-                    if (this.saveInDataLake) {
-                        this.startSaveInDataLakePipeline(adapterElementId);
-                    } else {
-                        this.startAdapter(adapterElementId, true, () =>
-                            this.addToAsset(),
-                        );
-                    }
+                const adapterElementId = status.notifications[0].title;
+                this.adapterElementId = adapterElementId;
+                if (this.saveInDataLake) {
+                    this.startSaveInDataLakePipeline(adapterElementId);
                 } else {
-                    const errorMsg: SpLogMessage =
-                        this.getErrorLogMessage(status);
-
-                    this.onAdapterFailure(errorMsg);
+                    this.startAdapter(adapterElementId, true, () =>
+                        this.addToAsset(),
+                    );
                 }
             },
             error => {
                 this.onAdapterFailure(error.error);
             },
         );
-    }
-
-    private getErrorLogMessage(status: Message): SpLogMessage {
-        const notification = status.notifications[0] || {
-            title: 'Unknown Error',
-            description: '',
-        };
-        return {
-            cause: notification.title,
-            detail: '',
-            fullStackTrace: notification.description,
-            level: 'ERROR',
-            title: 'Unknown Error',
-        };
     }
 
     startAdapter(

@@ -38,7 +38,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.rest.shared.exception.SpProblemException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
@@ -331,7 +331,7 @@ public class DatasetResource extends AbstractDatasetResource {
       @RequestParam Map<String, String> queryParams) {
 
     if (!(checkProvidedQueryParams(queryParams))) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error("Wrong query parameters provided"));
+      throw SpProblemException.of(HttpStatus.BAD_REQUEST, "Wrong query parameters provided");
     } else {
       ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
       if (format == null) {
@@ -372,7 +372,7 @@ public class DatasetResource extends AbstractDatasetResource {
       dataWriter.writeData(measureName, queryResult);
     } catch (SpRuntimeException e) {
       LOG.warn("Could not store event", e);
-      return badRequest(Notifications.error("Could not store event for measurement " + measureName, e.getMessage()));
+      throw SpProblemException.badRequest("Could not store event for measurement " + measureName + ": " + e.getMessage(), e);
     }
     return ok();
   }
