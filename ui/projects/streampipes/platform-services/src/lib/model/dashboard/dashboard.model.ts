@@ -19,7 +19,6 @@
 import { TimeSettings } from '../datalake/DateRange';
 import {
     DataExplorerWidgetModel,
-    DatasetMetadata,
     ResourceMetadata,
 } from '../gen/streampipes-model';
 
@@ -60,7 +59,6 @@ export interface Dashboard {
 
 export interface CompositeDashboard {
     dashboard: Dashboard;
-    dataLakeMeasures: DatasetMetadata[];
     widgets: DataExplorerWidgetModel[];
     revisionHash: string;
 }
