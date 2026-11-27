@@ -111,11 +111,81 @@
                         (colorPickerChange)="setHighlightColor(field, $event)"
                         [disabled]="!isHighlighted(field)"
                         [attr.aria-label]="
-                            'Select highlight color for ' + field.runtimeName
-                                | translate
+                            'Select highlight color for {{field}}'
+                                | translate: { field: field.runtimeName }
                         "
                     />
                 </div>
+                @if (
+                    isHighlighted(field) &&
+                    field.fieldCharacteristics.numeric &&
+                    !field.fieldCharacteristics.binary
+                ) {
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Color scale range' | translate"
+                    >
+                        <mat-form-field appearance="outline" color="accent">
+                            <mat-select
+                                [value]="!!getHighlightRange(field)"
+                                (selectionChange)="
+                                    setCustomHighlightRange(field, $event.value)
+                                "
+                                [attr.aria-label]="
+                                    'Color scale range' | translate
+                                "
+                            >
+                                <mat-option [value]="false">{{
+                                    'Automatic' | translate
+                                }}</mat-option>
+                                <mat-option [value]="true">{{
+                                    'Custom' | translate
+                                }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </sp-form-field>
+                    @if (getHighlightRange(field); as range) {
+                        <sp-form-field [level]="3" [label]="'Min' | translate">
+                            <mat-form-field appearance="outline" color="accent">
+                                <input
+                                    matInput
+                                    type="number"
+                                    required
+                                    [ngModel]="range.min"
+                                    [max]="range.max"
+                                    (ngModelChange)="
+                                        setHighlightBound(field, 'min', $event)
+                                    "
+                                    [attr.aria-label]="'Min' | translate"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        <sp-form-field [level]="3" [label]="'Max' | translate">
+                            <mat-form-field appearance="outline" color="accent">
+                                <input
+                                    matInput
+                                    type="number"
+                                    required
+                                    [ngModel]="range.max"
+                                    [min]="range.min"
+                                    (ngModelChange)="
+                                        setHighlightBound(field, 'max', $event)
+                                    "
+                                    [attr.aria-label]="'Max' | translate"
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
+                        @if (!isValidHighlightRange(range)) {
+                            <sp-alert-banner
+                                type="warning"
+                                [title]="
+                                    'Enter a finite minimum smaller than the maximum. Invalid ranges are not applied.'
+                                        | translate
+                                "
+                            ></sp-alert-banner>
+                        }
+                    }
+                }
             } @empty {
                 <sp-alert-banner
                     type="info"
