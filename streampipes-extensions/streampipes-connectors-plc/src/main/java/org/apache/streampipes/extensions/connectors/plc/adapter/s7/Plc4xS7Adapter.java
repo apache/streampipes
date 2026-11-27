@@ -32,7 +32,6 @@ import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connecti
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.connection.PlcRequestProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.config.ConfigurationParser;
-import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
@@ -66,7 +65,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
    */
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.s7";
 
-  private static final String S7_URL = "s7-light://";
+  private static final String S7_URL = "s7://";
 
   /**
    * Keys of user configuration parameters
@@ -97,7 +96,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
   private final PlcConnectionManager connectionManager;
   private final PlcRequestProvider requestProvider;
 
-  private PullAdapterScheduler pullAdapterScheduler;
+  private ContinuousPlcRequestReader plcRequestReader;
 
   public Plc4xS7Adapter(PlcConnectionManager connectionManager) {
     this.requestProvider = new PlcRequestProvider();
@@ -112,7 +111,7 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
    */
   @Override
   public IAdapterConfiguration declareConfig() {
-    return AdapterConfigurationBuilder.create(ID, 1, () -> new Plc4xS7Adapter(connectionManager))
+    return AdapterConfigurationBuilder.create(ID, 2, () -> new Plc4xS7Adapter(connectionManager))
                                       .withLocales(Locales.EN)
                                       .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
                                       .requiredTextParameter(Labels.withId(PLC_IP))
@@ -163,20 +162,14 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
     var settings = getConfigurations(extractor.getStaticPropertyExtractor());
-    var adapterName = extractor.getAdapterDescription().getName();
-    var plcRequestReader = new ContinuousPlcRequestReader(
+    this.plcRequestReader = new ContinuousPlcRequestReader(
         connectionManager,
         settings,
-        requestProvider,
         collector,
-        adapterName
+        extractor.getAdapterDescription().getElementId(),
+        adapterRuntimeContext.getLogger()
     );
-    this.pullAdapterScheduler = new PullAdapterScheduler();
-    this.pullAdapterScheduler.schedule(
-        plcRequestReader,
-        extractor.getAdapterDescription()
-                 .getElementId()
-    );
+    this.plcRequestReader.start();
   }
 
   @Override
@@ -184,7 +177,10 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
       IAdapterParameterExtractor extractor,
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
-    this.pullAdapterScheduler.shutdown();
+    if (this.plcRequestReader != null) {
+      this.plcRequestReader.close();
+      this.plcRequestReader = null;
+    }
   }
 
   @Override

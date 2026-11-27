@@ -54,7 +54,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.plc4x</groupId>
-            <artifactId>plc4j-spi</artifactId>
+            <artifactId>plc4j-spi-config</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.plc4x</groupId>
@@ -67,17 +67,25 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.plc4x</groupId>
-                    <artifactId>plc4j-driver-opcua</artifactId>
+                    <artifactId>plc4j-driver-c-bus</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.plc4x</groupId>
-                    <artifactId>plc4j-driver-c-bus</artifactId>
+                    <artifactId>plc4j-driver-slmp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.plc4x</groupId>
+                    <artifactId>plc4j-driver-ab-eth</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.plc4x</groupId>
-            <artifactId>plc4j-connection-cache</artifactId>
+            <artifactId>plc4j-tools-connection-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.plc4x</groupId>
+            <artifactId>plc4j-tools-event-pump</artifactId>
         </dependency>
 
         <!-- Test dependencies -->

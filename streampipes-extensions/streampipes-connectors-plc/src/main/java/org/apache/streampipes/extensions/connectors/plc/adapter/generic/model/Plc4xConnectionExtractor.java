@@ -21,6 +21,7 @@ package org.apache.streampipes.extensions.connectors.plc.adapter.generic.model;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.plc.adapter.s7.config.ConfigurationParser;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
@@ -44,7 +45,6 @@ public class Plc4xConnectionExtractor {
   }
 
   public Plc4xConnectionSettings makeSettings() {
-    var modifiedProtocolCode = checkAndOverrideProtocolCode();
     var host = extractHost();
     var transportCode = extractTransportCode();
     var transportConfigs = extractTransportMetadata(transportCode);
@@ -52,18 +52,10 @@ public class Plc4xConnectionExtractor {
     var configParameters = makeConfigParameters(transportConfigs, protocolConfigs);
 
     return new Plc4xConnectionSettings(
-        getConnectionString(host, transportCode, modifiedProtocolCode, configParameters),
+        getConnectionString(host, transportCode, protocolCode, configParameters),
         extractor.singleValueParameter(Plc4xLabels.PLC_POLLING_INTERVAL, Integer.class),
         extractNodes()
     );
-  }
-
-  private String checkAndOverrideProtocolCode() {
-    if (protocolCode.equals("s7")) {
-      return "s7-light";
-    } else {
-      return protocolCode;
-    }
   }
 
   private String getConnectionString(String host,
@@ -71,7 +63,7 @@ public class Plc4xConnectionExtractor {
                                      String protocolCode,
                                      String parameters) {
     if (!parameters.isEmpty()) {
-      parameters = "?" + parameters;
+      parameters = (host.contains("?") ? "&" : "?") + parameters;
     }
     return String.format("%s:%s://%s%s", protocolCode, transportCode, host, parameters);
   }
@@ -122,6 +114,9 @@ public class Plc4xConnectionExtractor {
                                                          String labelId,
                                                          String requiredGroupLabelId,
                                                          String advancedGroupLabelId) {
+    if (extractor.getStaticPropertyByName(labelId) == null) {
+      return Map.of();
+    }
     var selectedAlternative = extractor.selectedAlternativeInternalId(labelId);
 
     if (selectedAlternative.equals(Plc4xLabels.REQUIRED_OPTIONS)) {
@@ -137,15 +132,18 @@ public class Plc4xConnectionExtractor {
                                                  List<StaticProperty> staticProperties) {
     var map = new HashMap<String, Object>();
 
-    staticProperties
-        .stream()
-        .filter(sp -> sp instanceof FreeTextStaticProperty)
-        .map(sp -> (FreeTextStaticProperty) sp)
-        .forEach(sp -> {
-          if (sp.getValue() != null && !sp.getValue().isEmpty()) {
-            map.put(String.format("%s%s", prefix, sp.getInternalName()), sp.getValue());
-          }
-        });
+    for (var property : staticProperties) {
+      String value = null;
+      if (property instanceof FreeTextStaticProperty text) {
+        value = text.getValue();
+      } else if (property instanceof SecretStaticProperty secret) {
+        value = secret.getValue();
+      }
+      if (value != null && !value.isEmpty()) {
+        var name = property.getInternalName();
+        map.put(name.contains(".") ? name : prefix + name, value);
+      }
+    }
 
     return map;
   }

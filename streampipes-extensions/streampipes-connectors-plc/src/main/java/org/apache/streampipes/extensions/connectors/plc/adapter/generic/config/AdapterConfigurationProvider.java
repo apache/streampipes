@@ -50,7 +50,7 @@ public class AdapterConfigurationProvider {
     var appId = getAdapterAppId(driver);
     var adapterBuilder = AdapterConfigurationBuilder.create(
             appId,
-            1,
+            2,
             () -> new GenericPlc4xAdapter(driver, connectionManager)
         )
         .withLocales(Locales.EN)
@@ -62,7 +62,10 @@ public class AdapterConfigurationProvider {
         .requiredIntegerParameter(Labels.withId(PLC_POLLING_INTERVAL), 1000)
         .requiredSingleValueSelection(
             Labels.withId(SUPPORTED_TRANSPORTS),
-            driverMetadata.getSupportedTransportCodes().stream().map(Option::new).toList()
+            driverMetadata.getSupportedTransportCodes().stream()
+                .filter(code -> !"test".equals(code))
+                .map(code -> new Option(code, driverMetadata.getDefaultTransportCode().filter(code::equals).isPresent()))
+                .toList()
         )
         .requiredStaticProperty(
             new MetadataOptionGenerator().makeRuntimeResolvableMetadata(
