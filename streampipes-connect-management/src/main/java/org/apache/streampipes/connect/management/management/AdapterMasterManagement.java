@@ -40,9 +40,11 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * This class is responsible for managing all the adapter instances which are executed on worker
@@ -85,6 +87,7 @@ public class AdapterMasterManagement {
     String streamId = null;
     boolean streamCreated;
     try {
+      rejectDuplicateRuntimeNames(adapterDescription);
       streamId = ElementIdGenerator.makeElementId(SpDataStream.class);
       adapterDescription.setElementId(adapterId);
       adapterDescription.setCreatedAt(System.currentTimeMillis());
@@ -104,6 +107,35 @@ public class AdapterMasterManagement {
     adapterAudit.created(principalSid, adapterId, streamId,
         streamCreated ? AuditOutcome.SUCCEEDED : AuditOutcome.PARTIAL,
         streamCreated ? null : AdapterCreationReason.STREAM_CREATION_REJECTED);
+  }
+
+  /**
+   * Rejects an adapter whose event schema contains more than one property with the same runtime
+   * name. Duplicate runtime names collapse downstream (e.g. the schema map in the compact adapter
+   * generator and the persist pipeline both key properties by runtime name), so the adapter would
+   * otherwise fail obscurely during persistence. Rejecting it here gives the user a clear reason.
+   */
+  private void rejectDuplicateRuntimeNames(AdapterDescription adapterDescription)
+      throws AdapterException {
+    if (adapterDescription.getDataStream() == null
+        || adapterDescription.getEventSchema() == null
+        || adapterDescription.getEventSchema().getEventProperties() == null) {
+      return;
+    }
+    Set<String> seen = new LinkedHashSet<>();
+    Set<String> duplicates = new LinkedHashSet<>();
+    for (var property : adapterDescription.getEventSchema().getEventProperties()) {
+      var runtimeName = property.getRuntimeName();
+      if (runtimeName != null && !seen.add(runtimeName)) {
+        duplicates.add(runtimeName);
+      }
+    }
+    if (!duplicates.isEmpty()) {
+      throw new AdapterException(
+          "The adapter schema contains more than one field with the same runtime name: "
+              + String.join(", ", duplicates)
+              + ". Please rename or remove the duplicates so that every field name is unique.");
+    }
   }
 
   boolean createDataStreamForAdapter(AdapterDescription adapterDescription, String adapterId,

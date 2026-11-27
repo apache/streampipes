@@ -28,8 +28,11 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.util.GroundingUtils;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
@@ -158,6 +161,58 @@ public class AdapterMasterManagementTest {
   @Test
   void auditRecorderRequiresAnExplicitService() {
     assertThrows(NullPointerException.class, () -> new AdapterAuditRecorder(null));
+  }
+
+  @Test
+  void addAdapter_rejectsDuplicateRuntimeNames() throws Exception {
+    var resources = mock(SpResourceManager.class);
+    var adapters = mock(AdapterResourceManager.class);
+    var audit = mock(AuditService.class);
+    when(resources.manageAdapters()).thenReturn(adapters);
+    var manager = spy(new AdapterMasterManagement(
+        resources, null, null, null, null, new AdapterAuditRecorder(audit)));
+    doReturn(true).when(manager)
+        .createDataStreamForAdapter(any(), anyString(), anyString(), anyString());
+
+    var adapter = adapterWithRuntimeNames("timestamp", "value", "timestamp");
+
+    var exception = assertThrows(AdapterException.class,
+        () -> manager.addAdapter(adapter, "adapter-1", "user-1"));
+    Assertions.assertTrue(exception.getMessage().contains("timestamp"));
+  }
+
+  @Test
+  void addAdapter_allowsDistinctRuntimeNames() throws Exception {
+    var resources = mock(SpResourceManager.class);
+    var adapters = mock(AdapterResourceManager.class);
+    var audit = mock(AuditService.class);
+    when(resources.manageAdapters()).thenReturn(adapters);
+    var manager = spy(new AdapterMasterManagement(
+        resources, null, null, null, null, new AdapterAuditRecorder(audit)));
+    doReturn(true).when(manager)
+        .createDataStreamForAdapter(any(), anyString(), anyString(), anyString());
+
+    var adapter = adapterWithRuntimeNames("timestamp", "value");
+
+    try (var grounding = mockStatic(GroundingUtils.class)) {
+      grounding.when(GroundingUtils::createEventGrounding).thenReturn(new EventGrounding());
+      manager.addAdapter(adapter, "adapter-1", "user-1");
+    }
+    verify(adapters).encryptAndCreate(adapter);
+  }
+
+  private AdapterDescription adapterWithRuntimeNames(String... runtimeNames) {
+    var schema = new EventSchema();
+    for (var runtimeName : runtimeNames) {
+      var property = new EventPropertyPrimitive();
+      property.setRuntimeName(runtimeName);
+      schema.addEventProperty(property);
+    }
+    var dataStream = new SpDataStream();
+    dataStream.setEventSchema(schema);
+    var adapter = new AdapterDescription();
+    adapter.setDataStream(dataStream);
+    return adapter;
   }
 
   private void verifyCreationAudit(boolean failAdapter, boolean failStream,
