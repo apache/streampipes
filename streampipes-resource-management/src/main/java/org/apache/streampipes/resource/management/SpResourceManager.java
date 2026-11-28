@@ -216,7 +216,7 @@ public class SpResourceManager {
   }
 
   public DashboardResourceManager manageDashboards() {
-    return new DashboardResourceManager(dashboardStorage, chartStorage, datasetStorage, managePermissions(),
+    return new DashboardResourceManager(dashboardStorage, chartStorage, managePermissions(),
         resourceDeletionManager);
   }
 

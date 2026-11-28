@@ -20,30 +20,22 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.dashboard.CompositeDashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
-import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import org.springframework.security.core.Authentication;
-
-import java.util.List;
-import java.util.Map;
 
 public class DashboardResourceManager extends CrudResourceManager<DashboardModel, IDashboardStorage> {
 
   private final IChartStorage widgetStorage;
-  private final IDatasetMetadataStorage datasetMetadataStorage;
 
   public DashboardResourceManager(IDashboardStorage dashboardStorage,
                                    IChartStorage widgetStorage,
-                                   IDatasetMetadataStorage datasetMetadataStorage,
                                    PermissionResourceManager permissionResourceManager,
                               ResourceDeletionManager resourceDeletionManager) {
     super(dashboardStorage, DashboardModel.class, permissionResourceManager, resourceDeletionManager);
     this.widgetStorage = widgetStorage;
-    this.datasetMetadataStorage = datasetMetadataStorage;
   }
 
   public ResourceSummaryDto<DashboardSummaryDto> getSummary(Authentication auth) {
@@ -65,20 +57,7 @@ public class DashboardResourceManager extends CrudResourceManager<DashboardModel
     var dashboard = db.getElementById(dashboardId);
     var widgets = dashboard.getWidgets().stream()
         .map(w -> widgetStorage.getElementById(w.getDataViewElementId())).toList();
-    var dataLakeMeasures = getMeasureNames(widgets).stream().map(datasetMetadataStorage::getByMeasureName).toList();
-
-    return new CompositeDashboardModel(dashboard, widgets, dataLakeMeasures);
-  }
-
-  private List<String> getMeasureNames(List<DataExplorerWidgetModel> widgets) {
-    return widgets.stream().map(DataExplorerWidgetModel::getDataConfig)
-        .map(dataConfig -> (List<?>) ((Map<?, ?>) dataConfig).get("sourceConfigs"))
-        .filter(Map.class::isInstance)
-        .map(Map.class::cast)
-        .map(cfg -> cfg.get("measureName"))
-        .filter(String.class::isInstance)
-        .map(String.class::cast)
-        .toList();
+    return new CompositeDashboardModel(dashboard, widgets);
   }
 
   private String getDashboardName(DashboardModel dashboard) {

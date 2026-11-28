@@ -32,11 +32,11 @@ import org.apache.streampipes.extensions.connectors.filewatcher.runtime.CsvFileR
 import org.apache.streampipes.extensions.connectors.filewatcher.runtime.FileSetWatcher;
 import org.apache.streampipes.extensions.connectors.filewatcher.runtime.FileWatcherCheckpointStore;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
-import org.apache.streampipes.extensions.management.connect.adapter.parser.CsvParser;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -50,7 +50,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.zone.ZoneRulesException;
-import java.util.Map;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -74,6 +73,8 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
   private static final String SEGMENTED_CIRCULAR_LOG_ON = "segmented-circular-log-on";
   private static final String SEGMENTED_CIRCULAR_LOG_OFF = "segmented-circular-log-off";
   private static final CsvParserSettings WINCC_CSV_SETTINGS = new CsvParserSettings(true, ';');
+
+  private final CsvFileReader archiveReader = new CsvFileReader(record -> !"$RT_COUNT$".equals(record.get("Time_ms")));
 
   private PullAdapterScheduler scheduler;
   private FileSetWatcher watcher;
@@ -134,7 +135,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
     this.watcher = new FileSetWatcher(
         config,
         new FileWatcherCheckpointStore(),
-        new CsvFileReader(),
+        archiveReader,
         new WinCCAlarmEventMapper(config.timeZone())
     );
     LOG.debug(
@@ -165,19 +166,19 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
                                           IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     FileWatcherConfig config = toConfig(extractor);
     try (var files = Files.list(config.directory())) {
-      Path sampleFile = files
-          .filter(Files::isRegularFile)
+      var matchingFiles = files.filter(Files::isRegularFile)
           .filter(path -> config.filePattern().matcher(path.getFileName().toString()).matches())
           .sorted()
-          .findFirst()
-        .orElseThrow(() -> new AdapterException("No matching WinCC alarm archive files found in " + config.directory()));
-
-      try (var inputStream = Files.newInputStream(sampleFile)) {
-        Map<String, Object> rawSample = new CsvParser(true, ';').getSampleData(inputStream).getSamples().get(0);
-        return org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder.create()
-            .sample(new WinCCAlarmEventMapper(config.timeZone()).map(rawSample))
-            .build();
+          .toList();
+      for (Path file : matchingFiles) {
+        var sample = archiveReader.firstRecord(file, config.parserSettings());
+        if (sample.isPresent()) {
+          return SampleDataBuilder.create()
+              .sample(new WinCCAlarmEventMapper(config.timeZone()).map(sample.get()))
+              .build();
+        }
       }
+      throw new AdapterException("No WinCC alarm records found in matching archives in " + config.directory());
     } catch (IOException e) {
       throw new AdapterException("Could not load sample data from directory " + config.directory(), e);
     }

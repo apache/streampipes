@@ -33,8 +33,9 @@ Configuration is Siemens-specific:
 - whether the last modified timestamp should be considered for deduplication
 - polling interval
 - optional delay between replayed events in milliseconds
-- timezone used when WinCC `TimeString` must be converted to Unix time
+- timezone of the archive’s local timestamps (`Time_ms` and `TimeString`)
 
+The adapter skips WinCC `$RT_COUNT$` control records during sampling and ingestion.
 The adapter assumes the WinCC alarm CSV layout with a header row and semicolon-separated columns.
 The configured base name should not include the segment number or file suffix. For example, use `Meldungsarchiv`
 to match `Meldungsarchiv1.csv` or `Meldungsarchiv0.csv` to `MeldungsarchivN.csv`, depending on the configured

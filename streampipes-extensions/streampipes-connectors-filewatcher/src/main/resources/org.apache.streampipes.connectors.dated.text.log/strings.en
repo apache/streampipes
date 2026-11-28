@@ -1,0 +1,34 @@
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+org.apache.streampipes.connectors.dated.text.log.title=Dated Text Log
+org.apache.streampipes.connectors.dated.text.log.description=Reads dated log files and maps line fields to events.
+directory.title=Log directory
+directory.description=Directory containing the daily files for one event stream.
+filename-pattern.title=Filename expression
+filename-pattern.description=Java regex matching the whole filename, with one capture group for its date.
+date-format.title=Filename date format
+date-format.description=Java date format for the captured date, for example uuuu_MM_dd.
+line-pattern.title=Line expression
+line-pattern.description=Java regex matching one complete line, with one capture group per output field.
+fields.title=Output fields
+fields.description=Comma-separated name:type entries in capture order. Use one time field and string, integer, long or double for other fields.
+time-format.title=Time format
+time-format.description=Java time format for the time capture group.
+charset.title=File encoding
+charset.description=Character set used by the log writer, for example UTF-16LE or UTF-8.
+timezone.title=Machine timezone
+timezone.description=IANA timezone of the local date and time, for example Europe/Berlin.
+poll-interval-seconds.title=Polling interval (seconds)
+poll-interval-seconds.description=Seconds between directory scans.

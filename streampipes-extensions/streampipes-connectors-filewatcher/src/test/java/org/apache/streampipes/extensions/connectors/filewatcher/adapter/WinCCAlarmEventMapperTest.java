@@ -52,7 +52,7 @@ class WinCCAlarmEventMapperTest {
 
     var mappedEvent = new WinCCAlarmEventMapper(ZoneId.of("Europe/Berlin")).map(rawEvent);
 
-    assertEquals(1775638043050L, mappedEvent.get("timestamp"));
+    assertEquals(1775630843050L, mappedEvent.get("timestamp"));
     assertEquals("46120366239", mappedEvent.get("timestamp_ms"));
     assertEquals("08.04.26 08:47", mappedEvent.get("timestamp_string"));
     assertEquals("Alarm text", mappedEvent.get("message_text"));
