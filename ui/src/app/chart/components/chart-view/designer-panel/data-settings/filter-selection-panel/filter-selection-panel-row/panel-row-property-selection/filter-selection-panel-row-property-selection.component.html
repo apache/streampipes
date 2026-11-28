@@ -18,10 +18,13 @@
 <mat-form-field color="accent" class="w-140-px mr-5" appearance="outline">
     <mat-label>{{ 'Field' | translate }}</mat-label>
     <mat-select
+        #fieldSelect
+        [matTooltip]="fieldSelect.triggerValue"
+        [matTooltipDisabled]="fieldSelect.panelOpen || fieldSelect.empty"
         [(value)]="filter.field"
         (selectionChange)="updateParentComponent()"
         [compareWith]="compare"
-        panelClass="form-field-small min-w-200"
+        panelClass="form-field-small min-w-200 sp-field-options"
         data-cy="design-panel-data-settings-filter-field"
     >
         @for (field of possibleFields; track field) {

@@ -76,6 +76,11 @@
                                     'input-runtime-name-' + cachedProperty.label
                                 "
                                 class="flex-100"
+                                tabindex="0"
+                                [attr.aria-label]="
+                                    'Field runtime name' | translate
+                                "
+                                [matTooltip]="cachedProperty.runtimeName"
                             >
                                 <mat-form-field class="w-100" color="accent">
                                     <input

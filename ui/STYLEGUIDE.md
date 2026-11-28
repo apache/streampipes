@@ -243,6 +243,29 @@ open the others in cards; a table that lacks the mode shows its list.
 </ng-template>
 ```
 
+#### Field names
+
+Wrap long field names, including identifiers without spaces. Shared rules live in
+`src/scss/sp/field-names.scss`.
+
+For field dropdowns, import `MatTooltip` and use the bindings below. The
+`sp-field-options` class allows long options to wrap. Check narrow widths and
+browser zoom.
+
+```html
+<mat-select
+  #fieldSelect
+  [(value)]="selectedField"
+  [matTooltip]="fieldSelect.triggerValue"
+  [matTooltipDisabled]="fieldSelect.panelOpen || fieldSelect.empty"
+  panelClass="sp-field-options"
+>
+  @for (field of fields; track field.runtimeName) {
+  <mat-option [value]="field">{{ field.runtimeName }}</mat-option>
+  }
+</mat-select>
+```
+
 #### Buttons
 
 Buttons are defined as follows:

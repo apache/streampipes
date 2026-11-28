@@ -20,6 +20,12 @@
     <div class="flex-row flex-100">
         <mat-form-field color="accent" class="flex-100">
             <mat-select
+                #fieldSelect
+                [matTooltip]="fieldSelect.triggerValue"
+                [matTooltipDisabled]="
+                    fieldSelect.panelOpen || fieldSelect.empty
+                "
+                panelClass="sp-field-options"
                 formControlName="{{ fieldName }}"
                 [placeholder]="staticProperty.label"
                 [attr.data-cy]="fieldName"

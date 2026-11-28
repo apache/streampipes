@@ -23,6 +23,10 @@
 >
     <mat-label>{{ this.label }}</mat-label>
     <mat-select
+        #fieldSelect
+        [matTooltip]="fieldSelect.triggerValue"
+        [matTooltipDisabled]="fieldSelect.panelOpen || fieldSelect.empty"
+        panelClass="sp-field-options"
         [ngModel]="selectedProperty"
         (selectionChange)="triggerSelectedProperty($event.value)"
         [compareWith]="compare"

@@ -26,13 +26,21 @@ import { FieldConfig, SelectedFilter } from '@streampipes/platform-services';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-filter-selection-panel-row-property-selection',
     templateUrl:
         './filter-selection-panel-row-property-selection.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [MatFormField, MatLabel, MatSelect, MatOption, TranslatePipe],
+    imports: [
+        MatTooltip,
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class FilterSelectionPanelRowPropertySelectionComponent {
     @Input()

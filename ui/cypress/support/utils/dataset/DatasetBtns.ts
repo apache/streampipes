@@ -155,6 +155,10 @@ export class DatasetBtns {
         return cy.dataCy('dataset-details-events-table', { timeout: 30000 });
     }
 
+    public static datasetDetailsEventHeader(fieldName: string) {
+        return this.datasetDetailsEventsTable().contains('th', fieldName);
+    }
+
     public static datasetDetailsEventCell(columnName: string) {
         return cy.dataCy(`dataset-details-event-cell-${columnName}`, {
             timeout: 30000,

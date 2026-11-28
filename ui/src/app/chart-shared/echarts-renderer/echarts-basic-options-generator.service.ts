@@ -59,6 +59,12 @@ export class EchartsBasicOptionsGeneratorService {
                 orient: 'horizontal',
                 top: LEGEND_TOP,
                 show: appearanceConfig.chartAppearance.showLegend,
+                tooltip: {
+                    show: true,
+                    confine: true,
+                    extraCssText:
+                        'max-width: calc(100vw - 2rem); white-space: normal; overflow-wrap: anywhere;',
+                },
             },
             tooltip: {
                 show: appearanceConfig.chartAppearance.showTooltip,

@@ -439,6 +439,16 @@ export class ChartBtns {
         return cy.get(`[data-cy="data-explorer-table-header-${fieldName}"]`);
     }
 
+    public static fieldOrderLabel(fieldName: string) {
+        return cy
+            .get('sp-field-order-config .selected-field-label')
+            .contains(fieldName);
+    }
+
+    public static chartDataPreviewColumn(fieldName: string) {
+        return this.chartDataPreviewTable().contains('th', fieldName);
+    }
+
     public static matOptionByText(text: string | RegExp) {
         return cy.get('mat-option').contains(text);
     }
